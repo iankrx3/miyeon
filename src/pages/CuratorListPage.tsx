@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ChevronLeft, MapPin, Plus, X } from 'lucide-react';
+import { ChevronLeft, MapPin, Pencil, Plus, Trash2, X } from 'lucide-react';
 import type { CuratorList, ListSpot, Place, UserSession } from '../types';
-import { addSpotToList, fetchListById, fetchListSpots, removeSpotFromList } from '../services/curator';
+import {
+  addSpotToList,
+  deleteList,
+  fetchListById,
+  fetchListSpots,
+  removeSpotFromList,
+  updateList,
+} from '../services/curator';
 import { PlaceCard } from '../components/place/PlaceCard';
 import { PlaceSearchPicker } from '../components/place/PlaceSearchPicker';
 
@@ -22,6 +29,10 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
   const [note, setNote] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [titleDraft, setTitleDraft] = useState('');
+  const [isSavingTitle, setIsSavingTitle] = useState(false);
+  const [isDeletingList, setIsDeletingList] = useState(false);
 
   const isOwner = Boolean(id && session.creator?.id === id);
 
@@ -65,6 +76,42 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
     }
   };
 
+  const startEditingTitle = () => {
+    if (!list) return;
+    setTitleDraft(list.title);
+    setIsEditingTitle(true);
+    setError(null);
+  };
+
+  const handleSaveTitle = async () => {
+    if (!listId || !titleDraft.trim() || isSavingTitle) return;
+    setIsSavingTitle(true);
+    setError(null);
+    try {
+      await updateList(session, listId, { title: titleDraft.trim() });
+      setList((prev) => (prev ? { ...prev, title: titleDraft.trim() } : prev));
+      setIsEditingTitle(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not rename this list. Try again.');
+    } finally {
+      setIsSavingTitle(false);
+    }
+  };
+
+  const handleDeleteList = async () => {
+    if (!listId || isDeletingList) return;
+    if (!window.confirm('이 리스트를 삭제할까요? 안에 있는 스팟도 함께 삭제됩니다.')) return;
+    setIsDeletingList(true);
+    setError(null);
+    try {
+      await deleteList(session, listId);
+      navigate(`/curator/${id}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not delete this list. Try again.');
+      setIsDeletingList(false);
+    }
+  };
+
   if (loading) return <div className="px-4 py-10 text-sm text-miyeon-main/60">Loading…</div>;
   if (!list) return <div className="px-4 py-10 text-sm text-miyeon-main/60">List not found.</div>;
 
@@ -78,7 +125,46 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
       </button>
 
       <div>
-        <h1 className="font-display text-2xl text-miyeon-main">{list.title}</h1>
+        {isEditingTitle ? (
+          <div className="flex items-center gap-2">
+            <input
+              autoFocus
+              value={titleDraft}
+              onChange={(e) => setTitleDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSaveTitle();
+                if (e.key === 'Escape') setIsEditingTitle(false);
+              }}
+              className="w-full rounded-full border border-miyeon-neutral bg-white px-3.5 py-1.5 font-display text-lg text-miyeon-main focus:outline-none"
+            />
+            <button
+              onClick={handleSaveTitle}
+              disabled={isSavingTitle || !titleDraft.trim()}
+              className="shrink-0 rounded-full bg-miyeon-sub1 px-3.5 py-1.5 text-xs font-bold text-white disabled:opacity-50"
+            >
+              {isSavingTitle ? 'Saving…' : 'Save'}
+            </button>
+            <button
+              onClick={() => setIsEditingTitle(false)}
+              className="shrink-0 rounded-full border border-miyeon-neutral px-3.5 py-1.5 text-xs font-semibold text-miyeon-main"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <h1 className="font-display text-2xl text-miyeon-main">{list.title}</h1>
+            {isOwner && (
+              <button
+                onClick={startEditingTitle}
+                aria-label="Rename list"
+                className="text-miyeon-main/50 hover:text-miyeon-main"
+              >
+                <Pencil className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        )}
         {list.description && <p className="mt-1 text-sm text-miyeon-main/70">{list.description}</p>}
         <p className="mt-1 text-xs font-semibold text-miyeon-main/70">
           {list.spot_count} spot{list.spot_count === 1 ? '' : 's'}
@@ -104,6 +190,15 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
           >
             <Plus className="h-3.5 w-3.5" /> Add spot
           </motion.button>
+        )}
+        {isOwner && (
+          <button
+            onClick={handleDeleteList}
+            disabled={isDeletingList}
+            className="flex items-center gap-1.5 rounded-full border border-red-200 px-3.5 py-1.5 text-xs font-semibold text-red-500 hover:bg-red-50 disabled:opacity-50"
+          >
+            <Trash2 className="h-3.5 w-3.5" /> {isDeletingList ? 'Deleting…' : 'Delete list'}
+          </button>
         )}
       </div>
 
