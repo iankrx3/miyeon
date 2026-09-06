@@ -47,7 +47,6 @@ export const NavHeader: React.FC<NavHeaderProps> = ({ session, onSignIn, onSignO
         <span className="hidden text-xs font-medium tracking-wide text-miyeon-main/50 sm:inline" title="English">
           EN
         </span>
-        <span className="hidden h-7 w-7 rounded-full bg-miyeon-neutral sm:block" aria-hidden />
 
         {session.isLoggedIn && session.user ? (
           <div className="flex items-center gap-3">
@@ -57,19 +56,21 @@ export const NavHeader: React.FC<NavHeaderProps> = ({ session, onSignIn, onSignO
             >
               {session.creator ? 'My Curator Page' : 'Become a Curator'}
             </NavLink>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onSignOut}
-              className="flex items-center gap-2 text-xs font-semibold text-miyeon-main"
-            >
+            <NavLink to="/profile" className="hidden sm:inline">
               <img
                 src={session.user.avatar_url}
                 alt={session.user.name}
                 referrerPolicy="no-referrer"
                 className="h-7 w-7 rounded-full object-cover ring-1 ring-miyeon-neutral"
               />
-              <span className="hidden sm:inline">Sign out</span>
+            </NavLink>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onSignOut}
+              className="text-xs font-semibold text-miyeon-main"
+            >
+              Sign out
             </motion.button>
           </div>
         ) : (

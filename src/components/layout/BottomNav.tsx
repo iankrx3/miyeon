@@ -15,7 +15,6 @@ const tabs = [
 ];
 
 export const BottomNav: React.FC<BottomNavProps> = ({ session, onSignIn }) => {
-  const profileTo = session.creator ? `/curator/${session.creator.id}` : '/curator/signup';
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 flex h-14 items-stretch border-t border-miyeon-neutral bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md sm:hidden">
@@ -40,7 +39,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ session, onSignIn }) => {
 
       {session.isLoggedIn && session.user ? (
         <NavLink
-          to={profileTo}
+          to="/profile"
           className="flex flex-1 flex-col items-center justify-center gap-0.5 text-[9px] font-medium"
         >
           {({ isActive }) => (
@@ -53,9 +52,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ session, onSignIn }) => {
                   isActive ? 'ring-2 ring-miyeon-main' : 'ring-1 ring-miyeon-neutral'
                 }`}
               />
-              <span className={isActive ? 'text-miyeon-main' : 'text-miyeon-main/30'}>
-                {session.creator ? 'Profile' : 'Curator'}
-              </span>
+              <span className={isActive ? 'text-miyeon-main' : 'text-miyeon-main/30'}>Profile</span>
             </>
           )}
         </NavLink>

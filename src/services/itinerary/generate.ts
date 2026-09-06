@@ -57,11 +57,11 @@ function spotsPerDay(profile: BeautyTripProfile, extra = 0): number {
 }
 
 const GOAL_SUBCATS: Record<Exclude<BeautyGoal, 'dont-know' | 'overall'>, SpotSubcategory[]> = {
-  skin: ['skin-care', 'aesthetics'],
-  face: ['skin-care', 'aesthetics', 'beauty-makeup'],
-  hair: ['color-perm', 'head-spa', 'hair-makeup', 'hair-extensions'],
-  'makeup-style': ['color-analysis', 'beauty-makeup', 'hair-makeup'],
-  details: ['nail-art', 'waxing', 'glasses', 'id-portrait', 'permanent-makeup'],
+  skin: ['skin-care', 'aesthetics', 'shopping'],
+  face: ['skin-care', 'aesthetics', 'beauty-makeup', 'shopping'],
+  hair: ['color-perm', 'head-spa', 'hair-makeup', 'hair-extensions', 'shopping'],
+  'makeup-style': ['color-analysis', 'beauty-makeup', 'hair-makeup', 'shopping'],
+  details: ['nail-art', 'waxing', 'glasses', 'id-portrait', 'permanent-makeup', 'shopping'],
 };
 
 function wantedSubcats(profile: BeautyTripProfile): SpotSubcategory[] | null {
@@ -75,6 +75,7 @@ function wantedSubcats(profile: BeautyTripProfile): SpotSubcategory[] | null {
   if (profile.purpose === 'what-suits-me' || profile.purpose === 'korean-experience') {
     set.add('color-analysis');
     set.add('beauty-makeup');
+    set.add('shopping');
   }
   if (profile.purpose === 'feel-good') {
     set.add('head-spa');

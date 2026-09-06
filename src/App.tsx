@@ -17,6 +17,7 @@ import CuratorSignupPage from './pages/CuratorSignupPage';
 import CuratorEditPage from './pages/CuratorEditPage';
 import CuratorListPage from './pages/CuratorListPage';
 import ItineraryPage from './pages/ItineraryPage';
+import ProfilePage from './pages/ProfilePage';
 import type { AuthReturnTab } from './services/auth';
 
 export default function App() {
@@ -60,6 +61,10 @@ export default function App() {
           >
             <Routes>
               <Route path="/" element={<ExplorePage />} />
+              <Route
+                path="/profile"
+                element={<ProfilePage session={session} onSignIn={() => setIsAuthOpen(true)} />}
+              />
               <Route path="/itinerary/:id" element={<ItineraryPage session={session} />} />
               <Route path="/map" element={<MapPage session={session} />} />
               <Route

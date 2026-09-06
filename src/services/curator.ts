@@ -351,9 +351,25 @@ export function deriveLocalCreatorPicks(creator: Creator): CreatorPick[] {
 /** Places shown on the Map tab (map + list toggle): only places some curator has
  * picked (remote + local demo), restricted to the live map categories. `places` is
  * deduped by place id; `picks` is deduped by creator, for the "Curated by Creators" strip. */
+async function fetchRemoteCuratorItineraries(): Promise<Itinerary[]> {
+  const local = listAllCuratorItineraries();
+  if (!supabase) return local;
+  try {
+    const { data, error } = await supabase.from('curator_itineraries').select('*').order('created_at', { ascending: true });
+    if (error) throw error;
+    const mapped = (data ?? []).map(mapRemoteItinerary);
+    mapped.forEach(upsertItinerary);
+    const ids = new Set(mapped.map((i) => i.id));
+    return [...mapped, ...local.filter((i) => !ids.has(i.id))];
+  } catch (err) {
+    console.warn('fetchRemoteCuratorItineraries failed', err);
+    return local;
+  }
+}
+
 export async function fetchCuratedMapData(session: UserSession): Promise<{ places: Place[]; picks: CreatorPick[] }> {
   const places = allSpotsAsPlaces();
-  const itineraries = listAllCuratorItineraries();
+  const itineraries = await fetchRemoteCuratorItineraries();
   const picks: CreatorPick[] = [];
   const seen = new Set<string>();
 
@@ -499,7 +515,9 @@ export async function updateCuratorItinerary(session: UserSession, itinerary: It
 export async function deleteCuratorItinerary(session: UserSession, itineraryId: string): Promise<void> {
   removeItinerary(itineraryId);
   if (!session.creator) return;
-  if (!supabase || itineraryId.startsWith('itn_') || isDemoSession(session)) return;
+  if (!supabase || itineraryId.startsWith('itn_seed_') || itineraryId.startsWith('snap_') || isDemoSession(session)) {
+    return;
+  }
   await supabase.from('curator_itineraries').delete().eq('id', itineraryId).eq('curator_id', session.creator.id);
 }
 

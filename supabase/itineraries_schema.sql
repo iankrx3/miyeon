@@ -26,3 +26,21 @@ create policy "curators update own itineraries" on curator_itineraries for updat
 
 create policy "curators delete own itineraries" on curator_itineraries for delete
   using (auth.uid() = (select user_id from creators where creators.id = curator_id));
+
+-- Saved trips for signed-in users (guest saves stay in localStorage).
+create table if not exists saved_itineraries (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  itinerary_id text not null,
+  source text not null,
+  snapshot jsonb not null default '{}'::jsonb,
+  saved_at timestamptz not null default now(),
+  unique (user_id, itinerary_id)
+);
+
+alter table saved_itineraries enable row level security;
+
+create policy "users read own saved itineraries" on saved_itineraries for select using (auth.uid() = user_id);
+create policy "users insert own saved itineraries" on saved_itineraries for insert with check (auth.uid() = user_id);
+create policy "users update own saved itineraries" on saved_itineraries for update using (auth.uid() = user_id);
+create policy "users delete own saved itineraries" on saved_itineraries for delete using (auth.uid() = user_id);

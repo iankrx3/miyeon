@@ -34,7 +34,8 @@ export type SpotSubcategory =
   | 'glasses'
   | 'id-portrait'
   | 'aesthetics'
-  | 'skin-care';
+  | 'skin-care'
+  | 'shopping';
 
 export type SpotDowntime = 'none' | 'few-hours' | '1-day' | '2-3-days';
 

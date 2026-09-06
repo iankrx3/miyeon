@@ -10,14 +10,13 @@ export const HomeHero: React.FC<HomeHeroProps> = ({ onStartAnalysis }) => (
   <section className="bg-miyeon-ink px-5 py-16 text-center sm:px-8 sm:py-24 lg:py-28">
     <div className="mx-auto max-w-3xl">
       <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-miyeon-sub1">
-        Your Seoul beauty trip
+        Meet your Miyeon.
       </p>
       <h1 className="mt-4 font-display text-[2rem] font-light leading-[1.15] tracking-tight text-miyeon-neutral sm:text-5xl lg:text-[3.5rem]">
-        Your Seoul beauty trip, <br className="sm:hidden" />
-        planned around you.
+        Tell me about your trip.
       </h1>
       <p className="mt-4 text-sm text-white/55 sm:text-base">
-        Tell us what you want from this trip. We'll turn it into a personalized beauty itinerary.
+        I’ll figure out the beauty part.
       </p>
       <motion.button
         whileHover={{ scale: 1.03 }}
