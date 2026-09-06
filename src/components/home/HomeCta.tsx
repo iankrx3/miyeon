@@ -12,9 +12,9 @@ export const HomeCta: React.FC<HomeCtaProps> = ({ onStartAnalysis }) => (
       Still scrolling?
     </p>
     <h2 className="mt-3 font-display text-3xl font-light leading-tight text-miyeon-main sm:text-4xl">
-      It takes 30 seconds
+      Plan the beauty trip
       <br />
-      to find out.
+      you actually want.
     </h2>
     <motion.button
       whileHover={{ scale: 1.03 }}
@@ -22,7 +22,7 @@ export const HomeCta: React.FC<HomeCtaProps> = ({ onStartAnalysis }) => (
       onClick={onStartAnalysis}
       className="mt-8 inline-flex items-center gap-2 rounded-full bg-miyeon-ink px-6 py-3 text-sm font-semibold text-white"
     >
-      Start Treatment Analysis
+      Plan my trip
       <ArrowRight className="h-4 w-4" />
     </motion.button>
     <p className="mt-4 text-xs text-miyeon-main/45">Free. No account needed.</p>

@@ -16,6 +16,7 @@ import CuratorProfilePage from './pages/CuratorProfilePage';
 import CuratorSignupPage from './pages/CuratorSignupPage';
 import CuratorEditPage from './pages/CuratorEditPage';
 import CuratorListPage from './pages/CuratorListPage';
+import ItineraryPage from './pages/ItineraryPage';
 import type { AuthReturnTab } from './services/auth';
 
 export default function App() {
@@ -28,6 +29,8 @@ export default function App() {
   }, [returnTab]);
 
   const isMapRoute = location.pathname.startsWith('/map');
+  const isItineraryRoute = location.pathname.startsWith('/itinerary');
+  const fullBleed = isMapRoute || isItineraryRoute;
   const authReturnTab: AuthReturnTab = isMapRoute
     ? 'map'
     : location.pathname.startsWith('/community')
@@ -46,7 +49,7 @@ export default function App() {
     <div className="min-h-screen bg-white text-miyeon-main">
       <NavHeader session={session} onSignIn={() => setIsAuthOpen(true)} onSignOut={signOut} />
 
-      <main className={isMapRoute ? '' : 'pb-[var(--bottom-nav-h)] sm:pb-0'}>
+      <main className={fullBleed ? '' : 'pb-[var(--bottom-nav-h)] sm:pb-0'}>
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname.split('/')[1] || 'home'}
@@ -57,6 +60,7 @@ export default function App() {
           >
             <Routes>
               <Route path="/" element={<ExplorePage />} />
+              <Route path="/itinerary/:id" element={<ItineraryPage session={session} />} />
               <Route path="/map" element={<MapPage session={session} />} />
               <Route
                 path="/community"
@@ -85,6 +89,10 @@ export default function App() {
                 element={<CuratorEditPage session={session} onCreatorUpdated={onCreatorUpdated} />}
               />
               <Route path="/curator/:id/lists/:listId" element={<CuratorListPage session={session} />} />
+              <Route
+                path="/curator/:id/itineraries/:itineraryId"
+                element={<CuratorListPage session={session} />}
+              />
             </Routes>
           </motion.div>
         </AnimatePresence>

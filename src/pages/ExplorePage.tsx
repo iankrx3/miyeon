@@ -1,339 +1,419 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
-import { ChevronLeft } from 'lucide-react';
-import type { BeautyCategory, MatchResult, Place, QuizAnswers } from '../types';
-import { categoryMeta } from '../data/mock';
-import { budgetOptions, downtimeOptions, tripLengthOptions, vibePairs, whatOptions } from '../data/quiz';
-import { CategoryRadial } from '../components/quiz/CategoryRadial';
-import { PairChoice } from '../components/quiz/PairChoice';
-import { AITransition } from '../components/quiz/AITransition';
-import { ResultCard } from '../components/explore/ResultCard';
-import { ProductCommerce } from '../components/explore/ProductCommerce';
-import { EmailCaptureCard } from '../components/explore/EmailCaptureCard';
-import { SponsoredPlaceCard } from '../components/place/SponsoredPlaceCard';
+import type { BeautyGoal, BeautyTripProfile, Restriction } from '../types';
+import {
+  beautyTimeOptions,
+  budgetOptions,
+  downtimeOptions,
+  goalLabel,
+  goalOptions,
+  needleOptions,
+  purposeLabel,
+  purposeOptions,
+  restrictionLabel,
+  restrictionOptions,
+  skinExperienceOptions,
+  tripDaysOptions,
+} from '../data/quiz';
 import { HomeLanding } from '../components/home/HomeLanding';
-import { getMatches, placesForCategory } from '../services/match';
-import { fetchPlaces } from '../services/places';
-import { hasCreatripListing } from '../lib/creatrip';
-import { buildPickQuote } from '../lib/pickCopy';
+import { OptionCard } from '../components/onboarding/OptionCard';
+import { WizardShell } from '../components/onboarding/WizardShell';
+import { AITransition } from '../components/quiz/AITransition';
+import { emptyProfile, generateItinerary } from '../services/itinerary/generate';
+import { upsertItinerary } from '../lib/localItineraryStore';
 
-type Step = 'home' | 'area' | 'what' | 'vibe' | 'constraints' | 'transition' | 'results';
-
-const TREATMENT_CATEGORIES: BeautyCategory[] = ['skin', 'face'];
-
-const emptyAnswers: QuizAnswers = {
-  category: null,
-  concerns: [],
-  vibes: [],
-  downtime: null,
-  resultTiming: null,
-  budget: null,
-  tripLength: null,
-};
+type Step =
+  | 'home'
+  | 'purpose'
+  | 'goals'
+  | 'skin'
+  | 'needles'
+  | 'restrictions'
+  | 'budget'
+  | 'time'
+  | 'days'
+  | 'downtime'
+  | 'profile'
+  | 'transition';
 
 const stepTransition = { duration: 0.3, ease: [0.16, 1, 0.3, 1] as const };
-
-const StepMotion: React.FC<{ stepKey: string; className?: string; children: React.ReactNode }> = ({
-  stepKey,
-  className,
-  children,
-}) => (
-  <motion.div
-    key={stepKey}
-    initial={{ opacity: 0, x: 24 }}
-    animate={{ opacity: 1, x: 0 }}
-    exit={{ opacity: 0, x: -24 }}
-    transition={stepTransition}
-    className={className}
-  >
-    {children}
-  </motion.div>
-);
 
 export default function ExplorePage() {
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>('home');
-  const [answers, setAnswers] = useState<QuizAnswers>(emptyAnswers);
-  const [results, setResults] = useState<MatchResult[]>([]);
-  const [sponsoredPlace, setSponsoredPlace] = useState<Place | null>(null);
+  const [profile, setProfile] = useState<BeautyTripProfile>(emptyProfile());
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [step]);
 
-  const startAnalysis = () => {
-    setStep('area');
+  const needsSkin = profile.goals.includes('skin');
+  const needsNeedles = needsSkin && profile.skinExperience === 'medical';
+
+  const flow = useMemo<Step[]>(() => {
+    const steps: Step[] = ['purpose', 'goals'];
+    if (needsSkin) steps.push('skin');
+    if (needsNeedles) steps.push('needles');
+    steps.push('restrictions', 'budget', 'time', 'days', 'downtime', 'profile');
+    return steps;
+  }, [needsSkin, needsNeedles]);
+
+  const stepIndex = Math.max(1, flow.indexOf(step) + 1);
+
+  const goNextFrom = (current: Step) => {
+    const idx = flow.indexOf(current);
+    const next = flow[idx + 1] ?? 'profile';
+    setStep(next);
   };
 
-  const selectCategory = (category: BeautyCategory) => {
-    setAnswers({ ...emptyAnswers, category });
-    setStep('what');
+  const goBackFrom = (current: Step) => {
+    const idx = flow.indexOf(current);
+    if (idx <= 0) {
+      setStep('home');
+      return;
+    }
+    setStep(flow[idx - 1]);
   };
 
-  const toggleConcern = (concern: string) => {
-    setAnswers((prev) => ({
-      ...prev,
-      concerns: prev.concerns.includes(concern)
-        ? prev.concerns.filter((c) => c !== concern)
-        : [...prev.concerns, concern],
-    }));
-  };
-
-  const setVibe = (pairIndex: number, value: string) => {
-    setAnswers((prev) => {
-      const vibes = [...prev.vibes];
-      vibes[pairIndex] = value;
-      // Pair 2 (Fast Results vs Long-term) doubles as the old standalone "result timing" question.
-      const resultTiming =
-        pairIndex === 1 ? (/fast results/i.test(value) ? 'asap' : 'long-term') : prev.resultTiming;
-      return { ...prev, vibes, resultTiming };
+  const toggleGoal = (id: BeautyGoal) => {
+    setProfile((prev) => {
+      if (id === 'dont-know') {
+        return { ...prev, goals: prev.goals.includes('dont-know') ? [] : ['dont-know'] };
+      }
+      const withoutUnknown = prev.goals.filter((g) => g !== 'dont-know');
+      const next = withoutUnknown.includes(id)
+        ? withoutUnknown.filter((g) => g !== id)
+        : withoutUnknown.length >= 3
+          ? withoutUnknown
+          : [...withoutUnknown, id];
+      return { ...prev, goals: next };
     });
   };
 
-  const handlePick = async () => {
-    setStep('transition');
+  const toggleRestriction = (id: Restriction) => {
+    setProfile((prev) => {
+      const selected = prev.restrictions.includes(id)
+        ? prev.restrictions.filter((r) => r !== id)
+        : [...prev.restrictions, id];
+      return { ...prev, restrictions: selected, nothingOffLimits: false };
+    });
   };
 
-  const handleTransitionDone = async () => {
-    const matches = await getMatches(answers);
-    setResults(matches);
+  const handleBuild = () => setStep('transition');
 
-    const matchedPlaceIds = new Set(matches.map((m) => m.place.id));
-    const allPlaces = await fetchPlaces();
-    const sponsored = placesForCategory(allPlaces, answers.category)
-      .filter((p) => hasCreatripListing(p) && !matchedPlaceIds.has(p.id))
-      .sort((a, b) => b.rating - a.rating)[0];
-    setSponsoredPlace(sponsored ?? null);
-
-    setStep('results');
-  };
-
-  const restart = () => {
-    setAnswers(emptyAnswers);
-    setResults([]);
-    setSponsoredPlace(null);
-    setStep('home');
+  const handleTransitionDone = () => {
+    const itinerary = generateItinerary(profile);
+    upsertItinerary(itinerary);
+    navigate(`/itinerary/${itinerary.id}`);
   };
 
   if (step === 'home') {
-    return <HomeLanding onStartAnalysis={startAnalysis} />;
+    return <HomeLanding onStartAnalysis={() => setStep('purpose')} />;
+  }
+
+  if (step === 'transition') {
+    return (
+      <div className="mx-auto max-w-xl px-4 py-8">
+        <AITransition onDone={handleTransitionDone} />
+      </div>
+    );
   }
 
   return (
     <div className="mx-auto max-w-xl overflow-hidden px-4 py-8 sm:py-14">
       <AnimatePresence mode="wait">
-        {step === 'area' && (
-          <StepMotion stepKey="area" className="space-y-8 text-center">
-            <BackButton onClick={() => setStep('home')} />
-            <div>
-              <h2 className="font-display text-2xl text-miyeon-main">Miyeon starts asking.</h2>
-              <p className="mt-1 text-xs text-miyeon-main/60">Where should we start?</p>
-            </div>
-            <CategoryRadial categories={TREATMENT_CATEGORIES} centerLabel="✨" onSelect={selectCategory} />
-          </StepMotion>
-        )}
-
-        {step === 'what' && answers.category && (
-          <StepMotion stepKey="what">
-            <QuizShell
-              title="Tell Miyeon what you're looking for."
-              subtitle={`${categoryMeta[answers.category].icon} ${categoryMeta[answers.category].label} · pick as many as apply`}
-              onBack={() => setStep('area')}
-              onNext={() => setStep('vibe')}
-              nextDisabled={answers.concerns.length === 0}
+        <motion.div
+          key={step}
+          initial={{ opacity: 0, x: 24 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -24 }}
+          transition={stepTransition}
+        >
+          {step === 'purpose' && (
+            <WizardShell
+              title="What’s this trip really about?"
+              subtitle="There’s no right answer. Tell us what you’re hoping to get out of Seoul."
+              step={stepIndex}
+              total={flow.length}
+              onBack={() => setStep('home')}
             >
-              <div className="flex flex-wrap gap-2">
-                {whatOptions[answers.category].map((opt, i) => (
-                  <motion.button
-                    key={opt}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: i * 0.04, duration: 0.25 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => toggleConcern(opt)}
-                    className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-                      answers.concerns.includes(opt)
-                        ? 'border-miyeon-sub1 bg-miyeon-sub1 text-white'
-                        : 'border-miyeon-neutral bg-white text-miyeon-main hover:border-miyeon-sub1/50'
+              <div className="space-y-2.5">
+                {purposeOptions.map((opt) => (
+                  <OptionCard
+                    key={opt.id}
+                    large
+                    emoji={opt.emoji}
+                    label={opt.label}
+                    selected={profile.purpose === opt.id}
+                    onClick={() => {
+                      setProfile((p) => ({ ...p, purpose: opt.id }));
+                      setTimeout(() => goNextFrom('purpose'), 180);
+                    }}
+                  />
+                ))}
+              </div>
+            </WizardShell>
+          )}
+
+          {step === 'goals' && (
+            <WizardShell
+              title="What would you most like to improve?"
+              subtitle={`${profile.goals.filter((g) => g !== 'dont-know').length} / 3 selected`}
+              step={stepIndex}
+              total={flow.length}
+              onBack={() => goBackFrom('goals')}
+              onNext={() => goNextFrom('goals')}
+              nextDisabled={profile.goals.length === 0}
+            >
+              <div className="grid grid-cols-2 gap-2.5">
+                {goalOptions.map((opt) => (
+                  <OptionCard
+                    key={opt.id}
+                    label={opt.label}
+                    selected={profile.goals.includes(opt.id)}
+                    onClick={() => toggleGoal(opt.id)}
+                  />
+                ))}
+              </div>
+            </WizardShell>
+          )}
+
+          {step === 'skin' && (
+            <WizardShell
+              title="What kind of experience are you looking for?"
+              subtitle="We’ll only ask medical questions if they’re actually relevant."
+              step={stepIndex}
+              total={flow.length}
+              onBack={() => goBackFrom('skin')}
+            >
+              <div className="space-y-2.5">
+                {skinExperienceOptions.map((opt) => (
+                  <OptionCard
+                    key={opt.id}
+                    label={opt.label}
+                    selected={profile.skinExperience === opt.id}
+                    onClick={() => {
+                      setProfile((p) => ({ ...p, skinExperience: opt.id }));
+                      setTimeout(() => goNextFrom('skin'), 180);
+                    }}
+                  />
+                ))}
+              </div>
+            </WizardShell>
+          )}
+
+          {step === 'needles' && (
+            <WizardShell
+              title="Are you comfortable with treatments involving needles?"
+              step={stepIndex}
+              total={flow.length}
+              onBack={() => goBackFrom('needles')}
+            >
+              <div className="space-y-2.5">
+                {needleOptions.map((opt) => (
+                  <OptionCard
+                    key={opt.id}
+                    label={opt.label}
+                    selected={profile.needleComfort === opt.id}
+                    onClick={() => {
+                      setProfile((p) => ({ ...p, needleComfort: opt.id }));
+                      setTimeout(() => goNextFrom('needles'), 180);
+                    }}
+                  />
+                ))}
+              </div>
+            </WizardShell>
+          )}
+
+          {step === 'restrictions' && (
+            <WizardShell
+              title="Pick anything that’s off-limits."
+              step={stepIndex}
+              total={flow.length}
+              onBack={() => goBackFrom('restrictions')}
+              onNext={() => goNextFrom('restrictions')}
+              nextDisabled={!profile.nothingOffLimits && profile.restrictions.length === 0}
+            >
+              <label className="mb-3 flex items-center justify-between rounded-2xl border border-miyeon-neutral bg-white px-4 py-3">
+                <span className="text-sm font-semibold text-miyeon-main">Nothing is off limits</span>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={profile.nothingOffLimits}
+                  onClick={() =>
+                    setProfile((p) => ({
+                      ...p,
+                      nothingOffLimits: !p.nothingOffLimits,
+                      restrictions: !p.nothingOffLimits ? [] : p.restrictions,
+                    }))
+                  }
+                  className={`relative h-6 w-11 rounded-full transition-colors ${
+                    profile.nothingOffLimits ? 'bg-miyeon-sub1' : 'bg-miyeon-neutral'
+                  }`}
+                >
+                  <span
+                    className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                      profile.nothingOffLimits ? 'left-5' : 'left-0.5'
                     }`}
-                  >
-                    {opt}
-                  </motion.button>
+                  />
+                </button>
+              </label>
+              <div className="space-y-2.5">
+                {restrictionOptions.map((opt) => (
+                  <OptionCard
+                    key={opt.id}
+                    label={opt.label}
+                    selected={profile.restrictions.includes(opt.id)}
+                    disabled={profile.nothingOffLimits}
+                    onClick={() => toggleRestriction(opt.id)}
+                  />
                 ))}
               </div>
-            </QuizShell>
-          </StepMotion>
-        )}
+            </WizardShell>
+          )}
 
-        {step === 'vibe' && answers.category && (
-          <StepMotion stepKey="vibe">
-            <QuizShell
-              title="Which feels more like you?"
-              subtitle="Choose one from each pair."
-              onBack={() => setStep('what')}
-              onNext={() => setStep('constraints')}
-              nextDisabled={answers.vibes.filter(Boolean).length < vibePairs[answers.category].length}
+          {step === 'budget' && (
+            <WizardShell
+              title="How much do you want to spend on beauty?"
+              subtitle="This is your beauty budget, not the whole trip."
+              step={stepIndex}
+              total={flow.length}
+              onBack={() => goBackFrom('budget')}
             >
-              <div className="space-y-5">
-                {vibePairs[answers.category].map((pair, i) => (
-                  <PairChoice key={i} pair={pair} value={answers.vibes[i]} onChange={(v) => setVibe(i, v)} />
+              <div className="space-y-2.5">
+                {budgetOptions.map((opt) => (
+                  <OptionCard
+                    key={opt.id}
+                    label={opt.label}
+                    selected={profile.budget === opt.id}
+                    onClick={() => {
+                      setProfile((p) => ({ ...p, budget: opt.id }));
+                      setTimeout(() => goNextFrom('budget'), 180);
+                    }}
+                  />
                 ))}
               </div>
-            </QuizShell>
-          </StepMotion>
-        )}
+            </WizardShell>
+          )}
 
-        {step === 'constraints' && (
-          <StepMotion stepKey="constraints">
-            <QuizShell
-              title="The practical bit."
-              subtitle="Last one. Promise."
-              onBack={() => setStep('vibe')}
-              onNext={handlePick}
-              nextLabel="PICK"
-              nextDisabled={!answers.tripLength || !answers.downtime || !answers.budget}
+          {step === 'time' && (
+            <WizardShell
+              title="How much time do you want to spend on beauty?"
+              step={stepIndex}
+              total={flow.length}
+              onBack={() => goBackFrom('time')}
             >
-              <div className="space-y-5">
-                <ConstraintGroup label="🗓 How long are you in Korea?">
-                  {tripLengthOptions.map((opt) => (
-                    <ChoiceChip
-                      key={opt.id}
-                      active={answers.tripLength === opt.id}
-                      label={opt.label}
-                      onClick={() => setAnswers((p) => ({ ...p, tripLength: opt.id }))}
-                    />
-                  ))}
-                </ConstraintGroup>
-                <ConstraintGroup label="🕐 How much downtime can you afford?">
-                  {downtimeOptions.map((opt) => (
-                    <ChoiceChip
-                      key={opt.id}
-                      active={answers.downtime === opt.id}
-                      label={opt.label}
-                      onClick={() => setAnswers((p) => ({ ...p, downtime: opt.id }))}
-                    />
-                  ))}
-                </ConstraintGroup>
-                <ConstraintGroup label="💰 Budget per treatment">
-                  {budgetOptions.map((opt) => (
-                    <ChoiceChip
-                      key={opt.id}
-                      active={answers.budget === opt.id}
-                      label={opt.label}
-                      onClick={() => setAnswers((p) => ({ ...p, budget: opt.id }))}
-                    />
-                  ))}
-                </ConstraintGroup>
+              <div className="space-y-2.5">
+                {beautyTimeOptions.map((opt) => (
+                  <OptionCard
+                    key={opt.id}
+                    label={opt.label}
+                    selected={profile.beautyTime === opt.id}
+                    onClick={() => {
+                      setProfile((p) => ({ ...p, beautyTime: opt.id }));
+                      setTimeout(() => goNextFrom('time'), 180);
+                    }}
+                  />
+                ))}
               </div>
-            </QuizShell>
-          </StepMotion>
-        )}
+            </WizardShell>
+          )}
 
-        {step === 'transition' && <AITransition key="transition" onDone={handleTransitionDone} />}
-
-        {step === 'results' && (
-          <StepMotion stepKey="results" className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="font-display text-2xl text-miyeon-main">Miyeon's Picks</h2>
-                <p className="text-xs text-miyeon-main/60">Based on your goals, preferences & trip.</p>
+          {step === 'days' && (
+            <WizardShell
+              title="How many days in Seoul should we plan around?"
+              subtitle="We use this to split neighborhoods across days."
+              step={stepIndex}
+              total={flow.length}
+              onBack={() => goBackFrom('days')}
+            >
+              <div className="space-y-2.5">
+                {tripDaysOptions.map((opt) => (
+                  <OptionCard
+                    key={opt.id}
+                    label={opt.label}
+                    selected={profile.tripDays === opt.id}
+                    onClick={() => {
+                      setProfile((p) => ({ ...p, tripDays: opt.id }));
+                      setTimeout(() => goNextFrom('days'), 180);
+                    }}
+                  />
+                ))}
               </div>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={restart}
-                className="text-xs font-semibold text-miyeon-main/60 hover:text-miyeon-sub1"
-              >
-                Start over
-              </motion.button>
-            </div>
-            {results.length === 0 ? (
-              <p className="text-sm text-miyeon-main/60">
-                No matches yet — try widening your constraints and pick again.
-              </p>
-            ) : (
-              <>
-                {sponsoredPlace && (
-                  <SponsoredPlaceCard place={sponsoredPlace} onView={(p) => navigate(`/place/${p.id}`)} />
-                )}
-                <div className="space-y-4">
-                  {results.map((r, i) => (
-                    <ResultCard
-                      key={r.treatment.id}
-                      result={r}
-                      rank={(i + 1) as 1 | 2 | 3}
-                      quote={i === 0 ? buildPickQuote(answers) : undefined}
-                    />
-                  ))}
-                </div>
-                <ProductCommerce concerns={answers.concerns} />
-                <EmailCaptureCard answers={answers} topTreatmentId={results[0]?.treatment.id ?? null} />
-              </>
-            )}
-          </StepMotion>
-        )}
+            </WizardShell>
+          )}
+
+          {step === 'downtime' && (
+            <WizardShell
+              title="How much recovery time are you comfortable with?"
+              step={stepIndex}
+              total={flow.length}
+              onBack={() => goBackFrom('downtime')}
+            >
+              <div className="space-y-2.5">
+                {downtimeOptions.map((opt) => (
+                  <OptionCard
+                    key={opt.id}
+                    label={opt.label}
+                    selected={profile.downtime === opt.id}
+                    onClick={() => {
+                      setProfile((p) => ({ ...p, downtime: opt.id }));
+                      setTimeout(() => goNextFrom('downtime'), 180);
+                    }}
+                  />
+                ))}
+              </div>
+            </WizardShell>
+          )}
+
+          {step === 'profile' && (
+            <WizardShell
+              title="Got it. Here’s what we’re planning around."
+              step={stepIndex}
+              total={flow.length}
+              onBack={() => goBackFrom('profile')}
+              onNext={handleBuild}
+              nextLabel="Build my itinerary →"
+            >
+              <div className="space-y-5 rounded-3xl border border-miyeon-neutral bg-white p-5 text-sm">
+                <ProfileRow label="YOUR GOAL" value={profile.purpose ? purposeLabel[profile.purpose] : '—'} />
+                <ProfileRow
+                  label="FOCUS"
+                  value={
+                    profile.goals.length
+                      ? profile.goals.map((g) => goalLabel[g]).join(' · ')
+                      : '—'
+                  }
+                />
+                <ProfileRow
+                  label="YOU PREFER"
+                  value={
+                    profile.nothingOffLimits
+                      ? 'Nothing is off limits'
+                      : profile.restrictions.map((r) => restrictionLabel[r]).join('\n') || '—'
+                  }
+                />
+                <ProfileRow
+                  label="BEAUTY BUDGET"
+                  value={budgetOptions.find((b) => b.id === profile.budget)?.label ?? '—'}
+                />
+                <ProfileRow
+                  label="TIME"
+                  value={beautyTimeOptions.find((b) => b.id === profile.beautyTime)?.label ?? '—'}
+                />
+              </div>
+            </WizardShell>
+          )}
+        </motion.div>
       </AnimatePresence>
     </div>
   );
 }
 
-const BackButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
-  <motion.button
-    whileHover={{ x: -2 }}
-    whileTap={{ scale: 0.95 }}
-    onClick={onClick}
-    className="flex items-center gap-1 text-xs font-semibold text-miyeon-main/60"
-  >
-    <ChevronLeft className="h-3.5 w-3.5" /> Back
-  </motion.button>
-);
-
-const QuizShell: React.FC<{
-  title: string;
-  subtitle: string;
-  onBack: () => void;
-  onNext: () => void;
-  nextLabel?: string;
-  nextDisabled?: boolean;
-  children: React.ReactNode;
-}> = ({ title, subtitle, onBack, onNext, nextLabel = 'Next', nextDisabled, children }) => (
-  <div className="space-y-6">
-    <BackButton onClick={onBack} />
-    <div>
-      <h2 className="font-display text-2xl text-miyeon-main">{title}</h2>
-      <p className="mt-1 text-xs text-miyeon-main/60">{subtitle}</p>
-    </div>
-    {children}
-    <motion.button
-      whileHover={nextDisabled ? undefined : { scale: 1.02 }}
-      whileTap={nextDisabled ? undefined : { scale: 0.97 }}
-      onClick={onNext}
-      disabled={nextDisabled}
-      className="w-full rounded-full bg-miyeon-sub1 py-3.5 text-sm font-bold text-white shadow-sm shadow-miyeon-sub1/30 disabled:opacity-30"
-    >
-      {nextLabel}
-    </motion.button>
-  </div>
-);
-
-const ConstraintGroup: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
+const ProfileRow: React.FC<{ label: string; value: string }> = ({ label, value }) => (
   <div>
-    <p className="mb-2 text-xs font-semibold text-miyeon-main/70">{label}</p>
-    <div className="flex flex-wrap gap-2">{children}</div>
+    <p className="text-[11px] font-bold uppercase tracking-wider text-miyeon-main/45">{label}</p>
+    <p className="mt-1 whitespace-pre-line font-medium text-miyeon-main">{value}</p>
   </div>
-);
-
-const ChoiceChip: React.FC<{ active: boolean; label: string; onClick: () => void }> = ({ active, label, onClick }) => (
-  <motion.button
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    onClick={onClick}
-    className={`rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
-      active ? 'border-miyeon-sub1 bg-miyeon-sub1 text-white' : 'border-miyeon-neutral bg-white text-miyeon-main hover:border-miyeon-sub1/50'
-    }`}
-  >
-    {label}
-  </motion.button>
 );

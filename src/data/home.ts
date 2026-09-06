@@ -29,9 +29,9 @@ export interface Testimonial {
 export const browseItems: BrowseItem[] = [
   {
     id: 'treatments',
-    caption: 'Skin · Face · Lifting',
-    title: 'Treatments',
-    description: 'Not sure what you need?\nAnswer 3 questions.',
+    caption: 'Skin · Hair · Makeup',
+    title: 'Plan a trip',
+    description: 'Tell us what you want.\nGet a day-by-day itinerary.',
     highlighted: true,
   },
   {

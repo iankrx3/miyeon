@@ -9,7 +9,7 @@ interface BottomNavProps {
 }
 
 const tabs = [
-  { to: '/', label: 'Explore', icon: Compass },
+  { to: '/', label: 'Plan', icon: Compass },
   { to: '/map', label: 'Map', icon: MapPin },
   { to: '/community', label: 'Community', icon: Users },
 ];

@@ -9,10 +9,11 @@ import { searchPlacesByCategory } from '../../services/discovery';
 import {
   fetchCuratedMapData,
   fetchCuratorById,
-  fetchCuratorLists,
-  fetchListById,
-  fetchListSpots,
+  fetchCuratorItineraries,
 } from '../../services/curator';
+import { listAllCuratorItineraries } from '../../lib/localItineraryStore';
+import { useSavedItineraries } from '../../hooks/useSavedItineraries';
+import type { Itinerary } from '../../types';
 
 // Adapted from extract/src/components/MapView.tsx (Sniffood map + login kit).
 // Same Leaflet/MapTiler setup and custom controls; filter modes and pin data
@@ -34,6 +35,9 @@ const CATEGORY_FILTERS: { id: 'all' | BeautyCategory; label: string }[] = [
   { id: 'all', label: 'All' },
   { id: 'skin', label: '✨ Skin' },
   { id: 'face', label: '💎 Face' },
+  { id: 'hair', label: '✂️ Hair' },
+  { id: 'nails', label: '💅 Nails' },
+  { id: 'makeup', label: '💄 Makeup' },
 ];
 
 const PICK_FILTERS: { id: PickFilter; label: string }[] = [
@@ -90,8 +94,10 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
   const [locationError, setLocationError] = useState<string | null>(null);
 
   const curatorIdParam = searchParams.get('curator');
-  const listIdParam = searchParams.get('list');
-  const curatorFilterActive = Boolean(curatorIdParam || listIdParam);
+  const itineraryIdParam = searchParams.get('itinerary') || searchParams.get('list');
+  const curatorFilterActive = Boolean(curatorIdParam || itineraryIdParam);
+  const { saved } = useSavedItineraries(session.user?.id);
+  const [itineraryPicker, setItineraryPicker] = useState<Itinerary[] | null>(null);
   const [curatorFilterPlaces, setCuratorFilterPlaces] = useState<Place[]>([]);
   const [curatorFilterCreator, setCuratorFilterCreator] = useState<Creator | null>(null);
   const [curatorFilterListTitle, setCuratorFilterListTitle] = useState<string | null>(null);
@@ -109,43 +115,45 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
 
     let cancelled = false;
     (async () => {
-      if (listIdParam) {
-        const [list, spots] = await Promise.all([fetchListById(listIdParam), fetchListSpots(listIdParam)]);
-        if (cancelled) return;
-        const listPlaces = spots.map((s) => s.place);
-        setCuratorFilterListTitle(list?.title ?? 'List');
-        setCuratorFilterPlaces(listPlaces);
-        if (mapInstanceRef.current) fitMapToPlaces(mapInstanceRef.current, listPlaces);
-        const creator = list ? await fetchCuratorById(list.curator_id) : null;
-        if (!cancelled) setCuratorFilterCreator(creator);
+      if (itineraryIdParam) {
+        navigate(`/itinerary/${itineraryIdParam}`);
         return;
       }
 
       if (curatorIdParam) {
-        const [creator, lists] = await Promise.all([fetchCuratorById(curatorIdParam), fetchCuratorLists(curatorIdParam)]);
+        const [creator, itineraries] = await Promise.all([
+          fetchCuratorById(curatorIdParam),
+          fetchCuratorItineraries(curatorIdParam),
+        ]);
         if (cancelled) return;
         setCuratorFilterCreator(creator);
-        setCuratorFilterListTitle(null);
-        const spotLists = await Promise.all(lists.map((l) => fetchListSpots(l.id)));
-        if (cancelled) return;
+        if (itineraries.length === 1) {
+          navigate(`/itinerary/${itineraries[0].id}`);
+          return;
+        }
+        setItineraryPicker(itineraries.length ? itineraries : listAllCuratorItineraries().filter((i) => i.curatorId === curatorIdParam));
+        const placesFromItineraries: Place[] = [];
         const seen = new Set<string>();
-        const merged: Place[] = [];
-        for (const spots of spotLists) {
-          for (const spot of spots) {
-            if (seen.has(spot.place.id)) continue;
-            seen.add(spot.place.id);
-            merged.push(spot.place);
+        for (const itn of itineraries) {
+          for (const day of itn.days) {
+            for (const block of day.blocks) {
+              if (!block.spotId || seen.has(block.spotId)) continue;
+              seen.add(block.spotId);
+              const match = places.find((p) => p.id === block.spotId);
+              if (match) placesFromItineraries.push(match);
+            }
           }
         }
-        setCuratorFilterPlaces(merged);
-        if (mapInstanceRef.current) fitMapToPlaces(mapInstanceRef.current, merged);
+        setCuratorFilterPlaces(placesFromItineraries);
+        setCuratorFilterListTitle(creator ? `${creator.display_name}'s trips` : 'Itineraries');
+        if (mapInstanceRef.current) fitMapToPlaces(mapInstanceRef.current, placesFromItineraries);
       }
     })();
 
     return () => {
       cancelled = true;
     };
-  }, [curatorFilterActive, curatorIdParam, listIdParam]);
+  }, [curatorFilterActive, curatorIdParam, itineraryIdParam, navigate, places]);
 
   useEffect(() => {
     setLoading(true);
@@ -567,7 +575,12 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
                   <button
                     key={pick.id}
                     type="button"
-                    onClick={() => setSearchParams({ curator: pick.creator.id })}
+                    onClick={() => {
+                      const theirs = listAllCuratorItineraries().filter((i) => i.curatorId === pick.creator.id);
+                      if (theirs.length === 1) navigate(`/itinerary/${theirs[0].id}`);
+                      else if (theirs.length > 1) setItineraryPicker(theirs);
+                      else setSearchParams({ curator: pick.creator.id });
+                    }}
                     className="group flex shrink-0 flex-col items-center gap-1.5"
                   >
                     <img
@@ -585,7 +598,48 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
             )}
           </div>
         )}
+
+        {saved.length > 0 && !curatorFilterActive && !(isSearchOpen && searchQuery) && (
+          <div className="pointer-events-auto rounded-2xl bg-white/90 shadow-lg backdrop-blur-md border border-white/60">
+            <p className="px-3.5 pt-2.5 text-[11px] font-bold uppercase tracking-wider text-miyeon-main/60">Saved trips</p>
+            <div className="flex gap-2 overflow-x-auto no-scrollbar px-3.5 py-2.5">
+              {saved.map((item) => (
+                <button
+                  key={item.savedId}
+                  type="button"
+                  onClick={() => navigate(`/itinerary/${item.snapshot.id}`)}
+                  className="shrink-0 rounded-full border border-miyeon-neutral bg-white px-3 py-1.5 text-[11px] font-semibold text-miyeon-main"
+                >
+                  {item.snapshot.title}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
+
+      {itineraryPicker && itineraryPicker.length > 0 && (
+        <div className="absolute inset-0 z-30 flex items-end justify-center bg-black/30 sm:items-center" onClick={() => setItineraryPicker(null)}>
+          <div className="w-full max-w-sm rounded-t-3xl bg-white p-4 sm:rounded-3xl" onClick={(e) => e.stopPropagation()}>
+            <p className="text-sm font-semibold text-miyeon-main">Choose an itinerary</p>
+            <div className="mt-3 space-y-1">
+              {itineraryPicker.map((itn) => (
+                <button
+                  key={itn.id}
+                  type="button"
+                  className="w-full rounded-xl px-3 py-2.5 text-left text-sm text-miyeon-main hover:bg-miyeon-neutral"
+                  onClick={() => navigate(`/itinerary/${itn.id}`)}
+                >
+                  {itn.title}
+                  <span className="mt-0.5 block text-[11px] text-miyeon-main/50">
+                    {itn.days.length} days · {itn.description ?? ''}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

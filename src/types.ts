@@ -17,6 +17,165 @@ export interface QuizAnswers {
   tripLength: TripLength | null;
 }
 
+export type SpotArea = 'Gangnam' | 'Seongsu' | 'Hongdae' | 'Myeongdong';
+
+export type SpotParentCategory = 'hair-salon' | 'k-beauty' | 'dermatology';
+
+export type SpotSubcategory =
+  | 'color-perm'
+  | 'head-spa'
+  | 'hair-makeup'
+  | 'hair-extensions'
+  | 'color-analysis'
+  | 'beauty-makeup'
+  | 'nail-art'
+  | 'permanent-makeup'
+  | 'waxing'
+  | 'glasses'
+  | 'id-portrait'
+  | 'aesthetics'
+  | 'skin-care';
+
+export type SpotDowntime = 'none' | 'few-hours' | '1-day' | '2-3-days';
+
+export type TripPurpose =
+  | 'new-me'
+  | 'event'
+  | 'korean-experience'
+  | 'what-suits-me'
+  | 'feel-good'
+  | 'dont-know';
+
+export type BeautyGoal =
+  | 'skin'
+  | 'face'
+  | 'hair'
+  | 'makeup-style'
+  | 'details'
+  | 'overall'
+  | 'dont-know';
+
+export type Restriction =
+  | 'no-needles'
+  | 'no-trip-ruin'
+  | 'need-communication'
+  | 'no-surprise-costs'
+  | 'no-factory'
+  | 'no-upsell';
+
+export type SkinExperience = 'relaxing' | 'professional' | 'medical' | 'unsure';
+export type NeedleComfort = 'yes' | 'no' | 'not-sure';
+export type BeautyBudget = 'under-100' | '100-300' | '300-500' | '500-1000' | '1000-plus';
+export type BeautyTime = 'couple-hours' | 'half-day' | 'full-day' | 'no-mind';
+export type RecoveryComfort = 'none' | 'few-hours' | '1-day' | '2-3-days' | 'ok';
+export type TripDays = '1' | '2' | '3' | '4-plus';
+
+export interface BeautyTripProfile {
+  purpose: TripPurpose | null;
+  goals: BeautyGoal[];
+  skinExperience: SkinExperience | null;
+  needleComfort: NeedleComfort | null;
+  restrictions: Restriction[];
+  nothingOffLimits: boolean;
+  budget: BeautyBudget | null;
+  beautyTime: BeautyTime | null;
+  tripDays: TripDays | null;
+  downtime: RecoveryComfort | null;
+}
+
+export interface Spot {
+  id: string;
+  name: string;
+  parentCategory: SpotParentCategory;
+  subcategory: SpotSubcategory;
+  description: string;
+  area: SpotArea;
+  address: string;
+  latitude: number;
+  longitude: number;
+  priceMin: number;
+  priceMax: number;
+  durationMin: number;
+  openingHours: string;
+  bookingRequired: boolean;
+  bookingUrl?: string;
+  languages: string[];
+  downtime: SpotDowntime;
+  procedureIntensity: 'low' | 'medium' | 'high';
+  needleRequired: boolean;
+  touristFriendly: boolean;
+  factoryLike: boolean;
+  upsellingRisk: boolean;
+  priceTransparency: boolean;
+  images: string[];
+  rating: number;
+  reviewCount: number;
+  experienceStyle: 'relaxing' | 'professional' | 'medical' | 'korean';
+  googlePlaceId?: string;
+}
+
+export type TravelMode = 'walk' | 'subway' | 'taxi';
+
+export interface ItineraryBlock {
+  id: string;
+  kind: 'spot' | 'travel' | 'break';
+  spotId?: string;
+  startTime?: string;
+  durationMin?: number;
+  priceUsd?: number;
+  travel?: { mode: TravelMode; minutes: number };
+  reason?: string;
+  note?: string;
+  label?: string;
+}
+
+export interface ItineraryDay {
+  dayIndex: number;
+  areaLabel: string;
+  theme?: string;
+  blocks: ItineraryBlock[];
+}
+
+export interface Itinerary {
+  id: string;
+  title: string;
+  source: 'miyeon' | 'curator';
+  curatorId?: string;
+  profileSnapshot?: BeautyTripProfile;
+  days: ItineraryDay[];
+  estimatedSpendUsd: number;
+  createdAt: string;
+  updatedAt: string;
+  description?: string;
+  coverPhotoUrl?: string;
+}
+
+export interface SavedItinerary {
+  savedId: string;
+  itineraryId: string;
+  source: 'miyeon' | 'curator';
+  snapshot: Itinerary;
+  savedAt: string;
+}
+
+export type ReplacePreference =
+  | 'cheaper'
+  | 'closer'
+  | 'relaxing'
+  | 'korean'
+  | 'higher-rated'
+  | 'different-category';
+
+export type RegeneratePreference =
+  | 'cheaper'
+  | 'less-travel'
+  | 'more-experiences'
+  | 'more-korean'
+  | 'more-relaxing'
+  | 'more-packed'
+  | 'start-later'
+  | 'finish-earlier';
+
 export interface Treatment {
   id: string;
   name: string;

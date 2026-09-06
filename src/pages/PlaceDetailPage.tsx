@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Bookmark, ChevronLeft, Navigation, Star } from 'lucide-react';
 import type { CommunityPost, Place, Treatment } from '../types';
@@ -10,9 +10,12 @@ import { MedicalTourismSection, NearbyWellnessSection } from '../components/badg
 import { GroundedInfo } from '../components/place/GroundedInfo';
 import { getDirectionsLinks } from '../lib/directions';
 import { withCreatripAffiliate, CREATRIP_BASE_URL, CREATRIP_DISCLOSURE } from '../lib/creatrip';
+import { getSpot, SUBCATEGORY_LABEL } from '../data/spots';
 
 export default function PlaceDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
+  const fromItinerary = (location.state as { fromItinerary?: string } | null)?.fromItinerary;
   const [place, setPlace] = useState<Place | null>(null);
   const [treatments, setTreatments] = useState<Treatment[]>([]);
   const [reviews, setReviews] = useState<CommunityPost[]>([]);
@@ -46,8 +49,11 @@ export default function PlaceDetailPage() {
       />
 
       <div className="space-y-6 px-4 py-6">
-        <Link to="/map" className="flex items-center gap-1 text-xs font-semibold text-miyeon-main/60">
-          <ChevronLeft className="h-3.5 w-3.5" /> Back to map
+        <Link
+          to={fromItinerary ? `/itinerary/${fromItinerary}` : '/map'}
+          className="flex items-center gap-1 text-xs font-semibold text-miyeon-main/60"
+        >
+          <ChevronLeft className="h-3.5 w-3.5" /> {fromItinerary ? 'Back to itinerary' : 'Back to map'}
         </Link>
 
         <div className="flex items-start justify-between gap-3">
@@ -80,6 +86,24 @@ export default function PlaceDetailPage() {
           <span>·</span>
           <span>{place.language.join(', ')}</span>
         </div>
+
+        {(() => {
+          const spot = getSpot(place.id);
+          if (!spot) return null;
+          return (
+            <section className="rounded-2xl border border-miyeon-neutral bg-miyeon-neutral/40 p-4 text-sm text-miyeon-main">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-miyeon-sub1">
+                {SUBCATEGORY_LABEL[spot.subcategory]}
+              </p>
+              <p className="mt-2">{spot.description}</p>
+              <p className="mt-2 text-xs text-miyeon-main/70">
+                ${spot.priceMin}–{spot.priceMax} · {spot.durationMin} min ·{' '}
+                {spot.downtime === 'none' ? 'No downtime' : spot.downtime.replace('-', ' ')}
+                {spot.needleRequired ? ' · Needles' : ''} · {spot.languages.join(' · ')}
+              </p>
+            </section>
+          );
+        })()}
 
         <div className="flex flex-wrap gap-2">
           {getDirectionsLinks(place).map((link) => (

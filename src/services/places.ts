@@ -12,6 +12,7 @@ import {
   catalogTreatment,
   discoverAll,
 } from './discovery';
+import { getSpot, spotToPlace } from '../data/spots';
 import { getApiHealth } from './googlePlaces';
 
 async function liveCatalog() {
@@ -53,6 +54,8 @@ export async function fetchPlaces(): Promise<Place[]> {
 }
 
 export async function fetchPlaceById(id: string): Promise<Place | null> {
+  const fromCatalog = getSpot(id);
+  if (fromCatalog) return spotToPlace(fromCatalog);
   const remembered = catalogPlace(id);
   if (remembered) return remembered;
   const mock = mockPlaces.find((place) => place.id === id);

@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import { ChevronLeft, Globe, Instagram, ListPlus, MapPin, Music2, Pencil } from 'lucide-react';
-import type { Creator, CreatorPick, CuratorList, Place, UserSession } from '../types';
+import type { Creator, CreatorPick, Itinerary, Place, UserSession } from '../types';
 import { fetchCreatorPicksByCreatorId } from '../services/places';
-import { createList, fetchCuratorById, fetchCuratorLists } from '../services/curator';
+import { createCuratorItinerary, fetchCuratorById, fetchCuratorItineraries } from '../services/curator';
+import { firstSpotImage } from '../lib/localItineraryStore';
 import { PlaceCard } from '../components/place/PlaceCard';
 
 interface CuratorProfilePageProps {
@@ -15,7 +16,7 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [creator, setCreator] = useState<Creator | null>(null);
-  const [lists, setLists] = useState<CuratorList[]>([]);
+  const [lists, setLists] = useState<Itinerary[]>([]);
   const [picks, setPicks] = useState<CreatorPick[]>([]);
   const [loading, setLoading] = useState(true);
   const [isCreatingList, setIsCreatingList] = useState(false);
@@ -28,7 +29,7 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
   useEffect(() => {
     if (!id) return;
     setLoading(true);
-    Promise.all([fetchCuratorById(id), fetchCuratorLists(id), fetchCreatorPicksByCreatorId(id)])
+    Promise.all([fetchCuratorById(id), fetchCuratorItineraries(id), fetchCreatorPicksByCreatorId(id)])
       .then(([c, l, p]) => {
         setCreator(c);
         setLists(l);
@@ -39,17 +40,20 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
 
   const viewPlace = (place: Place) => navigate(`/place/${place.id}`);
 
-  const totalSpots = lists.reduce((sum, l) => sum + l.spot_count, 0);
+  const totalSpots = lists.reduce(
+    (sum, l) => sum + l.days.reduce((c, d) => c + d.blocks.filter((b) => b.kind === 'spot').length, 0),
+    0
+  );
 
   const handleCreateList = async () => {
     if (!newListTitle.trim() || !id || isSubmittingList) return;
     setIsSubmittingList(true);
     setListError(null);
     try {
-      const list = await createList(session, { title: newListTitle.trim() });
+      const list = await createCuratorItinerary(session, newListTitle.trim());
       setNewListTitle('');
       setIsCreatingList(false);
-      navigate(`/curator/${id}/lists/${list.id}`);
+      navigate(`/curator/${id}/itineraries/${list.id}`);
     } catch (err) {
       setListError(err instanceof Error ? err.message : 'Could not create the list. Try again.');
     } finally {
@@ -84,7 +88,7 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
         {creator.bio && <p className="mt-3 max-w-md text-sm text-miyeon-main/80">{creator.bio}</p>}
 
         <div className="mt-3 flex items-center gap-2 text-xs font-semibold text-miyeon-main/60">
-          <MapPin className="h-3.5 w-3.5" /> {totalSpots} spot{totalSpots === 1 ? '' : 's'} curated
+          <MapPin className="h-3.5 w-3.5" /> {lists.length} itinerar{lists.length === 1 ? 'y' : 'ies'} · {totalSpots} spot{totalSpots === 1 ? '' : 's'}
         </div>
 
         {(creator.instagram_url || creator.tiktok_url || creator.website_url) && (
@@ -149,7 +153,7 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
                 }}
                 className="flex items-center gap-1.5 rounded-full bg-miyeon-sub1 px-3.5 py-1.5 text-xs font-bold text-white shadow-sm shadow-miyeon-sub1/30"
               >
-                <ListPlus className="h-3.5 w-3.5" /> New list
+                <ListPlus className="h-3.5 w-3.5" /> New itinerary
               </motion.button>
             </>
           )}
@@ -172,7 +176,7 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') handleCreateList();
                   }}
-                  placeholder="List name…"
+                  placeholder="Itinerary name…"
                   className="w-full rounded-full border border-miyeon-neutral bg-white px-3.5 py-2 text-sm text-miyeon-main placeholder:text-miyeon-main/60 focus:outline-none"
                 />
                 <motion.button
@@ -192,12 +196,15 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
       </div>
 
       <div className="mt-8">
-        <h2 className="text-sm font-semibold text-miyeon-main">Lists</h2>
+        <h2 className="text-sm font-semibold text-miyeon-main">Itineraries</h2>
         {lists.length === 0 ? (
-          <p className="mt-2 text-sm text-miyeon-main/60">No lists yet.</p>
+          <p className="mt-2 text-sm text-miyeon-main/60">No itineraries yet.</p>
         ) : (
           <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {lists.map((list, i) => (
+            {lists.map((list, i) => {
+              const cover = firstSpotImage(list);
+              const spots = list.days.reduce((c, d) => c + d.blocks.filter((b) => b.kind === 'spot').length, 0);
+              return (
               <motion.div
                 key={list.id}
                 initial={{ opacity: 0, y: 14 }}
@@ -206,11 +213,11 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
                 whileHover={{ y: -3 }}
               >
                 <Link
-                  to={`/curator/${creator.id}/lists/${list.id}`}
+                  to={isOwner ? `/curator/${creator.id}/itineraries/${list.id}` : `/itinerary/${list.id}`}
                   className="block overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm transition-shadow hover:shadow-lg hover:shadow-miyeon-main/10"
                 >
-                  {list.cover_photo_url ? (
-                    <img src={list.cover_photo_url} alt={list.title} className="h-24 w-full object-cover" />
+                  {cover ? (
+                    <img src={cover} alt={list.title} className="h-24 w-full object-cover" />
                   ) : (
                     <div className="flex h-24 w-full items-center justify-center bg-miyeon-neutral/50 text-miyeon-main/50">
                       <MapPin className="h-6 w-6" />
@@ -219,12 +226,13 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
                   <div className="p-2.5">
                     <p className="truncate text-sm font-semibold text-miyeon-main">{list.title}</p>
                     <p className="text-[11px] text-miyeon-main/70">
-                      {list.spot_count} spot{list.spot_count === 1 ? '' : 's'}
+                      {list.days.length} day{list.days.length === 1 ? '' : 's'} · {spots} spot{spots === 1 ? '' : 's'}
                     </p>
                   </div>
                 </Link>
               </motion.div>
-            ))}
+            );
+            })}
           </div>
         )}
       </div>

@@ -10,7 +10,7 @@ interface NavHeaderProps {
 }
 
 const tabs = [
-  { to: '/', label: 'Explore' },
+  { to: '/', label: 'Plan' },
   { to: '/map', label: 'Map' },
   { to: '/community', label: 'Community' },
 ];
