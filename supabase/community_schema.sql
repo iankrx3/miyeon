@@ -8,9 +8,9 @@ create table if not exists community_posts (
   author_id uuid not null references auth.users(id) on delete cascade,
   author_name text not null,
   author_avatar_url text,
-  -- No FK to `places`: real place ids are dynamic (Google/KTO live search
-  -- results), and `places` is only an ad hoc, never-synced cache — see
-  -- supabase/places_schema.sql.
+  -- No FK: real place ids are dynamic (Google/KTO live search results). There
+  -- is no `places` table anymore — it was an ad hoc, never-synced cache and
+  -- has been dropped.
   place_id text,
   place_name text,
   treatment_name text,

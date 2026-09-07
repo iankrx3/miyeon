@@ -39,18 +39,7 @@ async function liveTreatments(): Promise<Treatment[] | null> {
 }
 
 export async function fetchPlaces(): Promise<Place[]> {
-  if (!supabase) {
-    return (await livePlaces()) ?? mockPlaces;
-  }
-  try {
-    const { data, error } = await supabase.from('places').select('*');
-    if (error) throw error;
-    if (!data || data.length === 0) return (await livePlaces()) ?? mockPlaces;
-    return data.map(mapPlace);
-  } catch (err) {
-    console.warn('fetchPlaces: Supabase query failed, falling back to live/mock data', err);
-    return (await livePlaces()) ?? mockPlaces;
-  }
+  return (await livePlaces()) ?? mockPlaces;
 }
 
 export async function fetchPlaceById(id: string): Promise<Place | null> {
@@ -65,18 +54,7 @@ export async function fetchPlaceById(id: string): Promise<Place | null> {
 }
 
 export async function fetchTreatments(): Promise<Treatment[]> {
-  if (!supabase) {
-    return (await liveTreatments()) ?? mockTreatments;
-  }
-  try {
-    const { data, error } = await supabase.from('treatments').select('*');
-    if (error) throw error;
-    if (!data || data.length === 0) return (await liveTreatments()) ?? mockTreatments;
-    return data as Treatment[];
-  } catch (err) {
-    console.warn('fetchTreatments: Supabase query failed, falling back to live/mock data', err);
-    return (await liveTreatments()) ?? mockTreatments;
-  }
+  return (await liveTreatments()) ?? mockTreatments;
 }
 
 export async function fetchTreatmentById(id: string): Promise<Treatment | null> {

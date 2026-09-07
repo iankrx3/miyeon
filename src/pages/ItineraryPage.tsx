@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Bookmark, ChevronLeft, Sparkles } from 'lucide-react';
 import type { Itinerary, RegeneratePreference, ReplacePreference, Spot, UserSession } from '../types';
 import { regenerateOptions, replaceOptions } from '../data/quiz';
@@ -18,9 +18,10 @@ import {
 
 interface ItineraryPageProps {
   session: UserSession;
+  onSignIn: () => void;
 }
 
-export default function ItineraryPage({ session }: ItineraryPageProps) {
+export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps) {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [itinerary, setItinerary] = useState<Itinerary | null>(() => (id ? getStoredItinerary(id) : null));
@@ -53,10 +54,11 @@ export default function ItineraryPage({ session }: ItineraryPageProps) {
   }
 
   const experiences = itinerarySpotCount(itinerary);
-  const canEdit =
+  const canEdit = Boolean(
     itinerary.source === 'miyeon' ||
-    itinerary.id.startsWith('snap_') ||
-    session.creator?.id === itinerary.curatorId;
+      itinerary.id.startsWith('snap_') ||
+      (session.creator?.id && session.creator.id === itinerary.curatorId)
+  );
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col sm:flex-row">
@@ -70,9 +72,13 @@ export default function ItineraryPage({ session }: ItineraryPageProps) {
       <section className="flex max-h-[58vh] flex-col overflow-hidden border-t border-miyeon-neutral bg-white sm:max-h-none sm:w-[26rem] sm:border-l sm:border-t-0">
         <header className="shrink-0 space-y-3 px-4 pb-3 pt-4">
           <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-1 text-xs font-semibold text-miyeon-main/60">
-              <ChevronLeft className="h-3.5 w-3.5" /> Plan
-            </Link>
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-1 text-xs font-semibold text-miyeon-main/60"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" /> Back
+            </button>
             <div className="flex items-center gap-2">
               {itinerary.source === 'miyeon' && (
                 <button
@@ -85,7 +91,7 @@ export default function ItineraryPage({ session }: ItineraryPageProps) {
               )}
               <button
                 type="button"
-                onClick={() => toggleSave(itinerary)}
+                onClick={() => (session.isLoggedIn ? toggleSave(itinerary) : onSignIn())}
                 className={`flex items-center gap-1 rounded-full border px-3 py-1.5 text-[11px] font-bold ${
                   isSaved(itinerary.id)
                     ? 'border-miyeon-sub1 bg-miyeon-sub1 text-white'

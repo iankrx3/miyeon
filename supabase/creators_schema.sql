@@ -17,9 +17,9 @@ create table if not exists creators (
   created_at timestamptz not null default now()
 );
 
--- place_id intentionally has no FK to `places`: real place ids are dynamic
--- (Google/KTO live search results), and `places` is only an ad hoc, never-synced
--- cache — see supabase/places_schema.sql.
+-- place_id intentionally has no FK: real place ids are dynamic (Google/KTO live
+-- search results). There is no `places` table anymore — it was an ad hoc,
+-- never-synced cache and has been dropped.
 create table if not exists creator_picks (
   id uuid primary key default gen_random_uuid(),
   creator_id uuid not null references creators(id) on delete cascade,

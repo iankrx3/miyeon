@@ -91,12 +91,19 @@ export function removeItinerary(id: string) {
   );
 }
 
+// Excludes `snap_`-prefixed itineraries: those are personal saved snapshots
+// (see useSavedItineraries.saveItinerary) that clone a curator's source/curatorId
+// verbatim so the "Saved trips" bar can show where they came from. Without this
+// exclusion, saving a curator's itinerary would make it show up a second time
+// in every "this curator's itineraries" listing (map picks, curator profile).
 export function listCuratorItineraries(curatorId: string): Itinerary[] {
-  return listItineraries().filter((i) => i.source === 'curator' && i.curatorId === curatorId);
+  return listItineraries().filter(
+    (i) => i.source === 'curator' && i.curatorId === curatorId && !i.id.startsWith('snap_')
+  );
 }
 
 export function listAllCuratorItineraries(): Itinerary[] {
-  return listItineraries().filter((i) => i.source === 'curator');
+  return listItineraries().filter((i) => i.source === 'curator' && !i.id.startsWith('snap_'));
 }
 
 export function savedKeyFor(userId?: string): string {
