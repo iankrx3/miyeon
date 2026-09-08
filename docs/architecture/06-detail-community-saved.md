@@ -14,10 +14,12 @@
 
 **Creatrip 제휴 링크 검증** — `Place.bookingUrl`이 진짜 spot 페이지(`/en/spot/13165`)인지, 아직 안 채워진 홈 URL인지는 `lib/creatrip.ts#hasCreatripListing()`으로 판별한다. 실제 spot URL을 채우는 건 자동화하지 않는다: `scripts/resolve-creatrip-links.mjs`(`npm run resolve:creatrip`)가 `src/data/mock.ts`의 각 장소 이름+주소로 Gemini(Google Search grounding)에 물어 creatrip.com 페이지를 찾고, 모델 답변이 실제 grounding 출처에도 나오는 것만 "verified"로 `scripts/output/creatrip-links.json`에 남긴다 — mock.ts는 스크립트가 직접 고치지 않고, verified 결과만 사람이 검토해서 수동 반영한다.
 
-**Curator 프로필** (`pages/CuratorProfilePage.tsx`, `/curator/:id`) — `services/places.ts`의 `fetchCreatorById` / `fetchCreatorPicksByCreatorId`로 큐레이터 정보(아바타·bio·소셜 링크)와 그 큐레이터가 큐레이션한 장소 목록(`PlaceCard`)을 보여준다. Map 탭 "Curated by Creators" 스트립에서 진입.
+**Curator 프로필** (`pages/CuratorProfilePage.tsx`, `/curator/:id`) — 큐레이터 정보(아바타·bio·소셜 링크)와 그 큐레이터가 만든 **일정(Itinerary) 목록**을 보여준다(`services/curator.ts#fetchCuratorItineraries`). 예전에는 낱개 장소 픽 목록이었지만 지금 큐레이터의 1차 콘텐츠 단위는 일정이다 — 큐레이터 도구 전체는 [§11](11-curator-tools.md) 참고. Map 탭 "Curated by Creators" 스트립에서 진입.
 
-**Find My Match 결과의 광고 카드** (`ExplorePage.tsx`) — 매치 점수로 정해진 3개 결과(YOUR MATCH 등)의 순위는 절대 안 바꾸고, 같은 카테고리에서 `hasCreatripListing()`이 true면서 이미 매치된 3곳과 겹치지 않는 장소 중 rating이 가장 높은 곳을 별도의 `SponsoredPlaceCard`("광고 · 추천")로 결과 리스트 맨 위에 추가로 보여준다. 해당하는 장소가 없으면 아무것도 안 뜬다.
+> 이전 "Find My Match 결과의 광고 카드"(`ExplorePage.tsx`가 매치 3개 옆에 `SponsoredPlaceCard`를 끼워 넣던 로직)는 Explore가 매칭 화면이 아니게 되면서 함께 없어졌다 — [§4.5](04-matching.md#45-지금은-죽은-코드--예전-매칭-엔진). `SponsoredPlaceCard` 자체는 지금도 Map 리스트뷰([§5](05-map.md))에서 쓰인다.
 
-**커뮤니티** (`CommunityPage.tsx`, `PostDetailPage.tsx`, `services/community.ts`) — Supabase가 설정돼 있으면 `community_posts`/`post_likes`/`post_comments` 테이블을 쓰고, 아니거나 실패하면 `localStorage`(`lib/localCommunityStore.ts`) + `mockCommunityPosts`로 폴백. 글쓰기, 좋아요/취소, 댓글, 본인 게시글/댓글 삭제까지 된다(전부 로그인 필요). 팔로우는 아직 없음.
+**커뮤니티** (`CommunityPage.tsx`, `PostDetailPage.tsx`, `services/community.ts`) — Supabase가 설정돼 있으면 `community_posts`/`post_likes`/`post_comments` 테이블을 쓰고, 아니거나 실패하면 `localStorage`(`lib/localCommunityStore.ts`) + `mockCommunityPosts`로 폴백. 글쓰기, 좋아요/취소, 댓글, 본인 게시글/댓글 삭제까지 된다(전부 로그인 필요). 팔로우는 아직 없음. `community_posts.place_id`는 FK가 없는 자유 텍스트다 — Google/KTO/큐레이션 spot 어떤 출처의 id든 그대로 저장한다(`places` 테이블 자체가 없다, [§7](07-domain-model.md) 참고).
 
-**My Map** (`hooks/useSavedPlaces.ts`) — 장소 id 배열, `miyeon_my_map`. 서버 테이블 없음.
+**Community 페이지 안의 Magazine 탭** (`CommunityPage.tsx`의 `?tab=magazine`, `MagazineGrid`/`MagazineComposer`, `/magazine/:id` → `MagazineDetailPage.tsx`) — 큐레이터가 쓰는 TREATMENT/GUIDE/TREND 칼럼. 자세한 내용은 [§11](11-curator-tools.md#3-매거진-servicesmagazinets) 참고.
+
+**My Map** (`hooks/useSavedPlaces.ts`) — 장소 id 배열, `miyeon_my_map`. 서버 테이블 없음. 저장된 일정(다른 저장 대상)은 [§4.4](04-matching.md#44-저장-usesaveditineraries)와 [§11](11-curator-tools.md#4-저장된-일정-servicessaveditinerariests) 참고.

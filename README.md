@@ -52,58 +52,85 @@ quota on data.go.kr is 1,000 calls/day — results are cached for 10 minutes.
 
 ## What's implemented
 
-- **Explore** (`src/pages/ExplorePage.tsx`) — Home → WHAT → VIBE → Constraints →
-  AI transition → Top 3 matches, per PRD §2. The VIBE pair-choice screen shows
-  an "OR" badge between each pair so it reads as a binary choice, not a grid.
-- **Map** (`src/pages/MapPage.tsx`, `src/components/map/MapView.tsx`) — category/pick
-  filters, search, geolocation, and a Warm-Taupe KTO Wellness pin layer per §15.3. Only
-  `skin`/`face` categories are shown for now (`src/data/mapCategories.ts`) —
-  hair/nails/makeup are still being built out. Search combines the already-loaded
-  local places with a live, debounced Google Places text search constrained to
-  `skin`/`face` place types (`services/discovery.ts#searchPlacesByCategory`), so
-  typing a real business name finds it even if it isn't in the loaded set;
-  picking a live result drops a new pin on the map. A map/list toggle
-  (bottom-left) switches to `components/map/PlaceListView.tsx`, a scrollable,
-  rating-sorted list of the same places.
+Explore (`/`) is a **beauty trip planner**, not a "quiz → 3 matches" screen anymore — it
+follows the onboarding spec in `MIYEON_planner.md` end to end (Purpose → Goals →
+conditional Skin/Needles → Restrictions → Budget → Time → Days → Downtime → Profile
+summary → AI transition), then generates a day-by-day itinerary and hands you off to
+it. The old category/quiz/match screen this replaced is still in the tree as dead code
+(see "Known gaps" below) but is no longer reachable from any route.
+
+- **Beauty trip onboarding → itinerary generation** (`src/pages/ExplorePage.tsx`,
+  `src/services/itinerary/generate.ts`) — a multi-step wizard (`src/components/onboarding/`)
+  builds a `BeautyTripProfile`, then a hard-filter → weighted-scoring → geographic-clustering
+  → walking-order pipeline (PRD §14–§16) turns it into an `Itinerary` over
+  `src/data/spots.ts`, a hand-curated catalog of 26 Seoul spots — **not** the
+  Google/KTO discovery engine. Each spot block gets a one-line "why we chose this".
+- **Itinerary workspace** (`src/pages/ItineraryPage.tsx`,
+  `src/components/itinerary/ItineraryTimeline.tsx` / `ItineraryRouteMap.tsx`) — day
+  tabs, a route map, and per-spot Replace / Move to another day / Remove, plus a
+  top-level Regenerate (cheaper, less travel, more/fewer experiences, more Korean,
+  more relaxing, start later, finish earlier) — all pure functions in
+  `services/itinerary/generate.ts` that preserve the original profile's constraints.
+- **Save an itinerary** (`src/hooks/useSavedItineraries.ts`,
+  `src/services/savedItineraries.ts`) — works for any signed-in user (not just
+  curators), always written to `localStorage`, and mirrored to Supabase
+  `saved_itineraries` when configured. Saved trips show up on `/profile`.
+- **Map** (`src/pages/MapPage.tsx`, `src/components/map/MapView.tsx`) — pins now come
+  from `services/curator.ts#fetchCuratedMapData()`, i.e. the same curated
+  `src/data/spots.ts` catalog plus every curator's published itineraries, **not**
+  live Google/KTO discovery. All five categories (skin/face/hair/nails/makeup) are
+  enabled (`src/data/mapCategories.ts`) since the curated catalog now covers all of
+  them. The search box still layers in a live, debounced Google Places text search
+  (`services/discovery.ts#searchPlacesByCategory`) so typing a real business name
+  finds it even if it isn't in the curated set. `?curator=`/`?itinerary=` query
+  params deep-link the map into one curator's or one itinerary's spots. A map/list
+  toggle (bottom-left) switches to `components/map/PlaceListView.tsx`.
 - **Login** (`src/hooks/useAuth.ts`, `src/services/auth.ts`,
   `src/components/auth/GoogleAuthModal.tsx`) — Google OAuth when Supabase is
   configured, plus a local **Continue as demo** session that does not need keys.
 - **Place discovery** (`src/services/discovery.ts`) — category engine over
   Google Places API (New) + KTO `MdclTursmService`. Vite proxy in
-  `plugins/miyeon-api-proxy.ts` hides the keys and avoids browser CORS.
+  `plugins/miyeon-api-proxy.ts` hides the keys and avoids browser CORS. It no longer
+  drives the Map's default pins; it now backs Place/Treatment detail lookups that
+  fall through the curated catalog, and the Map search box above.
 - **Place / Treatment detail** — Nearby Wellness and Medical Info KTO badges
   (§7.2/§7.3), fail-silent when their data is absent. Get-directions links to
   Google/Naver/Kakao Maps (`src/lib/directions.ts`), and an opt-in "Get latest
   info" lookup backed by Gemini + Google Search grounding
   (`src/components/place/GroundedInfo.tsx`) for anything Places/KTO don't cover.
+  A "Back to itinerary" link appears when you arrived from `/itinerary/:id`.
 - **Creatrip affiliate links** (`src/lib/creatrip.ts`) — Book-with-Creatrip CTAs
-  (`ResultCard`, `PlaceDetailPage`, `TreatmentDetailPage`) are tagged with the
-  Creatrip affiliate ID (`utm_source`/`aff_id` query params) and show a short
-  commission-disclosure caption underneath, per Creatrip's affiliate policy.
-  `hasCreatripListing()` tells apart a place with a real, spot-specific Creatrip
-  page from one still pointing at the generic homepage; only the former is
-  labeled "광고" (ad) — with one shown as a featured "광고 · 추천" pick — in the
-  Map list view and on the Explore results screen (separate from, and never
-  reordering, the 3 matched results). `scripts/resolve-creatrip-links.mjs`
+  (`PlaceDetailPage`, `TreatmentDetailPage`) are tagged with the Creatrip affiliate
+  ID (`utm_source`/`aff_id` query params) and show a short commission-disclosure
+  caption underneath, per Creatrip's affiliate policy. `hasCreatripListing()` tells
+  apart a place with a real, spot-specific Creatrip page from one still pointing at
+  the generic homepage; only the former is labeled "광고" (ad) — with one shown as a
+  featured "광고 · 추천" pick — in the Map list view. `scripts/resolve-creatrip-links.mjs`
   (`npm run resolve:creatrip`) is a one-off, read-only tool that asks Gemini
   (Google Search grounding) to find each demo place's real Creatrip page and
   reports whether the answer is corroborated by an actual search result —
   verified results are applied to `src/data/mock.ts` by hand, never
   auto-written.
-- **Curator profiles** (`src/pages/CuratorProfilePage.tsx`, route
-  `/curator/:id`) — a curator's bio, socials, and the full list of places they've
-  curated (`services/places.ts#fetchCreatorById` /
-  `#fetchCreatorPicksByCreatorId`). Reached by tapping a creator's avatar in the
-  Map tab's "Curated by Creators" strip.
+- **Curator tools** (`src/services/curator.ts`) — sign up / edit a curator profile
+  (`/curator/signup`, `/curator/:id/edit`); create, edit (add spot/day, rename,
+  delete), and publish **itineraries** as a curator's primary content
+  (`/curator/:id/itineraries/:itineraryId`), backed by Supabase `curator_itineraries`
+  with a `localStorage` fallback. `/curator/:id` shows a curator's bio, socials, and
+  the itineraries they've published, reached by tapping their avatar in the Map
+  tab's "Curated by Creators" strip. Older list infrastructure
+  (`CuratorList`/`ListSpot`, `creator_lists`/`list_spots`) still exists in the code
+  and schema but isn't what curators build with day to day anymore — see "Known
+  gaps".
+- **Magazine** (`src/services/magazine.ts`, Community tab's "Magazine" sub-tab,
+  `/magazine/:id`) — curator-authored TREATMENT/GUIDE/TREND columns, backed by
+  Supabase `magazine_articles` with a `localStorage` + seeded-article fallback.
 - **Community** (`src/services/community.ts`) — read/write feed backed by
   Supabase when configured, falling back to `localStorage` otherwise: create
   post, like/unlike, comment, and delete your own post/comment. Follow is not
   built.
-- **My Map** (`src/hooks/useSavedPlaces.ts`) — save/unsave, stored in
-  `localStorage` for now (no `saved_places` table yet).
-- **AI matching** (`src/services/match.ts`) — a transparent client-side scorer
-  implementing the §9 fit formula, standing in for the real LLM ranking engine
-  in §13 until one exists.
+- **My Map** (`src/hooks/useSavedPlaces.ts`) — save/unsave individual places,
+  stored in `localStorage` for now (no `saved_places` table yet). Separate from
+  saving whole itineraries, above.
 - **Mobile bottom nav** (`src/components/layout/BottomNav.tsx`) — below the `sm`
   breakpoint, the top tab bar (`NavHeader`) hides and a thumb-reachable bottom
   tab bar takes over; desktop keeps the top nav.
@@ -113,16 +140,33 @@ Satoshi / Pretendard typography, from the Miyeon brand board.
 ## Known gaps vs. the PRD
 
 - Community **follow** is not built (post/like/comment/delete all are).
-- `hair`/`nails`/`makeup` are modeled end-to-end (types, quiz, discovery) but
-  hidden from the Map tab until their UX is finished — see
-  `src/data/mapCategories.ts`.
-- Treatment/Place data is live when `KTO_SERVICE_KEY` / `GOOGLE_PLACES_API_KEY`
-  are set, otherwise the bundled demo set in `src/data/mock.ts`. Wire
-  `src/services/places.ts` to actual `places`/`treatments`/`creators`/
-  `creator_picks` tables when they exist — there's no SQL schema file for
-  those tables in this repo yet (`supabase/` only has `community_schema.sql`
-  and `leads_schema.sql`).
+- The itinerary engine still reads a static, hand-written array
+  (`src/data/spots.ts`, 26 spots) instead of live data. `supabase/spots_schema.sql`
+  already defines a `spots` table that mirrors the `Spot` type column-for-column,
+  but nothing writes to it yet and `getSpot()`/`getSpots()` don't read from it —
+  wiring that up is a separate follow-up.
+- Curated spots have no real `Treatment` rows (`treatmentIds: []`), so Place
+  detail's Treatments list is empty for curated spots; it's only populated for
+  live Google/KTO places, which get one synthetic Treatment per category.
 - Nearby Wellness (`WellnessTursmService`) is still mock-only; medical-tourism
   badges on live `skin`/`face` places come from `MdclTursmService`.
 - No nightly batch job. Discovery is on-demand with a 10-minute in-memory cache.
   The API proxy only runs under `vite` / `vite preview`, not on a static host.
+- No real LLM ranker yet — itinerary generation in `services/itinerary/generate.ts`
+  is a transparent hard-filter + weighted-scoring heuristic, per PRD §13's
+  "structured pipeline, not an LLM prompt" requirement.
+- **The pre-planner Explore flow is dead code, not deleted.** `services/match.ts`,
+  `components/explore/ResultCard.tsx`/`ProductCommerce.tsx`/`EmailCaptureCard.tsx`,
+  `components/quiz/CategoryRadial.tsx`/`PairChoice.tsx`, and
+  `components/place/PlaceSearchPicker.tsx` implemented the old "category → quiz →
+  top 3 matches" screen. None of them are imported from any route anymore; whether
+  to delete or revive them hasn't been decided.
+- `CuratorList`/`ListSpot` (the `creator_lists`/`list_spots` tables and
+  `SpotSearchPicker`) are still wired up, but curators now build itineraries, not
+  standalone lists — this infra is mostly legacy at this point. The even older
+  `creator_picks` table (and the `places` table it used to join against) is fully
+  superseded; `places` was dropped entirely rather than getting a schema, per the
+  comments in `supabase/creators_schema.sql`.
+
+See [`docs/architecture/`](docs/architecture/README.md) for the full breakdown,
+including the current state of each subsystem and everything that's now dead code.

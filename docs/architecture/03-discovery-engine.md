@@ -63,6 +63,12 @@ Map 탭 검색창은 이미 로드된 `places`를 이름/지역으로 즉시 필
 
 ### 3.5 조회 파사드 (`services/places.ts`)
 
-순서: in-memory 카탈로그 → (있으면) Supabase 테이블 → `discoverAll()` → `src/data/mock.ts`.
+`fetchPlaceById`/`fetchTreatmentById` 순서: `src/data/spots.ts` 큐레이션 카탈로그(`getSpot`) → in-memory 디스커버리 카탈로그(`catalogPlace`/`catalogTreatment`) → `src/data/mock.ts` → (그래도 없으면) `fetchPlaces()`/`fetchTreatments()`로 전체 디스커버리 재조회.
 
-Map · 상세 · 퀴즈가 같은 `Place.id`를 보게 카탈로그에 디스커버리 결과를 넣는다.
+### 3.6 지금 이 엔진을 실제로 쓰는 화면
+
+Map 탭의 기본 핀 데이터는 더 이상 이 엔진이 아니라 큐레이션 spot 카탈로그다([§5](05-map.md), [§4](04-matching.md) 참고) — `discoverAll()`/`fetchPlaces()`는 지금 다음 용도로만 쓰인다:
+
+- **Place/Treatment 상세** (`PlaceDetailPage`, `TreatmentDetailPage`) — `fetchPlaceById`가 큐레이션 spot에서 못 찾으면 이 엔진의 in-memory 카탈로그 → mock 순으로 fallback.
+- **Map 검색창의 라이브 텍스트 검색** — [§3.4](#34-지도-검색-searchplacesbycategory)의 `searchPlacesByCategory`.
+- 예전 Explore 퀴즈 매칭 플로우(`services/match.ts`)도 `discoverPlaces()`/`fetchPlaces()`를 호출하지만, 그 페이지 자체가 어떤 라우트에서도 더 이상 렌더링되지 않는 죽은 코드다 — [§10](10-known-gaps.md) 참고.
