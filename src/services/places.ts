@@ -12,7 +12,7 @@ import {
   catalogTreatment,
   discoverAll,
 } from './discovery';
-import { getSpot, spotToPlace } from '../data/spots';
+import { getSpot, loadSpots, spotToPlace } from '../data/spots';
 import { getApiHealth } from './googlePlaces';
 
 async function liveCatalog() {
@@ -43,6 +43,7 @@ export async function fetchPlaces(): Promise<Place[]> {
 }
 
 export async function fetchPlaceById(id: string): Promise<Place | null> {
+  await loadSpots();
   const fromCatalog = getSpot(id);
   if (fromCatalog) return spotToPlace(fromCatalog);
   const remembered = catalogPlace(id);

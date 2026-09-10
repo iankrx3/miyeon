@@ -1,4 +1,5 @@
-import type { BeautyCategory, Place, Spot, SpotSubcategory } from '../types';
+import type { BeautyCategory, Place, Spot, SpotArea, SpotSubcategory } from '../types';
+import { supabase } from '../lib/supabase';
 
 const IMG = {
   studio: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1200',
@@ -14,8 +15,147 @@ const IMG = {
   shop: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=1200',
 };
 
-export const spots: Spot[] = [
-];
+const SUBCATEGORY_IMAGE: Record<SpotSubcategory, string> = {
+  'color-perm': IMG.hair,
+  'head-spa': IMG.spa,
+  'hair-makeup': IMG.makeup,
+  'hair-extensions': IMG.hair,
+  'color-analysis': IMG.studio,
+  'beauty-makeup': IMG.makeup,
+  'nail-art': IMG.nails,
+  'permanent-makeup': IMG.brow,
+  waxing: IMG.wax,
+  glasses: IMG.glasses,
+  'id-portrait': IMG.portrait,
+  aesthetics: IMG.spa,
+  'skin-care': IMG.clinic,
+  shopping: IMG.shop,
+};
+
+// Rough fallbacks for the real Creatrip listings (supabase/seed_spots.sql) whose
+// scrape didn't expose a price table or venue hours — only unrelated Creatrip
+// Buddy concierge-service boilerplate was there. Keeps the itinerary engine's
+// arithmetic (budget filtering, block timing) sane instead of showing "$0" or
+// stacking every block at 0 minutes.
+const DEFAULT_PRICE_RANGE: Record<SpotSubcategory, [number, number]> = {
+  'color-perm': [80, 200],
+  'head-spa': [60, 120],
+  'hair-makeup': [60, 130],
+  'hair-extensions': [100, 300],
+  'color-analysis': [60, 150],
+  'beauty-makeup': [50, 120],
+  'nail-art': [30, 70],
+  'permanent-makeup': [120, 250],
+  waxing: [30, 80],
+  glasses: [80, 200],
+  'id-portrait': [25, 60],
+  aesthetics: [50, 150],
+  'skin-care': [100, 300],
+  shopping: [15, 80],
+};
+
+const DEFAULT_DURATION_MIN: Record<SpotSubcategory, number> = {
+  'color-perm': 120,
+  'head-spa': 90,
+  'hair-makeup': 75,
+  'hair-extensions': 180,
+  'color-analysis': 60,
+  'beauty-makeup': 75,
+  'nail-art': 60,
+  'permanent-makeup': 90,
+  waxing: 45,
+  glasses: 45,
+  'id-portrait': 40,
+  aesthetics: 60,
+  'skin-care': 60,
+  shopping: 30,
+};
+
+const AREA_CENTROID: Record<SpotArea, { lat: number; lng: number }> = {
+  Gangnam: { lat: 37.4979, lng: 127.0276 },
+  Seongsu: { lat: 37.5446, lng: 127.0559 },
+  Hongdae: { lat: 37.5563, lng: 126.9238 },
+  Myeongdong: { lat: 37.5636, lng: 126.985 },
+};
+
+/** Maps a `spots` table row (supabase/spots_schema.sql) to the app's Spot shape.
+ * Returns null for rows with no `area` — every feature here (itinerary days, the
+ * map, area filters) is organized around the 4-neighborhood SpotArea enum, so a
+ * spot outside it isn't placeable yet (a few real Creatrip listings sit outside
+ * Seoul's core tourist neighborhoods; see supabase/seed_spots.sql's notes). The
+ * remaining nullable columns get a reasonable per-subcategory/area default
+ * rather than being dropped, since most real listings are missing at least one
+ * of price/hours/duration in the source scrape. */
+function mapSpot(row: any): Spot | null {
+  const area = row.area as SpotArea | null;
+  if (!area) return null;
+  const subcategory = row.subcategory as SpotSubcategory;
+  const centroid = AREA_CENTROID[area];
+  const [defaultMin, defaultMax] = DEFAULT_PRICE_RANGE[subcategory] ?? [50, 150];
+
+  return {
+    id: row.id,
+    name: row.name,
+    parentCategory: row.parent_category,
+    subcategory,
+    description: row.description ?? '',
+    area,
+    address: row.address ?? `${area}, Seoul`,
+    latitude: row.latitude ?? centroid.lat,
+    longitude: row.longitude ?? centroid.lng,
+    priceMin: row.price_min ?? defaultMin,
+    priceMax: row.price_max ?? Math.max(row.price_min ?? defaultMax, defaultMax),
+    durationMin: row.duration_min ?? DEFAULT_DURATION_MIN[subcategory] ?? 60,
+    openingHours: row.opening_hours ?? 'Hours vary — check on booking',
+    bookingRequired: Boolean(row.booking_required),
+    bookingUrl: row.booking_url ?? undefined,
+    languages: row.languages ?? [],
+    downtime: row.downtime,
+    procedureIntensity: row.procedure_intensity,
+    needleRequired: Boolean(row.needle_required),
+    touristFriendly: Boolean(row.tourist_friendly),
+    factoryLike: Boolean(row.factory_like),
+    upsellingRisk: Boolean(row.upselling_risk),
+    priceTransparency: Boolean(row.price_transparency),
+    images: row.images?.length ? row.images : [SUBCATEGORY_IMAGE[subcategory]],
+    rating: Number(row.rating ?? 0),
+    reviewCount: Number(row.review_count ?? 0),
+    experienceStyle: row.experience_style,
+    googlePlaceId: row.google_place_id ?? undefined,
+  };
+}
+
+let cachedSpots: Spot[] = [];
+let loadPromise: Promise<Spot[]> | null = null;
+
+/** Loads the real `spots` table from Supabase into an in-memory cache, once.
+ * getSpot()/getSpots() stay synchronous — they have many callers (incl. the
+ * itinerary generator in services/itinerary/generate.ts) that aren't async —
+ * and just read this cache. App.tsx awaits this once at bootstrap, before any
+ * route that reads spots can mount. */
+export function loadSpots(): Promise<Spot[]> {
+  if (loadPromise) return loadPromise;
+  loadPromise = (async () => {
+    if (!supabase) return cachedSpots;
+    try {
+      const { data, error } = await supabase.from('spots').select('*');
+      if (error) throw error;
+      cachedSpots = (data ?? []).map(mapSpot).filter((s): s is Spot => s !== null);
+    } catch (err) {
+      console.warn('loadSpots: Supabase query failed', err);
+    }
+    return cachedSpots;
+  })();
+  return loadPromise;
+}
+
+export function getSpot(id: string): Spot | undefined {
+  return cachedSpots.find((s) => s.id === id);
+}
+
+export function getSpots(): Spot[] {
+  return cachedSpots;
+}
 
 export const SUBCATEGORY_LABEL: Record<SpotSubcategory, string> = {
   'color-perm': 'Color & Perm',
@@ -58,14 +198,6 @@ function priceRange(min: number): Place['priceRange'] {
   return '$$$$';
 }
 
-export function getSpot(id: string): Spot | undefined {
-  return spots.find((s) => s.id === id);
-}
-
-export function getSpots(): Spot[] {
-  return spots;
-}
-
 export function spotToPlace(spot: Spot): Place {
   return {
     id: spot.id,
@@ -92,5 +224,5 @@ export function spotToPlace(spot: Spot): Place {
 }
 
 export function allSpotsAsPlaces(): Place[] {
-  return spots.map(spotToPlace);
+  return getSpots().map(spotToPlace);
 }
