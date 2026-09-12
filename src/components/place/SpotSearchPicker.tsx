@@ -1,7 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Search, X } from 'lucide-react';
 import type { Spot } from '../../types';
-import { getSpots, SUBCATEGORY_LABEL } from '../../data/spots';
+import { getSpots, placeToSpot, SUBCATEGORY_LABEL } from '../../data/spots';
+import { searchPlacesByCategory } from '../../services/discovery';
+import { ENABLED_MAP_CATEGORIES } from '../../data/mapCategories';
 
 interface SpotSearchPickerProps {
   onSelect: (spot: Spot) => void;
@@ -11,9 +13,11 @@ interface SpotSearchPickerProps {
 
 export const SpotSearchPicker: React.FC<SpotSearchPickerProps> = ({ onSelect, onClose, excludeIds = [] }) => {
   const [query, setQuery] = useState('');
+  const [liveResults, setLiveResults] = useState<Spot[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const excluded = useMemo(() => new Set(excludeIds), [excludeIds]);
 
-  const results = useMemo(() => {
+  const localResults = useMemo(() => {
     const q = query.trim().toLowerCase();
     return getSpots()
       .filter((s) => !excluded.has(s.id))
@@ -24,9 +28,45 @@ export const SpotSearchPicker: React.FC<SpotSearchPickerProps> = ({ onSelect, on
           s.area.toLowerCase().includes(q) ||
           SUBCATEGORY_LABEL[s.subcategory].toLowerCase().includes(q)
         );
-      })
-      .slice(0, 12);
+      });
   }, [query, excluded]);
+
+  useEffect(() => {
+    const q = query.trim();
+    if (!q) {
+      setLiveResults([]);
+      setIsLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setIsLoading(true);
+    const timer = setTimeout(async () => {
+      try {
+        const places = await searchPlacesByCategory(ENABLED_MAP_CATEGORIES, q);
+        if (cancelled) return;
+        setLiveResults(places.map(placeToSpot));
+      } catch {
+        // fail-silent — locally cached matches (already shown) are still valid
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    }, 350);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [query]);
+
+  const results = useMemo(() => {
+    const seen = new Set<string>();
+    const merged: Spot[] = [];
+    for (const spot of [...localResults, ...liveResults]) {
+      if (excluded.has(spot.id) || seen.has(spot.id)) continue;
+      seen.add(spot.id);
+      merged.push(spot);
+    }
+    return merged.slice(0, 12);
+  }, [localResults, liveResults, excluded]);
 
   return (
     <div className="space-y-2">
@@ -36,7 +76,7 @@ export const SpotSearchPicker: React.FC<SpotSearchPickerProps> = ({ onSelect, on
           autoFocus
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search the catalog by name or area…"
+          placeholder="Search by name or area…"
           className="w-full bg-transparent text-sm text-miyeon-main placeholder:text-miyeon-main/60 focus:outline-none"
         />
         {onClose && (
@@ -62,6 +102,7 @@ export const SpotSearchPicker: React.FC<SpotSearchPickerProps> = ({ onSelect, on
             </span>
           </button>
         ))}
+        {isLoading && <p className="px-2 py-1 text-xs text-miyeon-main/50">Searching…</p>}
       </div>
     </div>
   );

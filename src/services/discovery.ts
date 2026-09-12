@@ -35,7 +35,7 @@ const PRICE_FROM_LEVEL: Record<string, Place['priceRange']> = {
   PRICE_LEVEL_VERY_EXPENSIVE: '$$$$',
 };
 
-const PRICE_BAND: Record<Place['priceRange'], { min: number; max: number }> = {
+export const PRICE_BAND: Record<Place['priceRange'], { min: number; max: number }> = {
   $: { min: 40, max: 90 },
   $$: { min: 80, max: 180 },
   $$$: { min: 150, max: 350 },

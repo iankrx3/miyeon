@@ -1,74 +1,51 @@
-import type { BeautyCategory, Place, Spot, SpotArea, SpotSubcategory } from '../types';
-import { supabase } from '../lib/supabase';
-
-const IMG = {
-  studio: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1200',
-  clinic: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=1200',
-  hair: 'https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?q=80&w=1200',
-  spa: 'https://images.unsplash.com/photo-1544161515-4ac6ee4e8db4?q=80&w=1200',
-  nails: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=1200',
-  makeup: 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=1200',
-  portrait: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1200',
-  glasses: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?q=80&w=1200',
-  wax: 'https://images.unsplash.com/photo-1519415518779-31f12acd77aa?q=80&w=1200',
-  brow: 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?q=80&w=1200',
-  shop: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=1200',
-};
+import type { BeautyCategory, Place, Spot, SpotArea, SpotParentCategory, SpotSubcategory } from '../types';
+import { discoverAll, PRICE_BAND } from '../services/discovery';
 
 const SUBCATEGORY_IMAGE: Record<SpotSubcategory, string> = {
-  'color-perm': IMG.hair,
-  'head-spa': IMG.spa,
-  'hair-makeup': IMG.makeup,
-  'hair-extensions': IMG.hair,
-  'color-analysis': IMG.studio,
-  'beauty-makeup': IMG.makeup,
-  'nail-art': IMG.nails,
-  'permanent-makeup': IMG.brow,
-  waxing: IMG.wax,
-  glasses: IMG.glasses,
-  'id-portrait': IMG.portrait,
-  aesthetics: IMG.spa,
-  'skin-care': IMG.clinic,
-  shopping: IMG.shop,
+  'color-perm': 'https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?q=80&w=1200',
+  'head-spa': 'https://images.unsplash.com/photo-1544161515-4ac6ee4e8db4?q=80&w=1200',
+  'hair-makeup': 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=1200',
+  'hair-extensions': 'https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?q=80&w=1200',
+  'color-analysis': 'https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1200',
+  'beauty-makeup': 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=1200',
+  'nail-art': 'https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=1200',
+  'permanent-makeup': 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?q=80&w=1200',
+  waxing: 'https://images.unsplash.com/photo-1519415518779-31f12acd77aa?q=80&w=1200',
+  glasses: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?q=80&w=1200',
+  'id-portrait': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1200',
+  aesthetics: 'https://images.unsplash.com/photo-1544161515-4ac6ee4e8db4?q=80&w=1200',
+  'skin-care': 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=1200',
+  shopping: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=1200',
 };
 
-// Rough fallbacks for the real Creatrip listings (supabase/seed_spots.sql) whose
-// scrape didn't expose a price table or venue hours — only unrelated Creatrip
-// Buddy concierge-service boilerplate was there. Keeps the itinerary engine's
-// arithmetic (budget filtering, block timing) sane instead of showing "$0" or
-// stacking every block at 0 minutes.
-const DEFAULT_PRICE_RANGE: Record<SpotSubcategory, [number, number]> = {
-  'color-perm': [80, 200],
-  'head-spa': [60, 120],
-  'hair-makeup': [60, 130],
-  'hair-extensions': [100, 300],
-  'color-analysis': [60, 150],
-  'beauty-makeup': [50, 120],
-  'nail-art': [30, 70],
-  'permanent-makeup': [120, 250],
-  waxing: [30, 80],
-  glasses: [80, 200],
-  'id-portrait': [25, 60],
-  aesthetics: [50, 150],
-  'skin-care': [100, 300],
-  shopping: [15, 80],
+/** Coarse stand-in used only where the itinerary engine/UI need a SpotSubcategory/
+ * SpotParentCategory label (e.g. ItineraryTimeline's category chip). Google/KTO only
+ * tell us the broad BeautyCategory (5 values), never the 14-way curated subcategory,
+ * so each category maps to a single representative subcategory rather than the real
+ * service breakdown a hand-curated listing would have. */
+const CATEGORY_TO_SUBCATEGORY: Record<BeautyCategory, { parentCategory: SpotParentCategory; subcategory: SpotSubcategory }> = {
+  skin: { parentCategory: 'dermatology', subcategory: 'skin-care' },
+  face: { parentCategory: 'dermatology', subcategory: 'aesthetics' },
+  hair: { parentCategory: 'hair-salon', subcategory: 'color-perm' },
+  nails: { parentCategory: 'k-beauty', subcategory: 'nail-art' },
+  makeup: { parentCategory: 'k-beauty', subcategory: 'beauty-makeup' },
 };
 
-const DEFAULT_DURATION_MIN: Record<SpotSubcategory, number> = {
-  'color-perm': 120,
-  'head-spa': 90,
-  'hair-makeup': 75,
-  'hair-extensions': 180,
-  'color-analysis': 60,
-  'beauty-makeup': 75,
-  'nail-art': 60,
-  'permanent-makeup': 90,
-  waxing: 45,
-  glasses: 45,
-  'id-portrait': 40,
-  aesthetics: 60,
-  'skin-care': 60,
-  shopping: 30,
+const SUBCATEGORY_TO_CATEGORY: Partial<Record<SpotSubcategory, BeautyCategory>> = Object.fromEntries(
+  (Object.keys(CATEGORY_TO_SUBCATEGORY) as BeautyCategory[]).map((category) => [
+    CATEGORY_TO_SUBCATEGORY[category].subcategory,
+    category,
+  ])
+);
+
+/** Rough per-category appointment length. Google/KTO never report this, so the
+ * itinerary engine's day-timing math needs *some* default to schedule blocks with. */
+const DEFAULT_DURATION_BY_CATEGORY: Record<BeautyCategory, number> = {
+  skin: 60,
+  face: 90,
+  hair: 120,
+  nails: 60,
+  makeup: 75,
 };
 
 const AREA_CENTROID: Record<SpotArea, { lat: number; lng: number }> = {
@@ -78,71 +55,96 @@ const AREA_CENTROID: Record<SpotArea, { lat: number; lng: number }> = {
   Myeongdong: { lat: 37.5636, lng: 126.985 },
 };
 
-/** Maps a `spots` table row (supabase/spots_schema.sql) to the app's Spot shape.
- * Returns null for rows with no `area` — every feature here (itinerary days, the
- * map, area filters) is organized around the 4-neighborhood SpotArea enum, so a
- * spot outside it isn't placeable yet (a few real Creatrip listings sit outside
- * Seoul's core tourist neighborhoods; see supabase/seed_spots.sql's notes). The
- * remaining nullable columns get a reasonable per-subcategory/area default
- * rather than being dropped, since most real listings are missing at least one
- * of price/hours/duration in the source scrape. */
-function mapSpot(row: any): Spot | null {
-  const area = row.area as SpotArea | null;
-  if (!area) return null;
-  const subcategory = row.subcategory as SpotSubcategory;
-  const centroid = AREA_CENTROID[area];
-  const [defaultMin, defaultMax] = DEFAULT_PRICE_RANGE[subcategory] ?? [50, 150];
+const SPOT_AREAS = Object.keys(AREA_CENTROID) as SpotArea[];
+
+/** Buckets a lat/lng into the nearest of the 4 neighborhoods the itinerary engine
+ * organizes days around. Google/KTO addresses don't reliably say "Gangnam" etc., so
+ * distance-to-centroid is more robust than parsing the address string. */
+function nearestArea(lat: number, lng: number): SpotArea {
+  let best = SPOT_AREAS[0];
+  let bestDist = Infinity;
+  for (const area of SPOT_AREAS) {
+    const c = AREA_CENTROID[area];
+    const d = (lat - c.lat) ** 2 + (lng - c.lng) ** 2;
+    if (d < bestDist) {
+      bestDist = d;
+      best = area;
+    }
+  }
+  return best;
+}
+
+/** Maps a live Google Places/KTO Tour API result (src/services/discovery.ts) to the
+ * app's Spot shape so the itinerary engine and its UI (ItineraryTimeline,
+ * ItineraryRouteMap, SpotSearchPicker, ...) can keep working unchanged. The curated
+ * dimensions a hand-seeded listing used to carry — needleRequired, downtime,
+ * procedureIntensity, factoryLike, upsellingRisk, priceTransparency, experienceStyle —
+ * have no equivalent in either API, so they're fixed to an "always passes" default
+ * here; services/itinerary/generate.ts no longer hard-filters or scores on them. */
+export function placeToSpot(place: Place): Spot {
+  const { parentCategory, subcategory } = CATEGORY_TO_SUBCATEGORY[place.category];
+  const band = PRICE_BAND[place.priceRange] ?? PRICE_BAND.$$;
 
   return {
-    id: row.id,
-    name: row.name,
-    parentCategory: row.parent_category,
+    id: place.id,
+    name: place.name,
+    parentCategory,
     subcategory,
-    description: row.description ?? '',
-    area,
-    address: row.address ?? `${area}, Seoul`,
-    latitude: row.latitude ?? centroid.lat,
-    longitude: row.longitude ?? centroid.lng,
-    priceMin: row.price_min ?? defaultMin,
-    priceMax: row.price_max ?? Math.max(row.price_min ?? defaultMax, defaultMax),
-    durationMin: row.duration_min ?? DEFAULT_DURATION_MIN[subcategory] ?? 60,
-    openingHours: row.opening_hours ?? 'Hours vary — check on booking',
-    bookingRequired: Boolean(row.booking_required),
-    bookingUrl: row.booking_url ?? undefined,
-    languages: row.languages ?? [],
-    downtime: row.downtime,
-    procedureIntensity: row.procedure_intensity,
-    needleRequired: Boolean(row.needle_required),
-    touristFriendly: Boolean(row.tourist_friendly),
-    factoryLike: Boolean(row.factory_like),
-    upsellingRisk: Boolean(row.upselling_risk),
-    priceTransparency: Boolean(row.price_transparency),
-    images: row.images?.length ? row.images : [SUBCATEGORY_IMAGE[subcategory]],
-    rating: Number(row.rating ?? 0),
-    reviewCount: Number(row.review_count ?? 0),
-    experienceStyle: row.experience_style,
-    googlePlaceId: row.google_place_id ?? undefined,
+    description: place.whyPeopleLikeIt?.[0] ?? '',
+    area: nearestArea(place.latitude, place.longitude),
+    address: place.address,
+    latitude: place.latitude,
+    longitude: place.longitude,
+    priceMin: band.min,
+    priceMax: band.max,
+    durationMin: DEFAULT_DURATION_BY_CATEGORY[place.category],
+    openingHours: 'Hours vary — check listing',
+    bookingRequired: false,
+    bookingUrl: place.bookingUrl,
+    languages: place.language,
+    downtime: 'none',
+    procedureIntensity: 'medium',
+    needleRequired: false,
+    touristFriendly: place.foreignerFriendly,
+    factoryLike: false,
+    upsellingRisk: false,
+    priceTransparency: true,
+    images: place.photos?.length ? place.photos : [place.photoUrl || SUBCATEGORY_IMAGE[subcategory]],
+    rating: place.rating,
+    reviewCount: place.reviewCount,
+    experienceStyle: 'professional',
+    googlePlaceId: place.googlePlaceId,
+    source: place.source,
   };
 }
 
 let cachedSpots: Spot[] = [];
 let loadPromise: Promise<Spot[]> | null = null;
 
-/** Loads the real `spots` table from Supabase into an in-memory cache, once.
- * getSpot()/getSpots() stay synchronous — they have many callers (incl. the
- * itinerary generator in services/itinerary/generate.ts) that aren't async —
- * and just read this cache. App.tsx awaits this once at bootstrap, before any
- * route that reads spots can mount. */
+/** Loads itinerary candidates from live Google Places/KTO Tour API discovery into an
+ * in-memory cache, once. Queries each of the 4 neighborhood centroids separately (a
+ * single Seoul-wide search would skew heavily toward whichever area it's centered on)
+ * and merges the results. getSpot()/getSpots() stay synchronous — they have many
+ * callers (incl. the itinerary generator in services/itinerary/generate.ts) that
+ * aren't async — and just read this cache. App.tsx awaits this once at bootstrap,
+ * before any route that reads spots can mount. */
 export function loadSpots(): Promise<Spot[]> {
   if (loadPromise) return loadPromise;
   loadPromise = (async () => {
-    if (!supabase) return cachedSpots;
     try {
-      const { data, error } = await supabase.from('spots').select('*');
-      if (error) throw error;
-      cachedSpots = (data ?? []).map(mapSpot).filter((s): s is Spot => s !== null);
+      const results = await Promise.all(SPOT_AREAS.map((area) => discoverAll(AREA_CENTROID[area])));
+      const seen = new Set<string>();
+      const merged: Spot[] = [];
+      for (const result of results) {
+        for (const place of result.places) {
+          if (seen.has(place.id)) continue;
+          seen.add(place.id);
+          merged.push(placeToSpot(place));
+        }
+      }
+      cachedSpots = merged;
     } catch (err) {
-      console.warn('loadSpots: Supabase query failed', err);
+      console.warn('loadSpots: live discovery failed', err);
     }
     return cachedSpots;
   })();
@@ -174,23 +176,6 @@ export const SUBCATEGORY_LABEL: Record<SpotSubcategory, string> = {
   shopping: 'K-Beauty Shopping',
 };
 
-const SUBCATEGORY_BEAUTY: Record<SpotSubcategory, BeautyCategory> = {
-  'color-perm': 'hair',
-  'head-spa': 'hair',
-  'hair-makeup': 'hair',
-  'hair-extensions': 'hair',
-  'color-analysis': 'makeup',
-  'beauty-makeup': 'makeup',
-  'nail-art': 'nails',
-  'permanent-makeup': 'makeup',
-  waxing: 'skin',
-  glasses: 'makeup',
-  'id-portrait': 'makeup',
-  aesthetics: 'skin',
-  'skin-care': 'skin',
-  shopping: 'makeup',
-};
-
 function priceRange(min: number): Place['priceRange'] {
   if (min < 50) return '$';
   if (min < 120) return '$$';
@@ -199,10 +184,11 @@ function priceRange(min: number): Place['priceRange'] {
 }
 
 export function spotToPlace(spot: Spot): Place {
+  const category = SUBCATEGORY_TO_CATEGORY[spot.subcategory] ?? 'skin';
   return {
     id: spot.id,
     name: spot.name,
-    category: SUBCATEGORY_BEAUTY[spot.subcategory],
+    category,
     address: spot.address,
     area: spot.area,
     latitude: spot.latitude,

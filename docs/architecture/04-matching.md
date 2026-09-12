@@ -28,12 +28,12 @@ purpose → goals → (goals에 skin 포함 시) skin → (skin === 'medical' �
 
 ### 4.2 일정 생성 (`services/itinerary/generate.ts`)
 
-카탈로그는 Google/KTO 디스커버리가 아니라 **`src/data/spots.ts`의 손으로 큐레이션한 26개 spot**([§10](10-known-gaps.md) 참고)이다.
+카탈로그는 `src/data/spots.ts`의 `getSpots()` — Google Places API + KTO Tour API 라이브 조회 결과를 `Spot` 모양으로 근사한 것이다([§3.6](03-discovery-engine.md#36-dataspotsts--이-엔진-위에-얹힌-일정-후보-카탈로그), [§10](10-known-gaps.md) 참고). needleRequired/downtime/procedureIntensity/factoryLike/upsellingRisk/priceTransparency/experienceStyle는 두 API 모두 못 주는 값이라 항상 "통과" 고정값이고, 이 필드들에 기대던 하드 필터·스코어링은 제거됐다.
 
-1. **하드 필터** (`passesHardFilter`) — needles/커뮤니케이션/가격 투명성/factory-like/upselling 제약, 다운타임 상한, 예산 상한, goals → subcategory 매핑(`GOAL_SUBCATS`)으로 걸러낸다. 후보가 3개 미만이면 `dont-know` 취급으로 한 번 더 완화해서 재시도.
-2. **소프트 스코어링** (`scoreSpot`) — Personal fit 0.3 · Location 0.2 · Price 0.15 · Category 0.15 · Opening hours 0.1 · Quality(rating) 0.1. PRD §15의 가중치를 그대로 코드화.
-3. **지역 클러스터링** — spot을 `area`(Gangnam/Seongsu/Hongdae/Myeongdong)별로 묶고 area당 상위 점수 합으로 순위를 매긴 뒤, `tripDays`/`beautyTime`에서 뽑은 일수만큼 area를 하루씩 배정한다(§16).
-4. **일자 조립** (`buildDay`) — 같은 area 안에서 최근접 이웃 방식(`orderByWalk`)으로 도보 순서를 잡고, `travelBetween()`으로 이동 블록을, 시술 180분 누적마다 점심 브레이크 블록을 끼워 넣는다. 다운타임이 큰(≥1일) area는 가능하면 마지막 날로 민다.
+1. **하드 필터** (`passesHardFilter`) — 커뮤니케이션(영어) 제약, 예산 상한, goals → subcategory 매핑(`GOAL_SUBCATS`, 실제로는 5개 `BeautyCategory` 대표값 1개씩이라 카테고리 단위로 동작)으로 걸러낸다. 후보가 3개 미만이면 `dont-know` 취급으로 한 번 더 완화해서 재시도.
+2. **소프트 스코어링** (`scoreSpot`) — Personal fit 0.3 · Location 0.2 · Price 0.15 · Category 0.15 · Quality(rating) 0.2. `korean-experience` 목적은 KTO 소스(`spot.source === 'kto'`, 한국관광공사 공식 등록 정보) 여부로 가점.
+3. **지역 클러스터링** — spot을 `area`(Gangnam/Seongsu/Hongdae/Myeongdong — 좌표 최단거리로 버킷팅, `data/spots.ts#nearestArea`)별로 묶고 area당 상위 점수 합으로 순위를 매긴 뒤, `tripDays`/`beautyTime`에서 뽑은 일수만큼 area를 하루씩 배정한다(§16).
+4. **일자 조립** (`buildDay`) — 같은 area 안에서 최근접 이웃 방식(`orderByWalk`)으로 도보 순서를 잡고, `travelBetween()`으로 이동 블록을, 시술 180분 누적마다 점심 브레이크 블록을 끼워 넣는다.
 5. 각 spot 블록에는 `whyFor()`가 만든 한 줄 이유(§19 "Why we chose this")가 붙는다.
 
 ### 4.3 일정 편집

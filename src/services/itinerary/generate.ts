@@ -5,12 +5,10 @@ import type {
   Itinerary,
   ItineraryBlock,
   ItineraryDay,
-  RecoveryComfort,
   RegeneratePreference,
   ReplacePreference,
   Spot,
   SpotArea,
-  SpotDowntime,
   SpotSubcategory,
 } from '../../types';
 import { getSpot, getSpots, SUBCATEGORY_LABEL } from '../../data/spots';
@@ -23,21 +21,6 @@ const BUDGET_RANGE: Record<BeautyBudget, [number, number]> = {
   '500-1000': [500, 1000],
   '1000-plus': [1000, 8000],
 };
-
-const DOWNTIME_RANK: Record<SpotDowntime, number> = {
-  none: 0,
-  'few-hours': 1,
-  '1-day': 2,
-  '2-3-days': 3,
-};
-
-function wantDowntimeRank(d: RecoveryComfort | null): number {
-  if (!d || d === 'ok') return 3;
-  if (d === 'none') return 0;
-  if (d === 'few-hours') return 1;
-  if (d === '1-day') return 2;
-  return 3;
-}
 
 function dayCount(profile: BeautyTripProfile): number {
   if (profile.tripDays === '1') return 1;
@@ -89,32 +72,20 @@ function wantedSubcats(profile: BeautyTripProfile): SpotSubcategory[] | null {
   return [...set];
 }
 
+// Spots are now sourced live from Google Places/KTO (src/data/spots.ts), which can't
+// tell us needleRequired, priceTransparency, factoryLike, upsellingRisk, or downtime —
+// those curated dimensions no longer carry real signal, so the restrictions that used
+// to hard-filter on them (no-needles, no-surprise-costs, no-factory, no-upsell,
+// no-trip-ruin) are intentionally not enforced here anymore. Budget and the
+// need-communication (English) restriction are real data and stay.
 export function passesHardFilter(spot: Spot, profile: BeautyTripProfile): boolean {
-  const needlesOff =
-    profile.restrictions.includes('no-needles') || profile.needleComfort === 'no';
-  if (needlesOff && spot.needleRequired) return false;
-
   if (profile.restrictions.includes('need-communication') && !spot.languages.includes('English')) {
     return false;
   }
-  if (profile.restrictions.includes('no-surprise-costs') && !spot.priceTransparency) return false;
-  if (profile.restrictions.includes('no-factory') && spot.factoryLike) return false;
-  if (profile.restrictions.includes('no-upsell') && spot.upsellingRisk) return false;
-
-  const maxDt = wantDowntimeRank(profile.downtime);
-  if (DOWNTIME_RANK[spot.downtime] > maxDt) return false;
-  if (profile.restrictions.includes('no-trip-ruin') && DOWNTIME_RANK[spot.downtime] >= 2) return false;
 
   if (profile.budget) {
     const [, max] = BUDGET_RANGE[profile.budget];
     if (spot.priceMin > max) return false;
-  }
-
-  if (profile.skinExperience === 'relaxing' && (spot.needleRequired || spot.experienceStyle === 'medical')) {
-    return false;
-  }
-  if (profile.skinExperience === 'medical' && spot.parentCategory !== 'dermatology' && profile.goals.includes('skin')) {
-    // still allow other goal categories
   }
 
   const wanted = wantedSubcats(profile);
@@ -129,9 +100,10 @@ function scoreSpot(spot: Spot, profile: BeautyTripProfile): number {
 
   let personal = 0.7;
   if (profile.purpose === 'what-suits-me' && spot.subcategory === 'color-analysis') personal = 1;
-  if (profile.purpose === 'korean-experience' && spot.experienceStyle === 'korean') personal = 1;
-  if (profile.purpose === 'feel-good' && spot.experienceStyle === 'relaxing') personal = 1;
-  if (profile.purpose === 'new-me' && spot.procedureIntensity !== 'low') personal = 0.95;
+  // Google/KTO can't tell us "korean experience" style, but a KTO-sourced listing is an
+  // officially-registered Korea Tourism Organization spot — the closest real signal we have.
+  if (profile.purpose === 'korean-experience' && spot.source === 'kto') personal = 1;
+  if (profile.purpose === 'new-me') personal = 0.95;
   if (profile.purpose === 'event' && (spot.subcategory === 'beauty-makeup' || spot.subcategory === 'hair-makeup')) {
     personal = 1;
   }
@@ -146,18 +118,10 @@ function scoreSpot(spot: Spot, profile: BeautyTripProfile): number {
     else price = Math.max(0.2, 1 - (mid - max) / 400);
   }
 
-  const hours = /10:00|11:00/.test(spot.openingHours) ? 1 : 0.8;
   const quality = Math.min(1, spot.rating / 5);
   const location = 0.85;
 
-  return (
-    personal * 0.3 +
-    location * 0.2 +
-    price * 0.15 +
-    category * 0.15 +
-    hours * 0.1 +
-    quality * 0.1
-  );
+  return personal * 0.3 + location * 0.2 + price * 0.15 + category * 0.15 + quality * 0.2;
 }
 
 function newId(prefix: string): string {
@@ -196,10 +160,7 @@ function whyFor(spot: Spot, profile: BeautyTripProfile, firstOfDay: boolean, are
   if (firstOfDay) {
     return `We grouped these experiences in ${area} to reduce unnecessary travel between appointments.`;
   }
-  if (spot.experienceStyle === 'relaxing') {
-    return 'A lower-intensity stop so the day doesn’t stack recovery on recovery.';
-  }
-  if (profile.purpose === 'korean-experience' && spot.experienceStyle === 'korean') {
+  if (profile.purpose === 'korean-experience' && spot.source === 'kto') {
     return 'This one is here because you asked for a distinctly Korean experience.';
   }
   return `A strong match for ${SUBCATEGORY_LABEL[spot.subcategory].toLowerCase()} within your constraints.`;
@@ -207,9 +168,6 @@ function whyFor(spot: Spot, profile: BeautyTripProfile, firstOfDay: boolean, are
 
 function themeFor(spotsInDay: Spot[]): string {
   if (spotsInDay.some((s) => s.subcategory === 'color-analysis')) return 'Discover what suits you';
-  if (spotsInDay.every((s) => s.experienceStyle === 'relaxing' || s.subcategory === 'head-spa')) {
-    return 'Go easy on yourself';
-  }
   if (spotsInDay.some((s) => s.parentCategory === 'dermatology')) return 'Skin, then the rest';
   if (spotsInDay.some((s) => s.parentCategory === 'hair-salon')) return 'Hair day';
   return 'A neighborhood beauty loop';
@@ -316,8 +274,8 @@ function selectSpots(profile: BeautyTripProfile, opts: GenerateOpts): Map<SpotAr
   const scored = candidates
     .map((spot) => {
       let s = scoreSpot(spot, profile);
-      if (opts.preferKorean && spot.experienceStyle === 'korean') s += 0.12;
-      if (opts.preferRelaxing && spot.experienceStyle === 'relaxing') s += 0.12;
+      if (opts.preferKorean && spot.source === 'kto') s += 0.12;
+      if (opts.preferRelaxing) s += Math.max(0, (spot.rating - 4) * 0.12);
       if (opts.cheaper) s += Math.max(0, (200 - spot.priceMin) / 400);
       return { spot, s };
     })
@@ -366,7 +324,6 @@ function selectSpots(profile: BeautyTripProfile, opts: GenerateOpts): Map<SpotAr
     if (picked.length) result.set(area, picked);
   }
 
-  // Recovery: if a day has high downtime, keep that day as the last one when possible.
   return result;
 }
 
@@ -376,11 +333,6 @@ function assemble(
   startHour: string
 ): ItineraryDay[] {
   const entries = [...byArea.entries()];
-  entries.sort((a, b) => {
-    const aHeavy = a[1].some((s) => DOWNTIME_RANK[s.downtime] >= 2) ? 1 : 0;
-    const bHeavy = b[1].some((s) => DOWNTIME_RANK[s.downtime] >= 2) ? 1 : 0;
-    return aHeavy - bHeavy;
-  });
   return entries.map(([area, list], i) => buildDay(area, i + 1, list, profile, startHour));
 }
 
@@ -462,8 +414,10 @@ export function replaceSpotInItinerary(
 
   let pool = getSpots().filter((s) => !used.has(s.id) && passesHardFilter(s, profile));
   if (preference === 'cheaper') pool = pool.filter((s) => s.priceMax < current.priceMax);
-  if (preference === 'relaxing') pool = pool.filter((s) => s.experienceStyle === 'relaxing' || s.downtime === 'none');
-  if (preference === 'korean') pool = pool.filter((s) => s.experienceStyle === 'korean');
+  if (preference === 'relaxing') pool = pool.filter((s) => s.rating >= 4.3);
+  // Google/KTO have no "relaxing"/"korean" style tag — a KTO-sourced spot is an
+  // officially-registered Korea Tourism Organization listing, the closest real signal.
+  if (preference === 'korean') pool = pool.filter((s) => s.source === 'kto');
   if (preference === 'different-category') pool = pool.filter((s) => s.subcategory !== current.subcategory);
   if (preference === 'higher-rated') pool = pool.filter((s) => s.rating >= current.rating);
   if (preference === 'closer' && neighbors[0]) {

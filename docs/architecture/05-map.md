@@ -10,8 +10,8 @@
 | `src/components/place/SponsoredPlaceCard.tsx` | "광고" 배지 + 강조 테두리로 감싼 `PlaceCard` (리스트 최상단에서 재사용) |
 | `data/mapCategories.ts` | Map 탭에 노출할 카테고리 목록(`ENABLED_MAP_CATEGORIES`) |
 
-- **데이터 소스가 바뀜**: Map의 기본 핀 데이터는 더 이상 Google/KTO 라이브 디스커버리가 아니라 `services/curator.ts#fetchCuratedMapData(session)`가 반환하는 `allSpotsAsPlaces()`(= `src/data/spots.ts` 큐레이션 카탈로그 26곳 전체)다. 라이브 디스커버리는 이제 검색창의 텍스트 검색에서만 쓰인다([§3.6](03-discovery-engine.md#36-지금-이-엔진을-실제로-쓰는-화면)).
-- **카테고리**: `ENABLED_MAP_CATEGORIES`(`data/mapCategories.ts`)에 5개 카테고리(skin/face/hair/nails/makeup)가 모두 들어 있다 — 파일 주석은 "skin/face만" 시절 그대로지만 배열 값 자체는 이미 전부 켜져 있다. 큐레이션 카탈로그에 hair/nails/makeup spot이 실제로 있어서(예: nail-art, color-perm, beauty-makeup) 다섯 카테고리 칩 모두 핀을 보여준다.
+- **데이터 소스**: Map의 기본 핀 데이터는 `services/curator.ts#fetchCuratedMapData(session)`가 반환하는 `allSpotsAsPlaces()`다. 이 카탈로그(`src/data/spots.ts`) 자체가 이제 Google Places/KTO 라이브 디스커버리를 지역 4곳에 걸쳐 미리 불러와 캐싱한 것이라, "기본 핀 vs 검색창 라이브 검색"의 데이터 소스는 결국 같은 API로 수렴한다([§3.6](03-discovery-engine.md#36-dataspotsts--이-엔진-위에-얹힌-일정-후보-카탈로그)) — 다만 기본 핀은 앱 부트스트랩 시점에 캐시된 스냅샷이고, 검색창은 타이핑마다 새로 조회한다.
+- **카테고리**: `ENABLED_MAP_CATEGORIES`(`data/mapCategories.ts`)에 5개 카테고리(skin/face/hair/nails/makeup)가 모두 들어 있다.
 - 뷰티 핀: Miyeon Sub1 (Dusty Rose). 카테고리 아이콘.
 - 웰니스 핀: Warm Taupe. mock `nearbyWellness`만.
 - 타일: `VITE_MAPTILER_API_KEY` 있으면 MapTiler, 없으면 Carto Voyager.

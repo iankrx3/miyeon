@@ -113,6 +113,9 @@ export interface Spot {
   reviewCount: number;
   experienceStyle: 'relaxing' | 'professional' | 'medical' | 'korean';
   googlePlaceId?: string;
+  /** Provenance from live discovery (src/data/spots.ts) — 'kto' means it's an
+   * officially-registered Korea Tourism Organization medical-tourism listing. */
+  source?: 'google' | 'kto' | 'merged' | 'mock';
 }
 
 export type TravelMode = 'walk' | 'subway' | 'taxi';

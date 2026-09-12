@@ -97,9 +97,7 @@ export default function PlaceDetailPage() {
               </p>
               <p className="mt-2">{spot.description}</p>
               <p className="mt-2 text-xs text-miyeon-main/70">
-                ${spot.priceMin}–{spot.priceMax} · {spot.durationMin} min ·{' '}
-                {spot.downtime === 'none' ? 'No downtime' : spot.downtime.replace('-', ' ')}
-                {spot.needleRequired ? ' · Needles' : ''} · {spot.languages.join(' · ')}
+                ${spot.priceMin}–{spot.priceMax} (est.) · ~{spot.durationMin} min · {spot.languages.join(' · ')}
               </p>
             </section>
           );

@@ -63,12 +63,17 @@ Map 탭 검색창은 이미 로드된 `places`를 이름/지역으로 즉시 필
 
 ### 3.5 조회 파사드 (`services/places.ts`)
 
-`fetchPlaceById`/`fetchTreatmentById` 순서: `src/data/spots.ts` 큐레이션 카탈로그(`getSpot`) → in-memory 디스커버리 카탈로그(`catalogPlace`/`catalogTreatment`) → `src/data/mock.ts` → (그래도 없으면) `fetchPlaces()`/`fetchTreatments()`로 전체 디스커버리 재조회.
+`fetchPlaceById`/`fetchTreatmentById` 순서: `src/data/spots.ts`의 일정 후보 카탈로그(`getSpot`, 아래 3.6 참고) → in-memory 디스커버리 카탈로그(`catalogPlace`/`catalogTreatment`) → `src/data/mock.ts` → (그래도 없으면) `fetchPlaces()`/`fetchTreatments()`로 전체 디스커버리 재조회.
 
-### 3.6 지금 이 엔진을 실제로 쓰는 화면
+### 3.6 `data/spots.ts` — 이 엔진 위에 얹힌 일정 후보 카탈로그
 
-Map 탭의 기본 핀 데이터는 더 이상 이 엔진이 아니라 큐레이션 spot 카탈로그다([§5](05-map.md), [§4](04-matching.md) 참고) — `discoverAll()`/`fetchPlaces()`는 지금 다음 용도로만 쓰인다:
+Supabase `spots` 테이블(Creatrip 큐레이션 시드)은 삭제됐다. `src/data/spots.ts`의 `loadSpots()`는 이제 지역 중심점 4곳(Gangnam/Seongsu/Hongdae/Myeongdong)마다 이 문서의 `discoverAll(origin)`을 호출해 병합하고, 결과 `Place`를 `Spot` 모양으로 매핑한다(`placeToSpot()`). 이 카탈로그가 다음 화면들의 유일한 데이터 소스다:
 
-- **Place/Treatment 상세** (`PlaceDetailPage`, `TreatmentDetailPage`) — `fetchPlaceById`가 큐레이션 spot에서 못 찾으면 이 엔진의 in-memory 카탈로그 → mock 순으로 fallback.
-- **Map 검색창의 라이브 텍스트 검색** — [§3.4](#34-지도-검색-searchplacesbycategory)의 `searchPlacesByCategory`.
-- 예전 Explore 퀴즈 매칭 플로우(`services/match.ts`)도 `discoverPlaces()`/`fetchPlaces()`를 호출하지만, 그 페이지 자체가 어떤 라우트에서도 더 이상 렌더링되지 않는 죽은 코드다 — [§10](10-known-gaps.md) 참고.
+- **일정 생성 엔진** (`services/itinerary/generate.ts`, [§4](04-matching.md))
+- **Map 탭 기본 핀** (`fetchCuratedMapData()`, [§5](05-map.md))
+- **큐레이터 "장소 추가" 검색** (`SpotSearchPicker`) — 로컬 캐시 매치 + `searchPlacesByCategory` 라이브 검색을 합쳐 보여준다.
+- **Place/Treatment 상세** (`PlaceDetailPage`, `TreatmentDetailPage`) — `fetchPlaceById`가 이 카탈로그에서 못 찾으면 이 엔진의 in-memory 디스커버리 카탈로그 → mock 순으로 fallback.
+
+Google/KTO는 `needleRequired`/`downtime`/`procedureIntensity`/`factoryLike`/`upsellingRisk`/`priceTransparency`/`experienceStyle`를 주지 않으므로 `placeToSpot()`은 이 필드들을 "항상 통과" 고정값으로 채우고, `generate.ts`도 더 이상 이 필드들로 하드 필터링·스코어링하지 않는다(예산/언어/카테고리, rating만 실데이터). `subcategory`/`parentCategory`도 5개 `BeautyCategory`당 대표값 1개로 근사한 것이지, 실제 14종 세부 분류가 아니다.
+
+`App.tsx`는 라우트를 마운트하기 전 `loadSpots()`를 한 번 await한다 — 예전엔 Supabase select라 저렴했지만, 지금은 지역 4곳 × 카테고리 5개 라이브 검색을 병렬로 쏘는 무거운 호출이다([§10](10-known-gaps.md) 참고).
