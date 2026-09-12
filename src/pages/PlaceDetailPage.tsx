@@ -9,7 +9,7 @@ import { useSavedPlaces } from '../hooks/useSavedPlaces';
 import { MedicalTourismSection, NearbyWellnessSection } from '../components/badges/KtoBadges';
 import { GroundedInfo } from '../components/place/GroundedInfo';
 import { getDirectionsLinks } from '../lib/directions';
-import { withCreatripAffiliate, CREATRIP_BASE_URL, CREATRIP_DISCLOSURE } from '../lib/creatrip';
+import { hasCreatripListing, withCreatripAffiliate, CREATRIP_DISCLOSURE } from '../lib/creatrip';
 import { getSpot, SUBCATEGORY_LABEL } from '../data/spots';
 
 export default function PlaceDetailPage() {
@@ -177,19 +177,23 @@ export default function PlaceDetailPage() {
           </section>
         )}
 
-        <div className="space-y-1.5">
-          <motion.a
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            href={withCreatripAffiliate(place.bookingUrl || CREATRIP_BASE_URL)}
-            target="_blank"
-            rel="noreferrer"
-            className="block rounded-full bg-miyeon-sub1 py-3.5 text-center text-sm font-bold text-white shadow-sm shadow-miyeon-sub1/30"
-          >
-            BOOK WITH CREATRIP →
-          </motion.a>
-          <p className="text-center text-[10px] text-miyeon-main/60">{CREATRIP_DISCLOSURE}</p>
-        </div>
+        {place.bookingUrl && (
+          <div className="space-y-1.5">
+            <motion.a
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              href={hasCreatripListing(place) ? withCreatripAffiliate(place.bookingUrl) : place.bookingUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="block rounded-full bg-miyeon-sub1 py-3.5 text-center text-sm font-bold text-white shadow-sm shadow-miyeon-sub1/30"
+            >
+              Book →
+            </motion.a>
+            {hasCreatripListing(place) && (
+              <p className="text-center text-[10px] text-miyeon-main/60">{CREATRIP_DISCLOSURE}</p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

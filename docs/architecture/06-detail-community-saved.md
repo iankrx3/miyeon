@@ -8,11 +8,13 @@
 - 경로찾기 링크 (Google/Naver/Kakao Maps, `lib/directions.ts`) — 좌표 + `googlePlaceId` 기반, 새 탭
 - `NearbyWellnessSection` · `MedicalTourismSection` (`src/components/badges/KtoBadges.tsx`) — 데이터 없으면 안 그림 (fail-silent)
 - `GroundedInfo` (`src/components/place/GroundedInfo.tsx`) — "Get latest info" 버튼. 클릭 시에만 `services/gemini.ts` → `/api/gemini/ground` 호출, Google Search grounding으로 KTO/Places에 없는 최신 정보(영업시간 변경, 휴업 등) 요약 + 출처 링크. `GEMINI_API_KEY` 없으면 버튼 자체가 안 보임 (fail-silent)
-- Save to My Map, Creatrip 제휴 링크(또는 Google website) — `lib/creatrip.ts`가 `utm_source`/`aff_id` 쿼리 파라미터를 자동으로 붙이고, 버튼 아래에 커미션 disclosure 문구(`CREATRIP_DISCLOSURE`)를 보여준다(Creatrip 제휴 정책 2번 항목).
+- Save to My Map, "Book →" 버튼 — `place.bookingUrl` 그대로 연결한다(Creatrip 리스팅이면 그 spot 페이지, 아니면 대부분 Google Places가 준 그 업체의 실제 웹사이트). `hasCreatripListing(place)`가 true일 때만 `lib/creatrip.ts#withCreatripAffiliate()`로 `utm_source`/`aff_id`를 붙이고 커미션 disclosure 문구(`CREATRIP_DISCLOSURE`)를 보여준다 — Creatrip이 아닌 외부 URL에는 어필리에이트 파라미터를 붙이지 않는다(예전엔 무조건 붙이는 버그가 있었음). `bookingUrl` 자체가 없으면 버튼을 숨긴다.
 
-**시술 상세** (`TreatmentDetailPage.tsx`) — 가격대, 다운타임, 강도, 연결된 장소. Creatrip CTA 아래 동일한 disclosure 문구.
+**시술 상세** (`TreatmentDetailPage.tsx`) — 가격대, 다운타임, 강도, 연결된 장소. 같은 "Book →" 로직을 연결된 `place.bookingUrl`에 적용(예전엔 라이브 데이터에서 항상 비어 있던 `treatment.creatripUrl`을 썼음).
 
 **Creatrip 제휴 링크 검증** — `Place.bookingUrl`이 진짜 spot 페이지(`/en/spot/13165`)인지, 아직 안 채워진 홈 URL인지는 `lib/creatrip.ts#hasCreatripListing()`으로 판별한다. 실제 spot URL을 채우는 건 자동화하지 않는다: `scripts/resolve-creatrip-links.mjs`(`npm run resolve:creatrip`)가 `src/data/mock.ts`의 각 장소 이름+주소로 Gemini(Google Search grounding)에 물어 creatrip.com 페이지를 찾고, 모델 답변이 실제 grounding 출처에도 나오는 것만 "verified"로 `scripts/output/creatrip-links.json`에 남긴다 — mock.ts는 스크립트가 직접 고치지 않고, verified 결과만 사람이 검토해서 수동 반영한다.
+
+**Itinerary의 "Book with Creatrip" 버튼**(별개, `ItineraryTimeline.tsx`)은 이 상세 페이지의 "Book →"과 다르다 — 항상 Creatrip 카테고리 리스트 페이지(어필리에이트 코드 포함)로 연결된다. 자세한 내용은 [§4.2](04-matching.md#42-일정-생성-servicesitinerarygeneratets) 참고.
 
 **Curator 프로필** (`pages/CuratorProfilePage.tsx`, `/curator/:id`) — 큐레이터 정보(아바타·bio·소셜 링크)와 그 큐레이터가 만든 **일정(Itinerary) 목록**을 보여준다(`services/curator.ts#fetchCuratorItineraries`). 예전에는 낱개 장소 픽 목록이었지만 지금 큐레이터의 1차 콘텐츠 단위는 일정이다 — 큐레이터 도구 전체는 [§11](11-curator-tools.md) 참고. Map 탭 "Curated by Creators" 스트립에서 진입.
 

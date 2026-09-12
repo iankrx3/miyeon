@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 import { ChevronLeft } from 'lucide-react';
 import type { Place, Treatment } from '../types';
 import { fetchPlaceById, fetchTreatmentById } from '../services/places';
-import { withCreatripAffiliate, CREATRIP_BASE_URL, CREATRIP_DISCLOSURE } from '../lib/creatrip';
+import { hasCreatripListing, withCreatripAffiliate, CREATRIP_DISCLOSURE } from '../lib/creatrip';
 import { TreatmentExplainer } from '../components/treatment/TreatmentExplainer';
 
 export default function TreatmentDetailPage() {
@@ -73,19 +73,23 @@ export default function TreatmentDetailPage() {
         </Link>
       )}
 
-      <div className="space-y-1.5">
-        <motion.a
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          href={withCreatripAffiliate(treatment.creatripUrl || CREATRIP_BASE_URL)}
-          target="_blank"
-          rel="noreferrer"
-          className="block rounded-full bg-miyeon-sub1 py-3.5 text-center text-sm font-bold text-white shadow-sm shadow-miyeon-sub1/30"
-        >
-          BOOK WITH CREATRIP →
-        </motion.a>
-        <p className="text-center text-[10px] text-miyeon-main/60">{CREATRIP_DISCLOSURE}</p>
-      </div>
+      {place?.bookingUrl && (
+        <div className="space-y-1.5">
+          <motion.a
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            href={hasCreatripListing(place) ? withCreatripAffiliate(place.bookingUrl) : place.bookingUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="block rounded-full bg-miyeon-sub1 py-3.5 text-center text-sm font-bold text-white shadow-sm shadow-miyeon-sub1/30"
+          >
+            Book →
+          </motion.a>
+          {hasCreatripListing(place) && (
+            <p className="text-center text-[10px] text-miyeon-main/60">{CREATRIP_DISCLOSURE}</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -6,9 +6,9 @@ Explore 탭(`/`)은 더 이상 "카테고리 → 퀴즈 → Top 3 장소" 매칭
 
 | 레이어 | 파일 | 기능 |
 |---|---|---|
-| UI | `pages/ExplorePage.tsx` | Home landing → Purpose → Goals → (조건부 Skin/Needles) → Restrictions → Budget → Time → Days → Downtime → Profile 요약 → AI transition |
+| UI | `pages/ExplorePage.tsx` | Home landing → Purpose → Goals → (조건부 Skin/Needles/바이브 스텝들) → Restrictions → Languages → Budget → Time → Days → Downtime → Profile 요약 → AI transition |
 | 위젯 | `components/onboarding/WizardShell.tsx`, `OptionCard.tsx`, `components/quiz/AITransition.tsx` | 진행률 있는 1문항 화면, 선택 카드, 로딩 전환 |
-| 온보딩 카피/옵션 | `data/quiz.ts` | purpose/goal/restriction/budget/time/downtime 옵션과 라벨, replace/regenerate 옵션 |
+| 온보딩 카피/옵션 | `data/quiz.ts` | purpose/goal/restriction/budget/time/downtime 옵션과 라벨, goal별 바이브 옵션(`hairVibeOptions` 등), `languageOptions`, replace/regenerate 옵션 |
 | 도메인 타입 | `types.ts`의 `BeautyTripProfile`, `Itinerary`, `ItineraryDay`, `ItineraryBlock` | §4의 UX 스펙(§8~§12)을 그대로 반영 |
 | 일정 생성 엔진 | `services/itinerary/generate.ts` | 하드 필터 → 스코어링 → 지역 클러스터링 → 도보순서 → 타임라인 조립 |
 | 이동시간 | `services/itinerary/travel.ts` | 두 spot 사이 이동수단/시간 추정(도보 우선, 거리 기반) |
@@ -21,8 +21,11 @@ Explore 탭(`/`)은 더 이상 "카테고리 → 퀴즈 → Top 3 장소" 매칭
 
 ```
 purpose → goals → (goals에 skin 포함 시) skin → (skin === 'medical' 시) needles
-        → restrictions → budget → time → days → downtime → profile
+        → (goals에 hair/face/makeup-style/details 포함 시 각각) hairVibe/faceVibe/makeupStyleVibe/detailsVibe
+        → restrictions → languages → budget → time → days → downtime → profile
 ```
+
+`hairVibe`/`faceVibe`/`makeupStyleVibe`/`detailsVibe`는 "Color & Perm vs Head Spa 중 골라주세요" 같은 직접적인 서비스 목록이 아니라 `data/quiz.ts`의 감성적인 문구(예: "Deep-conditioning head spa") 선택지로 물어서 `profile.subcategoryVibe[goal]`에 실제 `SpotSubcategory`를 저장한다 — Creatrip 버튼(§4.2 하단)이 어떤 세부 카테고리를 가리킬지 정하는 데만 쓰이고, spot 후보 필터링에는 안 쓰인다. `skin` 목표는 이미 있는 `skinExperience` 답변을 재사용해 파생하므로 별도 스텝이 없다. `languages` 스텝은 Creatrip이 지원하는 4개 언어(중국어/일본어/태국어/베트남어) 중 필요한 걸 골라 `profile.languageNeeds`에 저장 — Creatrip `theme` 필터로 연결된다.
 
 `profile` 스텝에서 "Build my itinerary →"를 누르면 `AITransition` 로딩 화면을 거쳐 `generateItinerary(profile)`을 호출하고, 결과를 `upsertItinerary()`로 `localStorage`에 저장한 뒤 `/itinerary/:id`로 이동한다.
 
@@ -35,6 +38,8 @@ purpose → goals → (goals에 skin 포함 시) skin → (skin === 'medical' �
 3. **지역 클러스터링** — spot을 `area`(Gangnam/Seongsu/Hongdae/Myeongdong — 좌표 최단거리로 버킷팅, `data/spots.ts#nearestArea`)별로 묶고 area당 상위 점수 합으로 순위를 매긴 뒤, `tripDays`/`beautyTime`에서 뽑은 일수만큼 area를 하루씩 배정한다(§16).
 4. **일자 조립** (`buildDay`) — 같은 area 안에서 최근접 이웃 방식(`orderByWalk`)으로 도보 순서를 잡고, `travelBetween()`으로 이동 블록을, 시술 180분 누적마다 점심 브레이크 블록을 끼워 넣는다.
 5. 각 spot 블록에는 `whyFor()`가 만든 한 줄 이유(§19 "Why we chose this")가 붙는다.
+
+`ItineraryTimeline.tsx`의 각 spot 카드에는 "Book with Creatrip →" 링크도 붙는다(`lib/creatrip.ts#buildCreatripListUrl`) — `generate.ts#creatripSubcategoryFor(spot, profile)`가 그 spot이 속한 goal의 `subcategoryVibe` 답변(없으면 spot 자체의 대표 subcategory)으로 타깃 카테고리를 정하고, `creatripThemesForProfile(profile)`이 `languageNeeds`/`budget`/일부 `restrictions`(no-surprise-costs → affordable price, no-upsell·no-factory → excellent service)로 `theme` 쿼리를 더한다. 이 매핑은 spot 선택(하드 필터·스코어링)과는 완전히 별개다 — 후보 자체는 여전히 5-way `BeautyCategory` 수준에서만 걸러진다.
 
 ### 4.3 일정 편집
 

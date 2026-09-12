@@ -47,6 +47,27 @@ const GOAL_SUBCATS: Record<Exclude<BeautyGoal, 'dont-know' | 'overall'>, SpotSub
   details: ['nail-art', 'waxing', 'glasses', 'id-portrait', 'permanent-makeup', 'shopping'],
 };
 
+/** Which of the user's selected goals a live spot's (coarse, 5-way) subcategory
+ * belongs to, so the itinerary's "Book with Creatrip" link can target the *specific*
+ * Creatrip middle-category the user actually asked for — without changing spot
+ * selection itself (still 5-way; see data/spots.ts's CATEGORY_TO_SUBCATEGORY). Not
+ * used by passesHardFilter/scoreSpot on purpose. */
+export function creatripSubcategoryFor(spot: Spot, profile?: BeautyTripProfile | null): SpotSubcategory {
+  if (!profile) return spot.subcategory;
+  if (spot.subcategory === 'skin-care' || spot.subcategory === 'aesthetics') {
+    // The skin goal already has a 2-way signal via skinExperience — no separate vibe step.
+    if (profile.goals.includes('skin')) {
+      return profile.skinExperience === 'medical' || profile.skinExperience === 'professional'
+        ? 'aesthetics'
+        : 'skin-care';
+    }
+  }
+  const goal = (Object.keys(GOAL_SUBCATS) as (keyof typeof GOAL_SUBCATS)[]).find((g) =>
+    GOAL_SUBCATS[g].includes(spot.subcategory)
+  );
+  return (goal && profile.subcategoryVibe[goal]) || spot.subcategory;
+}
+
 function wantedSubcats(profile: BeautyTripProfile): SpotSubcategory[] | null {
   const goals = profile.goals.filter((g) => g !== 'dont-know' && g !== 'overall') as Exclude<
     BeautyGoal,
@@ -548,6 +569,8 @@ function emptyProfileFallback(): BeautyTripProfile {
     beautyTime: 'half-day',
     tripDays: '3',
     downtime: 'few-hours',
+    subcategoryVibe: {},
+    languageNeeds: [],
   };
 }
 
@@ -563,6 +586,8 @@ export function emptyProfile(): BeautyTripProfile {
     beautyTime: null,
     tripDays: null,
     downtime: null,
+    subcategoryVibe: {},
+    languageNeeds: [],
   };
 }
 

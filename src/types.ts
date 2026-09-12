@@ -71,6 +71,9 @@ export type BeautyTime = 'couple-hours' | 'half-day' | 'full-day' | 'no-mind';
 export type RecoveryComfort = 'none' | 'few-hours' | '1-day' | '2-3-days' | 'ok';
 export type TripDays = '1' | '2' | '3' | '4-plus';
 
+/** The 4 languages Creatrip's spot-list filters support (lib/creatrip.ts#CREATRIP_THEME). */
+export type CreatripLanguage = 'Chinese' | 'Japanese' | 'Thai' | 'Vietnamese';
+
 export interface BeautyTripProfile {
   purpose: TripPurpose | null;
   goals: BeautyGoal[];
@@ -82,6 +85,12 @@ export interface BeautyTripProfile {
   beautyTime: BeautyTime | null;
   tripDays: TripDays | null;
   downtime: RecoveryComfort | null;
+  /** A vibe-question answer per goal (services/itinerary/generate.ts's GOAL_SUBCATS
+   * keys), asked only for goals with more than one real Creatrip subcategory. Used to
+   * target the itinerary's "Book with Creatrip" link, not to filter live spot
+   * candidates (those stay at the coarser BeautyCategory level — see data/spots.ts). */
+  subcategoryVibe: Partial<Record<Exclude<BeautyGoal, 'dont-know' | 'overall'>, SpotSubcategory>>;
+  languageNeeds: CreatripLanguage[];
 }
 
 export interface Spot {

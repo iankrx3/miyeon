@@ -2,10 +2,12 @@ import type {
   BeautyBudget,
   BeautyGoal,
   BeautyTime,
+  CreatripLanguage,
   NeedleComfort,
   RecoveryComfort,
   Restriction,
   SkinExperience,
+  SpotSubcategory,
   TripDays,
   TripPurpose,
 } from '../types';
@@ -45,6 +47,43 @@ export const needleOptions: { id: NeedleComfort; label: string }[] = [
   { id: 'yes', label: 'Yes' },
   { id: 'no', label: 'No' },
   { id: 'not-sure', label: 'Not sure' },
+];
+
+// Vibe-flavored follow-ups shown only for the goals that have more than one real
+// Creatrip subcategory (services/itinerary/generate.ts's GOAL_SUBCATS) — worded as a
+// feeling/scenario rather than a literal service-menu pick, per product direction.
+// The 'skin' goal reuses skinExperienceOptions above instead of a separate step.
+export const hairVibeOptions: { id: SpotSubcategory; emoji: string; label: string }[] = [
+  { id: 'color-perm', emoji: '💇', label: 'A whole new color or cut' },
+  { id: 'head-spa', emoji: '🧖', label: 'Deep-conditioning head spa' },
+  { id: 'hair-makeup', emoji: '💁', label: 'Styled for an occasion' },
+  { id: 'hair-extensions', emoji: '🌊', label: 'More length or volume' },
+];
+
+export const faceVibeOptions: { id: SpotSubcategory; emoji: string; label: string }[] = [
+  { id: 'skin-care', emoji: '✨', label: 'Clearer, healthier-looking skin' },
+  { id: 'aesthetics', emoji: '🪄', label: 'Lifting & contouring' },
+  { id: 'beauty-makeup', emoji: '💄', label: 'A full makeup transformation' },
+];
+
+export const makeupStyleVibeOptions: { id: SpotSubcategory; emoji: string; label: string }[] = [
+  { id: 'color-analysis', emoji: '🎨', label: 'Discover my personal colors' },
+  { id: 'beauty-makeup', emoji: '💄', label: 'A full glam makeup session' },
+];
+
+export const detailsVibeOptions: { id: SpotSubcategory; emoji: string; label: string }[] = [
+  { id: 'nail-art', emoji: '💅', label: 'Nails' },
+  { id: 'waxing', emoji: '🪒', label: 'Smooth, hair-free skin' },
+  { id: 'glasses', emoji: '👓', label: 'New glasses' },
+  { id: 'id-portrait', emoji: '📸', label: 'ID or passport photo' },
+  { id: 'permanent-makeup', emoji: '✏️', label: 'Long-lasting brows or lips' },
+];
+
+export const languageOptions: { id: CreatripLanguage; emoji: string; label: string }[] = [
+  { id: 'Chinese', emoji: '🇨🇳', label: 'Chinese' },
+  { id: 'Japanese', emoji: '🇯🇵', label: 'Japanese' },
+  { id: 'Thai', emoji: '🇹🇭', label: 'Thai' },
+  { id: 'Vietnamese', emoji: '🇻🇳', label: 'Vietnamese' },
 ];
 
 export const restrictionOptions: { id: Restriction; label: string }[] = [

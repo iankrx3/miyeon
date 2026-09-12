@@ -1,13 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
-import type { BeautyGoal, BeautyTripProfile, Restriction } from '../types';
+import type { BeautyGoal, BeautyTripProfile, CreatripLanguage, Restriction } from '../types';
 import {
   beautyTimeOptions,
   budgetOptions,
+  detailsVibeOptions,
   downtimeOptions,
+  faceVibeOptions,
   goalLabel,
   goalOptions,
+  hairVibeOptions,
+  languageOptions,
+  makeupStyleVibeOptions,
   needleOptions,
   purposeLabel,
   purposeOptions,
@@ -29,7 +34,12 @@ type Step =
   | 'goals'
   | 'skin'
   | 'needles'
+  | 'hairVibe'
+  | 'faceVibe'
+  | 'makeupStyleVibe'
+  | 'detailsVibe'
   | 'restrictions'
+  | 'languages'
   | 'budget'
   | 'time'
   | 'days'
@@ -50,14 +60,22 @@ export default function ExplorePage() {
 
   const needsSkin = profile.goals.includes('skin');
   const needsNeedles = needsSkin && profile.skinExperience === 'medical';
+  const needsHairVibe = profile.goals.includes('hair');
+  const needsFaceVibe = profile.goals.includes('face');
+  const needsMakeupStyleVibe = profile.goals.includes('makeup-style');
+  const needsDetailsVibe = profile.goals.includes('details');
 
   const flow = useMemo<Step[]>(() => {
     const steps: Step[] = ['purpose', 'goals'];
     if (needsSkin) steps.push('skin');
     if (needsNeedles) steps.push('needles');
-    steps.push('restrictions', 'budget', 'time', 'days', 'downtime', 'profile');
+    if (needsHairVibe) steps.push('hairVibe');
+    if (needsFaceVibe) steps.push('faceVibe');
+    if (needsMakeupStyleVibe) steps.push('makeupStyleVibe');
+    if (needsDetailsVibe) steps.push('detailsVibe');
+    steps.push('restrictions', 'languages', 'budget', 'time', 'days', 'downtime', 'profile');
     return steps;
-  }, [needsSkin, needsNeedles]);
+  }, [needsSkin, needsNeedles, needsHairVibe, needsFaceVibe, needsMakeupStyleVibe, needsDetailsVibe]);
 
   const stepIndex = Math.max(1, flow.indexOf(step) + 1);
 
@@ -97,6 +115,15 @@ export default function ExplorePage() {
         ? prev.restrictions.filter((r) => r !== id)
         : [...prev.restrictions, id];
       return { ...prev, restrictions: selected, nothingOffLimits: false };
+    });
+  };
+
+  const toggleLanguage = (id: CreatripLanguage) => {
+    setProfile((prev) => {
+      const selected = prev.languageNeeds.includes(id)
+        ? prev.languageNeeds.filter((l) => l !== id)
+        : [...prev.languageNeeds, id];
+      return { ...prev, languageNeeds: selected };
     });
   };
 
@@ -226,6 +253,105 @@ export default function ExplorePage() {
             </WizardShell>
           )}
 
+          {step === 'hairVibe' && (
+            <WizardShell
+              title="What's calling you for hair?"
+              step={stepIndex}
+              total={flow.length}
+              onBack={() => goBackFrom('hairVibe')}
+            >
+              <div className="space-y-2.5">
+                {hairVibeOptions.map((opt) => (
+                  <OptionCard
+                    key={opt.id}
+                    emoji={opt.emoji}
+                    label={opt.label}
+                    selected={profile.subcategoryVibe.hair === opt.id}
+                    onClick={() => {
+                      setProfile((p) => ({ ...p, subcategoryVibe: { ...p.subcategoryVibe, hair: opt.id } }));
+                      setTimeout(() => goNextFrom('hairVibe'), 180);
+                    }}
+                  />
+                ))}
+              </div>
+            </WizardShell>
+          )}
+
+          {step === 'faceVibe' && (
+            <WizardShell
+              title="What matters most for your face?"
+              step={stepIndex}
+              total={flow.length}
+              onBack={() => goBackFrom('faceVibe')}
+            >
+              <div className="space-y-2.5">
+                {faceVibeOptions.map((opt) => (
+                  <OptionCard
+                    key={opt.id}
+                    emoji={opt.emoji}
+                    label={opt.label}
+                    selected={profile.subcategoryVibe.face === opt.id}
+                    onClick={() => {
+                      setProfile((p) => ({ ...p, subcategoryVibe: { ...p.subcategoryVibe, face: opt.id } }));
+                      setTimeout(() => goNextFrom('faceVibe'), 180);
+                    }}
+                  />
+                ))}
+              </div>
+            </WizardShell>
+          )}
+
+          {step === 'makeupStyleVibe' && (
+            <WizardShell
+              title="How do you want to look your best?"
+              step={stepIndex}
+              total={flow.length}
+              onBack={() => goBackFrom('makeupStyleVibe')}
+            >
+              <div className="space-y-2.5">
+                {makeupStyleVibeOptions.map((opt) => (
+                  <OptionCard
+                    key={opt.id}
+                    emoji={opt.emoji}
+                    label={opt.label}
+                    selected={profile.subcategoryVibe['makeup-style'] === opt.id}
+                    onClick={() => {
+                      setProfile((p) => ({
+                        ...p,
+                        subcategoryVibe: { ...p.subcategoryVibe, 'makeup-style': opt.id },
+                      }));
+                      setTimeout(() => goNextFrom('makeupStyleVibe'), 180);
+                    }}
+                  />
+                ))}
+              </div>
+            </WizardShell>
+          )}
+
+          {step === 'detailsVibe' && (
+            <WizardShell
+              title="Any finishing touches on your list?"
+              step={stepIndex}
+              total={flow.length}
+              onBack={() => goBackFrom('detailsVibe')}
+            >
+              <div className="space-y-2.5">
+                {detailsVibeOptions.map((opt) => (
+                  <OptionCard
+                    key={opt.id}
+                    emoji={opt.emoji}
+                    label={opt.label}
+                    selected={profile.subcategoryVibe.details === opt.id}
+                    onClick={() => {
+                      setProfile((p) => ({ ...p, subcategoryVibe: { ...p.subcategoryVibe, details: opt.id } }));
+                      setTimeout(() => goNextFrom('detailsVibe'), 180);
+                    }}
+                  />
+                ))}
+              </div>
+            </WizardShell>
+          )}
+
           {step === 'restrictions' && (
             <WizardShell
               title="Pick anything that’s off-limits."
@@ -267,6 +393,29 @@ export default function ExplorePage() {
                     selected={profile.restrictions.includes(opt.id)}
                     disabled={profile.nothingOffLimits}
                     onClick={() => toggleRestriction(opt.id)}
+                  />
+                ))}
+              </div>
+            </WizardShell>
+          )}
+
+          {step === 'languages' && (
+            <WizardShell
+              title="Do you need staff who speak a specific language?"
+              subtitle="Optional — skip if English is fine."
+              step={stepIndex}
+              total={flow.length}
+              onBack={() => goBackFrom('languages')}
+              onNext={() => goNextFrom('languages')}
+            >
+              <div className="grid grid-cols-2 gap-2.5">
+                {languageOptions.map((opt) => (
+                  <OptionCard
+                    key={opt.id}
+                    emoji={opt.emoji}
+                    label={opt.label}
+                    selected={profile.languageNeeds.includes(opt.id)}
+                    onClick={() => toggleLanguage(opt.id)}
                   />
                 ))}
               </div>
@@ -402,6 +551,9 @@ export default function ExplorePage() {
                   label="TIME"
                   value={beautyTimeOptions.find((b) => b.id === profile.beautyTime)?.label ?? '—'}
                 />
+                {profile.languageNeeds.length > 0 && (
+                  <ProfileRow label="LANGUAGE" value={profile.languageNeeds.join(' · ')} />
+                )}
               </div>
             </WizardShell>
           )}

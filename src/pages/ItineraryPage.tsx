@@ -132,6 +132,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
         <div className="flex-1 overflow-y-auto px-4 pb-24 sm:pb-8">
           <ItineraryTimeline
             day={day}
+            profile={itinerary.profileSnapshot}
             onOpenSpot={(spot) => navigate(`/place/${spot.id}`, { state: { fromItinerary: itinerary.id } })}
             onOpenMenu={
               canEdit
