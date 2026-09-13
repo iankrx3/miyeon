@@ -16,9 +16,11 @@ interface ProfilePageProps {
 
 export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
   const navigate = useNavigate();
-  const { saved, unsave } = useSavedItineraries(session.user?.id);
-  const { savedPlaces, unsave: unsavePlace } = useSavedPlaces(session.user?.id);
+  const { saved, unsave, syncError: savedItineraryError } = useSavedItineraries(session.user?.id);
+  const { savedPlaces, unsave: unsavePlace, syncError: savedPlaceError } = useSavedPlaces(session.user?.id);
   const [myItineraries, setMyItineraries] = useState<Itinerary[]>([]);
+  const [myItineraryError, setMyItineraryError] = useState<string | null>(null);
+  const syncError = savedPlaceError || myItineraryError || savedItineraryError;
 
   const handleDeleteMyItinerary = (itineraryId: string) => {
     void deleteUserItinerary(itineraryId, session.user?.id);
@@ -44,8 +46,11 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
       return;
     }
     let cancelled = false;
-    fetchUserItineraries(session.user.id).then((list) => {
-      if (!cancelled) setMyItineraries(list);
+    fetchUserItineraries(session.user.id).then(({ itineraries, syncError: cloudError }) => {
+      if (!cancelled) {
+        setMyItineraries(itineraries);
+        setMyItineraryError(cloudError);
+      }
     });
     return () => {
       cancelled = true;
@@ -82,6 +87,12 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
           <p className="text-xs text-miyeon-main/60">{session.user.email}</p>
         </div>
       </div>
+
+      {syncError && (
+        <p className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+          {syncError}
+        </p>
+      )}
 
       {session.creator ? (
         <Link

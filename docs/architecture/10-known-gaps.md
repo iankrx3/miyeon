@@ -14,6 +14,6 @@
 
 ### 이제는 사실이 아닌 예전 기록 (참고용)
 
-과거 이 문서·README는 "`creators`/`creator_picks`/`places`/`treatments` 테이블의 SQL 스키마 파일이 없다"고 적었지만, 지금은 `supabase/creators_schema.sql`(creators/creator_picks/creator_lists/list_spots), `supabase/itineraries_schema.sql`(curator_itineraries/saved_itineraries), `supabase/magazine_schema.sql`이 존재한다. `places` 테이블은 애초에 "한 번도 동기화 안 되는 캐시"였어서 스키마를 만드는 대신 **완전히 폐기**됐고, `spots` 테이블(Creatrip 스크레이핑 시드)도 일정 엔진이 Google/KTO 라이브 조회로 바뀌면서 함께 삭제됐다(`supabase/spots_schema.sql`/`seed_spots.sql`도 제거) — `creator_picks.place_id`/`list_spots.place_id`/`community_posts.place_id`는 전부 FK 없는 자유 텍스트다(각 스키마 파일의 주석 참고).
+과거 이 문서·README는 "`creators`/`creator_picks`/`places`/`treatments` 테이블의 SQL 스키마 파일이 없다"고 적었지만, 지금은 `supabase/creators_schema.sql`(creators/creator_picks/creator_lists/list_spots), `supabase/itineraries_schema.sql`(curator_itineraries), `supabase/user_saves_schema.sql`(saved_places/saved_itineraries/user_itineraries), `supabase/magazine_schema.sql`이 존재한다. 레포에 SQL이 있다고 프로덕션 테이블이 있는 것은 아니다 — 기기 간 저장 동기화는 SQL editor에서 `user_saves_schema.sql`을 실행해야 한다. `places` 테이블은 애초에 "한 번도 동기화 안 되는 캐시"였어서 스키마를 만드는 대신 **완전히 폐기**됐고, `spots` 테이블(Creatrip 스크레이핑 시드)도 일정 엔진이 Google/KTO 라이브 조회로 바뀌면서 함께 삭제됐다(`supabase/spots_schema.sql`/`seed_spots.sql`도 제거) — `creator_picks.place_id`/`list_spots.place_id`/`community_posts.place_id`는 전부 FK 없는 자유 텍스트다(각 스키마 파일의 주석 참고).
 
 Map 탭의 카테고리 제한(hair/nails/makeup 숨김)도 더 이상 사실이 아니다 — `ENABLED_MAP_CATEGORIES`에 5개 카테고리가 모두 들어 있고, 큐레이션 카탈로그에 각 카테고리의 실제 spot이 있다([§5](05-map.md)).

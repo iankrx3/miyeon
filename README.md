@@ -28,6 +28,12 @@ data call falls back to `src/data/mock.ts` unless the place-discovery keys below
 are set. Without `VITE_MAPTILER_API_KEY`, the map uses the free Carto Voyager
 basemap instead of MapTiler.
 
+Google sign-in alone does **not** create the save tables. After Auth is working,
+run `supabase/user_saves_schema.sql` in the Supabase SQL editor so Saved places,
+My itineraries, and Saved itineraries sync across devices. Until that file has
+been applied, those lists stay in the browser's `localStorage` and look different
+on each phone.
+
 ### Live place discovery (optional)
 
 Add these **server-only** keys to `.env.local` (no `VITE_` prefix — the Vite
@@ -128,9 +134,10 @@ it. The old category/quiz/match screen this replaced is still in the tree as dea
   Supabase when configured, falling back to `localStorage` otherwise: create
   post, like/unlike, comment, and delete your own post/comment. Follow is not
   built.
-- **My Map** (`src/hooks/useSavedPlaces.ts`) — save/unsave individual places,
-  stored in `localStorage` for now (no `saved_places` table yet). Separate from
-  saving whole itineraries, above.
+- **My Map** (`src/hooks/useSavedPlaces.ts`) — save/unsave individual places.
+  Always cached in `localStorage`; signed-in Google users also sync to Supabase
+  `saved_places` (apply `supabase/user_saves_schema.sql`). Demo / guest sessions
+  stay on-device. Separate from saving whole itineraries, above.
 - **Mobile bottom nav** (`src/components/layout/BottomNav.tsx`) — below the `sm`
   breakpoint, the top tab bar (`NavHeader`) hides and a thumb-reachable bottom
   tab bar takes over; desktop keeps the top nav.

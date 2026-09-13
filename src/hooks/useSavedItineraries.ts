@@ -1,25 +1,45 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Itinerary, SavedItinerary } from '../types';
-import { listSavedItineraries, upsertItinerary, writeSavedItineraries } from '../lib/localItineraryStore';
+import { isRemoteUser } from '../lib/remoteUser';
+import {
+  listSavedItineraries,
+  migrateGuestSavedItineraries,
+  upsertItinerary,
+  writeSavedItineraries,
+} from '../lib/localItineraryStore';
 import {
   deleteRemoteSavedItinerary,
   fetchRemoteSavedItineraries,
   insertRemoteSavedItinerary,
   mergeSavedItineraries,
+  pushLocalSavedItineraries,
 } from '../services/savedItineraries';
 
 export function useSavedItineraries(userId?: string) {
   const [saved, setSaved] = useState<SavedItinerary[]>(() => listSavedItineraries(userId));
+  const [syncError, setSyncError] = useState<string | null>(null);
   const hydratedUserId = useRef(userId);
 
   useEffect(() => {
     hydratedUserId.current = userId;
-    setSaved(listSavedItineraries(userId));
+    const migrated = migrateGuestSavedItineraries(userId);
+    setSaved(migrated);
+    setSyncError(null);
     let cancelled = false;
-    fetchRemoteSavedItineraries(userId).then((remote) => {
-      if (cancelled || remote === null) return;
-      setSaved((local) => mergeSavedItineraries(local, remote));
-    });
+    (async () => {
+      const remote = await fetchRemoteSavedItineraries(userId);
+      if (cancelled) return;
+      if (remote === null) {
+        if (isRemoteUser(userId)) setSyncError('Could not sync saved itineraries. Showing this device only.');
+        return;
+      }
+      const merged = mergeSavedItineraries(migrated, remote);
+      merged.forEach((entry) => upsertItinerary(entry.snapshot));
+      setSaved(merged);
+      const pushed = await pushLocalSavedItineraries(userId, merged, remote);
+      if (cancelled) return;
+      if (!pushed) setSyncError('Could not sync saved itineraries. Showing this device only.');
+    })();
     return () => {
       cancelled = true;
     };
@@ -50,8 +70,37 @@ export function useSavedItineraries(userId?: string) {
         savedAt: new Date().toISOString(),
       };
       setSaved((prev) => [entry, ...prev.filter((s) => s.itineraryId !== itinerary.id)]);
-      void insertRemoteSavedItinerary(userId, entry);
+      void insertRemoteSavedItinerary(userId, entry).then((ok) => {
+        if (!ok && isRemoteUser(userId)) setSyncError('Could not sync saved itineraries. Showing this device only.');
+      });
       return snapshot;
+    },
+    [userId]
+  );
+
+  const updateSavedSnapshot = useCallback(
+    (itinerary: Itinerary) => {
+      setSaved((prev) => {
+        const idx = prev.findIndex(
+          (s) => s.itineraryId === itinerary.id || s.snapshot.id === itinerary.id || s.savedId === itinerary.id
+        );
+        if (idx < 0) return prev;
+        const previous = prev[idx];
+        const snapshot: Itinerary = {
+          ...(JSON.parse(JSON.stringify(itinerary)) as Itinerary),
+          id: previous.snapshot.id,
+        };
+        upsertItinerary(snapshot);
+        const entry: SavedItinerary = {
+          ...previous,
+          snapshot,
+          savedAt: new Date().toISOString(),
+        };
+        void insertRemoteSavedItinerary(userId, entry);
+        const next = [...prev];
+        next[idx] = entry;
+        return next;
+      });
     },
     [userId]
   );
@@ -81,5 +130,5 @@ export function useSavedItineraries(userId?: string) {
     [isSaved, saveItinerary, unsave]
   );
 
-  return { saved, isSaved, saveItinerary, unsave, toggleSave };
+  return { saved, isSaved, saveItinerary, unsave, toggleSave, updateSavedSnapshot, syncError };
 }

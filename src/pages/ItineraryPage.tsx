@@ -8,6 +8,7 @@ import { ItineraryRouteMap } from '../components/itinerary/ItineraryRouteMap';
 import { ItineraryTimeline } from '../components/itinerary/ItineraryTimeline';
 import { useSavedItineraries } from '../hooks/useSavedItineraries';
 import { getStoredItinerary, upsertItinerary } from '../lib/localItineraryStore';
+import { persistUserItinerary } from '../services/userItinerary';
 import {
   itinerarySpotCount,
   moveSpotToDay,
@@ -28,13 +29,18 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
   const [dayIndex, setDayIndex] = useState(1);
   const [menu, setMenu] = useState<{ blockId: string; spot: Spot } | null>(null);
   const [sheet, setSheet] = useState<'replace' | 'regenerate' | 'move' | null>(null);
-  const { isSaved, toggleSave } = useSavedItineraries(session.user?.id);
+  const { isSaved, toggleSave, updateSavedSnapshot } = useSavedItineraries(session.user?.id);
 
   const day = itinerary?.days.find((d) => d.dayIndex === dayIndex) ?? itinerary?.days[0];
 
   const persist = (next: Itinerary) => {
-    upsertItinerary(next);
     setItinerary(next);
+    if (next.source === 'user') {
+      void persistUserItinerary(session, next);
+    } else {
+      upsertItinerary(next);
+    }
+    updateSavedSnapshot(next);
   };
 
   const spotsInDay = useMemo(() => {

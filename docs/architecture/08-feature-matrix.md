@@ -16,7 +16,7 @@
 | 장소/시술 상세 조회 | Place/Treatment detail | — | `fetchPlaceById`/`fetchTreatmentById`(spots → 디스커버리 카탈로그 → mock 순) | Google, KTO |
 | 의료관광 배지 | Place detail | — | KTO `detailMdclTursm` 머지 | KTO |
 | 웰니스 핀 | Map, Place detail | — | mock `nearbyWellness` | (미연동) |
-| 장소 저장(My Map) | 상세/맵 버튼 | `useSavedPlaces` | — | `localStorage` |
+| 장소 저장(My Map) | 상세/맵 버튼 | `useSavedPlaces` | `services/savedPlaces.ts` | `localStorage` + (Google 로그인 시) Supabase `saved_places` |
 | 커뮤니티 | CommunityPage(Community 탭), PostDetailPage | — | `services/community.ts` | Supabase 또는 `localStorage` |
 | 매거진 | CommunityPage(Magazine 탭), MagazineDetailPage | `useMagazineArticles` | `services/magazine.ts` | Supabase 또는 `localStorage` |
 | 큐레이터 프로필/일정 관리 | CuratorProfilePage, CuratorEditPage, CuratorSignupPage, CuratorListPage | — | `services/curator.ts` | Supabase 또는 `localStorage` |

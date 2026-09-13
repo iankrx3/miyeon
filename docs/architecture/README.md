@@ -15,7 +15,7 @@ Vite + React SPA. 서버는 Vite 개발/프리뷰 프록시(및 Vercel 배포용
   data.go.kr MdclTursmService (KTO 의료관광)
   places.googleapis.com      (Google Places API New)
   generativelanguage.googleapis.com (optional) Gemini + Google Search grounding
-  (optional) Supabase Auth + Postgres (creators/creator_lists/list_spots/curator_itineraries/saved_itineraries/magazine_articles/community_*/spots)
+  (optional) Supabase Auth + Postgres (creators/creator_lists/list_spots/curator_itineraries/saved_itineraries/saved_places/user_itineraries/magazine_articles/community_*)
 ```
 
 실패 시 항상 mock/로컬 데이터로 연다. 키가 없어도 Plan 온보딩 → 일정 생성, Map, 데모 로그인은 동작한다.

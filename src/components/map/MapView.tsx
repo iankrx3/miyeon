@@ -170,8 +170,8 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
     }
     setMyTrips(listUserItineraries(session.user.id));
     let cancelled = false;
-    fetchUserItineraries(session.user.id).then((list) => {
-      if (!cancelled) setMyTrips(list);
+    fetchUserItineraries(session.user.id).then(({ itineraries }) => {
+      if (!cancelled) setMyTrips(itineraries);
     });
     return () => {
       cancelled = true;

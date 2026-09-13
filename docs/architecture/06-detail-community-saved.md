@@ -24,4 +24,4 @@
 
 **Community 페이지 안의 Magazine 탭** (`CommunityPage.tsx`의 `?tab=magazine`, `MagazineGrid`/`MagazineComposer`, `/magazine/:id` → `MagazineDetailPage.tsx`) — 큐레이터가 쓰는 TREATMENT/GUIDE/TREND 칼럼. 자세한 내용은 [§11](11-curator-tools.md#3-매거진-servicesmagazinets) 참고.
 
-**My Map** (`hooks/useSavedPlaces.ts`) — 장소 id 배열, `miyeon_my_map`. 서버 테이블 없음. 저장된 일정(다른 저장 대상)은 [§4.4](04-matching.md#44-저장-usesaveditineraries)와 [§11](11-curator-tools.md#4-저장된-일정-servicessaveditinerariests) 참고.
+**My Map** (`hooks/useSavedPlaces.ts`) — 장소 스냅샷 배열, `miyeon_my_map:<userId|guest>`. 게스트/데모는 `localStorage`만. Google 로그인이면 Supabase `saved_places`에도 올리고, 로그인 hydrate 때 로컬에만 있는 행을 원격으로 밀어 올린다(`supabase/user_saves_schema.sql`). 저장된 일정은 [§4.4](04-matching.md#44-저장-usesaveditineraries)와 [§11](11-curator-tools.md#4-저장된-일정-servicessaveditinerariests) 참고.

@@ -94,6 +94,23 @@ export function writeSavedItineraries(items: SavedItinerary[], userId?: string) 
   writeJson(savedKeyFor(userId), items);
 }
 
+/** Move guest bookmarks onto the signed-in user's key. Demo sessions stay local. */
+export function migrateGuestSavedItineraries(userId?: string): SavedItinerary[] {
+  const current = listSavedItineraries(userId);
+  if (!userId) return current;
+  const guest = listSavedItineraries(undefined);
+  if (guest.length === 0) return current;
+  const byKey = new Map<string, SavedItinerary>();
+  for (const entry of [...guest, ...current]) {
+    const prev = byKey.get(entry.itineraryId);
+    if (!prev || entry.savedAt > prev.savedAt) byKey.set(entry.itineraryId, entry);
+  }
+  const merged = [...byKey.values()].sort((a, b) => (a.savedAt < b.savedAt ? 1 : -1));
+  writeSavedItineraries(merged, userId);
+  writeSavedItineraries([], undefined);
+  return merged;
+}
+
 export function firstSpotImage(itinerary: Itinerary): string | undefined {
   if (itinerary.coverPhotoUrl) return itinerary.coverPhotoUrl;
   for (const day of itinerary.days) {

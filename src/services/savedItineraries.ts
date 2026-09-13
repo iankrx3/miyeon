@@ -1,12 +1,8 @@
 import type { Itinerary, SavedItinerary } from '../types';
 import { isRemoteUser } from '../lib/remoteUser';
 import { supabase } from '../lib/supabase';
+import { isMissingRelation } from '../lib/supabaseError';
 import { upsertItinerary } from '../lib/localItineraryStore';
-
-function isMissingTable(error: { code?: string; message?: string } | null): boolean {
-  if (!error) return false;
-  return error.code === 'PGRST205' || /saved_itineraries/i.test(error.message ?? '');
-}
 
 function mapSource(source: string): SavedItinerary['source'] {
   if (source === 'curator' || source === 'user' || source === 'miyeon') return source;
@@ -31,8 +27,10 @@ function mapRow(row: {
 
 export function mergeSavedItineraries(local: SavedItinerary[], remote: SavedItinerary[]): SavedItinerary[] {
   const byKey = new Map<string, SavedItinerary>();
-  for (const entry of local) byKey.set(entry.itineraryId, entry);
-  for (const entry of remote) byKey.set(entry.itineraryId, entry);
+  for (const entry of [...local, ...remote]) {
+    const prev = byKey.get(entry.itineraryId);
+    if (!prev || entry.savedAt > prev.savedAt) byKey.set(entry.itineraryId, entry);
+  }
   return [...byKey.values()].sort((a, b) => (a.savedAt < b.savedAt ? 1 : -1));
 }
 
@@ -44,7 +42,7 @@ export async function fetchRemoteSavedItineraries(userId?: string): Promise<Save
     .eq('user_id', userId!)
     .order('saved_at', { ascending: false });
   if (error) {
-    if (!isMissingTable(error)) console.warn('fetchRemoteSavedItineraries failed', error);
+    console.warn('fetchRemoteSavedItineraries failed', error);
     return null;
   }
   const mapped = (data ?? []).map(mapRow);
@@ -52,29 +50,57 @@ export async function fetchRemoteSavedItineraries(userId?: string): Promise<Save
   return mapped;
 }
 
-export async function insertRemoteSavedItinerary(userId: string | undefined, entry: SavedItinerary) {
-  if (!isRemoteUser(userId) || !supabase) return;
-  const { error } = await supabase.from('saved_itineraries').upsert(
-    {
-      user_id: userId,
-      itinerary_id: entry.itineraryId,
-      source: entry.source,
-      snapshot: entry.snapshot,
-      saved_at: entry.savedAt,
-    },
-    { onConflict: 'user_id,itinerary_id' }
-  );
-  if (error && !isMissingTable(error)) console.warn('insertRemoteSavedItinerary failed', error);
+async function upsertSaved(userId: string, entry: SavedItinerary): Promise<boolean> {
+  if (!supabase) return false;
+  const payload = {
+    user_id: userId,
+    itinerary_id: entry.itineraryId,
+    source: entry.source,
+    snapshot: entry.snapshot,
+    saved_at: entry.savedAt,
+  };
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const { error } = await supabase.from('saved_itineraries').upsert(payload, { onConflict: 'user_id,itinerary_id' });
+    if (!error) return true;
+    console.warn('insertRemoteSavedItinerary failed', error);
+    if (isMissingRelation(error)) return false;
+  }
+  return false;
+}
+
+export async function insertRemoteSavedItinerary(userId: string | undefined, entry: SavedItinerary): Promise<boolean> {
+  if (!isRemoteUser(userId) || !supabase) return false;
+  return upsertSaved(userId!, entry);
+}
+
+export async function pushLocalSavedItineraries(
+  userId: string | undefined,
+  local: SavedItinerary[],
+  remote: SavedItinerary[]
+): Promise<boolean> {
+  if (!isRemoteUser(userId) || local.length === 0) return true;
+  const byRemote = new Map(remote.map((entry) => [entry.itineraryId, entry]));
+  let ok = true;
+  for (const entry of local) {
+    const existing = byRemote.get(entry.itineraryId);
+    if (existing && existing.savedAt >= entry.savedAt) continue;
+    if (!(await upsertSaved(userId!, entry))) ok = false;
+  }
+  return ok;
 }
 
 export async function deleteRemoteSavedItinerary(
   userId: string | undefined,
   keys: { itineraryId: string; savedId?: string; snapshotId?: string }
-) {
-  if (!isRemoteUser(userId) || !supabase) return;
+): Promise<boolean> {
+  if (!isRemoteUser(userId) || !supabase) return false;
   const parts = [`itinerary_id.eq.${keys.itineraryId}`];
   if (keys.snapshotId && keys.snapshotId !== keys.itineraryId) parts.push(`itinerary_id.eq.${keys.snapshotId}`);
   if (keys.savedId && keys.savedId !== keys.itineraryId) parts.push(`id.eq.${keys.savedId}`);
   const { error } = await supabase.from('saved_itineraries').delete().eq('user_id', userId!).or(parts.join(','));
-  if (error && !isMissingTable(error)) console.warn('deleteRemoteSavedItinerary failed', error);
+  if (error) {
+    console.warn('deleteRemoteSavedItinerary failed', error);
+    return false;
+  }
+  return true;
 }

@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Place } from '../types';
+import { isRemoteUser } from '../lib/remoteUser';
 import { fetchPlaceById } from '../services/places';
 import {
   deleteRemoteSavedPlace,
   fetchRemoteSavedPlaces,
   insertRemoteSavedPlace,
+  mergeSaved,
+  pushLocalSavedPlaces,
   type SavedPlaceEntry,
 } from '../services/savedPlaces';
 
@@ -33,25 +36,45 @@ function readSaved(userId?: string): SavedPlaceEntry[] {
   }
 }
 
-function mergeSaved(local: SavedPlaceEntry[], remote: SavedPlaceEntry[]): SavedPlaceEntry[] {
-  const byId = new Map<string, SavedPlaceEntry>();
-  for (const entry of local) byId.set(entry.placeId, entry);
-  for (const entry of remote) byId.set(entry.placeId, entry);
-  return [...byId.values()].sort((a, b) => (a.savedAt < b.savedAt ? 1 : -1));
+function writeSaved(userId: string | undefined, entries: SavedPlaceEntry[]) {
+  localStorage.setItem(storageKeyFor(userId), JSON.stringify(entries));
+}
+
+function migrateGuestSavedPlaces(userId?: string): SavedPlaceEntry[] {
+  const current = readSaved(userId);
+  if (!userId) return current;
+  const guest = readSaved(undefined);
+  if (guest.length === 0) return current;
+  const merged = mergeSaved(guest, current);
+  writeSaved(userId, merged);
+  localStorage.removeItem(storageKeyFor(undefined));
+  return merged;
 }
 
 export function useSavedPlaces(userId?: string) {
   const [saved, setSaved] = useState<SavedPlaceEntry[]>(() => readSaved(userId));
+  const [syncError, setSyncError] = useState<string | null>(null);
   const hydratedUserId = useRef(userId);
 
   useEffect(() => {
     hydratedUserId.current = userId;
-    setSaved(readSaved(userId));
+    const migrated = migrateGuestSavedPlaces(userId);
+    setSaved(migrated);
+    setSyncError(null);
     let cancelled = false;
-    fetchRemoteSavedPlaces(userId).then((remote) => {
-      if (cancelled || !remote) return;
-      setSaved((local) => mergeSaved(local, remote));
-    });
+    (async () => {
+      const remote = await fetchRemoteSavedPlaces(userId);
+      if (cancelled) return;
+      if (remote === null) {
+        if (isRemoteUser(userId)) setSyncError('Could not sync saved places. Showing this device only.');
+        return;
+      }
+      const merged = mergeSaved(migrated, remote);
+      setSaved(merged);
+      const pushed = await pushLocalSavedPlaces(userId, merged, remote);
+      if (cancelled) return;
+      if (!pushed) setSyncError('Could not sync saved places. Showing this device only.');
+    })();
     return () => {
       cancelled = true;
     };
@@ -59,7 +82,7 @@ export function useSavedPlaces(userId?: string) {
 
   useEffect(() => {
     if (hydratedUserId.current !== userId) return;
-    localStorage.setItem(storageKeyFor(userId), JSON.stringify(saved));
+    writeSaved(userId, saved);
   }, [saved, userId]);
 
   const attemptedHydrate = useRef(new Set<string>());
@@ -92,7 +115,9 @@ export function useSavedPlaces(userId?: string) {
         savedAt: new Date().toISOString(),
       };
       setSaved((prev) => [entry, ...prev.filter((item) => item.placeId !== place.id)]);
-      void insertRemoteSavedPlace(userId, entry);
+      void insertRemoteSavedPlace(userId, entry).then((ok) => {
+        if (!ok && isRemoteUser(userId)) setSyncError('Could not sync saved places. Showing this device only.');
+      });
     },
     [userId]
   );
@@ -116,5 +141,5 @@ export function useSavedPlaces(userId?: string) {
   const savedIds = saved.map((entry) => entry.placeId);
   const savedPlaces = saved.map((entry) => entry.snapshot).filter((place) => Boolean(place?.name));
 
-  return { savedIds, savedPlaces, isSaved, toggleSave, unsave };
+  return { savedIds, savedPlaces, isSaved, toggleSave, unsave, syncError };
 }

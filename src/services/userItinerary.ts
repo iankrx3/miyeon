@@ -1,13 +1,9 @@
 import type { Itinerary, UserSession } from '../types';
 import { isRemoteUser } from '../lib/remoteUser';
 import { supabase } from '../lib/supabase';
+import { isMissingRelation } from '../lib/supabaseError';
 import { createBlankItinerary } from './itinerary/generate';
 import { listUserItineraries, removeItinerary, upsertItinerary } from '../lib/localItineraryStore';
-
-function isMissingTable(error: { code?: string; message?: string } | null): boolean {
-  if (!error) return false;
-  return error.code === 'PGRST205' || /user_itineraries/i.test(error.message ?? '');
-}
 
 function mapUserItinerary(row: {
   id: string;
@@ -45,6 +41,18 @@ function remotePayload(itinerary: Itinerary, userId: string) {
   };
 }
 
+async function upsertRemote(userId: string, itinerary: Itinerary): Promise<boolean> {
+  if (!supabase) return false;
+  const payload = remotePayload(itinerary, userId);
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const { error } = await supabase.from('user_itineraries').upsert(payload, { onConflict: 'id' });
+    if (!error) return true;
+    console.warn('persistUserItinerary failed', error);
+    if (isMissingRelation(error)) return false;
+  }
+  return false;
+}
+
 export async function createUserItinerary(session: UserSession, title: string): Promise<Itinerary> {
   if (!session.isLoggedIn || !session.user) throw new Error('Must be signed in to create an itinerary.');
   const blank = createBlankItinerary(session.user.id, title, 'user');
@@ -57,9 +65,7 @@ export async function createUserItinerary(session: UserSession, title: string): 
       upsertItinerary(mapped);
       return mapped;
     } catch (err) {
-      if (!isMissingTable(err as { code?: string; message?: string })) {
-        console.warn('createUserItinerary: saving locally', err);
-      }
+      console.warn('createUserItinerary: saving locally', err);
     }
   }
 
@@ -70,22 +76,13 @@ export async function createUserItinerary(session: UserSession, title: string): 
 export async function persistUserItinerary(session: UserSession, itinerary: Itinerary): Promise<Itinerary> {
   upsertItinerary(itinerary);
   if (!session.user || !isRemoteUser(session.user.id) || !supabase) return itinerary;
-  try {
-    const { error } = await supabase
-      .from('user_itineraries')
-      .upsert(remotePayload(itinerary, session.user.id), { onConflict: 'id' });
-    if (error) throw error;
-  } catch (err) {
-    if (!isMissingTable(err as { code?: string; message?: string })) {
-      console.warn('persistUserItinerary failed', err);
-    }
-  }
+  await upsertRemote(session.user.id, itinerary);
   return itinerary;
 }
 
-export async function fetchUserItineraries(userId: string): Promise<Itinerary[]> {
+export async function fetchUserItineraries(userId: string): Promise<{ itineraries: Itinerary[]; syncError: string | null }> {
   const local = listUserItineraries(userId);
-  if (!isRemoteUser(userId) || !supabase) return local;
+  if (!isRemoteUser(userId) || !supabase) return { itineraries: local, syncError: null };
   try {
     const { data, error } = await supabase
       .from('user_itineraries')
@@ -93,15 +90,32 @@ export async function fetchUserItineraries(userId: string): Promise<Itinerary[]>
       .eq('user_id', userId)
       .order('updated_at', { ascending: false });
     if (error) throw error;
-    const mapped = (data ?? []).map(mapUserItinerary);
-    mapped.forEach(upsertItinerary);
-    const ids = new Set(mapped.map((i) => i.id));
-    return [...mapped, ...local.filter((i) => !ids.has(i.id))];
-  } catch (err) {
-    if (!isMissingTable(err as { code?: string; message?: string })) {
-      console.warn('fetchUserItineraries failed', err);
+    const remote = (data ?? []).map(mapUserItinerary);
+    remote.forEach(upsertItinerary);
+
+    const byId = new Map<string, Itinerary>();
+    for (const item of [...local, ...remote]) {
+      const prev = byId.get(item.id);
+      if (!prev || item.updatedAt > prev.updatedAt) byId.set(item.id, item);
     }
-    return local;
+    const merged = [...byId.values()].sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1));
+
+    const remoteById = new Map(remote.map((item) => [item.id, item]));
+    let pushFailed = false;
+    for (const item of merged) {
+      const existing = remoteById.get(item.id);
+      if (existing && existing.updatedAt >= item.updatedAt) continue;
+      upsertItinerary(item);
+      if (!(await upsertRemote(userId, item))) pushFailed = true;
+    }
+
+    return {
+      itineraries: merged,
+      syncError: pushFailed ? 'Could not sync your itineraries. Showing this device only.' : null,
+    };
+  } catch (err) {
+    console.warn('fetchUserItineraries failed', err);
+    return { itineraries: local, syncError: 'Could not sync your itineraries. Showing this device only.' };
   }
 }
 
@@ -123,5 +137,5 @@ export async function deleteUserItinerary(itineraryId: string, userId?: string):
   removeItinerary(itineraryId);
   if (!isRemoteUser(userId) || !supabase) return;
   const { error } = await supabase.from('user_itineraries').delete().eq('id', itineraryId).eq('user_id', userId!);
-  if (error && !isMissingTable(error)) console.warn('deleteUserItinerary failed', error);
+  if (error) console.warn('deleteUserItinerary failed', error);
 }
