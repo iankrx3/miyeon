@@ -16,7 +16,11 @@ function read(kind: string, userId?: string): string[] {
 }
 
 function write(kind: string, userId: string | undefined, ids: string[]) {
-  localStorage.setItem(storageKey(kind, userId), JSON.stringify([...new Set(ids)]));
+  try {
+    localStorage.setItem(storageKey(kind, userId), JSON.stringify([...new Set(ids)]));
+  } catch {
+    // private mode / quota — in-memory filters still hide the row this session
+  }
 }
 
 export function listTombstones(kind: string, userId?: string): Set<string> {

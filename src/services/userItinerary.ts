@@ -1,5 +1,5 @@
 import type { Itinerary, UserSession } from '../types';
-import { getAuthedSupabase, isRemoteUser } from '../lib/remoteUser';
+import { isRemoteUser } from '../lib/remoteUser';
 import { supabase } from '../lib/supabase';
 import { isMissingRelation, isMissingRpc } from '../lib/supabaseError';
 import {
@@ -161,23 +161,17 @@ export async function fetchRemoteUserItinerary(id: string): Promise<Itinerary | 
 export async function deleteUserItinerary(itineraryId: string, userId?: string): Promise<boolean> {
   addTombstone(TOMBSTONE_USER_ITINERARIES, userId, itineraryId);
   removeItinerary(itineraryId);
-  if (!isRemoteUser(userId)) return true;
-  const client = await getAuthedSupabase();
-  if (!client) {
-    console.warn('deleteUserItinerary: no auth session');
-    return false;
-  }
+  if (!isRemoteUser(userId) || !supabase) return true;
 
-  const { data, error } = await client
+  const { error, count } = await supabase
     .from('user_itineraries')
-    .delete()
+    .delete({ count: 'exact' })
     .eq('id', itineraryId)
-    .eq('user_id', userId!)
-    .select('id');
-  if (!error && (data?.length ?? 0) > 0) return true;
+    .eq('user_id', userId!);
+  if (!error && (count ?? 0) > 0) return true;
   if (error) console.warn('deleteUserItinerary failed', error);
 
-  const { data: rpcCount, error: rpcError } = await client.rpc('delete_own_user_itinerary', { p_id: itineraryId });
+  const { data: rpcCount, error: rpcError } = await supabase.rpc('delete_own_user_itinerary', { p_id: itineraryId });
   if (rpcError && !isMissingRpc(rpcError)) {
     console.warn('deleteUserItinerary rpc failed', rpcError);
     return false;

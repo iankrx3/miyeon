@@ -58,6 +58,7 @@ export function useSavedPlaces(userId?: string) {
   const [saved, setSaved] = useState<SavedPlaceEntry[]>(() => excludeDeletedPlaces(readSaved(userId), userId));
   const [syncError, setSyncError] = useState<string | null>(null);
   const hydratedUserId = useRef(userId);
+  const deletedIds = useRef(new Set<string>());
 
   useEffect(() => {
     hydratedUserId.current = userId;
@@ -73,7 +74,9 @@ export function useSavedPlaces(userId?: string) {
         return;
       }
       const localNow = excludeDeletedPlaces(readSaved(userId), userId);
-      const merged = excludeDeletedPlaces(mergeSaved(localNow, remote), userId);
+      const merged = excludeDeletedPlaces(mergeSaved(localNow, remote), userId).filter(
+        (entry) => !deletedIds.current.has(entry.placeId)
+      );
       setSaved(merged);
       await reconcileDeletedPlaces(userId, remote);
       if (cancelled) return;
@@ -120,6 +123,7 @@ export function useSavedPlaces(userId?: string) {
         snapshot: place,
         savedAt: new Date().toISOString(),
       };
+      deletedIds.current.delete(place.id);
       removeTombstone(TOMBSTONE_PLACES, userId, place.id);
       setSaved((prev) => [entry, ...prev.filter((item) => item.placeId !== place.id)]);
       void insertRemoteSavedPlace(userId, entry).then((ok) => {
@@ -131,6 +135,7 @@ export function useSavedPlaces(userId?: string) {
 
   const unsave = useCallback(
     (placeId: string) => {
+      deletedIds.current.add(placeId);
       addTombstone(TOMBSTONE_PLACES, userId, placeId);
       setSaved((prev) => prev.filter((item) => item.placeId !== placeId));
       void deleteRemoteSavedPlace(userId, placeId).then((ok) => {

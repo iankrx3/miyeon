@@ -25,6 +25,7 @@ export function useSavedItineraries(userId?: string) {
   );
   const [syncError, setSyncError] = useState<string | null>(null);
   const hydratedUserId = useRef(userId);
+  const deletedIds = useRef(new Set<string>());
 
   useEffect(() => {
     hydratedUserId.current = userId;
@@ -40,7 +41,9 @@ export function useSavedItineraries(userId?: string) {
         return;
       }
       const localNow = excludeDeletedSavedItineraries(listSavedItineraries(userId), userId);
-      const merged = excludeDeletedSavedItineraries(mergeSavedItineraries(localNow, remote), userId);
+      const merged = excludeDeletedSavedItineraries(mergeSavedItineraries(localNow, remote), userId).filter(
+        (entry) => !savedItineraryKeys(entry).some((id) => deletedIds.current.has(id))
+      );
       merged.forEach((entry) => upsertItinerary(entry.snapshot));
       setSaved(merged);
       await reconcileDeletedSavedItineraries(userId, remote);
@@ -78,6 +81,7 @@ export function useSavedItineraries(userId?: string) {
         snapshot,
         savedAt: new Date().toISOString(),
       };
+      deletedIds.current.delete(itinerary.id);
       removeTombstone(TOMBSTONE_SAVED_ITINERARIES, userId, itinerary.id);
       setSaved((prev) => [entry, ...prev.filter((s) => s.itineraryId !== itinerary.id)]);
       void insertRemoteSavedItinerary(userId, entry).then((ok) => {
@@ -120,10 +124,9 @@ export function useSavedItineraries(userId?: string) {
       const entry = saved.find(
         (s) => s.itineraryId === itineraryId || s.snapshot.id === itineraryId || s.savedId === itineraryId
       );
-      addTombstones(TOMBSTONE_SAVED_ITINERARIES, userId, [
-        itineraryId,
-        ...(entry ? savedItineraryKeys(entry) : []),
-      ]);
+      const keys = [itineraryId, ...(entry ? savedItineraryKeys(entry) : [])];
+      keys.forEach((id) => deletedIds.current.add(id));
+      addTombstones(TOMBSTONE_SAVED_ITINERARIES, userId, keys);
       setSaved((prev) =>
         prev.filter((s) => s.itineraryId !== itineraryId && s.snapshot.id !== itineraryId && s.savedId !== itineraryId)
       );

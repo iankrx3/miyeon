@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Bookmark, ListPlus, MapPin, Star, Trash2 } from 'lucide-react';
@@ -14,11 +14,6 @@ interface ProfilePageProps {
   onSignIn: () => void;
 }
 
-function stopCardAction(event: React.SyntheticEvent) {
-  event.preventDefault();
-  event.stopPropagation();
-}
-
 export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
   const navigate = useNavigate();
   const { saved, unsave, syncError: savedItineraryError } = useSavedItineraries(session.user?.id);
@@ -27,9 +22,11 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
   const visibleSavedPlaces = savedPlaceEntries.filter((entry) => Boolean(entry.snapshot?.name));
   const [myItineraries, setMyItineraries] = useState<Itinerary[]>([]);
   const [myItineraryError, setMyItineraryError] = useState<string | null>(null);
+  const deletedMyIds = useRef(new Set<string>());
   const syncError = savedPlaceError || myItineraryError || savedItineraryError;
 
   const handleDeleteMyItinerary = (itineraryId: string) => {
+    deletedMyIds.current.add(itineraryId);
     setMyItineraries((prev) => prev.filter((i) => i.id !== itineraryId));
     void deleteUserItinerary(itineraryId, session.user?.id).then((ok) => {
       if (!ok) {
@@ -59,7 +56,7 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
     let cancelled = false;
     fetchUserItineraries(session.user.id).then(({ itineraries, syncError: cloudError }) => {
       if (!cancelled) {
-        setMyItineraries(itineraries);
+        setMyItineraries(itineraries.filter((item) => !deletedMyIds.current.has(item.id)));
         setMyItineraryError(cloudError);
       }
     });
@@ -144,31 +141,27 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: i * 0.05 }}
-                className="isolate overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm"
+                className="overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm"
               >
-                <div className="relative">
-                  <Link to={`/place/${entry.placeId}`} className="block">
-                    <img src={place.photoUrl} alt={place.name} className="h-32 w-full object-cover" />
+                <Link to={`/place/${entry.placeId}`} className="block">
+                  <img src={place.photoUrl} alt={place.name} className="h-32 w-full object-cover" />
+                </Link>
+                <div className="flex items-start justify-between gap-2 p-3">
+                  <Link to={`/place/${entry.placeId}`} className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-miyeon-main">{place.name}</p>
+                    <p className="flex items-center gap-1 text-[11px] text-miyeon-main/60">
+                      <Star className="h-3 w-3 fill-miyeon-sub1 text-miyeon-sub1" /> {place.rating} · {place.area}
+                    </p>
                   </Link>
                   <button
                     type="button"
                     aria-label="Remove from saved"
-                    onPointerDown={stopCardAction}
-                    onClick={(event) => {
-                      stopCardAction(event);
-                      unsavePlace(entry.placeId);
-                    }}
-                    className="absolute right-2 top-2 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-miyeon-sub1 shadow-sm"
+                    onClick={() => unsavePlace(entry.placeId)}
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-miyeon-sub1 hover:bg-miyeon-neutral/60"
                   >
-                    <Bookmark className="h-3.5 w-3.5" fill="currentColor" />
+                    <Bookmark className="h-4 w-4" fill="currentColor" />
                   </button>
                 </div>
-                <Link to={`/place/${entry.placeId}`} className="block p-3">
-                  <p className="truncate text-sm font-semibold text-miyeon-main">{place.name}</p>
-                  <p className="flex items-center gap-1 text-[11px] text-miyeon-main/60">
-                    <Star className="h-3 w-3 fill-miyeon-sub1 text-miyeon-sub1" /> {place.rating} · {place.area}
-                  </p>
-                </Link>
               </motion.div>
             );
           })}
@@ -210,38 +203,34 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: i * 0.05 }}
-                className="isolate overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm"
+                className="overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm"
               >
-                <div className="relative">
-                  <Link to={`/itinerary/${item.id}/build`} className="block">
-                    {cover ? (
-                      <img src={cover} alt="" className="h-32 w-full object-cover" />
-                    ) : (
-                      <div className="flex h-32 w-full items-center justify-center bg-miyeon-neutral/50 text-miyeon-main/40">
-                        <MapPin className="h-6 w-6" />
-                      </div>
-                    )}
+                <Link to={`/itinerary/${item.id}/build`} className="block">
+                  {cover ? (
+                    <img src={cover} alt="" className="h-32 w-full object-cover" />
+                  ) : (
+                    <div className="flex h-32 w-full items-center justify-center bg-miyeon-neutral/50 text-miyeon-main/40">
+                      <MapPin className="h-6 w-6" />
+                    </div>
+                  )}
+                </Link>
+                <div className="flex items-start justify-between gap-2 p-3">
+                  <Link to={`/itinerary/${item.id}/build`} className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-miyeon-main">{item.title}</p>
+                    <p className="text-[11px] text-miyeon-main/60">
+                      {item.days.length} day{item.days.length === 1 ? '' : 's'} · {spots} spot
+                      {spots === 1 ? '' : 's'}
+                    </p>
                   </Link>
                   <button
                     type="button"
                     aria-label="Delete itinerary"
-                    onPointerDown={stopCardAction}
-                    onClick={(event) => {
-                      stopCardAction(event);
-                      handleDeleteMyItinerary(item.id);
-                    }}
-                    className="absolute right-2 top-2 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-miyeon-main/60 shadow-sm hover:text-red-500"
+                    onClick={() => handleDeleteMyItinerary(item.id)}
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-miyeon-main/60 hover:bg-miyeon-neutral/60 hover:text-red-500"
                   >
-                    <Trash2 className="h-3.5 w-3.5" />
+                    <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
-                <Link to={`/itinerary/${item.id}/build`} className="block p-3">
-                  <p className="truncate text-sm font-semibold text-miyeon-main">{item.title}</p>
-                  <p className="text-[11px] text-miyeon-main/60">
-                    {item.days.length} day{item.days.length === 1 ? '' : 's'} · {spots} spot
-                    {spots === 1 ? '' : 's'}
-                  </p>
-                </Link>
               </motion.div>
             );
           })}
@@ -272,39 +261,35 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: i * 0.05 }}
-                className="isolate overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm"
+                className="overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm"
               >
-                <div className="relative">
-                  <Link to={`/itinerary/${item.snapshot.id}`} className="block">
-                    {cover ? (
-                      <img src={cover} alt="" className="h-32 w-full object-cover" />
-                    ) : (
-                      <div className="flex h-32 w-full items-center justify-center bg-miyeon-neutral/50 text-miyeon-main/40">
-                        <MapPin className="h-6 w-6" />
-                      </div>
-                    )}
+                <Link to={`/itinerary/${item.snapshot.id}`} className="block">
+                  {cover ? (
+                    <img src={cover} alt="" className="h-32 w-full object-cover" />
+                  ) : (
+                    <div className="flex h-32 w-full items-center justify-center bg-miyeon-neutral/50 text-miyeon-main/40">
+                      <MapPin className="h-6 w-6" />
+                    </div>
+                  )}
+                </Link>
+                <div className="flex items-start justify-between gap-2 p-3">
+                  <Link to={`/itinerary/${item.snapshot.id}`} className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-miyeon-main">{item.snapshot.title}</p>
+                    <p className="text-[11px] text-miyeon-main/60">
+                      {item.snapshot.days.length} day{item.snapshot.days.length === 1 ? '' : 's'} · {spots} experience
+                      {spots === 1 ? '' : 's'}
+                      {item.source === 'curator' ? ' · Curator' : item.source === 'user' ? ' · Mine' : ' · MIYEON'}
+                    </p>
                   </Link>
                   <button
                     type="button"
                     aria-label="Remove from saved"
-                    onPointerDown={stopCardAction}
-                    onClick={(event) => {
-                      stopCardAction(event);
-                      unsave(item.itineraryId);
-                    }}
-                    className="absolute right-2 top-2 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-miyeon-sub1 shadow-sm"
+                    onClick={() => unsave(item.itineraryId)}
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-miyeon-sub1 hover:bg-miyeon-neutral/60"
                   >
-                    <Bookmark className="h-3.5 w-3.5" fill="currentColor" />
+                    <Bookmark className="h-4 w-4" fill="currentColor" />
                   </button>
                 </div>
-                <Link to={`/itinerary/${item.snapshot.id}`} className="block p-3">
-                  <p className="truncate text-sm font-semibold text-miyeon-main">{item.snapshot.title}</p>
-                  <p className="text-[11px] text-miyeon-main/60">
-                    {item.snapshot.days.length} day{item.snapshot.days.length === 1 ? '' : 's'} · {spots} experience
-                    {spots === 1 ? '' : 's'}
-                    {item.source === 'curator' ? ' · Curator' : item.source === 'user' ? ' · Mine' : ' · MIYEON'}
-                  </p>
-                </Link>
               </motion.div>
             );
           })}
