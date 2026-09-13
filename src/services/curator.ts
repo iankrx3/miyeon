@@ -27,6 +27,7 @@ import {
 import { allSpotsAsPlaces, getSpot, spotToPlace } from '../data/spots';
 import { mockCreators } from '../data/mock';
 import { createBlankItinerary } from './itinerary/generate';
+import { fetchRemoteUserItinerary } from './userItinerary';
 
 export interface CuratorProfileInput {
   username: string;
@@ -435,13 +436,15 @@ export async function fetchItineraryById(id: string): Promise<Itinerary | null> 
   try {
     const { data, error } = await supabase.from('curator_itineraries').select('*').eq('id', id).maybeSingle();
     if (error) throw error;
-    if (!data) return null;
-    const mapped = mapRemoteItinerary(data);
-    upsertItinerary(mapped);
-    return mapped;
+    if (data) {
+      const mapped = mapRemoteItinerary(data);
+      upsertItinerary(mapped);
+      return mapped;
+    }
   } catch {
-    return null;
+    // fall through to user itineraries
   }
+  return fetchRemoteUserItinerary(id);
 }
 
 export async function fetchCuratorItineraries(curatorId: string): Promise<Itinerary[]> {

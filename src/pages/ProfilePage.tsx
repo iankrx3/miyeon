@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Bookmark, MapPin, Star, Trash2 } from 'lucide-react';
-import type { Itinerary, Place, UserSession } from '../types';
+import type { Itinerary, UserSession } from '../types';
 import { useSavedItineraries } from '../hooks/useSavedItineraries';
 import { useSavedPlaces } from '../hooks/useSavedPlaces';
-import { firstSpotImage, listUserItineraries, upsertItinerary } from '../lib/localItineraryStore';
+import { firstSpotImage, upsertItinerary } from '../lib/localItineraryStore';
 import { itinerarySpotCount } from '../services/itinerary/generate';
-import { fetchPlaceById } from '../services/places';
-import { deleteUserItinerary } from '../services/userItinerary';
+import { deleteUserItinerary, fetchUserItineraries } from '../services/userItinerary';
 
 interface ProfilePageProps {
   session: UserSession;
@@ -18,14 +17,11 @@ interface ProfilePageProps {
 export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
   const navigate = useNavigate();
   const { saved, unsave } = useSavedItineraries(session.user?.id);
-  const { savedIds, toggleSave } = useSavedPlaces(session.user?.id);
-  const [savedPlaces, setSavedPlaces] = useState<Place[]>([]);
-  const [myItineraries, setMyItineraries] = useState<Itinerary[]>(() =>
-    session.user ? listUserItineraries(session.user.id) : []
-  );
+  const { savedPlaces, unsave: unsavePlace } = useSavedPlaces(session.user?.id);
+  const [myItineraries, setMyItineraries] = useState<Itinerary[]>([]);
 
   const handleDeleteMyItinerary = (itineraryId: string) => {
-    deleteUserItinerary(itineraryId);
+    void deleteUserItinerary(itineraryId, session.user?.id);
     setMyItineraries((prev) => prev.filter((i) => i.id !== itineraryId));
   };
 
@@ -34,15 +30,18 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
   }, [saved]);
 
   useEffect(() => {
+    if (!session.user) {
+      setMyItineraries([]);
+      return;
+    }
     let cancelled = false;
-    Promise.all(savedIds.map((id) => fetchPlaceById(id))).then((places) => {
-      if (cancelled) return;
-      setSavedPlaces(places.filter((p): p is Place => p !== null));
+    fetchUserItineraries(session.user.id).then((list) => {
+      if (!cancelled) setMyItineraries(list);
     });
     return () => {
       cancelled = true;
     };
-  }, [savedIds]);
+  }, [session.user?.id]);
 
   if (!session.isLoggedIn || !session.user) {
     return (
@@ -126,7 +125,7 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
               <button
                 type="button"
                 aria-label="Remove from saved"
-                onClick={() => toggleSave(place.id)}
+                onClick={() => unsavePlace(place.id)}
                 className="absolute right-2 top-2 rounded-full bg-white/90 p-2 text-miyeon-sub1 shadow-sm"
               >
                 <Bookmark className="h-3.5 w-3.5" fill="currentColor" />
@@ -231,7 +230,7 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
                     <p className="text-[11px] text-miyeon-main/60">
                       {item.snapshot.days.length} day{item.snapshot.days.length === 1 ? '' : 's'} · {spots} experience
                       {spots === 1 ? '' : 's'}
-                      {item.source === 'curator' ? ' · Curator' : ' · MIYEON'}
+                      {item.source === 'curator' ? ' · Curator' : item.source === 'user' ? ' · Mine' : ' · MIYEON'}
                     </p>
                   </div>
                 </Link>

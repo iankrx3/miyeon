@@ -7,7 +7,7 @@ import { ItineraryTimeline } from '../components/itinerary/ItineraryTimeline';
 import { removeItinerary, upsertItinerary } from '../lib/localItineraryStore';
 import { addEmptyDay, addSpotToDay, removeSpotFromItinerary } from '../services/itinerary/generate';
 import { deleteCuratorItinerary, fetchItineraryById, updateCuratorItinerary } from '../services/curator';
-import { deleteUserItinerary } from '../services/userItinerary';
+import { deleteUserItinerary, persistUserItinerary } from '../services/userItinerary';
 
 interface CuratorListPageProps {
   session: UserSession;
@@ -41,6 +41,11 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
   }, [resolvedId]);
 
   const persist = async (next: Itinerary) => {
+    if (isOwner && next.source === 'user') {
+      const saved = await persistUserItinerary(session, next);
+      setItinerary(saved);
+      return;
+    }
     upsertItinerary(next);
     setItinerary(next);
     if (isOwner && next.source === 'curator') {
@@ -62,7 +67,7 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
     if (!itinerary || !window.confirm('Delete this itinerary?')) return;
     try {
       if (itinerary.source === 'user') {
-        deleteUserItinerary(itinerary.id);
+        await deleteUserItinerary(itinerary.id, session.user?.id);
       } else {
         await deleteCuratorItinerary(session, itinerary.id);
         removeItinerary(itinerary.id);

@@ -5,14 +5,17 @@ import { Locate, Loader2, Search, X, ChevronRight, ChevronDown, Plus, Minus } fr
 import type { BeautyCategory, Creator, CreatorPick, Place, UserSession } from '../../types';
 import { categoryMeta } from '../../data/mock';
 import { ENABLED_MAP_CATEGORIES } from '../../data/mapCategories';
-import { searchPlacesByCategory } from '../../services/discovery';
+import { catalogPlace, searchPlacesByCategory } from '../../services/discovery';
 import {
   fetchCuratedMapData,
   fetchCuratorById,
   fetchCuratorItineraries,
+  fetchItineraryById,
 } from '../../services/curator';
-import { listAllCuratorItineraries } from '../../lib/localItineraryStore';
+import { getSpot, spotToPlace } from '../../data/spots';
+import { getStoredItinerary, listAllCuratorItineraries, listUserItineraries } from '../../lib/localItineraryStore';
 import { useSavedItineraries } from '../../hooks/useSavedItineraries';
+import { fetchUserItineraries } from '../../services/userItinerary';
 import type { Itinerary } from '../../types';
 
 // Adapted from extract/src/components/MapView.tsx (Sniffood map + login kit).
@@ -55,6 +58,22 @@ function fitMapToPlaces(map: L.Map, targets: Place[]) {
   });
 }
 
+function placesFromItinerary(itinerary: Itinerary, known: Place[]): Place[] {
+  const knownById = new Map(known.map((p) => [p.id, p]));
+  const out: Place[] = [];
+  const seen = new Set<string>();
+  for (const day of itinerary.days) {
+    for (const block of day.blocks) {
+      if (!block.spotId || seen.has(block.spotId)) continue;
+      seen.add(block.spotId);
+      const spot = getSpot(block.spotId);
+      const place = knownById.get(block.spotId) ?? (spot ? spotToPlace(spot) : undefined) ?? catalogPlace(block.spotId);
+      if (place) out.push(place);
+    }
+  }
+  return out;
+}
+
 export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visible = true }) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -82,13 +101,19 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
   const [locationError, setLocationError] = useState<string | null>(null);
 
   const curatorIdParam = searchParams.get('curator');
-  const itineraryIdParam = searchParams.get('itinerary') || searchParams.get('list');
-  const curatorFilterActive = Boolean(curatorIdParam || itineraryIdParam);
+  const tripIdParam = searchParams.get('trip') || searchParams.get('itinerary') || searchParams.get('list');
+  const curatorFilterActive = Boolean(curatorIdParam) && !tripIdParam;
+  const tripFilterActive = Boolean(tripIdParam);
   const { saved } = useSavedItineraries(session.user?.id);
+  const [myTrips, setMyTrips] = useState<Itinerary[]>(() =>
+    session.user ? listUserItineraries(session.user.id) : []
+  );
   const [itineraryPicker, setItineraryPicker] = useState<Itinerary[] | null>(null);
   const [curatorFilterPlaces, setCuratorFilterPlaces] = useState<Place[]>([]);
   const [curatorFilterCreator, setCuratorFilterCreator] = useState<Creator | null>(null);
   const [curatorFilterListTitle, setCuratorFilterListTitle] = useState<string | null>(null);
+  const [tripFilterPlaces, setTripFilterPlaces] = useState<Place[]>([]);
+  const [tripFilterTitle, setTripFilterTitle] = useState<string | null>(null);
 
   // "View this curator/list on the map" — reuses the same marker-rendering
   // effect below by feeding getFilteredPlaces() a curator-scoped Place[]
@@ -103,11 +128,6 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
 
     let cancelled = false;
     (async () => {
-      if (itineraryIdParam) {
-        navigate(`/itinerary/${itineraryIdParam}`);
-        return;
-      }
-
       if (curatorIdParam) {
         const [creator, itineraries] = await Promise.all([
           fetchCuratorById(curatorIdParam),
@@ -141,7 +161,53 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
     return () => {
       cancelled = true;
     };
-  }, [curatorFilterActive, curatorIdParam, itineraryIdParam, navigate, places]);
+  }, [curatorFilterActive, curatorIdParam, navigate, places]);
+
+  useEffect(() => {
+    if (!session.user) {
+      setMyTrips([]);
+      return;
+    }
+    setMyTrips(listUserItineraries(session.user.id));
+    let cancelled = false;
+    fetchUserItineraries(session.user.id).then((list) => {
+      if (!cancelled) setMyTrips(list);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [session.user?.id]);
+
+  useEffect(() => {
+    if (!tripIdParam) {
+      setTripFilterPlaces([]);
+      setTripFilterTitle(null);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      const fromSaved = saved.find((s) => s.snapshot.id === tripIdParam || s.itineraryId === tripIdParam)?.snapshot;
+      let itinerary = getStoredItinerary(tripIdParam) ?? fromSaved ?? myTrips.find((i) => i.id === tripIdParam) ?? null;
+      if (!itinerary) itinerary = await fetchItineraryById(tripIdParam);
+      if (cancelled) return;
+      if (!itinerary) {
+        setTripFilterTitle('Trip');
+        setTripFilterPlaces([]);
+        return;
+      }
+      const resolved = placesFromItinerary(itinerary, places);
+      setTripFilterTitle(itinerary.title);
+      setTripFilterPlaces(resolved);
+      setPlaces((prev) => {
+        const extra = resolved.filter((p) => !prev.some((x) => x.id === p.id));
+        return extra.length ? [...prev, ...extra] : prev;
+      });
+      if (mapInstanceRef.current) fitMapToPlaces(mapInstanceRef.current, resolved);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [tripIdParam, saved, myTrips, places]);
 
   useEffect(() => {
     setLoading(true);
@@ -199,12 +265,13 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
   }, [visible]);
 
   const getFilteredPlaces = useCallback((): Place[] => {
+    if (tripFilterActive) return tripFilterPlaces;
     if (curatorFilterActive) return curatorFilterPlaces;
     if (selectedCategory !== 'all') {
       return places.filter((p) => p.category === selectedCategory);
     }
     return places;
-  }, [places, selectedCategory, curatorFilterActive, curatorFilterPlaces]);
+  }, [places, selectedCategory, curatorFilterActive, curatorFilterPlaces, tripFilterActive, tripFilterPlaces]);
 
   useEffect(() => {
     const map = mapInstanceRef.current;
@@ -253,7 +320,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
       layer.addLayer(marker);
       markerMapRef.current.set(place.id, marker);
     });
-  }, [places, selectedCategory, getFilteredPlaces, onSelectPlace, navigate]);
+  }, [places, selectedCategory, tripFilterPlaces, curatorFilterPlaces, getFilteredPlaces, onSelectPlace, navigate]);
 
   // KTO Wellness pins — tone-down Warm Taupe marker, visually distinct from Miyeon Rose beauty pins (§15.3)
   useEffect(() => {
@@ -393,6 +460,20 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
     );
   };
 
+  const tripChips: { id: string; title: string }[] = [];
+  const tripChipIds = new Set<string>();
+  for (const itn of myTrips) {
+    if (tripChipIds.has(itn.id)) continue;
+    tripChipIds.add(itn.id);
+    tripChips.push({ id: itn.id, title: itn.title });
+  }
+  for (const item of saved) {
+    const id = item.snapshot.id;
+    if (tripChipIds.has(id) || tripChipIds.has(item.itineraryId)) continue;
+    tripChipIds.add(id);
+    tripChips.push({ id, title: item.snapshot.title });
+  }
+
   return (
     <div className="relative h-[calc(100dvh-64px)] w-full overflow-hidden bg-miyeon-neutral/30">
       <div ref={mapContainerRef} className="h-full w-full z-0" />
@@ -466,7 +547,25 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
 
         {!(isSearchOpen && searchQuery) && (
           <div className="pointer-events-auto space-y-2">
-            {curatorFilterActive ? (
+            {tripFilterActive ? (
+              <div className="flex items-center justify-between gap-2 rounded-2xl border border-white/60 bg-white/95 px-3.5 py-2.5 shadow-lg backdrop-blur-md">
+                <p className="truncate text-xs font-semibold text-miyeon-main">
+                  {tripFilterPlaces.length
+                    ? `Showing "${tripFilterTitle ?? 'Trip'}"`
+                    : `"${tripFilterTitle ?? 'Trip'}" has no places yet`}
+                </p>
+                <div className="flex shrink-0 items-center gap-3">
+                  {tripIdParam && (
+                    <Link to={`/itinerary/${tripIdParam}`} className="text-[11px] font-semibold text-miyeon-sub1">
+                      Open
+                    </Link>
+                  )}
+                  <button onClick={() => setSearchParams({})} aria-label="Clear filter" className="text-miyeon-main/70">
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </div>
+            ) : curatorFilterActive ? (
               <div className="flex items-center justify-between gap-2 rounded-2xl border border-white/60 bg-white/95 px-3.5 py-2.5 shadow-lg backdrop-blur-md">
                 <p className="truncate text-xs font-semibold text-miyeon-main">
                   {curatorFilterListTitle
@@ -501,7 +600,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
           </div>
         )}
 
-        {creatorPicks.length > 0 && !curatorFilterActive && !(isSearchOpen && searchQuery) && (
+        {creatorPicks.length > 0 && !curatorFilterActive && !tripFilterActive && !(isSearchOpen && searchQuery) && (
           <div className="pointer-events-auto rounded-2xl bg-white/90 shadow-lg backdrop-blur-md border border-white/60">
             <button
               onClick={() => setIsCreatorPicksExpanded((prev) => !prev)}
@@ -547,18 +646,18 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
           </div>
         )}
 
-        {saved.length > 0 && !curatorFilterActive && !(isSearchOpen && searchQuery) && (
+        {tripChips.length > 0 && !curatorFilterActive && !tripFilterActive && !(isSearchOpen && searchQuery) && (
           <div className="pointer-events-auto rounded-2xl bg-white/90 shadow-lg backdrop-blur-md border border-white/60">
             <p className="px-3.5 pt-2.5 text-[11px] font-bold uppercase tracking-wider text-miyeon-main/60">Saved trips</p>
             <div className="flex gap-2 overflow-x-auto no-scrollbar px-3.5 py-2.5">
-              {saved.map((item) => (
+              {tripChips.map((item) => (
                 <button
-                  key={item.savedId}
+                  key={item.id}
                   type="button"
-                  onClick={() => navigate(`/itinerary/${item.snapshot.id}`)}
+                  onClick={() => setSearchParams({ trip: item.id })}
                   className="shrink-0 rounded-full border border-miyeon-neutral bg-white px-3 py-1.5 text-[11px] font-semibold text-miyeon-main"
                 >
-                  {item.snapshot.title}
+                  {item.title}
                 </button>
               ))}
             </div>

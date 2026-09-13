@@ -14,12 +14,12 @@ export default function MapPage({ session, onSignIn }: { session: UserSession; o
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const { isSaved, toggleSave } = useSavedPlaces(session.user?.id);
 
-  const handleCreateItinerary = () => {
+  const handleCreateItinerary = async () => {
     if (!session.isLoggedIn) {
       onSignIn();
       return;
     }
-    const itinerary = createUserItinerary(session, 'My Itinerary');
+    const itinerary = await createUserItinerary(session, 'My Itinerary');
     navigate(`/itinerary/${itinerary.id}/build`);
   };
 
@@ -106,7 +106,7 @@ export default function MapPage({ session, onSignIn }: { session: UserSession; o
                       onSignIn();
                       return;
                     }
-                    toggleSave(selectedPlace.id);
+                    toggleSave(selectedPlace);
                   }}
                   className={`flex items-center justify-center gap-1.5 rounded-full border px-4 py-2 text-xs font-bold ${
                     isSaved(selectedPlace.id) ? 'border-miyeon-sub1 bg-miyeon-sub1 text-white' : 'border-miyeon-neutral text-miyeon-main'

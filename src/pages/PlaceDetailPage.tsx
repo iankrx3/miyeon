@@ -75,7 +75,7 @@ export default function PlaceDetailPage({
                 onSignIn();
                 return;
               }
-              toggleSave(place.id);
+              toggleSave(place);
             }}
             className={`flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-bold ${
               isSaved(place.id) ? 'border-miyeon-sub1 bg-miyeon-sub1 text-white' : 'border-miyeon-neutral text-miyeon-main'

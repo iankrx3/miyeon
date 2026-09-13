@@ -1,21 +1,24 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Itinerary, SavedItinerary } from '../types';
 import { listSavedItineraries, upsertItinerary, writeSavedItineraries } from '../lib/localItineraryStore';
 import {
   deleteRemoteSavedItinerary,
   fetchRemoteSavedItineraries,
   insertRemoteSavedItinerary,
+  mergeSavedItineraries,
 } from '../services/savedItineraries';
 
 export function useSavedItineraries(userId?: string) {
   const [saved, setSaved] = useState<SavedItinerary[]>(() => listSavedItineraries(userId));
+  const hydratedUserId = useRef(userId);
 
   useEffect(() => {
+    hydratedUserId.current = userId;
     setSaved(listSavedItineraries(userId));
     let cancelled = false;
     fetchRemoteSavedItineraries(userId).then((remote) => {
-      if (cancelled || !remote) return;
-      setSaved(remote);
+      if (cancelled || remote === null) return;
+      setSaved((local) => mergeSavedItineraries(local, remote));
     });
     return () => {
       cancelled = true;
@@ -23,6 +26,7 @@ export function useSavedItineraries(userId?: string) {
   }, [userId]);
 
   useEffect(() => {
+    if (hydratedUserId.current !== userId) return;
     writeSavedItineraries(saved, userId);
   }, [saved, userId]);
 
@@ -54,12 +58,19 @@ export function useSavedItineraries(userId?: string) {
 
   const unsave = useCallback(
     (itineraryId: string) => {
+      const entry = saved.find(
+        (s) => s.itineraryId === itineraryId || s.snapshot.id === itineraryId || s.savedId === itineraryId
+      );
       setSaved((prev) =>
         prev.filter((s) => s.itineraryId !== itineraryId && s.snapshot.id !== itineraryId && s.savedId !== itineraryId)
       );
-      void deleteRemoteSavedItinerary(userId, itineraryId);
+      void deleteRemoteSavedItinerary(userId, {
+        itineraryId: entry?.itineraryId ?? itineraryId,
+        savedId: entry?.savedId,
+        snapshotId: entry?.snapshot.id,
+      });
     },
-    [userId]
+    [saved, userId]
   );
 
   const toggleSave = useCallback(

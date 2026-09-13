@@ -155,7 +155,7 @@ export interface Itinerary {
   source: 'miyeon' | 'curator' | 'user';
   curatorId?: string;
   /** Set when source === 'user' — a plain logged-in user's own manually-built
-   * itinerary (see services/userItinerary.ts), stored locally only. */
+   * itinerary (see services/userItinerary.ts). */
   userId?: string;
   profileSnapshot?: BeautyTripProfile;
   days: ItineraryDay[];
