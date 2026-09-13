@@ -1,5 +1,5 @@
 import type { Place } from '../types';
-import { isRemoteUser } from '../lib/remoteUser';
+import { getAuthedSupabase, isRemoteUser } from '../lib/remoteUser';
 import { supabase } from '../lib/supabase';
 import { isMissingRelation, isMissingRpc } from '../lib/supabaseError';
 import { listTombstones, removeTombstone, TOMBSTONE_PLACES } from '../lib/syncTombstones';
@@ -90,28 +90,28 @@ export async function pushLocalSavedPlaces(
 }
 
 export async function deleteRemoteSavedPlace(userId: string | undefined, placeId: string): Promise<boolean> {
-  if (!isRemoteUser(userId) || !supabase) return false;
-
-  const { data: rpcCount, error: rpcError } = await supabase.rpc('delete_own_saved_place', {
-    p_place_id: placeId,
-  });
-  if (!rpcError && typeof rpcCount === 'number') return rpcCount > 0;
-  if (rpcError && !isMissingRpc(rpcError)) {
-    console.warn('deleteRemoteSavedPlace rpc failed', rpcError);
+  if (!isRemoteUser(userId)) return false;
+  const client = await getAuthedSupabase();
+  if (!client) {
+    console.warn('deleteRemoteSavedPlace: no auth session');
     return false;
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from('saved_places')
     .delete()
     .eq('user_id', userId!)
     .eq('place_id', placeId)
     .select('place_id');
-  if (error) {
-    console.warn('deleteRemoteSavedPlace failed', error);
+  if (!error && (data?.length ?? 0) > 0) return true;
+  if (error) console.warn('deleteRemoteSavedPlace failed', error);
+
+  const { data: rpcCount, error: rpcError } = await client.rpc('delete_own_saved_place', { p_place_id: placeId });
+  if (rpcError && !isMissingRpc(rpcError)) {
+    console.warn('deleteRemoteSavedPlace rpc failed', rpcError);
     return false;
   }
-  return (data?.length ?? 0) > 0;
+  return typeof rpcCount === 'number' && rpcCount > 0;
 }
 
 /** Retry cloud deletes for tombstoned ids; drop tombstones once the cloud agrees. */

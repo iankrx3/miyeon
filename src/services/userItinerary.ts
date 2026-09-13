@@ -1,5 +1,5 @@
 import type { Itinerary, UserSession } from '../types';
-import { isRemoteUser } from '../lib/remoteUser';
+import { getAuthedSupabase, isRemoteUser } from '../lib/remoteUser';
 import { supabase } from '../lib/supabase';
 import { isMissingRelation, isMissingRpc } from '../lib/supabaseError';
 import {
@@ -123,20 +123,7 @@ export async function fetchUserItineraries(userId: string): Promise<{ itinerarie
 
     for (const id of dead) {
       if (remoteById.has(id)) {
-        const { data: rpcCount, error: rpcError } = await supabase.rpc('delete_own_user_itinerary', { p_id: id });
-        if (rpcError && isMissingRpc(rpcError)) {
-          const { error: deleteError } = await supabase
-            .from('user_itineraries')
-            .delete()
-            .eq('id', id)
-            .eq('user_id', userId)
-            .select('id');
-          if (deleteError) console.warn('deleteUserItinerary retry failed', deleteError);
-        } else if (rpcError) {
-          console.warn('deleteUserItinerary retry failed', rpcError);
-        } else if (typeof rpcCount === 'number' && rpcCount === 0) {
-          console.warn('deleteUserItinerary retry deleted 0 rows', id);
-        }
+        await deleteUserItinerary(id, userId);
       } else {
         removeTombstone(TOMBSTONE_USER_ITINERARIES, userId, id);
       }
@@ -171,29 +158,29 @@ export async function fetchRemoteUserItinerary(id: string): Promise<Itinerary | 
   }
 }
 
-export async function deleteUserItinerary(itineraryId: string, userId?: string): Promise<void> {
+export async function deleteUserItinerary(itineraryId: string, userId?: string): Promise<boolean> {
   addTombstone(TOMBSTONE_USER_ITINERARIES, userId, itineraryId);
   removeItinerary(itineraryId);
-  if (!isRemoteUser(userId) || !supabase) return;
-
-  const { data: rpcCount, error: rpcError } = await supabase.rpc('delete_own_user_itinerary', {
-    p_id: itineraryId,
-  });
-  if (!rpcError && typeof rpcCount === 'number') {
-    // Keep the tombstone until a later fetch confirms the cloud row is gone.
-    // A 0-row result means RLS/session missed; retry on next hydrate.
-    return;
-  }
-  if (rpcError && !isMissingRpc(rpcError)) {
-    console.warn('deleteUserItinerary rpc failed', rpcError);
-    return;
+  if (!isRemoteUser(userId)) return true;
+  const client = await getAuthedSupabase();
+  if (!client) {
+    console.warn('deleteUserItinerary: no auth session');
+    return false;
   }
 
-  const { error } = await supabase
+  const { data, error } = await client
     .from('user_itineraries')
     .delete()
     .eq('id', itineraryId)
     .eq('user_id', userId!)
     .select('id');
+  if (!error && (data?.length ?? 0) > 0) return true;
   if (error) console.warn('deleteUserItinerary failed', error);
+
+  const { data: rpcCount, error: rpcError } = await client.rpc('delete_own_user_itinerary', { p_id: itineraryId });
+  if (rpcError && !isMissingRpc(rpcError)) {
+    console.warn('deleteUserItinerary rpc failed', rpcError);
+    return false;
+  }
+  return typeof rpcCount === 'number' && rpcCount > 0;
 }

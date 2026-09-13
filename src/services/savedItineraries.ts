@@ -1,5 +1,5 @@
 import type { Itinerary, SavedItinerary } from '../types';
-import { isRemoteUser } from '../lib/remoteUser';
+import { getAuthedSupabase, isRemoteUser } from '../lib/remoteUser';
 import { supabase } from '../lib/supabase';
 import { isMissingRelation, isMissingRpc } from '../lib/supabaseError';
 import { listTombstones, removeTombstone, TOMBSTONE_SAVED_ITINERARIES } from '../lib/syncTombstones';
@@ -108,36 +108,19 @@ export async function deleteRemoteSavedItinerary(
   userId: string | undefined,
   keys: { itineraryId: string; savedId?: string; snapshotId?: string }
 ): Promise<boolean> {
-  if (!isRemoteUser(userId) || !supabase) return false;
+  if (!isRemoteUser(userId)) return false;
+  const client = await getAuthedSupabase();
+  if (!client) {
+    console.warn('deleteRemoteSavedItinerary: no auth session');
+    return false;
+  }
 
   const itineraryIds = [...new Set([keys.itineraryId, keys.snapshotId].filter((id): id is string => Boolean(id)))];
   const rowId = keys.savedId && UUID_RE.test(keys.savedId) ? keys.savedId : null;
 
-  let deleted = 0;
-  let rpcMissing = false;
-  for (const itineraryId of itineraryIds) {
-    const { data: rpcCount, error: rpcError } = await supabase.rpc('delete_own_saved_itinerary', {
-      p_itinerary_id: itineraryId,
-      p_row_id: rowId,
-    });
-    if (!rpcError && typeof rpcCount === 'number') {
-      deleted += rpcCount;
-      continue;
-    }
-    if (rpcError && !isMissingRpc(rpcError)) {
-      console.warn('deleteRemoteSavedItinerary rpc failed', rpcError);
-      return false;
-    }
-    rpcMissing = true;
-    break;
-  }
-
-  if (!rpcMissing) return deleted > 0;
-
-  let ok = true;
   let tableDeleted = 0;
   for (const itineraryId of itineraryIds) {
-    const { data, error } = await supabase
+    const { data, error } = await client
       .from('saved_itineraries')
       .delete()
       .eq('user_id', userId!)
@@ -145,23 +128,33 @@ export async function deleteRemoteSavedItinerary(
       .select('id');
     if (error) {
       console.warn('deleteRemoteSavedItinerary failed', error);
-      ok = false;
     } else {
       tableDeleted += data?.length ?? 0;
     }
   }
-
   if (rowId) {
-    const { data, error } = await supabase.from('saved_itineraries').delete().eq('user_id', userId!).eq('id', rowId).select('id');
+    const { data, error } = await client.from('saved_itineraries').delete().eq('user_id', userId!).eq('id', rowId).select('id');
     if (error) {
       console.warn('deleteRemoteSavedItinerary by id failed', error);
-      ok = false;
     } else {
       tableDeleted += data?.length ?? 0;
     }
   }
+  if (tableDeleted > 0) return true;
 
-  return ok && tableDeleted > 0;
+  let rpcDeleted = 0;
+  for (const itineraryId of itineraryIds) {
+    const { data: rpcCount, error: rpcError } = await client.rpc('delete_own_saved_itinerary', {
+      p_itinerary_id: itineraryId,
+      p_row_id: rowId,
+    });
+    if (rpcError && !isMissingRpc(rpcError)) {
+      console.warn('deleteRemoteSavedItinerary rpc failed', rpcError);
+      return false;
+    }
+    if (typeof rpcCount === 'number') rpcDeleted += rpcCount;
+  }
+  return rpcDeleted > 0;
 }
 
 export async function reconcileDeletedSavedItineraries(userId: string | undefined, remote: SavedItinerary[]): Promise<void> {

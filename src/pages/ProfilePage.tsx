@@ -30,8 +30,12 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
   const syncError = savedPlaceError || myItineraryError || savedItineraryError;
 
   const handleDeleteMyItinerary = (itineraryId: string) => {
-    void deleteUserItinerary(itineraryId, session.user?.id);
     setMyItineraries((prev) => prev.filter((i) => i.id !== itineraryId));
+    void deleteUserItinerary(itineraryId, session.user?.id).then((ok) => {
+      if (!ok) {
+        setMyItineraryError('Could not delete from the cloud. It may reappear on another device.');
+      }
+    });
   };
 
   const handleCreateItinerary = async () => {

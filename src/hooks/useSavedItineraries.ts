@@ -131,6 +131,10 @@ export function useSavedItineraries(userId?: string) {
         itineraryId: entry?.itineraryId ?? itineraryId,
         savedId: entry?.savedId,
         snapshotId: entry?.snapshot.id,
+      }).then((ok) => {
+        if (!ok && isRemoteUser(userId)) {
+          setSyncError('Could not delete from the cloud. It may reappear on another device.');
+        }
       });
     },
     [saved, userId]

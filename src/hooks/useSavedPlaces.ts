@@ -133,7 +133,11 @@ export function useSavedPlaces(userId?: string) {
     (placeId: string) => {
       addTombstone(TOMBSTONE_PLACES, userId, placeId);
       setSaved((prev) => prev.filter((item) => item.placeId !== placeId));
-      void deleteRemoteSavedPlace(userId, placeId);
+      void deleteRemoteSavedPlace(userId, placeId).then((ok) => {
+        if (!ok && isRemoteUser(userId)) {
+          setSyncError('Could not delete from the cloud. It may reappear on another device.');
+        }
+      });
     },
     [userId]
   );
