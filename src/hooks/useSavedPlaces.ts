@@ -149,5 +149,5 @@ export function useSavedPlaces(userId?: string) {
   const savedIds = saved.map((entry) => entry.placeId);
   const savedPlaces = saved.map((entry) => entry.snapshot).filter((place) => Boolean(place?.name));
 
-  return { savedIds, savedPlaces, isSaved, toggleSave, unsave, syncError };
+  return { savedIds, savedPlaces, saved, isSaved, toggleSave, unsave, syncError };
 }

@@ -14,10 +14,17 @@ interface ProfilePageProps {
   onSignIn: () => void;
 }
 
+function stopCardAction(event: React.SyntheticEvent) {
+  event.preventDefault();
+  event.stopPropagation();
+}
+
 export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
   const navigate = useNavigate();
   const { saved, unsave, syncError: savedItineraryError } = useSavedItineraries(session.user?.id);
-  const { savedPlaces, unsave: unsavePlace, syncError: savedPlaceError } = useSavedPlaces(session.user?.id);
+  const { saved: savedPlaceEntries, unsave: unsavePlace, syncError: savedPlaceError } =
+    useSavedPlaces(session.user?.id);
+  const visibleSavedPlaces = savedPlaceEntries.filter((entry) => Boolean(entry.snapshot?.name));
   const [myItineraries, setMyItineraries] = useState<Itinerary[]>([]);
   const [myItineraryError, setMyItineraryError] = useState<string | null>(null);
   const syncError = savedPlaceError || myItineraryError || savedItineraryError;
@@ -112,7 +119,7 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
 
       <h2 className="mt-8 text-sm font-semibold text-miyeon-main">Saved places</h2>
 
-      {savedPlaces.length === 0 ? (
+      {visibleSavedPlaces.length === 0 ? (
         <div className="mt-4 rounded-3xl border border-dashed border-miyeon-neutral px-4 py-10 text-center">
           <p className="text-sm text-miyeon-main/60">Nothing saved yet.</p>
           <button
@@ -125,37 +132,42 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
         </div>
       ) : (
         <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {savedPlaces.map((place, i) => (
-            <motion.div
-              key={place.id}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: i * 0.05 }}
-              className="relative overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm"
-            >
-              <Link to={`/place/${place.id}`} className="block">
-                <img src={place.photoUrl} alt={place.name} className="h-32 w-full object-cover" />
-                <div className="p-3">
+          {visibleSavedPlaces.map((entry, i) => {
+            const place = entry.snapshot;
+            return (
+              <motion.div
+                key={entry.placeId}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: i * 0.05 }}
+                className="isolate overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm"
+              >
+                <div className="relative">
+                  <Link to={`/place/${entry.placeId}`} className="block">
+                    <img src={place.photoUrl} alt={place.name} className="h-32 w-full object-cover" />
+                  </Link>
+                  <button
+                    type="button"
+                    aria-label="Remove from saved"
+                    onPointerDown={stopCardAction}
+                    onClick={(event) => {
+                      stopCardAction(event);
+                      unsavePlace(entry.placeId);
+                    }}
+                    className="absolute right-2 top-2 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-miyeon-sub1 shadow-sm"
+                  >
+                    <Bookmark className="h-3.5 w-3.5" fill="currentColor" />
+                  </button>
+                </div>
+                <Link to={`/place/${entry.placeId}`} className="block p-3">
                   <p className="truncate text-sm font-semibold text-miyeon-main">{place.name}</p>
                   <p className="flex items-center gap-1 text-[11px] text-miyeon-main/60">
                     <Star className="h-3 w-3 fill-miyeon-sub1 text-miyeon-sub1" /> {place.rating} · {place.area}
                   </p>
-                </div>
-              </Link>
-              <button
-                type="button"
-                aria-label="Remove from saved"
-                onClick={(event) => {
-                  event.preventDefault();
-                  event.stopPropagation();
-                  unsavePlace(place.id);
-                }}
-                className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 text-miyeon-sub1 shadow-sm"
-              >
-                <Bookmark className="h-3.5 w-3.5" fill="currentColor" />
-              </button>
-            </motion.div>
-          ))}
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
       )}
 
@@ -194,36 +206,38 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: i * 0.05 }}
-                className="relative overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm"
+                className="isolate overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm"
               >
-                <Link to={`/itinerary/${item.id}/build`} className="block">
-                  {cover ? (
-                    <img src={cover} alt="" className="h-32 w-full object-cover" />
-                  ) : (
-                    <div className="flex h-32 w-full items-center justify-center bg-miyeon-neutral/50 text-miyeon-main/40">
-                      <MapPin className="h-6 w-6" />
-                    </div>
-                  )}
-                  <div className="p-3">
-                    <p className="truncate text-sm font-semibold text-miyeon-main">{item.title}</p>
-                    <p className="text-[11px] text-miyeon-main/60">
-                      {item.days.length} day{item.days.length === 1 ? '' : 's'} · {spots} spot
-                      {spots === 1 ? '' : 's'}
-                    </p>
-                  </div>
+                <div className="relative">
+                  <Link to={`/itinerary/${item.id}/build`} className="block">
+                    {cover ? (
+                      <img src={cover} alt="" className="h-32 w-full object-cover" />
+                    ) : (
+                      <div className="flex h-32 w-full items-center justify-center bg-miyeon-neutral/50 text-miyeon-main/40">
+                        <MapPin className="h-6 w-6" />
+                      </div>
+                    )}
+                  </Link>
+                  <button
+                    type="button"
+                    aria-label="Delete itinerary"
+                    onPointerDown={stopCardAction}
+                    onClick={(event) => {
+                      stopCardAction(event);
+                      handleDeleteMyItinerary(item.id);
+                    }}
+                    className="absolute right-2 top-2 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-miyeon-main/60 shadow-sm hover:text-red-500"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+                <Link to={`/itinerary/${item.id}/build`} className="block p-3">
+                  <p className="truncate text-sm font-semibold text-miyeon-main">{item.title}</p>
+                  <p className="text-[11px] text-miyeon-main/60">
+                    {item.days.length} day{item.days.length === 1 ? '' : 's'} · {spots} spot
+                    {spots === 1 ? '' : 's'}
+                  </p>
                 </Link>
-                <button
-                  type="button"
-                  aria-label="Delete itinerary"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    handleDeleteMyItinerary(item.id);
-                  }}
-                  className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 text-miyeon-main/60 shadow-sm hover:text-red-500"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </button>
               </motion.div>
             );
           })}
@@ -254,37 +268,39 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: i * 0.05 }}
-                className="relative overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm"
+                className="isolate overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm"
               >
-                <Link to={`/itinerary/${item.snapshot.id}`} className="block">
-                  {cover ? (
-                    <img src={cover} alt="" className="h-32 w-full object-cover" />
-                  ) : (
-                    <div className="flex h-32 w-full items-center justify-center bg-miyeon-neutral/50 text-miyeon-main/40">
-                      <MapPin className="h-6 w-6" />
-                    </div>
-                  )}
-                  <div className="p-3">
-                    <p className="truncate text-sm font-semibold text-miyeon-main">{item.snapshot.title}</p>
-                    <p className="text-[11px] text-miyeon-main/60">
-                      {item.snapshot.days.length} day{item.snapshot.days.length === 1 ? '' : 's'} · {spots} experience
-                      {spots === 1 ? '' : 's'}
-                      {item.source === 'curator' ? ' · Curator' : item.source === 'user' ? ' · Mine' : ' · MIYEON'}
-                    </p>
-                  </div>
+                <div className="relative">
+                  <Link to={`/itinerary/${item.snapshot.id}`} className="block">
+                    {cover ? (
+                      <img src={cover} alt="" className="h-32 w-full object-cover" />
+                    ) : (
+                      <div className="flex h-32 w-full items-center justify-center bg-miyeon-neutral/50 text-miyeon-main/40">
+                        <MapPin className="h-6 w-6" />
+                      </div>
+                    )}
+                  </Link>
+                  <button
+                    type="button"
+                    aria-label="Remove from saved"
+                    onPointerDown={stopCardAction}
+                    onClick={(event) => {
+                      stopCardAction(event);
+                      unsave(item.itineraryId);
+                    }}
+                    className="absolute right-2 top-2 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-miyeon-sub1 shadow-sm"
+                  >
+                    <Bookmark className="h-3.5 w-3.5" fill="currentColor" />
+                  </button>
+                </div>
+                <Link to={`/itinerary/${item.snapshot.id}`} className="block p-3">
+                  <p className="truncate text-sm font-semibold text-miyeon-main">{item.snapshot.title}</p>
+                  <p className="text-[11px] text-miyeon-main/60">
+                    {item.snapshot.days.length} day{item.snapshot.days.length === 1 ? '' : 's'} · {spots} experience
+                    {spots === 1 ? '' : 's'}
+                    {item.source === 'curator' ? ' · Curator' : item.source === 'user' ? ' · Mine' : ' · MIYEON'}
+                  </p>
                 </Link>
-                <button
-                  type="button"
-                  aria-label="Remove from saved"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    unsave(item.itineraryId);
-                  }}
-                  className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 text-miyeon-sub1 shadow-sm"
-                >
-                  <Bookmark className="h-3.5 w-3.5" fill="currentColor" />
-                </button>
               </motion.div>
             );
           })}
