@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Bookmark, ChevronLeft, Navigation, Star } from 'lucide-react';
-import type { CommunityPost, Place, Treatment } from '../types';
+import type { CommunityPost, Place, Treatment, UserSession } from '../types';
 import { fetchPlaceById, fetchTreatments } from '../services/places';
 import { fetchCommunityPosts } from '../services/community';
 import { useSavedPlaces } from '../hooks/useSavedPlaces';
@@ -12,7 +12,13 @@ import { getDirectionsLinks } from '../lib/directions';
 import { hasCreatripListing, withCreatripAffiliate, CREATRIP_DISCLOSURE } from '../lib/creatrip';
 import { getSpot, SUBCATEGORY_LABEL } from '../data/spots';
 
-export default function PlaceDetailPage() {
+export default function PlaceDetailPage({
+  session,
+  onSignIn,
+}: {
+  session: UserSession;
+  onSignIn: () => void;
+}) {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const fromItinerary = (location.state as { fromItinerary?: string } | null)?.fromItinerary;
@@ -20,7 +26,7 @@ export default function PlaceDetailPage() {
   const [treatments, setTreatments] = useState<Treatment[]>([]);
   const [reviews, setReviews] = useState<CommunityPost[]>([]);
   const [loading, setLoading] = useState(true);
-  const { isSaved, toggleSave } = useSavedPlaces();
+  const { isSaved, toggleSave } = useSavedPlaces(session.user?.id);
 
   useEffect(() => {
     if (!id) return;
@@ -64,7 +70,13 @@ export default function PlaceDetailPage() {
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => toggleSave(place.id)}
+            onClick={() => {
+              if (!session.isLoggedIn) {
+                onSignIn();
+                return;
+              }
+              toggleSave(place.id);
+            }}
             className={`flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-bold ${
               isSaved(place.id) ? 'border-miyeon-sub1 bg-miyeon-sub1 text-white' : 'border-miyeon-neutral text-miyeon-main'
             }`}

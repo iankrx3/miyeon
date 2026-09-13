@@ -2,24 +2,32 @@ import { useCallback, useEffect, useState } from 'react';
 
 // "Save to My Map" — the MIYEON Core UX spec §3. Stored client-side for now;
 // once user accounts persist server-side, swap this for a `saved_places` table
-// keyed by session.user.id and keep the same hook signature.
-const STORAGE_KEY = 'miyeon_my_map';
+// keyed by session.user.id and keep the same hook signature. Scoped per-user
+// (like `savedKeyFor` in localItineraryStore.ts) so switching accounts on the
+// same browser doesn't leak one user's saved pins into another's.
+function storageKeyFor(userId?: string): string {
+  return `miyeon_my_map:${userId ?? 'guest'}`;
+}
 
-function readSaved(): string[] {
+function readSaved(userId?: string): string[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(storageKeyFor(userId));
     return raw ? (JSON.parse(raw) as string[]) : [];
   } catch {
     return [];
   }
 }
 
-export function useSavedPlaces() {
-  const [savedIds, setSavedIds] = useState<string[]>(() => readSaved());
+export function useSavedPlaces(userId?: string) {
+  const [savedIds, setSavedIds] = useState<string[]>(() => readSaved(userId));
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(savedIds));
-  }, [savedIds]);
+    setSavedIds(readSaved(userId));
+  }, [userId]);
+
+  useEffect(() => {
+    localStorage.setItem(storageKeyFor(userId), JSON.stringify(savedIds));
+  }, [savedIds, userId]);
 
   const isSaved = useCallback((placeId: string) => savedIds.includes(placeId), [savedIds]);
 

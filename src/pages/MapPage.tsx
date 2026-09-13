@@ -7,11 +7,11 @@ import { PlaceListView } from '../components/map/PlaceListView';
 import { useSavedPlaces } from '../hooks/useSavedPlaces';
 import type { Place, UserSession } from '../types';
 
-export default function MapPage({ session }: { session: UserSession }) {
+export default function MapPage({ session, onSignIn }: { session: UserSession; onSignIn: () => void }) {
   const navigate = useNavigate();
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
-  const { isSaved, toggleSave } = useSavedPlaces();
+  const { isSaved, toggleSave } = useSavedPlaces(session.user?.id);
 
   return (
     <div className="relative">
@@ -76,7 +76,13 @@ export default function MapPage({ session }: { session: UserSession }) {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
-                  onClick={() => toggleSave(selectedPlace.id)}
+                  onClick={() => {
+                    if (!session.isLoggedIn) {
+                      onSignIn();
+                      return;
+                    }
+                    toggleSave(selectedPlace.id);
+                  }}
                   className={`flex items-center justify-center gap-1.5 rounded-full border px-4 py-2 text-xs font-bold ${
                     isSaved(selectedPlace.id) ? 'border-miyeon-sub1 bg-miyeon-sub1 text-white' : 'border-miyeon-neutral text-miyeon-main'
                   }`}

@@ -84,7 +84,10 @@ export default function App() {
                 path="/itinerary/:id"
                 element={<ItineraryPage session={session} onSignIn={() => setIsAuthOpen(true)} />}
               />
-              <Route path="/map" element={<MapPage session={session} />} />
+              <Route
+                path="/map"
+                element={<MapPage session={session} onSignIn={() => setIsAuthOpen(true)} />}
+              />
               <Route
                 path="/community"
                 element={<CommunityPage session={session} onSignIn={() => setIsAuthOpen(true)} />}
@@ -94,7 +97,10 @@ export default function App() {
                 element={<PostDetailPage session={session} onSignIn={() => setIsAuthOpen(true)} />}
               />
               <Route path="/magazine/:id" element={<MagazineDetailPage session={session} />} />
-              <Route path="/place/:id" element={<PlaceDetailPage />} />
+              <Route
+                path="/place/:id"
+                element={<PlaceDetailPage session={session} onSignIn={() => setIsAuthOpen(true)} />}
+              />
               <Route path="/treatment/:id" element={<TreatmentDetailPage />} />
               <Route
                 path="/curator/signup"

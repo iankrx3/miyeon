@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Bookmark, MapPin } from 'lucide-react';
-import type { UserSession } from '../types';
+import { Bookmark, MapPin, Star } from 'lucide-react';
+import type { Place, UserSession } from '../types';
 import { useSavedItineraries } from '../hooks/useSavedItineraries';
+import { useSavedPlaces } from '../hooks/useSavedPlaces';
 import { firstSpotImage, upsertItinerary } from '../lib/localItineraryStore';
 import { itinerarySpotCount } from '../services/itinerary/generate';
+import { fetchPlaceById } from '../services/places';
 
 interface ProfilePageProps {
   session: UserSession;
@@ -15,10 +17,23 @@ interface ProfilePageProps {
 export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
   const navigate = useNavigate();
   const { saved, unsave } = useSavedItineraries(session.user?.id);
+  const { savedIds, toggleSave } = useSavedPlaces(session.user?.id);
+  const [savedPlaces, setSavedPlaces] = useState<Place[]>([]);
 
   useEffect(() => {
     saved.forEach((item) => upsertItinerary(item.snapshot));
   }, [saved]);
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all(savedIds.map((id) => fetchPlaceById(id))).then((places) => {
+      if (cancelled) return;
+      setSavedPlaces(places.filter((p): p is Place => p !== null));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [savedIds]);
 
   if (!session.isLoggedIn || !session.user) {
     return (
@@ -65,6 +80,51 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
         >
           Become a curator
         </Link>
+      )}
+
+      <h2 className="mt-8 text-sm font-semibold text-miyeon-main">Saved places</h2>
+
+      {savedPlaces.length === 0 ? (
+        <div className="mt-4 rounded-3xl border border-dashed border-miyeon-neutral px-4 py-10 text-center">
+          <p className="text-sm text-miyeon-main/60">Nothing saved yet.</p>
+          <button
+            type="button"
+            onClick={() => navigate('/map')}
+            className="mt-4 rounded-full bg-miyeon-sub1 px-4 py-2 text-xs font-bold text-white"
+          >
+            Explore the map
+          </button>
+        </div>
+      ) : (
+        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {savedPlaces.map((place, i) => (
+            <motion.div
+              key={place.id}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.05 }}
+              className="relative overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm"
+            >
+              <Link to={`/place/${place.id}`} className="block">
+                <img src={place.photoUrl} alt={place.name} className="h-32 w-full object-cover" />
+                <div className="p-3">
+                  <p className="truncate text-sm font-semibold text-miyeon-main">{place.name}</p>
+                  <p className="flex items-center gap-1 text-[11px] text-miyeon-main/60">
+                    <Star className="h-3 w-3 fill-miyeon-sub1 text-miyeon-sub1" /> {place.rating} · {place.area}
+                  </p>
+                </div>
+              </Link>
+              <button
+                type="button"
+                aria-label="Remove from saved"
+                onClick={() => toggleSave(place.id)}
+                className="absolute right-2 top-2 rounded-full bg-white/90 p-2 text-miyeon-sub1 shadow-sm"
+              >
+                <Bookmark className="h-3.5 w-3.5" fill="currentColor" />
+              </button>
+            </motion.div>
+          ))}
+        </div>
       )}
 
       <h2 className="mt-8 text-sm font-semibold text-miyeon-main">Saved itineraries</h2>
