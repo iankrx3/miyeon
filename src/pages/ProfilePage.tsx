@@ -145,8 +145,12 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
               <button
                 type="button"
                 aria-label="Remove from saved"
-                onClick={() => unsavePlace(place.id)}
-                className="absolute right-2 top-2 rounded-full bg-white/90 p-2 text-miyeon-sub1 shadow-sm"
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  unsavePlace(place.id);
+                }}
+                className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 text-miyeon-sub1 shadow-sm"
               >
                 <Bookmark className="h-3.5 w-3.5" fill="currentColor" />
               </button>
@@ -211,8 +215,12 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
                 <button
                   type="button"
                   aria-label="Delete itinerary"
-                  onClick={() => handleDeleteMyItinerary(item.id)}
-                  className="absolute right-2 top-2 rounded-full bg-white/90 p-2 text-miyeon-main/60 shadow-sm hover:text-red-500"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    handleDeleteMyItinerary(item.id);
+                  }}
+                  className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 text-miyeon-main/60 shadow-sm hover:text-red-500"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>
@@ -268,8 +276,12 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
                 <button
                   type="button"
                   aria-label="Remove from saved"
-                  onClick={() => unsave(item.itineraryId)}
-                  className="absolute right-2 top-2 rounded-full bg-white/90 p-2 text-miyeon-sub1 shadow-sm"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    unsave(item.itineraryId);
+                  }}
+                  className="absolute right-2 top-2 z-10 rounded-full bg-white/90 p-2 text-miyeon-sub1 shadow-sm"
                 >
                   <Bookmark className="h-3.5 w-3.5" fill="currentColor" />
                 </button>

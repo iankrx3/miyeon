@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Place } from '../types';
 import { isRemoteUser } from '../lib/remoteUser';
+import { addTombstone, removeTombstone, TOMBSTONE_PLACES } from '../lib/syncTombstones';
 import { fetchPlaceById } from '../services/places';
 import {
   deleteRemoteSavedPlace,
+  excludeDeletedPlaces,
   fetchRemoteSavedPlaces,
   insertRemoteSavedPlace,
   mergeSaved,
   pushLocalSavedPlaces,
+  reconcileDeletedPlaces,
   type SavedPlaceEntry,
 } from '../services/savedPlaces';
 
@@ -52,13 +55,13 @@ function migrateGuestSavedPlaces(userId?: string): SavedPlaceEntry[] {
 }
 
 export function useSavedPlaces(userId?: string) {
-  const [saved, setSaved] = useState<SavedPlaceEntry[]>(() => readSaved(userId));
+  const [saved, setSaved] = useState<SavedPlaceEntry[]>(() => excludeDeletedPlaces(readSaved(userId), userId));
   const [syncError, setSyncError] = useState<string | null>(null);
   const hydratedUserId = useRef(userId);
 
   useEffect(() => {
     hydratedUserId.current = userId;
-    const migrated = migrateGuestSavedPlaces(userId);
+    const migrated = excludeDeletedPlaces(migrateGuestSavedPlaces(userId), userId);
     setSaved(migrated);
     setSyncError(null);
     let cancelled = false;
@@ -69,8 +72,11 @@ export function useSavedPlaces(userId?: string) {
         if (isRemoteUser(userId)) setSyncError('Could not sync saved places. Showing this device only.');
         return;
       }
-      const merged = mergeSaved(migrated, remote);
+      const localNow = excludeDeletedPlaces(readSaved(userId), userId);
+      const merged = excludeDeletedPlaces(mergeSaved(localNow, remote), userId);
       setSaved(merged);
+      await reconcileDeletedPlaces(userId, remote);
+      if (cancelled) return;
       const pushed = await pushLocalSavedPlaces(userId, merged, remote);
       if (cancelled) return;
       if (!pushed) setSyncError('Could not sync saved places. Showing this device only.');
@@ -114,6 +120,7 @@ export function useSavedPlaces(userId?: string) {
         snapshot: place,
         savedAt: new Date().toISOString(),
       };
+      removeTombstone(TOMBSTONE_PLACES, userId, place.id);
       setSaved((prev) => [entry, ...prev.filter((item) => item.placeId !== place.id)]);
       void insertRemoteSavedPlace(userId, entry).then((ok) => {
         if (!ok && isRemoteUser(userId)) setSyncError('Could not sync saved places. Showing this device only.');
@@ -124,6 +131,7 @@ export function useSavedPlaces(userId?: string) {
 
   const unsave = useCallback(
     (placeId: string) => {
+      addTombstone(TOMBSTONE_PLACES, userId, placeId);
       setSaved((prev) => prev.filter((item) => item.placeId !== placeId));
       void deleteRemoteSavedPlace(userId, placeId);
     },

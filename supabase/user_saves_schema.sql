@@ -1,6 +1,7 @@
 -- Persistence for signed-in Google users. Guest / demo sessions stay in localStorage.
 -- Run in the Supabase SQL editor (idempotent). The app fail-softs to localStorage
 -- until these tables exist.
+-- If save works but delete does not, run supabase/user_saves_delete.sql (GRANT DELETE + RPCs).
 --
 --   saved_places      — places pinned to My Map
 --   saved_itineraries — bookmarked trips (snapshot JSON)

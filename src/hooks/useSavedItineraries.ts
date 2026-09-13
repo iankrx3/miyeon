@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Itinerary, SavedItinerary } from '../types';
 import { isRemoteUser } from '../lib/remoteUser';
+import { addTombstones, removeTombstone, TOMBSTONE_SAVED_ITINERARIES } from '../lib/syncTombstones';
 import {
   listSavedItineraries,
   migrateGuestSavedItineraries,
@@ -9,20 +10,25 @@ import {
 } from '../lib/localItineraryStore';
 import {
   deleteRemoteSavedItinerary,
+  excludeDeletedSavedItineraries,
   fetchRemoteSavedItineraries,
   insertRemoteSavedItinerary,
   mergeSavedItineraries,
   pushLocalSavedItineraries,
+  reconcileDeletedSavedItineraries,
+  savedItineraryKeys,
 } from '../services/savedItineraries';
 
 export function useSavedItineraries(userId?: string) {
-  const [saved, setSaved] = useState<SavedItinerary[]>(() => listSavedItineraries(userId));
+  const [saved, setSaved] = useState<SavedItinerary[]>(() =>
+    excludeDeletedSavedItineraries(listSavedItineraries(userId), userId)
+  );
   const [syncError, setSyncError] = useState<string | null>(null);
   const hydratedUserId = useRef(userId);
 
   useEffect(() => {
     hydratedUserId.current = userId;
-    const migrated = migrateGuestSavedItineraries(userId);
+    const migrated = excludeDeletedSavedItineraries(migrateGuestSavedItineraries(userId), userId);
     setSaved(migrated);
     setSyncError(null);
     let cancelled = false;
@@ -33,9 +39,12 @@ export function useSavedItineraries(userId?: string) {
         if (isRemoteUser(userId)) setSyncError('Could not sync saved itineraries. Showing this device only.');
         return;
       }
-      const merged = mergeSavedItineraries(migrated, remote);
+      const localNow = excludeDeletedSavedItineraries(listSavedItineraries(userId), userId);
+      const merged = excludeDeletedSavedItineraries(mergeSavedItineraries(localNow, remote), userId);
       merged.forEach((entry) => upsertItinerary(entry.snapshot));
       setSaved(merged);
+      await reconcileDeletedSavedItineraries(userId, remote);
+      if (cancelled) return;
       const pushed = await pushLocalSavedItineraries(userId, merged, remote);
       if (cancelled) return;
       if (!pushed) setSyncError('Could not sync saved itineraries. Showing this device only.');
@@ -69,6 +78,7 @@ export function useSavedItineraries(userId?: string) {
         snapshot,
         savedAt: new Date().toISOString(),
       };
+      removeTombstone(TOMBSTONE_SAVED_ITINERARIES, userId, itinerary.id);
       setSaved((prev) => [entry, ...prev.filter((s) => s.itineraryId !== itinerary.id)]);
       void insertRemoteSavedItinerary(userId, entry).then((ok) => {
         if (!ok && isRemoteUser(userId)) setSyncError('Could not sync saved itineraries. Showing this device only.');
@@ -110,6 +120,10 @@ export function useSavedItineraries(userId?: string) {
       const entry = saved.find(
         (s) => s.itineraryId === itineraryId || s.snapshot.id === itineraryId || s.savedId === itineraryId
       );
+      addTombstones(TOMBSTONE_SAVED_ITINERARIES, userId, [
+        itineraryId,
+        ...(entry ? savedItineraryKeys(entry) : []),
+      ]);
       setSaved((prev) =>
         prev.filter((s) => s.itineraryId !== itineraryId && s.snapshot.id !== itineraryId && s.savedId !== itineraryId)
       );

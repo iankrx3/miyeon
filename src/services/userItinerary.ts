@@ -1,7 +1,13 @@
 import type { Itinerary, UserSession } from '../types';
 import { isRemoteUser } from '../lib/remoteUser';
 import { supabase } from '../lib/supabase';
-import { isMissingRelation } from '../lib/supabaseError';
+import { isMissingRelation, isMissingRpc } from '../lib/supabaseError';
+import {
+  addTombstone,
+  listTombstones,
+  removeTombstone,
+  TOMBSTONE_USER_ITINERARIES,
+} from '../lib/syncTombstones';
 import { createBlankItinerary } from './itinerary/generate';
 import { listUserItineraries, removeItinerary, upsertItinerary } from '../lib/localItineraryStore';
 
@@ -82,7 +88,10 @@ export async function persistUserItinerary(session: UserSession, itinerary: Itin
 
 export async function fetchUserItineraries(userId: string): Promise<{ itineraries: Itinerary[]; syncError: string | null }> {
   const local = listUserItineraries(userId);
-  if (!isRemoteUser(userId) || !supabase) return { itineraries: local, syncError: null };
+  if (!isRemoteUser(userId) || !supabase) {
+    const dead = listTombstones(TOMBSTONE_USER_ITINERARIES, userId);
+    return { itineraries: local.filter((item) => !dead.has(item.id)), syncError: null };
+  }
   try {
     const { data, error } = await supabase
       .from('user_itineraries')
@@ -91,10 +100,13 @@ export async function fetchUserItineraries(userId: string): Promise<{ itinerarie
       .order('updated_at', { ascending: false });
     if (error) throw error;
     const remote = (data ?? []).map(mapUserItinerary);
-    remote.forEach(upsertItinerary);
+    // Read tombstones after the network round-trip so in-flight deletes stick.
+    const dead = listTombstones(TOMBSTONE_USER_ITINERARIES, userId);
+    remote.filter((item) => !dead.has(item.id)).forEach(upsertItinerary);
 
     const byId = new Map<string, Itinerary>();
     for (const item of [...local, ...remote]) {
+      if (dead.has(item.id)) continue;
       const prev = byId.get(item.id);
       if (!prev || item.updatedAt > prev.updatedAt) byId.set(item.id, item);
     }
@@ -109,13 +121,38 @@ export async function fetchUserItineraries(userId: string): Promise<{ itinerarie
       if (!(await upsertRemote(userId, item))) pushFailed = true;
     }
 
+    for (const id of dead) {
+      if (remoteById.has(id)) {
+        const { data: rpcCount, error: rpcError } = await supabase.rpc('delete_own_user_itinerary', { p_id: id });
+        if (rpcError && isMissingRpc(rpcError)) {
+          const { error: deleteError } = await supabase
+            .from('user_itineraries')
+            .delete()
+            .eq('id', id)
+            .eq('user_id', userId)
+            .select('id');
+          if (deleteError) console.warn('deleteUserItinerary retry failed', deleteError);
+        } else if (rpcError) {
+          console.warn('deleteUserItinerary retry failed', rpcError);
+        } else if (typeof rpcCount === 'number' && rpcCount === 0) {
+          console.warn('deleteUserItinerary retry deleted 0 rows', id);
+        }
+      } else {
+        removeTombstone(TOMBSTONE_USER_ITINERARIES, userId, id);
+      }
+    }
+
     return {
       itineraries: merged,
       syncError: pushFailed ? 'Could not sync your itineraries. Showing this device only.' : null,
     };
   } catch (err) {
     console.warn('fetchUserItineraries failed', err);
-    return { itineraries: local, syncError: 'Could not sync your itineraries. Showing this device only.' };
+    const dead = listTombstones(TOMBSTONE_USER_ITINERARIES, userId);
+    return {
+      itineraries: local.filter((item) => !dead.has(item.id)),
+      syncError: 'Could not sync your itineraries. Showing this device only.',
+    };
   }
 }
 
@@ -126,6 +163,7 @@ export async function fetchRemoteUserItinerary(id: string): Promise<Itinerary | 
     if (error) throw error;
     if (!data) return null;
     const mapped = mapUserItinerary(data);
+    if (listTombstones(TOMBSTONE_USER_ITINERARIES, mapped.userId).has(mapped.id)) return null;
     upsertItinerary(mapped);
     return mapped;
   } catch {
@@ -134,8 +172,28 @@ export async function fetchRemoteUserItinerary(id: string): Promise<Itinerary | 
 }
 
 export async function deleteUserItinerary(itineraryId: string, userId?: string): Promise<void> {
+  addTombstone(TOMBSTONE_USER_ITINERARIES, userId, itineraryId);
   removeItinerary(itineraryId);
   if (!isRemoteUser(userId) || !supabase) return;
-  const { error } = await supabase.from('user_itineraries').delete().eq('id', itineraryId).eq('user_id', userId!);
+
+  const { data: rpcCount, error: rpcError } = await supabase.rpc('delete_own_user_itinerary', {
+    p_id: itineraryId,
+  });
+  if (!rpcError && typeof rpcCount === 'number') {
+    // Keep the tombstone until a later fetch confirms the cloud row is gone.
+    // A 0-row result means RLS/session missed; retry on next hydrate.
+    return;
+  }
+  if (rpcError && !isMissingRpc(rpcError)) {
+    console.warn('deleteUserItinerary rpc failed', rpcError);
+    return;
+  }
+
+  const { error } = await supabase
+    .from('user_itineraries')
+    .delete()
+    .eq('id', itineraryId)
+    .eq('user_id', userId!)
+    .select('id');
   if (error) console.warn('deleteUserItinerary failed', error);
 }

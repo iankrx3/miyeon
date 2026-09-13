@@ -1,8 +1,11 @@
 import type { Itinerary, SavedItinerary } from '../types';
 import { isRemoteUser } from '../lib/remoteUser';
 import { supabase } from '../lib/supabase';
-import { isMissingRelation } from '../lib/supabaseError';
+import { isMissingRelation, isMissingRpc } from '../lib/supabaseError';
+import { listTombstones, removeTombstone, TOMBSTONE_SAVED_ITINERARIES } from '../lib/syncTombstones';
 import { upsertItinerary } from '../lib/localItineraryStore';
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function mapSource(source: string): SavedItinerary['source'] {
   if (source === 'curator' || source === 'user' || source === 'miyeon') return source;
@@ -32,6 +35,16 @@ export function mergeSavedItineraries(local: SavedItinerary[], remote: SavedItin
     if (!prev || entry.savedAt > prev.savedAt) byKey.set(entry.itineraryId, entry);
   }
   return [...byKey.values()].sort((a, b) => (a.savedAt < b.savedAt ? 1 : -1));
+}
+
+export function savedItineraryKeys(entry: SavedItinerary): string[] {
+  return [entry.itineraryId, entry.savedId, entry.snapshot?.id].filter((id): id is string => Boolean(id));
+}
+
+export function excludeDeletedSavedItineraries(entries: SavedItinerary[], userId?: string): SavedItinerary[] {
+  const dead = listTombstones(TOMBSTONE_SAVED_ITINERARIES, userId);
+  if (dead.size === 0) return entries;
+  return entries.filter((entry) => !savedItineraryKeys(entry).some((id) => dead.has(id)));
 }
 
 export async function fetchRemoteSavedItineraries(userId?: string): Promise<SavedItinerary[] | null> {
@@ -79,9 +92,11 @@ export async function pushLocalSavedItineraries(
   remote: SavedItinerary[]
 ): Promise<boolean> {
   if (!isRemoteUser(userId) || local.length === 0) return true;
+  const dead = listTombstones(TOMBSTONE_SAVED_ITINERARIES, userId);
   const byRemote = new Map(remote.map((entry) => [entry.itineraryId, entry]));
   let ok = true;
   for (const entry of local) {
+    if (savedItineraryKeys(entry).some((id) => dead.has(id))) continue;
     const existing = byRemote.get(entry.itineraryId);
     if (existing && existing.savedAt >= entry.savedAt) continue;
     if (!(await upsertSaved(userId!, entry))) ok = false;
@@ -94,13 +109,69 @@ export async function deleteRemoteSavedItinerary(
   keys: { itineraryId: string; savedId?: string; snapshotId?: string }
 ): Promise<boolean> {
   if (!isRemoteUser(userId) || !supabase) return false;
-  const parts = [`itinerary_id.eq.${keys.itineraryId}`];
-  if (keys.snapshotId && keys.snapshotId !== keys.itineraryId) parts.push(`itinerary_id.eq.${keys.snapshotId}`);
-  if (keys.savedId && keys.savedId !== keys.itineraryId) parts.push(`id.eq.${keys.savedId}`);
-  const { error } = await supabase.from('saved_itineraries').delete().eq('user_id', userId!).or(parts.join(','));
-  if (error) {
-    console.warn('deleteRemoteSavedItinerary failed', error);
-    return false;
+
+  const itineraryIds = [...new Set([keys.itineraryId, keys.snapshotId].filter((id): id is string => Boolean(id)))];
+  const rowId = keys.savedId && UUID_RE.test(keys.savedId) ? keys.savedId : null;
+
+  let deleted = 0;
+  let rpcMissing = false;
+  for (const itineraryId of itineraryIds) {
+    const { data: rpcCount, error: rpcError } = await supabase.rpc('delete_own_saved_itinerary', {
+      p_itinerary_id: itineraryId,
+      p_row_id: rowId,
+    });
+    if (!rpcError && typeof rpcCount === 'number') {
+      deleted += rpcCount;
+      continue;
+    }
+    if (rpcError && !isMissingRpc(rpcError)) {
+      console.warn('deleteRemoteSavedItinerary rpc failed', rpcError);
+      return false;
+    }
+    rpcMissing = true;
+    break;
   }
-  return true;
+
+  if (!rpcMissing) return deleted > 0;
+
+  let ok = true;
+  let tableDeleted = 0;
+  for (const itineraryId of itineraryIds) {
+    const { data, error } = await supabase
+      .from('saved_itineraries')
+      .delete()
+      .eq('user_id', userId!)
+      .eq('itinerary_id', itineraryId)
+      .select('id');
+    if (error) {
+      console.warn('deleteRemoteSavedItinerary failed', error);
+      ok = false;
+    } else {
+      tableDeleted += data?.length ?? 0;
+    }
+  }
+
+  if (rowId) {
+    const { data, error } = await supabase.from('saved_itineraries').delete().eq('user_id', userId!).eq('id', rowId).select('id');
+    if (error) {
+      console.warn('deleteRemoteSavedItinerary by id failed', error);
+      ok = false;
+    } else {
+      tableDeleted += data?.length ?? 0;
+    }
+  }
+
+  return ok && tableDeleted > 0;
+}
+
+export async function reconcileDeletedSavedItineraries(userId: string | undefined, remote: SavedItinerary[]): Promise<void> {
+  if (!isRemoteUser(userId)) return;
+  const remoteKeys = new Set(remote.flatMap(savedItineraryKeys));
+  for (const id of listTombstones(TOMBSTONE_SAVED_ITINERARIES, userId)) {
+    if (remoteKeys.has(id)) {
+      await deleteRemoteSavedItinerary(userId, { itineraryId: id, savedId: UUID_RE.test(id) ? id : undefined });
+    } else {
+      removeTombstone(TOMBSTONE_SAVED_ITINERARIES, userId, id);
+    }
+  }
 }
