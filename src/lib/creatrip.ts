@@ -1,4 +1,11 @@
-import type { BeautyTripProfile, SpotSubcategory } from '../types';
+import type {
+  BeautyTripProfile,
+  GlowUpBudget,
+  GlowUpLanguage,
+  GlowUpRegion,
+  GlowUpSubtype,
+  SpotSubcategory,
+} from '../types';
 
 const CREATRIP_AFF_PARAMS = { utm_source: 'AFF-e2873zu', aff_id: 'AFF-e2873zu' };
 
@@ -98,4 +105,114 @@ export function creatripThemesForProfile(profile?: BeautyTripProfile | null): nu
     themes.add(CREATRIP_THEME.excellentService);
   }
   return [...themes];
+}
+
+// ---- GLOW UP QUIZ (V2) — additive only. Nothing above this line changes;
+// buildCreatripListUrl/CREATRIP_CATEGORY/CREATRIP_THEME/creatripThemesForProfile
+// stay exactly as-is for the curator/Itinerary flow (ItineraryTimeline.tsx). ----
+
+/** Creatrip's "Spas & Wellness" category — confirmed live on creatrip.com. Kept
+ * separate from CREATRIP_CATEGORY (whose keys are the legacy SpotSubcategory
+ * union owned by the curator/Spot pipeline) rather than extending that union. */
+const RESTORE_CATEGORY = 3070;
+
+/** Maps every GlowUp leaf item to Creatrip's {category, middleCategory}. `hair`
+ * intentionally has no middleCategory: Screen 2 no longer asks a sub-question to
+ * disambiguate color-perm/head-spa/hair-makeup/hair-extensions, so linking to the
+ * category-level "All Hair Salons" page is honest — guessing one middle category
+ * would silently narrow results the user never asked to narrow. */
+export const GLOWUP_CATEGORY_MAP: Record<GlowUpSubtype, { category: number; middleCategory?: number }> = {
+  skin: { category: 3068, middleCategory: 404 },
+  face: { category: 403, middleCategory: 3104 },
+  hair: { category: 3028 },
+  nail: { category: 403, middleCategory: 886 },
+  'personal-color': { category: 403, middleCategory: 926 },
+  makeup: { category: 403, middleCategory: 878 },
+  'permanent-makeup': { category: 403, middleCategory: 3037 },
+  photo: { category: 403, middleCategory: 3082 },
+  sauna: { category: RESTORE_CATEGORY, middleCategory: 3085 },
+  scrub: { category: RESTORE_CATEGORY, middleCategory: 3083 },
+  massage: { category: RESTORE_CATEGORY, middleCategory: 3086 },
+  yoga: { category: RESTORE_CATEGORY, middleCategory: 3084 },
+};
+
+/** Creatrip's numeric `region` filter id. Confirmed live: Gangnam=8, Hongdae/Mapo=5.
+ * TODO verify Myeongdong/Seongsu ids on creatrip.com before shipping — left
+ * unmapped rather than guessed. */
+export const GLOWUP_REGION_ID: Partial<Record<Exclude<GlowUpRegion, 'auto'>, number>> = {
+  gangnam: 8,
+  'hongdae-mapo': 5,
+};
+
+/** Fallback for "You decide" — Gangnam only because its id is already verified;
+ * swap for a real product default once one is chosen. */
+const DEFAULT_REGION_ID = GLOWUP_REGION_ID.gangnam!;
+
+export function regionIdForProfile(region: GlowUpRegion | null): number | undefined {
+  if (!region || region === 'auto') return DEFAULT_REGION_ID;
+  return GLOWUP_REGION_ID[region];
+}
+
+/** Creatrip's minPrice/maxPrice are plain USD numbers; the quiz's budget tiers
+ * are KRW. Placeholder fixed rate — not live-fetched. */
+export const KRW_TO_USD_RATE = 1350;
+
+function krwToUsd(krw: number): number {
+  return Math.round(krw / KRW_TO_USD_RATE);
+}
+
+export function budgetRangeUsd(budget: GlowUpBudget | null): { min?: number; max?: number } {
+  switch (budget) {
+    case 'under-100k':
+      return { max: krwToUsd(100_000) };
+    case '100-300k':
+      return { min: krwToUsd(100_000), max: krwToUsd(300_000) };
+    case '300-500k':
+      return { min: krwToUsd(300_000), max: krwToUsd(500_000) };
+    default:
+      return {};
+  }
+}
+
+const GLOWUP_LANGUAGE_THEME: Partial<Record<GlowUpLanguage, number>> = {
+  Chinese: CREATRIP_THEME.chinese,
+  Japanese: CREATRIP_THEME.japanese,
+  Thai: CREATRIP_THEME.thai,
+  Vietnamese: CREATRIP_THEME.vietnamese,
+  // English: Creatrip exposes this as a separate toolbar toggle, not a `theme=`
+  // id — TODO confirm the real param before launch. Omitted for now rather than
+  // guessed, so selecting it is UI-only until then.
+};
+
+export function themeIdsForLanguages(languages: GlowUpLanguage[]): number[] {
+  return languages.map((l) => GLOWUP_LANGUAGE_THEME[l]).filter((id): id is number => id != null);
+}
+
+export interface GlowUpUrlContext {
+  region: GlowUpRegion | null;
+  budget: GlowUpBudget | null;
+  languages: GlowUpLanguage[];
+}
+
+/** Builds a Creatrip category-list URL for one GlowUp slot item. Region/budget/
+ * language are shared across every slot in a result — only category/
+ * middleCategory differs per slot. Returns null only if GLOWUP_CATEGORY_MAP is
+ * ever missing an entry (shouldn't happen — all 12 subtypes are mapped above). */
+export function buildGlowUpCreatripUrl(subtype: GlowUpSubtype, ctx: GlowUpUrlContext): string | null {
+  const mapping = GLOWUP_CATEGORY_MAP[subtype];
+  if (!mapping) return null;
+  const params = new URLSearchParams({
+    page: '1',
+    category: String(mapping.category),
+    order: 'MOST_VIEWED_IN_A_MONTH',
+    direction: 'DESC',
+  });
+  if (mapping.middleCategory != null) params.set('middleCategory', String(mapping.middleCategory));
+  const regionId = regionIdForProfile(ctx.region);
+  if (regionId != null) params.set('region', String(regionId));
+  const { min, max } = budgetRangeUsd(ctx.budget);
+  if (min != null) params.set('minPrice', String(min));
+  if (max != null) params.set('maxPrice', String(max));
+  for (const id of new Set(themeIdsForLanguages(ctx.languages))) params.append('theme', String(id));
+  return withCreatripAffiliate(`${CREATRIP_BASE_URL}/spot/list?${params.toString()}`);
 }

@@ -5,20 +5,21 @@ import { aiTransitionMessages } from '../../data/quiz';
 
 interface AITransitionProps {
   onDone: () => void;
+  messages?: string[];
 }
 
 // §2-5 — short AI transition shown between PICK and Results.
-export const AITransition: React.FC<AITransitionProps> = ({ onDone }) => {
+export const AITransition: React.FC<AITransitionProps> = ({ onDone, messages = aiTransitionMessages }) => {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-    if (step >= aiTransitionMessages.length - 1) {
+    if (step >= messages.length - 1) {
       const finish = setTimeout(onDone, 700);
       return () => clearTimeout(finish);
     }
     const next = setTimeout(() => setStep((s) => s + 1), 550);
     return () => clearTimeout(next);
-  }, [step, onDone]);
+  }, [step, onDone, messages.length]);
 
   return (
     <div className="flex h-[60vh] flex-col items-center justify-center gap-4 text-center">
@@ -37,7 +38,7 @@ export const AITransition: React.FC<AITransitionProps> = ({ onDone }) => {
           exit={{ opacity: 0, y: -6 }}
           className="font-display text-xl text-miyeon-main"
         >
-          {aiTransitionMessages[step]}
+          {messages[step]}
         </motion.p>
       </AnimatePresence>
     </div>

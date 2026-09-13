@@ -374,3 +374,71 @@ export interface UserSession {
   };
   creator?: Creator;
 }
+
+// ---- GLOW UP QUIZ (V2 main quiz — replaces BeautyTripProfile/Itinerary as the
+// output of ExplorePage's step machine; BeautyTripProfile/Itinerary/ItineraryDay/
+// ItineraryBlock are kept as-is below for the curator flow, see
+// services/itinerary/generate.ts and pages/CuratorListPage.tsx) ----
+
+export type FixItem = 'skin' | 'face';
+export type FixDowntimeAnswer = 'no-daily-photos' | 'day-or-two-ok' | 'doesnt-matter';
+export type ChangeItem = 'hair' | 'nail' | 'personal-color' | 'makeup' | 'permanent-makeup' | 'photo';
+export type RestoreItem = 'sauna' | 'scrub' | 'massage' | 'yoga';
+/** Every selectable GlowUp leaf item. Deliberately NOT SpotSubcategory — that
+ * type belongs to the legacy curator/Spot pipeline (data/spots.ts) and stays
+ * untouched by this quiz. */
+export type GlowUpSubtype = FixItem | ChangeItem | RestoreItem;
+export type GlowUpCategory = 'fix' | 'change' | 'restore';
+
+export type GlowUpTripDays = '1' | '2-3' | '4-7' | '7-plus';
+export type GlowUpRegion = 'gangnam' | 'hongdae-mapo' | 'myeongdong' | 'seongsu' | 'auto';
+export type GlowUpBudget = 'under-100k' | '100-300k' | '300-500k' | 'no-preference';
+/** Creatrip's spot-list filters support these 5 languages (Korean excluded —
+ * target users are foreign tourists). Chinese/Japanese/Thai/Vietnamese map to
+ * `theme` ids; English maps to a separate toolbar toggle (see lib/creatrip.ts). */
+export type GlowUpLanguage = 'English' | 'Japanese' | 'Chinese' | 'Vietnamese' | 'Thai';
+
+export interface GlowUpProfile {
+  fix: {
+    items: FixItem[];
+    /** Never sent to Creatrip — used only for day-placement (schedule RESTORE
+     * right after FIX, reserve recovery time). */
+    downtime: FixDowntimeAnswer | null;
+  };
+  change: ChangeItem[];
+  restore: RestoreItem[];
+  tripDays: GlowUpTripDays | null;
+  region: GlowUpRegion | null;
+  budget: GlowUpBudget | null;
+  languages: GlowUpLanguage[];
+}
+
+export type GlowUpPeriod = 'morning' | 'afternoon' | 'evening';
+
+export interface GlowUpSlotItem {
+  category: GlowUpCategory;
+  subtype: GlowUpSubtype;
+  label: string;
+  emoji: string;
+  /** Resolved Creatrip list URL (region/budget/language/category/middleCategory
+   * applied). Null only if GLOWUP_CATEGORY_MAP is ever missing an entry. */
+  url: string | null;
+}
+
+export interface GlowUpSlot {
+  period: GlowUpPeriod;
+  /** Empty = "Free time". More than one entry = stacked chips in one cell
+   * (see services/glowUp/placement.ts's overflow rule). */
+  items: GlowUpSlotItem[];
+}
+
+export interface GlowUpDay {
+  dayIndex: number; // 1-based "planning day", not the literal trip day count
+  slots: GlowUpSlot[]; // always [morning, afternoon, evening]
+}
+
+export interface GlowUpResult {
+  days: GlowUpDay[];
+  whyThisLine: string;
+  profileSnapshot: GlowUpProfile;
+}
