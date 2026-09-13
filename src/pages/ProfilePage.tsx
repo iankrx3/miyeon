@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Bookmark, MapPin, Star, Trash2 } from 'lucide-react';
+import { Bookmark, ListPlus, MapPin, Star, Trash2 } from 'lucide-react';
 import type { Itinerary, UserSession } from '../types';
 import { useSavedItineraries } from '../hooks/useSavedItineraries';
 import { useSavedPlaces } from '../hooks/useSavedPlaces';
 import { firstSpotImage, upsertItinerary } from '../lib/localItineraryStore';
 import { itinerarySpotCount } from '../services/itinerary/generate';
-import { deleteUserItinerary, fetchUserItineraries } from '../services/userItinerary';
+import { createUserItinerary, deleteUserItinerary, fetchUserItineraries } from '../services/userItinerary';
 
 interface ProfilePageProps {
   session: UserSession;
@@ -23,6 +23,15 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
   const handleDeleteMyItinerary = (itineraryId: string) => {
     void deleteUserItinerary(itineraryId, session.user?.id);
     setMyItineraries((prev) => prev.filter((i) => i.id !== itineraryId));
+  };
+
+  const handleCreateItinerary = async () => {
+    if (!session.isLoggedIn) {
+      onSignIn();
+      return;
+    }
+    const itinerary = await createUserItinerary(session, 'My Itinerary');
+    navigate(`/itinerary/${itinerary.id}/build`);
   };
 
   useEffect(() => {
@@ -135,17 +144,28 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
         </div>
       )}
 
-      <h2 className="mt-8 text-sm font-semibold text-miyeon-main">My itineraries</h2>
+      <div className="mt-8 flex items-center justify-between gap-3">
+        <h2 className="text-sm font-semibold text-miyeon-main">My itineraries</h2>
+        {myItineraries.length > 0 && (
+          <button
+            type="button"
+            onClick={() => void handleCreateItinerary()}
+            className="inline-flex items-center gap-1.5 rounded-full bg-miyeon-sub1 px-3 py-1.5 text-xs font-bold text-white"
+          >
+            <ListPlus className="h-3.5 w-3.5" /> Create an itinerary
+          </button>
+        )}
+      </div>
 
       {myItineraries.length === 0 ? (
         <div className="mt-4 rounded-3xl border border-dashed border-miyeon-neutral px-4 py-10 text-center">
           <p className="text-sm text-miyeon-main/60">Nothing built yet.</p>
           <button
             type="button"
-            onClick={() => navigate('/map')}
-            className="mt-4 rounded-full bg-miyeon-sub1 px-4 py-2 text-xs font-bold text-white"
+            onClick={() => void handleCreateItinerary()}
+            className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-miyeon-sub1 px-4 py-2 text-xs font-bold text-white"
           >
-            Create an itinerary
+            <ListPlus className="h-3.5 w-3.5" /> Create an itinerary
           </button>
         </div>
       ) : (

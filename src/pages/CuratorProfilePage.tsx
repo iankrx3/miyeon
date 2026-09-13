@@ -153,7 +153,7 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
                 }}
                 className="flex items-center gap-1.5 rounded-full bg-miyeon-sub1 px-3.5 py-1.5 text-xs font-bold text-white shadow-sm shadow-miyeon-sub1/30"
               >
-                <ListPlus className="h-3.5 w-3.5" /> New itinerary
+                <ListPlus className="h-3.5 w-3.5" /> Share itinerary
               </motion.button>
             </>
           )}
@@ -186,7 +186,7 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
                   disabled={isSubmittingList || !newListTitle.trim()}
                   className="shrink-0 rounded-full bg-miyeon-sub1 px-3.5 py-2 text-xs font-bold text-white disabled:opacity-50"
                 >
-                  {isSubmittingList ? 'Creating…' : 'Create'}
+                  {isSubmittingList ? 'Sharing…' : 'Share'}
                 </motion.button>
               </div>
               {listError && <p className="mt-1.5 text-xs text-red-500">{listError}</p>}

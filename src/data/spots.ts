@@ -1,5 +1,6 @@
 import type { BeautyCategory, Place, Spot, SpotArea, SpotParentCategory, SpotSubcategory } from '../types';
 import { discoverAll, PRICE_BAND } from '../services/discovery';
+import { mockPlaces } from './mock';
 
 const SUBCATEGORY_IMAGE: Record<SpotSubcategory, string> = {
   'color-perm': 'https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?q=80&w=1200',
@@ -152,7 +153,10 @@ export function loadSpots(): Promise<Spot[]> {
 }
 
 export function getSpot(id: string): Spot | undefined {
-  return cachedSpots.find((s) => s.id === id);
+  const live = cachedSpots.find((s) => s.id === id);
+  if (live) return live;
+  const mock = mockPlaces.find((p) => p.id === id);
+  return mock ? placeToSpot(mock) : undefined;
 }
 
 export function getSpots(): Spot[] {

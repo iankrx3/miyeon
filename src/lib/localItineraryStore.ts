@@ -1,11 +1,10 @@
 import type { Itinerary, SavedItinerary } from '../types';
-import { mockCreators } from '../data/mock';
+import { mockCuratorItineraries } from '../data/mockItineraries';
 import { getSpot } from '../data/spots';
-import { emptyProfile, generateItinerary } from '../services/itinerary/generate';
 
 const ITINERARIES_KEY = 'miyeon_itineraries';
 const SAVED_KEY = 'miyeon_saved_itineraries';
-const SEEDED_KEY = 'miyeon_itineraries_seeded_v1';
+const SEEDED_KEY = 'miyeon_itineraries_seeded_v2';
 
 function readJson<T>(key: string, fallback: T): T {
   try {
@@ -28,42 +27,10 @@ function seedCuratorItineraries() {
   if (typeof localStorage === 'undefined') return;
   if (localStorage.getItem(SEEDED_KEY)) return;
 
-  const profile = {
-    ...emptyProfile(),
-    purpose: 'korean-experience' as const,
-    goals: ['makeup-style' as const, 'hair' as const],
-    nothingOffLimits: false,
-    restrictions: ['need-communication' as const],
-    budget: '300-500' as const,
-    beautyTime: 'half-day' as const,
-    tripDays: '2' as const,
-    downtime: 'few-hours' as const,
-  };
-
-  const a = generateItinerary(profile);
-  a.id = 'itn_seed_seoulskin';
-  a.source = 'curator';
-  a.curatorId = mockCreators[0].id;
-  a.title = 'Soft Seoul, two days';
-  a.description = 'Color first, then hair — Gangnam and Seongsu.';
-
-  const b = generateItinerary({
-    ...profile,
-    purpose: 'feel-good',
-    goals: ['hair', 'details'],
-    beautyTime: 'couple-hours',
-    tripDays: '1',
-  });
-  b.id = 'itn_seed_mina';
-  b.source = 'curator';
-  b.curatorId = mockCreators[1].id;
-  b.title = 'Hongdae hair & makeup';
-  b.description = 'A short, very Korean afternoon.';
-
   const existing = readJson<Itinerary[]>(ITINERARIES_KEY, []);
-  const ids = new Set(existing.map((i) => i.id));
-  const seeded = [a, b].filter((i) => !ids.has(i.id) && i.days.length > 0);
-  writeJson(ITINERARIES_KEY, [...existing, ...seeded]);
+  const seedIds = new Set(mockCuratorItineraries.map((i) => i.id));
+  const kept = existing.filter((i) => !seedIds.has(i.id));
+  writeJson(ITINERARIES_KEY, [...mockCuratorItineraries, ...kept]);
   localStorage.setItem(SEEDED_KEY, '1');
 }
 
