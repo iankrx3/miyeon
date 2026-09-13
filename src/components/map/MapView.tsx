@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Locate, Loader2, Search, X, ChevronRight, ChevronDown, Plus, Minus } from 'lucide-react';
-import type { Creator, CreatorPick, Place, UserSession } from '../../types';
+import type { BeautyCategory, Creator, CreatorPick, Place, UserSession } from '../../types';
 import { categoryMeta } from '../../data/mock';
 import { ENABLED_MAP_CATEGORIES } from '../../data/mapCategories';
 import { searchPlacesByCategory } from '../../services/discovery';
@@ -27,6 +27,15 @@ interface MapViewProps {
   /** Whether this MapView is the currently visible tab (vs. hidden via CSS while List view is active). */
   visible?: boolean;
 }
+
+const CATEGORY_FILTERS: { id: 'all' | BeautyCategory; label: string }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'skin', label: '✨ Skin' },
+  { id: 'face', label: '💎 Face' },
+  { id: 'hair', label: '✂️ Hair' },
+  { id: 'nails', label: '💅 Nails' },
+  { id: 'makeup', label: '💄 Makeup' },
+];
 
 /** Pans/zooms the map so `targets` are fully visible — a single flyTo for one place,
  * or a padded flyToBounds for several (padded so the top search/filter UI never covers a pin). */
@@ -60,6 +69,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
   const [creatorPicks, setCreatorPicks] = useState<CreatorPick[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [selectedCategory, setSelectedCategory] = useState<'all' | BeautyCategory>('all');
   const [isCreatorPicksExpanded, setIsCreatorPicksExpanded] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -189,8 +199,12 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
   }, [visible]);
 
   const getFilteredPlaces = useCallback((): Place[] => {
-    return curatorFilterActive ? curatorFilterPlaces : places;
-  }, [places, curatorFilterActive, curatorFilterPlaces]);
+    if (curatorFilterActive) return curatorFilterPlaces;
+    if (selectedCategory !== 'all') {
+      return places.filter((p) => p.category === selectedCategory);
+    }
+    return places;
+  }, [places, selectedCategory, curatorFilterActive, curatorFilterPlaces]);
 
   useEffect(() => {
     const map = mapInstanceRef.current;
@@ -239,7 +253,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
       layer.addLayer(marker);
       markerMapRef.current.set(place.id, marker);
     });
-  }, [places, getFilteredPlaces, onSelectPlace, navigate]);
+  }, [places, selectedCategory, getFilteredPlaces, onSelectPlace, navigate]);
 
   // KTO Wellness pins — tone-down Warm Taupe marker, visually distinct from Miyeon Rose beauty pins (§15.3)
   useEffect(() => {
@@ -318,6 +332,8 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
     if (!map) return;
     // Live Google results aren't in `places` (and so have no marker) until we add them.
     setPlaces((prev) => (prev.some((p) => p.id === place.id) ? prev : [...prev, place]));
+    // Clear the category filter so the target place's pin is guaranteed to be visible.
+    setSelectedCategory('all');
     setSearchQuery('');
     setIsSearchOpen(false);
     fitMapToPlaces(map, [place]);
@@ -470,7 +486,18 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
                   </button>
                 </div>
               </div>
-            ) : null}
+            ) : (
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+                {CATEGORY_FILTERS.map((cat) => (
+                  <FilterChip
+                    key={cat.id}
+                    active={selectedCategory === cat.id}
+                    label={cat.label}
+                    onClick={() => setSelectedCategory(cat.id)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -580,6 +607,21 @@ const MapButton: React.FC<{ onClick: () => void; label: string; active?: boolean
     }`}
   >
     {children}
+  </button>
+);
+
+const FilterChip: React.FC<{ active: boolean; label: string; onClick: () => void }> = ({
+  active,
+  label,
+  onClick,
+}) => (
+  <button
+    onClick={onClick}
+    className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-bold shadow-md backdrop-blur-md transition-all whitespace-nowrap ${
+      active ? 'bg-miyeon-sub1 text-white shadow-miyeon-sub1/25' : 'bg-white/95 text-miyeon-main/70 hover:bg-white hover:text-miyeon-sub1'
+    }`}
+  >
+    {label}
   </button>
 );
 
