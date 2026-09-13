@@ -8,18 +8,16 @@ interface HomeGlowUpEntriesProps {
   onComingSoon: (feature: GlowUpSubEntry) => void;
 }
 
-const entries: { id: GlowUpSubEntry; emoji: string; label: string; sub: string }[] = [
+const entries: { id: GlowUpSubEntry; emoji: string; label: string }[] = [
   {
     id: 'skin-concern',
     emoji: '💉',
     label: 'Just want to sort out a skin concern?',
-    sub: 'What should I get?',
   },
   {
     id: 'real-korea',
     emoji: '🇰🇷',
     label: 'Curious about the real Korea, not tourist spots?',
-    sub: 'Want the Real Korea?',
   },
 ];
 
@@ -38,7 +36,6 @@ export const HomeGlowUpEntries: React.FC<HomeGlowUpEntriesProps> = ({ onComingSo
         <span className="flex items-center gap-2.5 text-xs text-white/70 sm:text-sm">
           <span className="text-base">{entry.emoji}</span>
           {entry.label}
-          <span className="text-white/40">({entry.sub})</span>
         </span>
         <ChevronRight className="h-3.5 w-3.5 shrink-0 text-white/40" />
       </motion.button>

@@ -55,16 +55,18 @@ export default function MapPage({ session, onSignIn }: { session: UserSession; o
       </motion.button>
 
       {!(viewMode === 'map' && selectedPlace) && (
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={handleCreateItinerary}
-          aria-label="Create an itinerary"
-          className="absolute left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-miyeon-main px-6 py-3 text-sm font-bold text-white shadow-lg bottom-[calc(var(--bottom-nav-h)+20px)] sm:bottom-5"
-        >
-          <ListPlus className="h-4 w-4" />
-          Create an itinerary
-        </motion.button>
+        <div className="absolute left-1/2 z-20 -translate-x-1/2 bottom-[calc(var(--bottom-nav-h)+20px)] sm:bottom-5">
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={handleCreateItinerary}
+            aria-label="Create an itinerary"
+            className="flex items-center gap-1.5 rounded-full bg-miyeon-main px-4 py-2 text-xs font-bold text-white shadow-lg"
+          >
+            <ListPlus className="h-3.5 w-3.5" />
+            Create an itinerary
+          </motion.button>
+        </div>
       )}
 
       <AnimatePresence>

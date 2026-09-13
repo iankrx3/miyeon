@@ -33,7 +33,7 @@ export const PlaceListView: React.FC<{ session: UserSession }> = ({ session }) =
   const rest = sponsored ? places.filter((p) => p.id !== sponsored.id) : places;
 
   return (
-    <div className="mx-auto h-[calc(100dvh-64px)] max-w-2xl overflow-y-auto px-4 py-4 pb-[calc(var(--bottom-nav-h)+80px)] sm:pb-24">
+    <div className="mx-auto h-[calc(100dvh-64px)] max-w-2xl overflow-y-auto px-4 py-4 pb-[calc(var(--bottom-nav-h)+64px)] sm:pb-20">
       {sponsored && (
         <div className="mb-4">
           <SponsoredPlaceCard place={sponsored} onView={viewPlace} />
