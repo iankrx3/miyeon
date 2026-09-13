@@ -1,3 +1,5 @@
+import { pickEnglishAddressParts } from '../lib/englishAddress';
+
 export interface KtoFacility {
   contentId: string;
   title: string;
@@ -12,7 +14,15 @@ export interface KtoFacility {
 export interface KtoMedicalDetail {
   departments: string[];
   languages: string[];
+  procedures: string[];
+  facilities: string[];
   homepage?: string;
+}
+
+export interface KtoCommonDetail {
+  overview?: string;
+  address?: string;
+  title?: string;
 }
 
 interface KtoEnvelope {
@@ -39,10 +49,23 @@ function asItems(raw: unknown): Record<string, unknown>[] {
   return [];
 }
 
+function cleanKtoText(value?: string): string | undefined {
+  if (!value) return undefined;
+  const cleaned = value
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return cleaned || undefined;
+}
+
 function splitList(value?: string): string[] {
   if (!value) return [];
   return value
-    .split(/[,;/|]/)
+    .split(/[,;/|\n]+/)
     .map((part) => part.trim())
     .filter(Boolean);
 }
@@ -58,7 +81,7 @@ function mapFacility(item: Record<string, unknown>): KtoFacility | null {
   return {
     contentId,
     title,
-    address: [base, detail].filter(Boolean).join(' ').trim(),
+    address: pickEnglishAddressParts(base, detail),
     latitude: lat,
     longitude: lng,
     tel: pick(item, 'tel'),
@@ -131,6 +154,21 @@ export async function detailMedical(contentId: string): Promise<KtoMedicalDetail
   return {
     departments: splitList(pick(item, 'mainMdlcSubjInfo', 'mdclTursmDivInfo')),
     languages: splitList(pick(item, 'svcLangInfo')),
+    procedures: splitList(pick(item, 'specProcMdlcInfo')),
+    facilities: splitList(pick(item, 'specFcltyInfo')),
     homepage: pick(item, 'hmpgInfo'),
+  };
+}
+
+export async function detailCommon(contentId: string): Promise<KtoCommonDetail | null> {
+  const items = await ktoGet('detailCommon', { contentId, numOfRows: 1, pageNo: 1 });
+  const item = items[0];
+  if (!item) return null;
+  const base = pick(item, 'baseAddr', 'addr1') || '';
+  const detail = pick(item, 'detailAddr', 'addr2') || '';
+  return {
+    overview: cleanKtoText(pick(item, 'overview')),
+    address: pickEnglishAddressParts(base, detail),
+    title: pick(item, 'title'),
   };
 }

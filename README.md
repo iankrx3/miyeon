@@ -42,12 +42,10 @@ proxy injects them so they never reach the browser):
 ```
 KTO_SERVICE_KEY=          # data.go.kr, service MdclTursmService (의료관광정보)
 GOOGLE_PLACES_API_KEY=    # Google Cloud Places API (New)
-GEMINI_API_KEY=           # Google AI Studio / Gemini API — optional, powers "Get latest info"
 ```
 
 - KTO key: [한국관광공사_의료관광정보](https://www.data.go.kr/data/15143913/openapi.do) → 활용신청. Use the Decoding or Encoding key; the proxy normalises either.
-- Google key: enable **Places API (New)** on a Cloud project. Restrict it to `localhost` HTTP referrers for local work.
-- Gemini key: from [Google AI Studio](https://aistudio.google.com/apikey). Place detail keeps Google Places + KTO as its data source; Gemini is only called on demand (the "Get latest info" button, `src/components/place/GroundedInfo.tsx`) with the Google Search grounding tool enabled, to surface things Places/KTO don't carry (hours changes, closures, recent notes). Without this key the button is hidden — fail-silent, like the KTO badges.
+- Google key: enable **Places API (New)** on a Cloud project. Restrict it to `localhost` HTTP referrers for local work. Place detail uses Places Search + Place Details (English `languageCode`) together with KTO `detailCommon` / `detailMdclTursm` to fill the address and "Why people like it".
 
 `src/services/discovery.ts` maps each beauty category to Google Place types and,
 for `skin` / `face`, overlays KTO-certified medical-tourism orgs (badge +
@@ -101,9 +99,11 @@ it. The old category/quiz/match screen this replaced is still in the tree as dea
   fall through the curated catalog, and the Map search box above.
 - **Place / Treatment detail** — Nearby Wellness and Medical Info KTO badges
   (§7.2/§7.3), fail-silent when their data is absent. Get-directions links to
-  Google/Naver/Kakao Maps (`src/lib/directions.ts`), and an opt-in "Get latest
-  info" lookup backed by Gemini + Google Search grounding
-  (`src/components/place/GroundedInfo.tsx`) for anything Places/KTO don't cover.
+  Google/Naver/Kakao Maps (`src/lib/directions.ts`). The address is forced to a
+  single English line (`src/lib/englishAddress.ts`). "Why people like it" is
+  composed on the detail page from Google Place Details (editorial summary,
+  rating, English reviews, place type) and KTO `detailCommon` / `detailMdclTursm`
+  (registered medical-tourism, languages, departments, English overview) — no LLM.
   A "Back to itinerary" link appears when you arrived from `/itinerary/:id`.
 - **Creatrip affiliate links** (`src/lib/creatrip.ts`) — Book-with-Creatrip CTAs
   (`PlaceDetailPage`, `TreatmentDetailPage`) are tagged with the Creatrip affiliate
@@ -111,12 +111,8 @@ it. The old category/quiz/match screen this replaced is still in the tree as dea
   caption underneath, per Creatrip's affiliate policy. `hasCreatripListing()` tells
   apart a place with a real, spot-specific Creatrip page from one still pointing at
   the generic homepage; only the former is labeled "광고" (ad) — with one shown as a
-  featured "광고 · 추천" pick — in the Map list view. `scripts/resolve-creatrip-links.mjs`
-  (`npm run resolve:creatrip`) is a one-off, read-only tool that asks Gemini
-  (Google Search grounding) to find each demo place's real Creatrip page and
-  reports whether the answer is corroborated by an actual search result —
-  verified results are applied to `src/data/mock.ts` by hand, never
-  auto-written.
+  featured "광고 · 추천" pick — in the Map list view. Filling a real Creatrip spot
+  URL on a place is manual (`src/data/mock.ts`).
 - **Curator tools** (`src/services/curator.ts`) — sign up / edit a curator profile
   (`/curator/signup`, `/curator/:id/edit`); create, edit (add spot/day, rename,
   delete), and publish **itineraries** as a curator's primary content

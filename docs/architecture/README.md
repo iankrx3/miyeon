@@ -13,8 +13,7 @@ Vite + React SPA. 서버는 Vite 개발/프리뷰 프록시(및 Vercel 배포용
 [Vercel 함수] api/**/*.ts                    (배포)
        │  둘 다 shared/apiProxy.ts의 상수를 공유
   data.go.kr MdclTursmService (KTO 의료관광)
-  places.googleapis.com      (Google Places API New)
-  generativelanguage.googleapis.com (optional) Gemini + Google Search grounding
+  places.googleapis.com      (Google Places API New — Search + Place Details)
   (optional) Supabase Auth + Postgres (creators/creator_lists/list_spots/curator_itineraries/saved_itineraries/saved_places/user_itineraries/magazine_articles/community_*)
 ```
 

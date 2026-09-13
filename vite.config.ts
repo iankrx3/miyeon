@@ -10,7 +10,6 @@ export default defineConfig(({ mode }) => {
       miyeonApiProxy({
         ktoKey: env.KTO_SERVICE_KEY,
         googleKey: env.GOOGLE_PLACES_API_KEY,
-        geminiKey: env.GEMINI_API_KEY,
       }),
     ],
   };

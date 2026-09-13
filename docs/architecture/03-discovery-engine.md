@@ -9,17 +9,17 @@
 두 곳에서 같은 엔드포인트를 제공한다 — 상수·설정은 `shared/apiProxy.ts` 하나를 공유해서 드리프트가 나지 않게 한다:
 
 - `plugins/miyeon-api-proxy.ts` — 로컬 개발/프리뷰(`vite.config.ts`의 `configureServer` / `configurePreviewServer`)
-- `api/**/*.ts` — Vercel 배포 (`api/health.ts`, `api/kto/[...op].ts`, `api/places/search.ts`, `api/places/photo.ts`, `api/gemini/ground.ts`)
+- `api/**/*.ts` — Vercel 배포 (`api/health.ts`, `api/kto/[...op].ts`, `api/places/search.ts`, `api/places/photo.ts`, `api/places/details.ts`)
 
-키는 `KTO_SERVICE_KEY`, `GOOGLE_PLACES_API_KEY`, `GEMINI_API_KEY` ( **`VITE_` 없음** ). 브라우저에 안 나간다.
+키는 `KTO_SERVICE_KEY`, `GOOGLE_PLACES_API_KEY` ( **`VITE_` 없음** ). 브라우저에 안 나간다.
 
 | 프론트 | 업스트림 |
 |---|---|
-| `GET /api/health` | 키 장착 여부 `{ kto, google, gemini }` |
+| `GET /api/health` | 키 장착 여부 `{ kto, google }` |
 | `GET /api/kto/:op` | `https://apis.data.go.kr/B551011/MdclTursmService/:op` |
 | `POST /api/places/search` | Places `searchNearby` / `searchText` |
 | `GET /api/places/photo` | 사진 URI로 302. 이미지 URL에 Google 키 없음 |
-| `POST /api/gemini/ground` | Gemini `generateContent` + `google_search` 툴 (grounding) |
+| `GET /api/places/details` | Place Details (`languageCode=en`) — 리뷰·editorial·영문 주소. 검색 필드 마스크에는 리뷰를 넣지 않음 |
 
 키 없으면 `503 { error: 'not_configured' }`. 정적 호스팅에는 이 프록시가 없다.
 
@@ -27,8 +27,10 @@
 
 | 파일 | 기능 |
 |---|---|
-| `services/googlePlaces.ts` | Nearby · Text Search, 사진 URL, health 캐시 |
-| `services/kto.ts` | `searchKeyword`, `locationBasedList`, `detailMdclTursm` |
+| `services/googlePlaces.ts` | Nearby · Text Search · Place Details, 사진 URL, health 캐시 |
+| `services/kto.ts` | `searchKeyword`, `locationBasedList`, `detailMdclTursm`, `detailCommon` |
+| `lib/englishAddress.ts` | 한글이 섞인 주소를 영문 한 줄로 정규화 |
+| `services/placeDetail.ts` | 상세 페이지에서 Place Details + KTO로 주소·Why people like it 채움 |
 | `data/categorySearch.ts` | 카테고리 → Google type · 검색어 · KTO 키워드 |
 
 기본 좌표는 강남 `(37.5172, 127.0473)`. `Near Me`여도 한국 밖이면 강남으로 되돌린다.

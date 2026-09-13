@@ -3,17 +3,15 @@ import type { Plugin, ViteDevServer } from 'vite';
 import {
   KTO_BASE,
   PLACES_BASE,
-  GEMINI_BASE,
-  GEMINI_MODEL,
   KTO_OPS,
   PLACES_FIELD_MASK,
+  PLACES_DETAILS_FIELD_MASK,
   decodeServiceKey,
 } from '../shared/apiProxy.js';
 
 export interface MiyeonApiProxyOptions {
   ktoKey?: string;
   googleKey?: string;
-  geminiKey?: string;
 }
 
 function json(res: ServerResponse, status: number, body: unknown) {
@@ -110,27 +108,22 @@ async function handlePlacesPhoto(url: URL, res: ServerResponse, googleKey: strin
   res.end();
 }
 
-async function handleGeminiGround(req: IncomingMessage, res: ServerResponse, geminiKey: string) {
-  const raw = await readBody(req);
-  let payload: { prompt?: string };
-  try {
-    payload = JSON.parse(raw || '{}');
-  } catch {
-    json(res, 400, { error: 'Invalid JSON body' });
+async function handlePlacesDetails(url: URL, res: ServerResponse, googleKey: string) {
+  const raw = url.searchParams.get('id');
+  if (!raw || !/^(places\/)?[A-Za-z0-9_-]+$/.test(raw)) {
+    json(res, 400, { error: 'Missing or invalid place id' });
     return;
   }
-  if (!payload.prompt) {
-    json(res, 400, { error: 'Missing prompt' });
-    return;
-  }
+  const placeId = raw.startsWith('places/') ? raw.slice('places/'.length) : raw;
+  const upstream = new URL(`${PLACES_BASE}/places/${encodeURIComponent(placeId)}`);
+  upstream.searchParams.set('languageCode', 'en');
+  upstream.searchParams.set('regionCode', 'KR');
 
-  const response = await fetch(`${GEMINI_BASE}/models/${GEMINI_MODEL}:generateContent?key=${geminiKey}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: payload.prompt }] }],
-      tools: [{ google_search: {} }],
-    }),
+  const response = await fetch(upstream, {
+    headers: {
+      'X-Goog-Api-Key': googleKey,
+      'X-Goog-FieldMask': PLACES_DETAILS_FIELD_MASK,
+    },
   });
   const text = await response.text();
   res.statusCode = response.status;
@@ -153,7 +146,6 @@ function attach(server: ViteDevServer, options: MiyeonApiProxyOptions) {
         json(res, 200, {
           kto: Boolean(options.ktoKey),
           google: Boolean(options.googleKey),
-          gemini: Boolean(options.geminiKey),
         });
         return;
       }
@@ -185,12 +177,12 @@ function attach(server: ViteDevServer, options: MiyeonApiProxyOptions) {
         return;
       }
 
-      if (url.pathname === '/api/gemini/ground' && req.method === 'POST') {
-        if (!options.geminiKey) {
-          json(res, 503, { error: 'not_configured', service: 'gemini' });
+      if (url.pathname === '/api/places/details' && req.method === 'GET') {
+        if (!options.googleKey) {
+          json(res, 503, { error: 'not_configured', service: 'google' });
           return;
         }
-        await handleGeminiGround(req, res, options.geminiKey);
+        await handlePlacesDetails(url, res, options.googleKey);
         return;
       }
 

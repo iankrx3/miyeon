@@ -13,7 +13,7 @@
 | 지도 검색 | MapView 검색창 | 로컬 debounce | `searchPlacesByCategory` → `discoverAll` | Google |
 | Map 리스트뷰 · 광고 | `PlaceListView` | — | `hasCreatripListing` | — |
 | 큐레이터/일정 지도 딥링크 | MapView `?curator=`/`?itinerary=` | — | `fetchCuratorById`/`fetchCuratorItineraries` | Supabase 또는 로컬 |
-| 장소/시술 상세 조회 | Place/Treatment detail | — | `fetchPlaceById`/`fetchTreatmentById`(spots → 디스커버리 카탈로그 → mock 순) | Google, KTO |
+| 장소/시술 상세 조회 | Place/Treatment detail | — | `fetchPlaceById`/`fetchTreatmentById`(spots → 디스커버리 카탈로그 → mock 순) + `enrichPlaceDetail` (영문 주소, Why people like it) | Google Place Details, KTO `detailCommon`/`detailMdclTursm` |
 | 의료관광 배지 | Place detail | — | KTO `detailMdclTursm` 머지 | KTO |
 | 웰니스 핀 | Map, Place detail | — | mock `nearbyWellness` | (미연동) |
 | 장소 저장(My Map) | 상세/맵 버튼 | `useSavedPlaces` | `services/savedPlaces.ts` | `localStorage` + (Google 로그인 시) Supabase `saved_places` |

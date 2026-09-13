@@ -1,12 +1,13 @@
 import type { User } from '@supabase/supabase-js';
 import { CommunityPost, Creator, CuratorList, ListSpot, MagazineArticle, Place, PostComment, UserSession } from '../types';
+import { toEnglishAddress } from './englishAddress';
 
 export function mapPlace(row: any): Place {
   return {
     id: row.id,
     name: row.name,
     category: row.category,
-    address: row.address,
+    address: toEnglishAddress(row.address, { area: row.area }),
     area: row.area,
     latitude: Number(row.latitude),
     longitude: Number(row.longitude),

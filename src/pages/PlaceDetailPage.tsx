@@ -7,8 +7,9 @@ import { fetchPlaceById, fetchTreatments } from '../services/places';
 import { fetchCommunityPosts } from '../services/community';
 import { useSavedPlaces } from '../hooks/useSavedPlaces';
 import { MedicalTourismSection, NearbyWellnessSection } from '../components/badges/KtoBadges';
-import { GroundedInfo } from '../components/place/GroundedInfo';
 import { getDirectionsLinks } from '../lib/directions';
+import { toEnglishAddress } from '../lib/englishAddress';
+import { enrichPlaceDetail } from '../services/placeDetail';
 import { hasCreatripListing, withCreatripAffiliate, CREATRIP_DISCLOSURE } from '../lib/creatrip';
 import { getSpot, SUBCATEGORY_LABEL } from '../data/spots';
 
@@ -30,14 +31,32 @@ export default function PlaceDetailPage({
 
   useEffect(() => {
     if (!id) return;
+    let cancelled = false;
     setLoading(true);
     Promise.all([fetchPlaceById(id), fetchTreatments(), fetchCommunityPosts()])
       .then(([p, allTreatments, posts]) => {
-        setPlace(p);
+        if (cancelled) return;
+        const initial = p
+          ? {
+              ...p,
+              address: toEnglishAddress(p.address, { area: p.area }),
+              whyPeopleLikeIt: p.whyPeopleLikeIt?.filter((line) => line.trim()),
+            }
+          : null;
+        setPlace(initial);
         setTreatments(allTreatments.filter((t) => p?.treatmentIds.includes(t.id)));
         setReviews(posts.filter((post) => post.placeId === id));
+        if (!initial) return;
+        void enrichPlaceDetail(initial).then((enriched) => {
+          if (!cancelled) setPlace(enriched);
+        });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   if (loading) return <div className="px-4 py-10 text-sm text-miyeon-main/60">Loading…</div>;
@@ -169,7 +188,6 @@ export default function PlaceDetailPage({
 
         <NearbyWellnessSection spots={place.nearbyWellness} />
         <MedicalTourismSection match={place.medicalTourismMatch} />
-        <GroundedInfo place={place} />
 
         {reviews.length > 0 && (
           <section>

@@ -115,6 +115,7 @@ export function placeToSpot(place: Place): Spot {
     reviewCount: place.reviewCount,
     experienceStyle: 'professional',
     googlePlaceId: place.googlePlaceId,
+    ktoContentId: place.ktoContentId,
     source: place.source,
   };
 }
@@ -207,9 +208,10 @@ export function spotToPlace(spot: Spot): Place {
     language: spot.languages,
     foreignerFriendly: spot.touristFriendly,
     bookingUrl: spot.bookingUrl,
-    whyPeopleLikeIt: [spot.description],
-    source: 'mock',
+    whyPeopleLikeIt: spot.description.trim() ? [spot.description] : undefined,
+    source: spot.source ?? 'mock',
     googlePlaceId: spot.googlePlaceId,
+    ktoContentId: spot.ktoContentId,
   };
 }
 

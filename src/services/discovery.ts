@@ -1,5 +1,6 @@
 import type { BeautyCategory, MedicalTourismMatch, Place, Treatment } from '../types';
 import { categorySearch, resolveOrigin } from '../data/categorySearch';
+import { toEnglishAddress } from '../lib/englishAddress';
 import { getApiHealth, placesPhotoUrl, searchNearby, searchText, type GooglePlaceHit } from './googlePlaces';
 import { detailMedical, locationBasedList, searchKeyword, type KtoFacility } from './kto';
 
@@ -239,10 +240,14 @@ function toPlaceFromGoogle(
   englishFriendly?: boolean
 ): Place {
   const spec = categorySearch[category];
+  const address = toEnglishAddress(hit.address, {
+    components: hit.addressComponents,
+    area: areaFromAddress(hit.address),
+  });
   const match: MedicalTourismMatch | undefined = kto
     ? {
         orgName: kto.title,
-        address: kto.address || hit.address,
+        address: toEnglishAddress(kto.address || address, { area: areaFromAddress(kto.address || address) }),
         departments: [],
         supportedLanguages: [],
         contact: kto.tel,
@@ -255,8 +260,8 @@ function toPlaceFromGoogle(
     id: `gp_${hit.id}`,
     name: hit.name,
     category,
-    address: hit.address,
-    area: areaFromAddress(hit.address),
+    address,
+    area: areaFromAddress(address),
     latitude: hit.latitude,
     longitude: hit.longitude,
     photoUrl: hit.photoName ? placesPhotoUrl(hit.photoName) : spec.fallbackPhoto,
@@ -279,12 +284,13 @@ function toPlaceFromGoogle(
 function toPlaceFromKto(item: KtoFacility, category: BeautyCategory): Place {
   const spec = categorySearch[category];
   const treatmentId = `t-kto_${item.contentId}`;
+  const address = toEnglishAddress(item.address, { area: areaFromAddress(item.address) });
   return {
     id: `kto_${item.contentId}`,
     name: item.title,
     category,
-    address: item.address,
-    area: areaFromAddress(item.address),
+    address,
+    area: areaFromAddress(address),
     latitude: item.latitude,
     longitude: item.longitude,
     photoUrl: item.imageUrl || spec.fallbackPhoto,
@@ -297,7 +303,7 @@ function toPlaceFromKto(item: KtoFacility, category: BeautyCategory): Place {
     foreignerFriendly: true,
     medicalTourismMatch: {
       orgName: item.title,
-      address: item.address,
+      address,
       departments: [],
       supportedLanguages: [],
       contact: item.tel,

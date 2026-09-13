@@ -1,7 +1,12 @@
+import { isEnglishText, toEnglishAddress, type AddressComponent } from '../lib/englishAddress';
+
+export type ApiHealth = { kto: boolean; google: boolean };
+
 export interface GooglePlaceHit {
   id: string;
   name: string;
   address: string;
+  addressComponents?: AddressComponent[];
   latitude: number;
   longitude: number;
   rating: number;
@@ -14,20 +19,51 @@ export interface GooglePlaceHit {
   website?: string;
 }
 
+export interface GooglePlaceReview {
+  text: string;
+  rating: number;
+  languageCode?: string;
+}
+
+export interface GooglePlaceDetails {
+  id: string;
+  name: string;
+  address: string;
+  addressComponents?: AddressComponent[];
+  latitude?: number;
+  longitude?: number;
+  rating: number;
+  reviewCount: number;
+  types: string[];
+  primaryType?: string;
+  editorialSummary?: string;
+  reviews: GooglePlaceReview[];
+}
+
 interface PlacesSearchResponse {
-  places?: Array<{
-    id?: string;
-    displayName?: { text?: string };
-    formattedAddress?: string;
-    location?: { latitude?: number; longitude?: number };
+  places?: Array<PlacePayload>;
+  error?: { message?: string; status?: string };
+}
+
+interface PlacePayload {
+  id?: string;
+  displayName?: { text?: string };
+  formattedAddress?: string;
+  addressComponents?: AddressComponent[];
+  location?: { latitude?: number; longitude?: number };
+  rating?: number;
+  userRatingCount?: number;
+  priceLevel?: string;
+  types?: string[];
+  primaryType?: string;
+  photos?: Array<{ name?: string }>;
+  nationalPhoneNumber?: string;
+  websiteUri?: string;
+  editorialSummary?: { text?: string; languageCode?: string };
+  reviews?: Array<{
     rating?: number;
-    userRatingCount?: number;
-    priceLevel?: string;
-    types?: string[];
-    primaryType?: string;
-    photos?: Array<{ name?: string }>;
-    nationalPhoneNumber?: string;
-    websiteUri?: string;
+    text?: { text?: string; languageCode?: string };
+    originalText?: { text?: string; languageCode?: string };
   }>;
   error?: { message?: string; status?: string };
 }
@@ -36,7 +72,7 @@ export function placesPhotoUrl(photoName: string): string {
   return `/api/places/photo?name=${encodeURIComponent(photoName)}&maxHeightPx=800`;
 }
 
-function mapHit(place: NonNullable<PlacesSearchResponse['places']>[number]): GooglePlaceHit | null {
+function mapHit(place: PlacePayload): GooglePlaceHit | null {
   if (!place.id || !place.displayName?.text) return null;
   const lat = place.location?.latitude;
   const lng = place.location?.longitude;
@@ -44,7 +80,8 @@ function mapHit(place: NonNullable<PlacesSearchResponse['places']>[number]): Goo
   return {
     id: place.id,
     name: place.displayName.text,
-    address: place.formattedAddress || '',
+    address: toEnglishAddress(place.formattedAddress, { components: place.addressComponents }),
+    addressComponents: place.addressComponents,
     latitude: lat,
     longitude: lng,
     rating: place.rating ?? 0,
@@ -55,6 +92,48 @@ function mapHit(place: NonNullable<PlacesSearchResponse['places']>[number]): Goo
     photoName: place.photos?.[0]?.name,
     phone: place.nationalPhoneNumber,
     website: place.websiteUri,
+  };
+}
+
+function pickEnglishReviewText(review: NonNullable<PlacePayload['reviews']>[number]): string {
+  const candidates = [review.text, review.originalText];
+  for (const candidate of candidates) {
+    const text = candidate?.text?.trim() ?? '';
+    const lang = (candidate?.languageCode ?? '').toLowerCase();
+    if (!text) continue;
+    if (lang.startsWith('en') || isEnglishText(text)) return text;
+  }
+  return '';
+}
+
+function mapDetails(place: PlacePayload): GooglePlaceDetails | null {
+  if (!place.id || !place.displayName?.text) return null;
+  const editorial = place.editorialSummary?.text?.trim() ?? '';
+  const editorialLang = (place.editorialSummary?.languageCode ?? '').toLowerCase();
+  const editorialOk =
+    editorial && (editorialLang.startsWith('en') || (!editorialLang && !/[\uAC00-\uD7A3]/.test(editorial)))
+      ? editorial
+      : undefined;
+
+  return {
+    id: place.id,
+    name: place.displayName.text,
+    address: toEnglishAddress(place.formattedAddress, { components: place.addressComponents }),
+    addressComponents: place.addressComponents,
+    latitude: place.location?.latitude,
+    longitude: place.location?.longitude,
+    rating: place.rating ?? 0,
+    reviewCount: place.userRatingCount ?? 0,
+    types: place.types ?? [],
+    primaryType: place.primaryType,
+    editorialSummary: editorialOk,
+    reviews: (place.reviews ?? [])
+      .map((review) => ({
+        text: pickEnglishReviewText(review),
+        rating: review.rating ?? 0,
+        languageCode: review.text?.languageCode,
+      }))
+      .filter((review) => review.text),
   };
 }
 
@@ -117,21 +196,38 @@ export async function searchText(opts: {
   });
 }
 
-let healthCache: { kto: boolean; google: boolean; gemini: boolean } | null = null;
+export async function getPlaceDetails(placeId: string): Promise<GooglePlaceDetails | null> {
+  try {
+    const response = await fetch(`/api/places/details?id=${encodeURIComponent(placeId)}`);
+    if (response.status === 503) return null;
+    const data = (await response.json()) as PlacePayload;
+    if (!response.ok) {
+      console.warn('Places details failed', data.error?.message || response.status);
+      return null;
+    }
+    return mapDetails(data);
+  } catch (err) {
+    console.warn('Places details failed', err);
+    return null;
+  }
+}
 
-export async function getApiHealth(): Promise<{ kto: boolean; google: boolean; gemini: boolean }> {
+let healthCache: ApiHealth | null = null;
+
+export async function getApiHealth(): Promise<ApiHealth> {
   if (healthCache) return healthCache;
   try {
     const response = await fetch('/api/health');
     if (!response.ok) {
-      healthCache = { kto: false, google: false, gemini: false };
+      healthCache = { kto: false, google: false };
       return healthCache;
     }
-    healthCache = (await response.json()) as { kto: boolean; google: boolean; gemini: boolean };
+    const data = (await response.json()) as Partial<ApiHealth>;
+    healthCache = { kto: Boolean(data.kto), google: Boolean(data.google) };
     return healthCache;
   } catch (err) {
     console.warn('getApiHealth: /api/health request failed, treating all APIs as unhealthy', err);
-    healthCache = { kto: false, google: false, gemini: false };
+    healthCache = { kto: false, google: false };
     return healthCache;
   }
 }
