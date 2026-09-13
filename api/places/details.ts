@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { PLACES_BASE, PLACES_DETAILS_FIELD_MASK } from '../../shared/apiProxy.js';
+import { consumePlacesQuota } from '../../shared/placesQuota.js';
 
 const PLACE_ID = /^(places\/)?[A-Za-z0-9_-]+$/;
 
@@ -19,6 +20,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const raw = Array.isArray(idParam) ? idParam[0] : idParam;
   if (!raw || !PLACE_ID.test(raw)) {
     res.status(400).json({ error: 'Missing or invalid place id' });
+    return;
+  }
+
+  const quota = consumePlacesQuota('details_pro');
+  if (!quota.ok) {
+    res.status(429).json({ error: 'quota_exhausted', sku: quota.sku, used: quota.used, cap: quota.cap });
     return;
   }
 

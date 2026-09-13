@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { PLACES_BASE, PLACES_FIELD_MASK } from '../../shared/apiProxy.js';
+import { PLACES_BASE, PLACES_SEARCH_FIELD_MASK } from '../../shared/apiProxy.js';
+import { consumePlacesQuota, searchModeToSku } from '../../shared/placesQuota.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -16,6 +17,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const payload: { mode?: string } & Record<string, unknown> = { ...(req.body ?? {}) };
   const mode = payload.mode === 'text' ? 'text' : 'nearby';
   delete payload.mode;
+  const quota = consumePlacesQuota(searchModeToSku(mode));
+  if (!quota.ok) {
+    res.status(429).json({ error: 'quota_exhausted', sku: quota.sku, used: quota.used, cap: quota.cap });
+    return;
+  }
   const path = mode === 'text' ? 'places:searchText' : 'places:searchNearby';
 
   const response = await fetch(`${PLACES_BASE}/${path}`, {
@@ -23,7 +29,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     headers: {
       'Content-Type': 'application/json',
       'X-Goog-Api-Key': googleKey,
-      'X-Goog-FieldMask': PLACES_FIELD_MASK,
+      'X-Goog-FieldMask': PLACES_SEARCH_FIELD_MASK,
     },
     body: JSON.stringify(payload),
   });

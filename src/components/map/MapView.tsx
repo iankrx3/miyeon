@@ -5,7 +5,12 @@ import { Locate, Loader2, Search, X, ChevronRight, ChevronDown, Plus, Minus } fr
 import type { BeautyCategory, Creator, CreatorPick, Place, UserSession } from '../../types';
 import { categoryMeta } from '../../data/mock';
 import { ENABLED_MAP_CATEGORIES } from '../../data/mapCategories';
-import { catalogPlace, searchPlacesByCategory } from '../../services/discovery';
+import {
+  catalogPlace,
+  discoverGoogleCategory,
+  GOOGLE_ON_DEMAND_CATEGORIES,
+  searchPlacesByCategory,
+} from '../../services/discovery';
 import {
   fetchCuratedMapData,
   fetchCuratorById,
@@ -220,6 +225,27 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
   }, [session.creator?.id]);
 
   useEffect(() => {
+    if (loading) return;
+    if (!GOOGLE_ON_DEMAND_CATEGORIES.includes(selectedCategory as BeautyCategory)) return;
+    const category = selectedCategory as BeautyCategory;
+    const map = mapInstanceRef.current;
+    const center = map?.getCenter();
+    const origin = userLocation ?? (center ? { lat: center.lat, lng: center.lng } : undefined);
+    let cancelled = false;
+    void discoverGoogleCategory(category, origin).then((extra) => {
+      if (cancelled || extra.length === 0) return;
+      setPlaces((prev) => {
+        const seen = new Set(prev.map((place) => place.id));
+        const add = extra.filter((place) => !seen.has(place.id));
+        return add.length ? [...prev, ...add] : prev;
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedCategory, userLocation, loading]);
+
+  useEffect(() => {
     if (!mapContainerRef.current || mapInstanceRef.current) return;
 
     const map = L.map(mapContainerRef.current, {
@@ -369,14 +395,16 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
     const localMatches = places.filter(
       (p) => p.name.toLowerCase().includes(q) || p.area.toLowerCase().includes(q)
     );
-    // Show local matches immediately, then layer in live Google results once they land.
+    // Show local matches immediately, then layer in live KTO results once they land.
     setSearchResults(localMatches.slice(0, 8));
 
     let cancelled = false;
     setIsSearchLoading(true);
     const timer = setTimeout(async () => {
       try {
-        const liveMatches = await searchPlacesByCategory(ENABLED_MAP_CATEGORIES, searchQuery, userLocation ?? undefined);
+        const searchCats =
+          selectedCategory === 'all' ? ENABLED_MAP_CATEGORIES : [selectedCategory];
+        const liveMatches = await searchPlacesByCategory(searchCats, searchQuery, userLocation ?? undefined);
         if (cancelled) return;
         const seen = new Set(localMatches.map((p) => p.id));
         const combined = [...localMatches, ...liveMatches.filter((p) => !seen.has(p.id))];
@@ -392,12 +420,12 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [searchQuery, places, userLocation]);
+  }, [searchQuery, places, userLocation, selectedCategory]);
 
   const handleJumpToPlace = (place: Place) => {
     const map = mapInstanceRef.current;
     if (!map) return;
-    // Live Google results aren't in `places` (and so have no marker) until we add them.
+    // Live KTO results aren't in `places` (and so have no marker) until we add them.
     setPlaces((prev) => (prev.some((p) => p.id === place.id) ? prev : [...prev, place]));
     // Clear the category filter so the target place's pin is guaranteed to be visible.
     setSelectedCategory('all');

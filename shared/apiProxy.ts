@@ -11,34 +11,29 @@ export const KTO_OPS = new Set([
   'ldongCode',
 ]);
 
-export const PLACES_FIELD_MASK = [
+/** Pro-tier search fields only. rating/phone/website/priceLevel/photos would
+ *  bill Nearby/Text Search as Enterprise (1,000 free/month instead of 5,000). */
+export const PLACES_SEARCH_FIELD_MASK = [
   'places.id',
   'places.displayName',
   'places.formattedAddress',
   'places.addressComponents',
   'places.location',
-  'places.rating',
-  'places.userRatingCount',
-  'places.photos',
-  'places.priceLevel',
   'places.types',
   'places.primaryType',
-  'places.nationalPhoneNumber',
-  'places.websiteUri',
-  'places.googleMapsUri',
 ].join(',');
 
-/** Single-place field mask — Place Details does not use the `places.` prefix. */
+/** @deprecated Use PLACES_SEARCH_FIELD_MASK — kept so older imports keep compiling. */
+export const PLACES_FIELD_MASK = PLACES_SEARCH_FIELD_MASK;
+
+/** Pro-tier Place Details only. reviews/editorialSummary → Enterprise + Atmosphere;
+ *  rating/phone/website → Enterprise. Both have a 1,000/month free cap. */
 export const PLACES_DETAILS_FIELD_MASK = [
   'id',
   'displayName',
   'formattedAddress',
   'addressComponents',
   'location',
-  'rating',
-  'userRatingCount',
-  'reviews',
-  'editorialSummary',
   'types',
   'primaryType',
 ].join(',');

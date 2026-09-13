@@ -143,7 +143,7 @@ async function search(body: Record<string, unknown>): Promise<GooglePlaceHit[]> 
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
-  if (response.status === 503) return [];
+  if (response.status === 503 || response.status === 429) return [];
   const data = (await response.json()) as PlacesSearchResponse;
   if (!response.ok) {
     throw new Error(data.error?.message || `Places search failed (${response.status})`);

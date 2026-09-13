@@ -41,18 +41,13 @@ proxy injects them so they never reach the browser):
 
 ```
 KTO_SERVICE_KEY=          # data.go.kr, service MdclTursmService (의료관광정보)
-GOOGLE_PLACES_API_KEY=    # Google Cloud Places API (New)
+GOOGLE_PLACES_API_KEY=    # Google Cloud Places API (New) — Pro search only
 ```
 
 - KTO key: [한국관광공사_의료관광정보](https://www.data.go.kr/data/15143913/openapi.do) → 활용신청. Use the Decoding or Encoding key; the proxy normalises either.
-- Google key: enable **Places API (New)** on a Cloud project. Restrict it to `localhost` HTTP referrers for local work. Place detail uses Places Search + Place Details (English `languageCode`) together with KTO `detailCommon` / `detailMdclTursm` to fill the address and "Why people like it".
+- Google key: enable **Places API (New)** on a Cloud project. In Cloud Console, cap **Nearby Search Pro** and **Text Search Pro** at 5,000 requests/month (the free SKU caps). The app only uses Pro field masks (no rating/reviews/photos — those bill as Enterprise, 1,000 free/month). Map bootstrap is KTO-only; Google Nearby Pro runs on demand for hair/nails/makeup (24h cache) and one Text Search Pro if KTO search is empty. Place Details and Place Photos are disabled. A process-local daily budget (150 Nearby + 150 Text) rejects extra calls with `429 quota_exhausted`.
 
-`src/services/discovery.ts` maps each beauty category to Google Place types and,
-for `skin` / `face`, overlays KTO-certified medical-tourism orgs (badge +
-languages). Hair / nails / makeup are Google-primary. If a key is missing or a
-call fails, the app keeps serving mock data. KTO responses must be attributed
-`자료: 한국관광공사` (already on the medical/wellness badges). Development
-quota on data.go.kr is 1,000 calls/day — results are cached for 10 minutes.
+`src/services/discovery.ts` loads skin/face from KTO. Hair/nails/makeup use one Nearby Search Pro when that filter is selected. If a key is missing or a call fails, the app keeps serving mock / KTO data. KTO responses must be attributed `자료: 한국관광공사` (already on the medical/wellness badges). Development quota on data.go.kr is 1,000 calls/day — list results are cached.
 
 ## What's implemented
 

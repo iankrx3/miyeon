@@ -4,10 +4,11 @@ import {
   KTO_BASE,
   PLACES_BASE,
   KTO_OPS,
-  PLACES_FIELD_MASK,
+  PLACES_SEARCH_FIELD_MASK,
   PLACES_DETAILS_FIELD_MASK,
   decodeServiceKey,
 } from '../shared/apiProxy.js';
+import { consumePlacesQuota, searchModeToSku } from '../shared/placesQuota.js';
 
 export interface MiyeonApiProxyOptions {
   ktoKey?: string;
@@ -66,6 +67,11 @@ async function handlePlacesSearch(req: IncomingMessage, res: ServerResponse, goo
 
   const mode = payload.mode === 'text' ? 'text' : 'nearby';
   delete payload.mode;
+  const quota = consumePlacesQuota(searchModeToSku(mode));
+  if (!quota.ok) {
+    json(res, 429, { error: 'quota_exhausted', sku: quota.sku, used: quota.used, cap: quota.cap });
+    return;
+  }
   const path = mode === 'text' ? 'places:searchText' : 'places:searchNearby';
 
   const response = await fetch(`${PLACES_BASE}/${path}`, {
@@ -73,7 +79,7 @@ async function handlePlacesSearch(req: IncomingMessage, res: ServerResponse, goo
     headers: {
       'Content-Type': 'application/json',
       'X-Goog-Api-Key': googleKey,
-      'X-Goog-FieldMask': PLACES_FIELD_MASK,
+      'X-Goog-FieldMask': PLACES_SEARCH_FIELD_MASK,
     },
     body: JSON.stringify(payload),
   });
@@ -83,35 +89,15 @@ async function handlePlacesSearch(req: IncomingMessage, res: ServerResponse, goo
   res.end(text);
 }
 
-async function handlePlacesPhoto(url: URL, res: ServerResponse, googleKey: string) {
-  const name = url.searchParams.get('name');
-  if (!name) {
-    json(res, 400, { error: 'Missing photo name' });
-    return;
-  }
-  const maxHeightPx = url.searchParams.get('maxHeightPx') || '800';
-  const mediaUrl = `${PLACES_BASE}/${name}/media?maxHeightPx=${encodeURIComponent(maxHeightPx)}&skipHttpRedirect=true`;
-  const response = await fetch(mediaUrl, {
-    headers: { 'X-Goog-Api-Key': googleKey },
-  });
-  if (!response.ok) {
-    json(res, response.status, { error: 'Photo fetch failed' });
-    return;
-  }
-  const data = (await response.json()) as { photoUri?: string };
-  if (!data.photoUri) {
-    json(res, 502, { error: 'No photoUri in Places response' });
-    return;
-  }
-  res.statusCode = 302;
-  res.setHeader('Location', data.photoUri);
-  res.end();
-}
-
 async function handlePlacesDetails(url: URL, res: ServerResponse, googleKey: string) {
   const raw = url.searchParams.get('id');
   if (!raw || !/^(places\/)?[A-Za-z0-9_-]+$/.test(raw)) {
     json(res, 400, { error: 'Missing or invalid place id' });
+    return;
+  }
+  const quota = consumePlacesQuota('details_pro');
+  if (!quota.ok) {
+    json(res, 429, { error: 'quota_exhausted', sku: quota.sku, used: quota.used, cap: quota.cap });
     return;
   }
   const placeId = raw.startsWith('places/') ? raw.slice('places/'.length) : raw;
@@ -169,11 +155,7 @@ function attach(server: ViteDevServer, options: MiyeonApiProxyOptions) {
       }
 
       if (url.pathname === '/api/places/photo') {
-        if (!options.googleKey) {
-          json(res, 503, { error: 'not_configured', service: 'google' });
-          return;
-        }
-        await handlePlacesPhoto(url, res, options.googleKey);
+        json(res, 404, { error: 'disabled', service: 'places_photo' });
         return;
       }
 

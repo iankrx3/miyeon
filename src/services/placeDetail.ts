@@ -9,6 +9,8 @@ import { detailCommon, detailMedical, type KtoCommonDetail, type KtoMedicalDetai
 
 const enrichCache = new Map<string, Place>();
 const MATCH_DISTANCE_M = 200;
+/** Google Place Details lookup is off to stop Places API billing. Flip to re-enable. */
+const USE_GOOGLE_PLACE_DETAILS = false;
 
 const TYPE_LABEL: Record<string, string> = {
   skin_care_clinic: 'skin-care clinic',
@@ -246,7 +248,7 @@ export async function enrichPlaceDetail(place: Place): Promise<Place> {
   if (cached) return cached;
 
   const [google, medical, common] = await Promise.all([
-    resolveGoogleDetails(place),
+    USE_GOOGLE_PLACE_DETAILS ? resolveGoogleDetails(place) : Promise.resolve(null),
     place.ktoContentId ? detailMedical(place.ktoContentId).catch(() => null) : Promise.resolve(null),
     place.ktoContentId ? detailCommon(place.ktoContentId).catch(() => null) : Promise.resolve(null),
   ]);

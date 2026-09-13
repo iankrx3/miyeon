@@ -75,7 +75,7 @@ function nearestArea(lat: number, lng: number): SpotArea {
   return best;
 }
 
-/** Maps a live Google Places/KTO Tour API result (src/services/discovery.ts) to the
+/** Maps a live KTO Tour API result (src/services/discovery.ts) to the
  * app's Spot shape so the itinerary engine and its UI (ItineraryTimeline,
  * ItineraryRouteMap, SpotSearchPicker, ...) can keep working unchanged. The curated
  * dimensions a hand-seeded listing used to carry — needleRequired, downtime,
@@ -123,7 +123,7 @@ export function placeToSpot(place: Place): Spot {
 let cachedSpots: Spot[] = [];
 let loadPromise: Promise<Spot[]> | null = null;
 
-/** Loads itinerary candidates from live Google Places/KTO Tour API discovery into an
+/** Loads itinerary candidates from live KTO Tour API discovery into an
  * in-memory cache, once. Queries each of the 4 neighborhood centroids separately (a
  * single Seoul-wide search would skew heavily toward whichever area it's centered on)
  * and merges the results. getSpot()/getSpots() stay synchronous — they have many

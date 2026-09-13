@@ -93,7 +93,7 @@ function wantedSubcats(profile: BeautyTripProfile): SpotSubcategory[] | null {
   return [...set];
 }
 
-// Spots are now sourced live from Google Places/KTO (src/data/spots.ts), which can't
+// Spots are now sourced live from KTO Tour API (src/data/spots.ts), which can't
 // tell us needleRequired, priceTransparency, factoryLike, upsellingRisk, or downtime —
 // those curated dimensions no longer carry real signal, so the restrictions that used
 // to hard-filter on them (no-needles, no-surprise-costs, no-factory, no-upsell,

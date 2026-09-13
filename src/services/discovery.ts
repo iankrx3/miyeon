@@ -1,7 +1,7 @@
 import type { BeautyCategory, MedicalTourismMatch, Place, Treatment } from '../types';
 import { categorySearch, resolveOrigin } from '../data/categorySearch';
 import { toEnglishAddress } from '../lib/englishAddress';
-import { getApiHealth, placesPhotoUrl, searchNearby, searchText, type GooglePlaceHit } from './googlePlaces';
+import { getApiHealth, searchNearby, searchText, type GooglePlaceHit } from './googlePlaces';
 import { detailMedical, locationBasedList, searchKeyword, type KtoFacility } from './kto';
 
 export interface DiscoverQuery {
@@ -27,6 +27,8 @@ const catalog: Catalog = { places: new Map(), treatments: new Map() };
 const cache = new Map<string, { expires: number; result: DiscoveryResult }>();
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const MATCH_DISTANCE_M = 150;
+/** Google Places merge is off to stop Places API billing. Flip to re-enable. */
+const USE_GOOGLE_PLACES = false;
 
 const PRICE_FROM_LEVEL: Record<string, Place['priceRange']> = {
   PRICE_LEVEL_FREE: '$',
@@ -212,6 +214,63 @@ function filterKtoForCategory(items: KtoFacility[], category: BeautyCategory): K
   return matched.length > 0 ? matched : items;
 }
 
+function inferKtoCategory(item: KtoFacility, categories: BeautyCategory[]): BeautyCategory | null {
+  const eligible = categories.filter((category) => categorySearch[category].ktoKeywords.length > 0);
+  if (eligible.length === 0) return null;
+  for (const category of eligible) {
+    const pattern = new RegExp(categorySearch[category].ktoKeywords.join('|'), 'i');
+    if (pattern.test(item.title) || pattern.test(item.address)) return category;
+  }
+  return eligible[0];
+}
+
+function inferGoogleCategory(hit: GooglePlaceHit, categories: BeautyCategory[]): BeautyCategory | null {
+  const types = new Set([hit.primaryType, ...hit.types].filter(Boolean) as string[]);
+  for (const category of categories) {
+    if (categorySearch[category].googleTypes.some((type) => types.has(type))) return category;
+  }
+  return categories.find((category) => GOOGLE_ON_DEMAND_CATEGORIES.includes(category)) ?? categories[0] ?? null;
+}
+
+export const GOOGLE_ON_DEMAND_CATEGORIES: BeautyCategory[] = ['hair', 'nails', 'makeup'];
+const GOOGLE_NEARBY_TTL_MS = 24 * 60 * 60 * 1000;
+const googleNearbyCache = new Map<string, { expires: number; places: Place[] }>();
+
+function googleNearbyKey(category: BeautyCategory, origin: { lat: number; lng: number }): string {
+  return `${category}|${origin.lat.toFixed(3)}|${origin.lng.toFixed(3)}`;
+}
+
+/** One Nearby Search Pro at `origin`, cached 24h. Hair/nails/makeup only — KTO has no keywords there. */
+export async function discoverGoogleCategory(
+  category: BeautyCategory,
+  origin?: { lat: number; lng: number }
+): Promise<Place[]> {
+  if (!GOOGLE_ON_DEMAND_CATEGORIES.includes(category)) return [];
+  const resolved = resolveOrigin(origin);
+  const key = googleNearbyKey(category, resolved);
+  const cached = googleNearbyCache.get(key);
+  if (cached && cached.expires > Date.now()) return cached.places;
+
+  const health = await getApiHealth();
+  if (!health.google) return [];
+
+  try {
+    const hits = await searchNearby({
+      includedTypes: categorySearch[category].googleTypes.slice(0, 1),
+      origin: resolved,
+      radiusM: 5000,
+      maxResultCount: 20,
+    });
+    const places = hits.map((hit) => toPlaceFromGoogle(hit, category));
+    rememberDiscovery({ places, treatments: places.map((place) => treatmentForPlace(place)) });
+    googleNearbyCache.set(key, { expires: Date.now() + GOOGLE_NEARBY_TTL_MS, places });
+    return places;
+  } catch (err) {
+    console.warn(`discoverGoogleCategory(${category}) failed`, err);
+    return [];
+  }
+}
+
 async function enrichKtoMatches(places: Place[]): Promise<void> {
   const pending = places.filter((place) => place.ktoContentId && place.medicalTourismMatch);
   const top = pending.slice(0, 5);
@@ -264,7 +323,7 @@ function toPlaceFromGoogle(
     area: areaFromAddress(address),
     latitude: hit.latitude,
     longitude: hit.longitude,
-    photoUrl: hit.photoName ? placesPhotoUrl(hit.photoName) : spec.fallbackPhoto,
+    photoUrl: spec.fallbackPhoto,
     priceRange,
     rating: hit.rating || 0,
     reviewCount: hit.reviewCount,
@@ -344,11 +403,12 @@ export async function discoverPlaces(query: DiscoverQuery): Promise<DiscoveryRes
   if (cached && cached.expires > Date.now()) return cached.result;
 
   const health = await getApiHealth();
-  if (!health.google && !health.kto) {
+  if (!health.kto && !(USE_GOOGLE_PLACES && health.google)) {
     return { places: [], treatments: [] };
   }
 
-  const googlePromise = health.google ? fetchGoogle(query, origin) : Promise.resolve([] as GooglePlaceHit[]);
+  const googlePromise =
+    USE_GOOGLE_PLACES && health.google ? fetchGoogle(query, origin) : Promise.resolve([] as GooglePlaceHit[]);
   const ktoPromise = health.kto ? fetchKto(query, origin) : Promise.resolve([] as KtoFacility[]);
   const [googleHits, ktoRaw] = await Promise.all([googlePromise, ktoPromise]);
   const ktoHits = filterKtoForCategory(ktoRaw, query.category);
@@ -379,11 +439,8 @@ export async function discoverPlaces(query: DiscoverQuery): Promise<DiscoveryRes
 }
 
 /**
- * Live, as-you-type search (Map tab search box): finds real Google Places
- * matching free text, constrained to the given categories' place types so
- * e.g. a hair salon can't surface while searching the skin/face-only map.
- * Unlike discoverPlaces(), this skips the "nearby" leg (irrelevant for a
- * specific text query) and KTO merging (keeps it fast for type-ahead).
+ * Live, as-you-type search: KTO keyword first. If that is empty, one Text Search
+ * Pro (never a 5-category fan-out). Classifies KTO hits via ktoKeywords.
  */
 export async function searchPlacesByCategory(
   categories: BeautyCategory[],
@@ -394,40 +451,45 @@ export async function searchPlacesByCategory(
   if (!trimmed) return [];
 
   const health = await getApiHealth();
-  if (!health.google) return [];
-
-  const resolvedOrigin = resolveOrigin(origin);
-
-  const perCategory = await Promise.all(
-    categories.map(async (category) => {
-      const spec = categorySearch[category];
-      try {
-        const hits = await searchText({
-          textQuery: `${trimmed} Seoul`,
-          includedType: spec.googleTypes[0],
-          origin: resolvedOrigin,
-          maxResultCount: 8,
-        });
-        return hits.map((hit) => toPlaceFromGoogle(hit, category));
-      } catch (err) {
-        console.warn(`searchPlacesByCategory(${category}) failed`, err);
-        return [] as Place[];
-      }
-    })
-  );
-
-  const seen = new Set<string>();
   const merged: Place[] = [];
-  for (const place of perCategory.flat()) {
-    if (seen.has(place.id)) continue;
-    seen.add(place.id);
-    merged.push(place);
+  const seen = new Set<string>();
+
+  if (health.kto) {
+    try {
+      const hits = await searchKeyword(trimmed, { numOfRows: 20, regionCode: '11' });
+      for (const item of hits) {
+        if (!item.latitude || !item.longitude) continue;
+        if (seen.has(item.contentId)) continue;
+        const category = inferKtoCategory(item, categories);
+        if (!category) continue;
+        seen.add(item.contentId);
+        merged.push(toPlaceFromKto(item, category));
+      }
+    } catch (err) {
+      console.warn('searchPlacesByCategory KTO failed', err);
+    }
   }
 
-  // So a later fetchPlaceById(id) (e.g. clicking through to /place/:id) can
-  // resolve these — same pattern discoverPlaces() uses for its results.
-  rememberDiscovery({ places: merged, treatments: merged.map((place) => treatmentForPlace(place)) });
+  if (merged.length === 0 && health.google) {
+    const includedType = categories.length === 1 ? categorySearch[categories[0]].googleTypes[0] : undefined;
+    try {
+      const hits = await searchText({
+        textQuery: `${trimmed} Seoul`,
+        includedType,
+        origin: resolveOrigin(origin),
+        maxResultCount: 8,
+      });
+      for (const hit of hits) {
+        const category = inferGoogleCategory(hit, categories);
+        if (!category) continue;
+        merged.push(toPlaceFromGoogle(hit, category));
+      }
+    } catch (err) {
+      console.warn('searchPlacesByCategory Google failed', err);
+    }
+  }
 
+  rememberDiscovery({ places: merged, treatments: merged.map((place) => treatmentForPlace(place)) });
   return merged;
 }
 
