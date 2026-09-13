@@ -7,6 +7,7 @@ import { ItineraryTimeline } from '../components/itinerary/ItineraryTimeline';
 import { removeItinerary, upsertItinerary } from '../lib/localItineraryStore';
 import { addEmptyDay, addSpotToDay, removeSpotFromItinerary } from '../services/itinerary/generate';
 import { deleteCuratorItinerary, fetchItineraryById, updateCuratorItinerary } from '../services/curator';
+import { deleteUserItinerary } from '../services/userItinerary';
 
 interface CuratorListPageProps {
   session: UserSession;
@@ -23,7 +24,10 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
   const [editingTitle, setEditingTitle] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const isOwner = Boolean(id && session.creator?.id === id);
+  const isOwner = Boolean(
+    (id && session.creator?.id === id) ||
+      (itinerary?.source === 'user' && session.user?.id === itinerary.userId)
+  );
 
   useEffect(() => {
     if (!resolvedId) return;
@@ -39,7 +43,7 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
   const persist = async (next: Itinerary) => {
     upsertItinerary(next);
     setItinerary(next);
-    if (isOwner) {
+    if (isOwner && next.source === 'curator') {
       try {
         await updateCuratorItinerary(session, next);
       } catch (err) {
@@ -57,9 +61,13 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
   const handleDelete = async () => {
     if (!itinerary || !window.confirm('Delete this itinerary?')) return;
     try {
-      await deleteCuratorItinerary(session, itinerary.id);
-      removeItinerary(itinerary.id);
-      navigate(`/curator/${id}`);
+      if (itinerary.source === 'user') {
+        deleteUserItinerary(itinerary.id);
+      } else {
+        await deleteCuratorItinerary(session, itinerary.id);
+        removeItinerary(itinerary.id);
+      }
+      navigate(id ? `/curator/${id}` : '/profile');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not delete.');
     }
@@ -72,7 +80,7 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
     <div className="mx-auto max-w-2xl space-y-5 px-4 py-8">
       <button
         type="button"
-        onClick={() => navigate(`/curator/${id}`)}
+        onClick={() => navigate(id ? `/curator/${id}` : '/profile')}
         className="flex items-center gap-1 text-xs font-semibold text-miyeon-main/60"
       >
         <ChevronLeft className="h-3.5 w-3.5" /> Back to profile

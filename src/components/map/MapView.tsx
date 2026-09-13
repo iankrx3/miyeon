@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Locate, Loader2, Search, X, ChevronRight, ChevronDown, Plus, Minus } from 'lucide-react';
-import type { BeautyCategory, Creator, CreatorPick, Place, UserSession } from '../../types';
+import type { Creator, CreatorPick, Place, UserSession } from '../../types';
 import { categoryMeta } from '../../data/mock';
 import { ENABLED_MAP_CATEGORIES } from '../../data/mapCategories';
 import { searchPlacesByCategory } from '../../services/discovery';
@@ -27,25 +27,6 @@ interface MapViewProps {
   /** Whether this MapView is the currently visible tab (vs. hidden via CSS while List view is active). */
   visible?: boolean;
 }
-
-type FilterMode = 'category' | 'picks';
-type PickFilter = 'all' | 'ai' | 'creator' | 'community';
-
-const CATEGORY_FILTERS: { id: 'all' | BeautyCategory; label: string }[] = [
-  { id: 'all', label: 'All' },
-  { id: 'skin', label: '✨ Skin' },
-  { id: 'face', label: '💎 Face' },
-  { id: 'hair', label: '✂️ Hair' },
-  { id: 'nails', label: '💅 Nails' },
-  { id: 'makeup', label: '💄 Makeup' },
-];
-
-const PICK_FILTERS: { id: PickFilter; label: string }[] = [
-  { id: 'all', label: 'All' },
-  { id: 'ai', label: 'AI Picks' },
-  { id: 'creator', label: 'Creator Picks' },
-  { id: 'community', label: 'Community Picks' },
-];
 
 /** Pans/zooms the map so `targets` are fully visible — a single flyTo for one place,
  * or a padded flyToBounds for several (padded so the top search/filter UI never covers a pin). */
@@ -79,9 +60,6 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
   const [creatorPicks, setCreatorPicks] = useState<CreatorPick[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [filterMode, setFilterMode] = useState<FilterMode>('category');
-  const [selectedCategory, setSelectedCategory] = useState<'all' | BeautyCategory>('all');
-  const [selectedPick, setSelectedPick] = useState<PickFilter>('all');
   const [isCreatorPicksExpanded, setIsCreatorPicksExpanded] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -211,18 +189,8 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
   }, [visible]);
 
   const getFilteredPlaces = useCallback((): Place[] => {
-    if (curatorFilterActive) return curatorFilterPlaces;
-    let result = places;
-    if (filterMode === 'category' && selectedCategory !== 'all') {
-      result = result.filter((p) => p.category === selectedCategory);
-    }
-    if (filterMode === 'picks' && selectedPick !== 'all') {
-      result = result.filter((p) =>
-        selectedPick === 'ai' ? p.aiPick : selectedPick === 'creator' ? p.creatorPick : p.communityPick
-      );
-    }
-    return result;
-  }, [places, filterMode, selectedCategory, selectedPick, curatorFilterActive, curatorFilterPlaces]);
+    return curatorFilterActive ? curatorFilterPlaces : places;
+  }, [places, curatorFilterActive, curatorFilterPlaces]);
 
   useEffect(() => {
     const map = mapInstanceRef.current;
@@ -271,7 +239,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
       layer.addLayer(marker);
       markerMapRef.current.set(place.id, marker);
     });
-  }, [places, filterMode, selectedCategory, selectedPick, getFilteredPlaces, onSelectPlace, navigate]);
+  }, [places, getFilteredPlaces, onSelectPlace, navigate]);
 
   // KTO Wellness pins — tone-down Warm Taupe marker, visually distinct from Miyeon Rose beauty pins (§15.3)
   useEffect(() => {
@@ -350,8 +318,6 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
     if (!map) return;
     // Live Google results aren't in `places` (and so have no marker) until we add them.
     setPlaces((prev) => (prev.some((p) => p.id === place.id) ? prev : [...prev, place]));
-    // Clear the category filter so the target place's pin is guaranteed to be visible.
-    setSelectedCategory('all');
     setSearchQuery('');
     setIsSearchOpen(false);
     fitMapToPlaces(map, [place]);
@@ -409,12 +375,6 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
-  };
-
-  const handleSetFilterMode = (mode: FilterMode) => {
-    setFilterMode(mode);
-    setSelectedCategory('all');
-    setSelectedPick('all');
   };
 
   return (
@@ -510,46 +470,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
                   </button>
                 </div>
               </div>
-            ) : (
-              <>
-                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-                  {([
-                    { id: 'category' as FilterMode, label: 'Category' },
-                    { id: 'picks' as FilterMode, label: 'Picks' },
-                  ]).map((mode) => (
-                    <button
-                      key={mode.id}
-                      onClick={() => handleSetFilterMode(mode.id)}
-                      className={`rounded-full px-3.5 py-1.5 text-[11px] font-bold shadow-sm backdrop-blur-md transition-all whitespace-nowrap ${
-                        filterMode === mode.id ? 'bg-miyeon-main text-white' : 'bg-white/90 text-miyeon-main/70 hover:bg-white'
-                      }`}
-                    >
-                      {mode.label}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-                  {filterMode === 'category'
-                    ? CATEGORY_FILTERS.map((cat) => (
-                        <FilterChip
-                          key={cat.id}
-                          active={selectedCategory === cat.id}
-                          label={cat.label}
-                          onClick={() => setSelectedCategory(cat.id)}
-                        />
-                      ))
-                    : PICK_FILTERS.map((pick) => (
-                        <FilterChip
-                          key={pick.id}
-                          active={selectedPick === pick.id}
-                          label={pick.label}
-                          onClick={() => setSelectedPick(pick.id)}
-                        />
-                      ))}
-                </div>
-              </>
-            )}
+            ) : null}
           </div>
         )}
 
@@ -662,17 +583,3 @@ const MapButton: React.FC<{ onClick: () => void; label: string; active?: boolean
   </button>
 );
 
-const FilterChip: React.FC<{ active: boolean; label: string; onClick: () => void }> = ({
-  active,
-  label,
-  onClick,
-}) => (
-  <button
-    onClick={onClick}
-    className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-bold shadow-md backdrop-blur-md transition-all whitespace-nowrap ${
-      active ? 'bg-miyeon-sub1 text-white shadow-miyeon-sub1/25' : 'bg-white/95 text-miyeon-main/70 hover:bg-white hover:text-miyeon-sub1'
-    }`}
-  >
-    {label}
-  </button>
-);

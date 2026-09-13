@@ -152,8 +152,11 @@ export interface ItineraryDay {
 export interface Itinerary {
   id: string;
   title: string;
-  source: 'miyeon' | 'curator';
+  source: 'miyeon' | 'curator' | 'user';
   curatorId?: string;
+  /** Set when source === 'user' — a plain logged-in user's own manually-built
+   * itinerary (see services/userItinerary.ts), stored locally only. */
+  userId?: string;
   profileSnapshot?: BeautyTripProfile;
   days: ItineraryDay[];
   estimatedSpendUsd: number;
@@ -166,7 +169,7 @@ export interface Itinerary {
 export interface SavedItinerary {
   savedId: string;
   itineraryId: string;
-  source: 'miyeon' | 'curator';
+  source: 'miyeon' | 'curator' | 'user';
   snapshot: Itinerary;
   savedAt: string;
 }

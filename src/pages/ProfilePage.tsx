@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Bookmark, MapPin, Star } from 'lucide-react';
-import type { Place, UserSession } from '../types';
+import { Bookmark, MapPin, Star, Trash2 } from 'lucide-react';
+import type { Itinerary, Place, UserSession } from '../types';
 import { useSavedItineraries } from '../hooks/useSavedItineraries';
 import { useSavedPlaces } from '../hooks/useSavedPlaces';
-import { firstSpotImage, upsertItinerary } from '../lib/localItineraryStore';
+import { firstSpotImage, listUserItineraries, upsertItinerary } from '../lib/localItineraryStore';
 import { itinerarySpotCount } from '../services/itinerary/generate';
 import { fetchPlaceById } from '../services/places';
+import { deleteUserItinerary } from '../services/userItinerary';
 
 interface ProfilePageProps {
   session: UserSession;
@@ -19,6 +20,14 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
   const { saved, unsave } = useSavedItineraries(session.user?.id);
   const { savedIds, toggleSave } = useSavedPlaces(session.user?.id);
   const [savedPlaces, setSavedPlaces] = useState<Place[]>([]);
+  const [myItineraries, setMyItineraries] = useState<Itinerary[]>(() =>
+    session.user ? listUserItineraries(session.user.id) : []
+  );
+
+  const handleDeleteMyItinerary = (itineraryId: string) => {
+    deleteUserItinerary(itineraryId);
+    setMyItineraries((prev) => prev.filter((i) => i.id !== itineraryId));
+  };
 
   useEffect(() => {
     saved.forEach((item) => upsertItinerary(item.snapshot));
@@ -124,6 +133,62 @@ export default function ProfilePage({ session, onSignIn }: ProfilePageProps) {
               </button>
             </motion.div>
           ))}
+        </div>
+      )}
+
+      <h2 className="mt-8 text-sm font-semibold text-miyeon-main">My itineraries</h2>
+
+      {myItineraries.length === 0 ? (
+        <div className="mt-4 rounded-3xl border border-dashed border-miyeon-neutral px-4 py-10 text-center">
+          <p className="text-sm text-miyeon-main/60">Nothing built yet.</p>
+          <button
+            type="button"
+            onClick={() => navigate('/map')}
+            className="mt-4 rounded-full bg-miyeon-sub1 px-4 py-2 text-xs font-bold text-white"
+          >
+            Create an itinerary
+          </button>
+        </div>
+      ) : (
+        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {myItineraries.map((item, i) => {
+            const cover = firstSpotImage(item);
+            const spots = itinerarySpotCount(item);
+            return (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: i * 0.05 }}
+                className="relative overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm"
+              >
+                <Link to={`/itinerary/${item.id}/build`} className="block">
+                  {cover ? (
+                    <img src={cover} alt="" className="h-32 w-full object-cover" />
+                  ) : (
+                    <div className="flex h-32 w-full items-center justify-center bg-miyeon-neutral/50 text-miyeon-main/40">
+                      <MapPin className="h-6 w-6" />
+                    </div>
+                  )}
+                  <div className="p-3">
+                    <p className="truncate text-sm font-semibold text-miyeon-main">{item.title}</p>
+                    <p className="text-[11px] text-miyeon-main/60">
+                      {item.days.length} day{item.days.length === 1 ? '' : 's'} · {spots} spot
+                      {spots === 1 ? '' : 's'}
+                    </p>
+                  </div>
+                </Link>
+                <button
+                  type="button"
+                  aria-label="Delete itinerary"
+                  onClick={() => handleDeleteMyItinerary(item.id)}
+                  className="absolute right-2 top-2 rounded-full bg-white/90 p-2 text-miyeon-main/60 shadow-sm hover:text-red-500"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              </motion.div>
+            );
+          })}
         </div>
       )}
 

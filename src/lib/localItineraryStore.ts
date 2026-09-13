@@ -106,6 +106,15 @@ export function listAllCuratorItineraries(): Itinerary[] {
   return listItineraries().filter((i) => i.source === 'curator' && !i.id.startsWith('snap_'));
 }
 
+/** A plain logged-in user's own manually-built itineraries (see
+ * services/userItinerary.ts) — same `snap_` exclusion as listCuratorItineraries,
+ * for the same reason (a saved/bookmarked clone shouldn't show up twice). */
+export function listUserItineraries(userId: string): Itinerary[] {
+  return listItineraries().filter(
+    (i) => i.source === 'user' && i.userId === userId && !i.id.startsWith('snap_')
+  );
+}
+
 export function savedKeyFor(userId?: string): string {
   return userId ? `${SAVED_KEY}:${userId}` : `${SAVED_KEY}:guest`;
 }

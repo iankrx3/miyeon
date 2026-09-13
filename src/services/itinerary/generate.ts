@@ -618,18 +618,23 @@ export function rebuildDayFromSpots(
   };
 }
 
-export function createBlankItinerary(curatorId: string, title: string): Itinerary {
+export function createBlankItinerary(
+  ownerId: string,
+  title: string,
+  source: 'curator' | 'user' = 'curator'
+): Itinerary {
   const now = new Date().toISOString();
   return {
     id: `itn_${crypto.randomUUID()}`,
     title,
-    source: 'curator',
-    curatorId,
+    source,
+    curatorId: source === 'curator' ? ownerId : undefined,
+    userId: source === 'user' ? ownerId : undefined,
     days: [{ dayIndex: 1, areaLabel: 'SEOUL', theme: 'Day 1', blocks: [] }],
     estimatedSpendUsd: 0,
     createdAt: now,
     updatedAt: now,
-    description: 'A curator itinerary',
+    description: source === 'curator' ? 'A curator itinerary' : 'My itinerary',
   };
 }
 

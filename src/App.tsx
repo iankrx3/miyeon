@@ -122,6 +122,7 @@ export default function App() {
                 path="/curator/:id/itineraries/:itineraryId"
                 element={<CuratorListPage session={session} />}
               />
+              <Route path="/itinerary/:itineraryId/build" element={<CuratorListPage session={session} />} />
             </Routes>
           </motion.div>
         </AnimatePresence>

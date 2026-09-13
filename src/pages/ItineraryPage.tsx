@@ -57,7 +57,8 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
   const canEdit = Boolean(
     itinerary.source === 'miyeon' ||
       itinerary.id.startsWith('snap_') ||
-      (session.creator?.id && session.creator.id === itinerary.curatorId)
+      (session.creator?.id && session.creator.id === itinerary.curatorId) ||
+      (itinerary.source === 'user' && session.user?.id === itinerary.userId)
   );
 
   return (

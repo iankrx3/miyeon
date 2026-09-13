@@ -459,7 +459,8 @@ export async function fetchCuratorItineraries(curatorId: string): Promise<Itiner
     if (!data?.length) return local;
     const mapped = data.map(mapRemoteItinerary);
     mapped.forEach(upsertItinerary);
-    return mapped;
+    const ids = new Set(mapped.map((i) => i.id));
+    return [...mapped, ...local.filter((i) => !ids.has(i.id))];
   } catch {
     return local;
   }
