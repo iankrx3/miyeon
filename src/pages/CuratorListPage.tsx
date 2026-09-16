@@ -8,6 +8,7 @@ import { removeItinerary, upsertItinerary } from '../lib/localItineraryStore';
 import { addEmptyDay, addSpotToDay, removeSpotFromItinerary } from '../services/itinerary/generate';
 import { deleteCuratorItinerary, fetchItineraryById, updateCuratorItinerary } from '../services/curator';
 import { deleteUserItinerary, persistUserItinerary } from '../services/userItinerary';
+import { useSpotsCatalog } from '../hooks/useSpotsCatalog';
 
 interface CuratorListPageProps {
   session: UserSession;
@@ -23,6 +24,7 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
   const [titleDraft, setTitleDraft] = useState('');
   const [editingTitle, setEditingTitle] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const spotsReady = useSpotsCatalog();
 
   const isOwner = Boolean(
     (id && session.creator?.id === id) ||
@@ -78,7 +80,7 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
     }
   };
 
-  if (loading) return <div className="px-4 py-10 text-sm text-miyeon-main/60">Loading…</div>;
+  if (loading || !spotsReady) return <div className="px-4 py-10 text-sm text-miyeon-main/60">Loading…</div>;
   if (!itinerary) return <div className="px-4 py-10 text-sm text-miyeon-main/60">Itinerary not found.</div>;
 
   return (

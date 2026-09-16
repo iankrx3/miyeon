@@ -5,7 +5,6 @@ import { NavHeader } from './components/layout/NavHeader';
 import { BottomNav } from './components/layout/BottomNav';
 import { GoogleAuthModal } from './components/auth/GoogleAuthModal';
 import { useAuth } from './hooks/useAuth';
-import { loadSpots } from './data/spots';
 import ExplorePage from './pages/ExplorePage';
 import MapPage from './pages/MapPage';
 import CommunityPage from './pages/CommunityPage';
@@ -24,25 +23,11 @@ import type { AuthReturnTab } from './services/auth';
 export default function App() {
   const { authReady, session, returnTab, signOut, signInAsDemo, onCreatorUpdated } = useAuth();
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [spotsReady, setSpotsReady] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
     if (returnTab) setIsAuthOpen(false);
   }, [returnTab]);
-
-  // getSpot()/getSpots() (src/data/spots.ts) are synchronous reads of an
-  // in-memory cache — the itinerary generator and other callers aren't async —
-  // so the real `spots` table has to be loaded once before any route mounts.
-  useEffect(() => {
-    let mounted = true;
-    loadSpots().finally(() => {
-      if (mounted) setSpotsReady(true);
-    });
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   const isMapRoute = location.pathname.startsWith('/map');
   const isItineraryRoute = location.pathname.startsWith('/itinerary');
@@ -53,7 +38,7 @@ export default function App() {
       ? 'community'
       : 'explore';
 
-  if (!authReady || !spotsReady) {
+  if (!authReady) {
     return (
       <div className="flex h-screen items-center justify-center text-sm text-miyeon-main/60">
         Signing you in…

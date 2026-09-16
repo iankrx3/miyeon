@@ -1,12 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Bookmark, ChevronLeft, Sparkles } from 'lucide-react';
+import { Bookmark, ChevronLeft, Loader2, Sparkles } from 'lucide-react';
 import type { Itinerary, RegeneratePreference, ReplacePreference, Spot, UserSession } from '../types';
 import { regenerateOptions, replaceOptions } from '../data/quiz';
 import { getSpot } from '../data/spots';
 import { ItineraryRouteMap } from '../components/itinerary/ItineraryRouteMap';
 import { ItineraryTimeline } from '../components/itinerary/ItineraryTimeline';
 import { useSavedItineraries } from '../hooks/useSavedItineraries';
+import { useSpotsCatalog } from '../hooks/useSpotsCatalog';
 import { getStoredItinerary, upsertItinerary } from '../lib/localItineraryStore';
 import { persistUserItinerary } from '../services/userItinerary';
 import {
@@ -30,6 +31,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
   const [menu, setMenu] = useState<{ blockId: string; spot: Spot } | null>(null);
   const [sheet, setSheet] = useState<'replace' | 'regenerate' | 'move' | null>(null);
   const { isSaved, toggleSave, updateSavedSnapshot } = useSavedItineraries(session.user?.id);
+  const spotsReady = useSpotsCatalog();
 
   const day = itinerary?.days.find((d) => d.dayIndex === dayIndex) ?? itinerary?.days[0];
 
@@ -46,7 +48,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
   const spotsInDay = useMemo(() => {
     if (!day) return [];
     return day.blocks.map((b) => (b.spotId ? getSpot(b.spotId) : undefined)).filter((s): s is Spot => Boolean(s));
-  }, [day]);
+  }, [day, spotsReady]);
 
   if (!itinerary || !day) {
     return (
@@ -55,6 +57,14 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
         <button type="button" className="underline" onClick={() => navigate('/')}>
           Plan a trip
         </button>
+      </div>
+    );
+  }
+
+  if (!spotsReady) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-miyeon-sub1" />
       </div>
     );
   }

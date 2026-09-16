@@ -10,7 +10,7 @@
 | `src/components/place/SponsoredPlaceCard.tsx` | "광고" 배지 + 강조 테두리로 감싼 `PlaceCard` (리스트 최상단에서 재사용) |
 | `data/mapCategories.ts` | Map 탭에 노출할 카테고리 목록(`ENABLED_MAP_CATEGORIES`) |
 
-- **데이터 소스**: Map의 기본 핀 데이터는 `services/curator.ts#fetchCuratedMapData(session)`가 반환하는 `allSpotsAsPlaces()`다. 이 카탈로그(`src/data/spots.ts`)는 부트스트랩 때 KTO만 쓴다. All/Skin/Face 핀은 KTO. Hair/Nails/Makeup 필터는 Nearby Search Pro 1회(24h 캐시). 검색창은 KTO `searchKeyword` 우선, 비면 Text Search Pro 1회([§3](03-discovery-engine.md)).
+- **데이터 소스**: Map의 기본 핀 데이터는 `services/curator.ts#fetchCuratedMapData(session)`가 반환하는, curator가 실제로 등록한 장소만이다 — 모든 curator 일정(`curator_itineraries`, 원격+로컬)의 day block에 들어간 spot과, 레거시 `creator_picks`/`list_spots`(`services/places.ts#fetchAllCreatorPicks`)를 place id로 합쳐 dedupe한다. 더 이상 `allSpotsAsPlaces()`(부트스트랩 때 KTO로 채운 전체 카탈로그)를 그대로 핀으로 뿌리지 않는다. 단, 카테고리 필터(Hair/Nails/Makeup, Nearby Search Pro 1회/24h 캐시)와 검색창의 라이브 결과(KTO `searchKeyword` 우선, 비면 Text Search Pro 1회, [§3](03-discovery-engine.md))는 이 제한과 무관하게 기존처럼 curator 등록 여부와 상관없는 장소도 보여주고, 선택/클릭 시 지도에 핀으로 추가된다 — 의도적으로 유지된 예외.
 - **카테고리**: `ENABLED_MAP_CATEGORIES`(`data/mapCategories.ts`)에 5개 카테고리(skin/face/hair/nails/makeup)가 모두 들어 있다.
 - 뷰티 핀: Miyeon Sub1 (Dusty Rose). 카테고리 아이콘.
 - 웰니스 핀: Warm Taupe. mock `nearbyWellness`만.

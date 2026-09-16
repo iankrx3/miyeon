@@ -77,4 +77,4 @@ Supabase `spots` 테이블(Creatrip 큐레이션 시드)은 삭제됐다. `src/d
 
 Google/KTO는 `needleRequired`/`downtime`/`procedureIntensity`/`factoryLike`/`upsellingRisk`/`priceTransparency`/`experienceStyle`를 주지 않으므로 `placeToSpot()`은 이 필드들을 "항상 통과" 고정값으로 채우고, `generate.ts`도 더 이상 이 필드들로 하드 필터링·스코어링하지 않는다(예산/언어/카테고리, rating만 실데이터). `subcategory`/`parentCategory`도 5개 `BeautyCategory`당 대표값 1개로 근사한 것이지, 실제 14종 세부 분류가 아니다.
 
-`App.tsx`는 라우트를 마운트하기 전 `loadSpots()`를 한 번 await한다. Google Places는 쓰지 않고 KTO만 쏜다([§10](10-known-gaps.md) 참고).
+`App.tsx`는 더 이상 `loadSpots()`를 await하지 않는다 — `getSpot`/`getSpots`를 실제로 읽는 페이지(`MapPage`/`ItineraryPage`/`CuratorListPage`)가 `hooks/useSpotsCatalog.ts`로 각자 진입 시점에 지연 호출한다(`PlaceDetailPage`는 `fetchPlaceById` 내부에서 이미 await). Google Places는 쓰지 않고 KTO만 쏜다([§10](10-known-gaps.md) 참고).

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
-import { Bookmark, List, ListPlus, Map as MapIcon, Star, X } from 'lucide-react';
+import { Bookmark, List, ListPlus, Loader2, Map as MapIcon, Star, X } from 'lucide-react';
 import { MapView } from '../components/map/MapView';
 import { PlaceListView } from '../components/map/PlaceListView';
 import { useSavedPlaces } from '../hooks/useSavedPlaces';
+import { useSpotsCatalog } from '../hooks/useSpotsCatalog';
 import { createUserItinerary } from '../services/userItinerary';
 import type { Place, UserSession } from '../types';
 
@@ -13,6 +14,7 @@ export default function MapPage({ session, onSignIn }: { session: UserSession; o
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const { isSaved, toggleSave } = useSavedPlaces(session.user?.id);
+  const spotsReady = useSpotsCatalog();
 
   const handleCreateItinerary = async () => {
     if (!session.isLoggedIn) {
@@ -25,12 +27,20 @@ export default function MapPage({ session, onSignIn }: { session: UserSession; o
 
   return (
     <div className="relative">
-      <div className={viewMode === 'map' ? '' : 'hidden'}>
-        <MapView onSelectPlace={setSelectedPlace} session={session} visible={viewMode === 'map'} />
-      </div>
-      <div className={viewMode === 'list' ? '' : 'hidden'}>
-        <PlaceListView session={session} />
-      </div>
+      {!spotsReady ? (
+        <div className="flex h-[calc(100dvh-64px)] w-full items-center justify-center bg-miyeon-neutral/30">
+          <Loader2 className="h-6 w-6 animate-spin text-miyeon-sub1" />
+        </div>
+      ) : (
+        <>
+          <div className={viewMode === 'map' ? '' : 'hidden'}>
+            <MapView onSelectPlace={setSelectedPlace} session={session} visible={viewMode === 'map'} />
+          </div>
+          <div className={viewMode === 'list' ? '' : 'hidden'}>
+            <PlaceListView session={session} />
+          </div>
+        </>
+      )}
 
       <motion.button
         whileHover={{ scale: 1.05 }}

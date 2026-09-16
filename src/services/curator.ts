@@ -24,7 +24,7 @@ import {
   removeItinerary,
   upsertItinerary,
 } from '../lib/localItineraryStore';
-import { allSpotsAsPlaces, getSpot, spotToPlace } from '../data/spots';
+import { getSpot, spotToPlace } from '../data/spots';
 import { mockCreators } from '../data/mock';
 import { createBlankItinerary } from './itinerary/generate';
 import { fetchRemoteUserItinerary } from './userItinerary';
@@ -368,9 +368,36 @@ async function fetchRemoteCuratorItineraries(): Promise<Itinerary[]> {
   }
 }
 
+/** Every distinct place referenced by a curator itinerary's day blocks, resolved
+ * against the loaded spot catalog. Missing spotIds (not yet in the catalog cache)
+ * are silently skipped rather than falling back to an arbitrary place. */
+function collectItineraryPlaces(itineraries: Itinerary[], into: Map<string, Place>): void {
+  for (const itn of itineraries) {
+    for (const day of itn.days) {
+      for (const block of day.blocks) {
+        if (!block.spotId || into.has(block.spotId)) continue;
+        const spot = getSpot(block.spotId);
+        if (spot) into.set(block.spotId, spotToPlace(spot));
+      }
+    }
+  }
+}
+
+/** Map tab pins: only places a curator has actually registered — spots inside a
+ * curator itinerary (remote + local) plus the legacy creator_picks/list_spots data
+ * (`fetchAllCreatorPicks`) — instead of the full KTO/Google discovery catalog. */
 export async function fetchCuratedMapData(session: UserSession): Promise<{ places: Place[]; picks: CreatorPick[] }> {
-  const places = allSpotsAsPlaces();
   const itineraries = await fetchRemoteCuratorItineraries();
+  const legacyPicks = await fetchAllCreatorPicks();
+
+  const placesById = new Map<string, Place>();
+  for (const pick of legacyPicks) {
+    if (pick.place) placesById.set(pick.place_id, pick.place);
+  }
+  collectItineraryPlaces(itineraries, placesById);
+  if (session.creator) collectItineraryPlaces(listCuratorItineraries(session.creator.id), placesById);
+
+  const places = Array.from(placesById.values());
   const picks: CreatorPick[] = [];
   const seen = new Set<string>();
 
@@ -381,8 +408,7 @@ export async function fetchCuratedMapData(session: UserSession): Promise<{ place
       (await fetchCuratorById(itn.curatorId)) ?? mockCreators.find((c) => c.id === itn.curatorId);
     if (!creator) continue;
     const firstSpotId = itn.days.flatMap((d) => d.blocks).find((b) => b.spotId)?.spotId;
-    const spot = firstSpotId ? getSpot(firstSpotId) : undefined;
-    const place = spot ? spotToPlace(spot) : places[0];
+    const place = firstSpotId ? placesById.get(firstSpotId) : undefined;
     if (!place) continue;
     picks.push({
       id: `itn-pick-${itn.id}`,
@@ -399,8 +425,7 @@ export async function fetchCuratedMapData(session: UserSession): Promise<{ place
     const local = listCuratorItineraries(session.creator.id);
     if (local[0]) {
       const firstSpotId = local[0].days.flatMap((d) => d.blocks).find((b) => b.spotId)?.spotId;
-      const spot = firstSpotId ? getSpot(firstSpotId) : undefined;
-      const place = spot ? spotToPlace(spot) : places[0];
+      const place = firstSpotId ? placesById.get(firstSpotId) : undefined;
       if (place) {
         picks.push({
           id: `itn-pick-${local[0].id}`,
