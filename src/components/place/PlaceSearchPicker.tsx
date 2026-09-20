@@ -58,7 +58,7 @@ export const PlaceSearchPicker: React.FC<PlaceSearchPickerProps> = ({ onSelect, 
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-2 rounded-full border border-miyeon-neutral bg-white px-3.5 py-2">
+      <div className="flex items-center gap-2 rounded-full border border-miyeon-line bg-white px-3.5 py-2">
         <Search className="h-4 w-4 shrink-0 text-miyeon-main/60" />
         <input
           autoFocus
@@ -81,7 +81,7 @@ export const PlaceSearchPicker: React.FC<PlaceSearchPickerProps> = ({ onSelect, 
             <button
               key={place.id}
               onClick={() => onSelect(place)}
-              className="flex w-full items-center gap-2.5 rounded-xl border border-miyeon-neutral bg-white p-2 text-left hover:border-miyeon-sub1/50"
+              className="flex w-full items-center gap-2.5 rounded-xl border border-miyeon-line bg-white p-2 text-left hover:border-miyeon-accent/50"
             >
               <img src={place.photoUrl} alt={place.name} className="h-10 w-10 shrink-0 rounded-lg object-cover" />
               <div className="min-w-0">

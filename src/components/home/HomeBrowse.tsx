@@ -30,12 +30,12 @@ export const HomeBrowse: React.FC<HomeBrowseProps> = ({ onStartAnalysis }) => {
               onClick={() => handleClick(item.id)}
               className={`group flex w-full items-center justify-between rounded-[1.4rem] border px-5 py-5 text-left transition-shadow hover:shadow-sm ${
                 item.highlighted
-                  ? 'border-transparent bg-miyeon-sub2/70'
-                  : 'border-miyeon-neutral bg-white'
+                  ? 'border-transparent bg-miyeon-accent-soft/70'
+                  : 'border-miyeon-line bg-white'
               }`}
             >
               <span>
-                <span className="block text-[11px] font-medium text-miyeon-sub1">{item.caption}</span>
+                <span className="block text-[11px] font-medium text-miyeon-accent">{item.caption}</span>
                 <span className="mt-1 block font-display text-xl text-miyeon-main">{item.title}</span>
                 <span className="mt-1 block whitespace-pre-line text-sm text-miyeon-main/55">
                   {item.description}

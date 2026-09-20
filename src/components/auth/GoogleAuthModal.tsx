@@ -50,7 +50,7 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-miyeon-main/40 backdrop-blur-sm"
+          className="fixed inset-0 bg-miyeon-ink/40 backdrop-blur-sm"
         />
 
         <motion.div
@@ -58,17 +58,17 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 8 }}
           transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full max-w-sm overflow-hidden rounded-3xl bg-white p-7 shadow-2xl border border-miyeon-neutral"
+          className="relative w-full max-w-sm overflow-hidden rounded-3xl bg-white p-7 shadow-2xl border border-miyeon-line"
         >
           <button
             onClick={onClose}
-            className="absolute right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-miyeon-neutral/60 text-miyeon-main hover:text-miyeon-sub1 transition-colors"
+            className="absolute right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-miyeon-surface/60 text-miyeon-main hover:text-miyeon-accent transition-colors"
           >
             <X className="h-4 w-4" />
           </button>
 
           <div className="text-center pt-2 pb-6">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-miyeon-sub1 text-white shadow-md shadow-miyeon-sub1/25">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-miyeon-accent text-white shadow-md shadow-miyeon-accent/25">
               <Sparkles className="h-6 w-6" />
             </div>
             <h3 className="font-display text-2xl tracking-tight text-miyeon-main">Welcome to Miyeon</h3>
@@ -83,8 +83,8 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
               disabled={loading}
               className={`group flex w-full items-center justify-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-semibold shadow-sm active:scale-[0.99] transition-all disabled:opacity-50 cursor-pointer ${
                 isSupabaseConfigured
-                  ? 'border border-miyeon-neutral bg-white text-miyeon-main hover:bg-miyeon-neutral/30'
-                  : 'bg-miyeon-sub1 text-white shadow-miyeon-sub1/30 hover:opacity-95'
+                  ? 'border border-miyeon-line bg-white text-miyeon-main hover:bg-miyeon-surface/30'
+                  : 'bg-miyeon-accent text-white shadow-miyeon-accent/30 hover:opacity-95'
               }`}
             >
               <User className="h-4 w-4" />
@@ -94,7 +94,7 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
             <button
               onClick={handleGoogleSignIn}
               disabled={loading}
-              className="group flex w-full items-center justify-center gap-3 rounded-2xl border border-miyeon-neutral bg-white px-4 py-3.5 text-sm font-semibold text-miyeon-main shadow-sm hover:bg-miyeon-neutral/30 active:scale-[0.99] transition-all disabled:opacity-50 cursor-pointer"
+              className="group flex w-full items-center justify-center gap-3 rounded-2xl border border-miyeon-line bg-white px-4 py-3.5 text-sm font-semibold text-miyeon-main shadow-sm hover:bg-miyeon-surface/30 active:scale-[0.99] transition-all disabled:opacity-50 cursor-pointer"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />

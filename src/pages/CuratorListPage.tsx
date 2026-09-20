@@ -100,7 +100,7 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
               autoFocus
               value={titleDraft}
               onChange={(e) => setTitleDraft(e.target.value)}
-              className="w-full rounded-full border border-miyeon-neutral px-3.5 py-1.5 font-display text-lg text-miyeon-main"
+              className="w-full rounded-full border border-miyeon-line px-3.5 py-1.5 font-display text-lg text-miyeon-main"
             />
             <button
               type="button"
@@ -108,7 +108,7 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
                 persist({ ...itinerary, title: titleDraft.trim() || itinerary.title });
                 setEditingTitle(false);
               }}
-              className="rounded-full bg-miyeon-sub1 px-3.5 py-1.5 text-xs font-bold text-white"
+              className="rounded-full bg-miyeon-accent px-3.5 py-1.5 text-xs font-bold text-white"
             >
               Save
             </button>
@@ -123,10 +123,10 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
         )}
         {isOwner && !editingTitle && (
           <div className="flex gap-2">
-            <button type="button" onClick={() => setEditingTitle(true)} className="rounded-full border border-miyeon-neutral p-2">
+            <button type="button" onClick={() => setEditingTitle(true)} className="rounded-full border border-miyeon-line p-2">
               <Pencil className="h-3.5 w-3.5" />
             </button>
-            <button type="button" onClick={handleDelete} className="rounded-full border border-miyeon-neutral p-2 text-red-500">
+            <button type="button" onClick={handleDelete} className="rounded-full border border-miyeon-line p-2 text-red-500">
               <Trash2 className="h-3.5 w-3.5" />
             </button>
           </div>
@@ -138,13 +138,13 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
       <button
         type="button"
         onClick={() => navigate(`/itinerary/${itinerary.id}`)}
-        className="flex items-center gap-1.5 rounded-full border border-miyeon-neutral px-3.5 py-1.5 text-xs font-semibold text-miyeon-main"
+        className="flex items-center gap-1.5 rounded-full border border-miyeon-line px-3.5 py-1.5 text-xs font-semibold text-miyeon-main"
       >
         <MapPin className="h-3.5 w-3.5" /> View on map
       </button>
 
       {itinerary.days.map((day) => (
-        <section key={day.dayIndex} className="space-y-3 rounded-3xl border border-miyeon-neutral p-4">
+        <section key={day.dayIndex} className="space-y-3 rounded-3xl border border-miyeon-line p-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-miyeon-main">
               Day {day.dayIndex} · {day.areaLabel}
@@ -153,7 +153,7 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
               <button
                 type="button"
                 onClick={() => setPickingDay(day.dayIndex)}
-                className="flex items-center gap-1 text-xs font-bold text-miyeon-sub1"
+                className="flex items-center gap-1 text-xs font-bold text-miyeon-accent"
               >
                 <Plus className="h-3.5 w-3.5" /> Add spot
               </button>
@@ -179,7 +179,7 @@ export default function CuratorListPage({ session }: CuratorListPageProps) {
         <button
           type="button"
           onClick={() => persist(addEmptyDay(itinerary))}
-          className="w-full rounded-full border border-dashed border-miyeon-neutral py-3 text-xs font-bold text-miyeon-main/70"
+          className="w-full rounded-full border border-dashed border-miyeon-line py-3 text-xs font-bold text-miyeon-main/70"
         >
           + Add a day
         </button>

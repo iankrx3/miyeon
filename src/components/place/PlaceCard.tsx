@@ -21,7 +21,7 @@ export const PlaceCard: React.FC<PlaceCardProps> = ({ place, saved, onSave, onVi
       viewport={{ once: true, margin: '-40px' }}
       whileHover={{ y: -4 }}
       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm transition-shadow hover:shadow-lg hover:shadow-miyeon-main/10"
+      className="overflow-hidden rounded-2xl border border-miyeon-line bg-white shadow-sm transition-shadow hover:shadow-lg hover:shadow-miyeon-main/10"
     >
       <button onClick={() => onView?.(place)} className="block w-full overflow-hidden text-left">
         <motion.img
@@ -35,7 +35,7 @@ export const PlaceCard: React.FC<PlaceCardProps> = ({ place, saved, onSave, onVi
       <div className="space-y-2 p-3.5">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-miyeon-sub1">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-miyeon-accent">
               {meta.icon} {meta.label} · {place.area}
             </p>
             <h3 className="mt-0.5 text-base font-semibold text-miyeon-main">{place.name}</h3>
@@ -46,7 +46,7 @@ export const PlaceCard: React.FC<PlaceCardProps> = ({ place, saved, onSave, onVi
               onClick={() => onSave(place.id)}
               aria-label="Save to My Map"
               className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-colors ${
-                saved ? 'border-miyeon-sub1 bg-miyeon-sub1 text-white' : 'border-miyeon-neutral text-miyeon-main'
+                saved ? 'border-miyeon-accent bg-miyeon-accent text-white' : 'border-miyeon-line text-miyeon-main'
               }`}
             >
               <motion.span animate={saved ? { scale: [1, 1.3, 1] } : { scale: 1 }} transition={{ duration: 0.3 }}>
@@ -58,7 +58,7 @@ export const PlaceCard: React.FC<PlaceCardProps> = ({ place, saved, onSave, onVi
 
         <div className="flex items-center gap-2 text-xs text-miyeon-main/80">
           <span className="flex items-center gap-0.5 font-semibold text-miyeon-main">
-            <Star className="h-3 w-3 fill-miyeon-sub1 text-miyeon-sub1" /> {place.rating}
+            <Star className="h-3 w-3 fill-miyeon-accent text-miyeon-accent" /> {place.rating}
           </span>
           <span>({place.reviewCount})</span>
           <span>·</span>
@@ -80,7 +80,7 @@ export const PlaceCard: React.FC<PlaceCardProps> = ({ place, saved, onSave, onVi
 };
 
 const Pill: React.FC<{ label: string }> = ({ label }) => (
-  <span className="rounded-full bg-miyeon-main/10 px-2.5 py-1 text-[11px] font-medium text-miyeon-main">
+  <span className="rounded-full bg-miyeon-ink/10 px-2.5 py-1 text-[11px] font-medium text-miyeon-main">
     {label}
   </span>
 );

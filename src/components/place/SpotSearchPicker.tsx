@@ -70,7 +70,7 @@ export const SpotSearchPicker: React.FC<SpotSearchPickerProps> = ({ onSelect, on
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-2 rounded-full border border-miyeon-neutral bg-white px-3.5 py-2">
+      <div className="flex items-center gap-2 rounded-full border border-miyeon-line bg-white px-3.5 py-2">
         <Search className="h-4 w-4 shrink-0 text-miyeon-main/60" />
         <input
           autoFocus
@@ -91,7 +91,7 @@ export const SpotSearchPicker: React.FC<SpotSearchPickerProps> = ({ onSelect, on
             key={spot.id}
             type="button"
             onClick={() => onSelect(spot)}
-            className="flex w-full items-center gap-3 rounded-2xl px-2 py-2 text-left hover:bg-miyeon-neutral"
+            className="flex w-full items-center gap-3 rounded-2xl px-2 py-2 text-left hover:bg-miyeon-surface"
           >
             <img src={spot.images[0]} alt="" className="h-10 w-10 rounded-xl object-cover" />
             <span>

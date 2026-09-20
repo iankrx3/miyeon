@@ -81,7 +81,7 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
           src={creator.avatar_url}
           alt={creator.display_name}
           referrerPolicy="no-referrer"
-          className="h-24 w-24 rounded-full object-cover ring-2 ring-miyeon-sub1/30"
+          className="h-24 w-24 rounded-full object-cover ring-2 ring-miyeon-accent/30"
         />
         <h1 className="mt-3 font-display text-2xl text-miyeon-main">{creator.display_name}</h1>
         <p className="text-xs font-medium text-miyeon-main/70">@{creator.username}</p>
@@ -99,7 +99,7 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Instagram"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-miyeon-neutral text-miyeon-main hover:border-miyeon-sub1/50 hover:text-miyeon-sub1"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-miyeon-line text-miyeon-main hover:border-miyeon-accent/50 hover:text-miyeon-accent"
               >
                 <Instagram className="h-4 w-4" />
               </a>
@@ -110,7 +110,7 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
                 target="_blank"
                 rel="noreferrer"
                 aria-label="TikTok"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-miyeon-neutral text-miyeon-main hover:border-miyeon-sub1/50 hover:text-miyeon-sub1"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-miyeon-line text-miyeon-main hover:border-miyeon-accent/50 hover:text-miyeon-accent"
               >
                 <Music2 className="h-4 w-4" />
               </a>
@@ -121,7 +121,7 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Website"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-miyeon-neutral text-miyeon-main hover:border-miyeon-sub1/50 hover:text-miyeon-sub1"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-miyeon-line text-miyeon-main hover:border-miyeon-accent/50 hover:text-miyeon-accent"
               >
                 <Globe className="h-4 w-4" />
               </a>
@@ -132,7 +132,7 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
           <Link
             to={`/map?curator=${creator.id}`}
-            className="flex items-center gap-1.5 rounded-full border border-miyeon-neutral px-3.5 py-1.5 text-xs font-semibold text-miyeon-main hover:border-miyeon-sub1/50"
+            className="flex items-center gap-1.5 rounded-full border border-miyeon-line px-3.5 py-1.5 text-xs font-semibold text-miyeon-main hover:border-miyeon-accent/50"
           >
             <MapPin className="h-3.5 w-3.5" /> View on map
           </Link>
@@ -140,7 +140,7 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
             <>
               <Link
                 to={`/curator/${creator.id}/edit`}
-                className="flex items-center gap-1.5 rounded-full border border-miyeon-neutral px-3.5 py-1.5 text-xs font-semibold text-miyeon-main hover:border-miyeon-sub1/50"
+                className="flex items-center gap-1.5 rounded-full border border-miyeon-line px-3.5 py-1.5 text-xs font-semibold text-miyeon-main hover:border-miyeon-accent/50"
               >
                 <Pencil className="h-3.5 w-3.5" /> Edit profile
               </Link>
@@ -151,7 +151,7 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
                   setIsCreatingList((prev) => !prev);
                   setListError(null);
                 }}
-                className="flex items-center gap-1.5 rounded-full bg-miyeon-sub1 px-3.5 py-1.5 text-xs font-bold text-white shadow-sm shadow-miyeon-sub1/30"
+                className="flex items-center gap-1.5 rounded-full bg-miyeon-accent px-3.5 py-1.5 text-xs font-bold text-white shadow-sm shadow-miyeon-accent/30"
               >
                 <ListPlus className="h-3.5 w-3.5" /> Share itinerary
               </motion.button>
@@ -177,14 +177,14 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
                     if (e.key === 'Enter') handleCreateList();
                   }}
                   placeholder="Itinerary name…"
-                  className="w-full rounded-full border border-miyeon-neutral bg-white px-3.5 py-2 text-sm text-miyeon-main placeholder:text-miyeon-main/60 focus:outline-none"
+                  className="w-full rounded-full border border-miyeon-line bg-white px-3.5 py-2 text-sm text-miyeon-main placeholder:text-miyeon-main/60 focus:outline-none"
                 />
                 <motion.button
                   whileHover={isSubmittingList ? undefined : { scale: 1.05 }}
                   whileTap={isSubmittingList ? undefined : { scale: 0.95 }}
                   onClick={handleCreateList}
                   disabled={isSubmittingList || !newListTitle.trim()}
-                  className="shrink-0 rounded-full bg-miyeon-sub1 px-3.5 py-2 text-xs font-bold text-white disabled:opacity-50"
+                  className="shrink-0 rounded-full bg-miyeon-accent px-3.5 py-2 text-xs font-bold text-white disabled:opacity-50"
                 >
                   {isSubmittingList ? 'Sharing…' : 'Share'}
                 </motion.button>
@@ -214,12 +214,12 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
               >
                 <Link
                   to={isOwner ? `/curator/${creator.id}/itineraries/${list.id}` : `/itinerary/${list.id}`}
-                  className="block overflow-hidden rounded-2xl border border-miyeon-neutral bg-white shadow-sm transition-shadow hover:shadow-lg hover:shadow-miyeon-main/10"
+                  className="block overflow-hidden rounded-2xl border border-miyeon-line bg-white shadow-sm transition-shadow hover:shadow-lg hover:shadow-miyeon-main/10"
                 >
                   {cover ? (
                     <img src={cover} alt={list.title} className="h-24 w-full object-cover" />
                   ) : (
-                    <div className="flex h-24 w-full items-center justify-center bg-miyeon-neutral/50 text-miyeon-main/50">
+                    <div className="flex h-24 w-full items-center justify-center bg-miyeon-surface/50 text-miyeon-main/50">
                       <MapPin className="h-6 w-6" />
                     </div>
                   )}

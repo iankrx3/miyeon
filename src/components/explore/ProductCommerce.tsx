@@ -16,7 +16,7 @@ export const ProductCommerce: React.FC<ProductCommerceProps> = ({ concerns }) =>
   const concernLabel = concerns.slice(0, 2).join(' + ') || 'your goals';
 
   return (
-    <div className="rounded-3xl border border-miyeon-neutral bg-miyeon-sub2/40 p-5">
+    <div className="rounded-3xl border border-miyeon-line bg-miyeon-accent-soft/40 p-5">
       <h3 className="text-sm font-bold text-miyeon-main">🧴 And at home</h3>
       <p className="mt-1 text-xs text-miyeon-main/60">
         Whatever you decide at the clinic, these help with {concernLabel}.
@@ -33,7 +33,7 @@ export const ProductCommerce: React.FC<ProductCommerceProps> = ({ concerns }) =>
             <img src={product.imageUrl} alt={product.name} className="h-20 w-full object-cover" />
             <div className="p-2">
               <p className="line-clamp-2 text-[11px] font-medium leading-tight text-miyeon-main">{product.name}</p>
-              <p className="mt-1 text-[11px] font-bold text-miyeon-sub1">${product.price}</p>
+              <p className="mt-1 text-[11px] font-bold text-miyeon-accent">${product.price}</p>
             </div>
           </a>
         ))}

@@ -7,14 +7,14 @@ import type { MedicalTourismMatch, WellnessSpot } from '../../types';
 // than showing a negative/"unverified" state.
 
 export const WellnessPickBadge: React.FC = () => (
-  <span className="inline-flex items-center gap-1 rounded-full bg-miyeon-neutral px-2.5 py-1 text-[11px] font-medium text-miyeon-main">
+  <span className="inline-flex items-center gap-1 rounded-full bg-miyeon-surface px-2.5 py-1 text-[11px] font-medium text-miyeon-main">
     <Leaf className="h-3 w-3" />
     KTO Wellness Pick
   </span>
 );
 
 export const MedicalInfoBadge: React.FC = () => (
-  <span className="inline-flex items-center gap-1 rounded-full bg-miyeon-neutral px-2.5 py-1 text-[11px] font-medium text-miyeon-main">
+  <span className="inline-flex items-center gap-1 rounded-full bg-miyeon-surface px-2.5 py-1 text-[11px] font-medium text-miyeon-main">
     <ShieldCheck className="h-3 w-3" />
     Registered with Korea Medical Tourism Info (KTO)
   </span>
@@ -34,7 +34,7 @@ export const NearbyWellnessSection: React.FC<{ spots?: WellnessSpot[] }> = ({ sp
       </div>
       <div className="space-y-2">
         {spots.map((spot) => (
-          <div key={spot.id} className="rounded-2xl border border-miyeon-neutral bg-white p-3">
+          <div key={spot.id} className="rounded-2xl border border-miyeon-line bg-white p-3">
             <p className="text-sm font-medium text-miyeon-main">{spot.name}</p>
             {spot.intro && <p className="mt-0.5 text-xs text-miyeon-main/70">{spot.intro}</p>}
             <p className="mt-1 text-[11px] text-miyeon-main/70">

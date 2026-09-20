@@ -503,17 +503,17 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
   }
 
   return (
-    <div className="relative h-[calc(100dvh-64px)] w-full overflow-hidden bg-miyeon-neutral/30">
+    <div className="relative h-[calc(100dvh-64px)] w-full overflow-hidden bg-miyeon-surface/30">
       <div ref={mapContainerRef} className="h-full w-full z-0" />
 
       {loading && (
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/60">
-          <Loader2 className="h-6 w-6 animate-spin text-miyeon-sub1" />
+          <Loader2 className="h-6 w-6 animate-spin text-miyeon-accent" />
         </div>
       )}
 
       {locationError && (
-        <div className="absolute bottom-[calc(var(--bottom-nav-h)+20px)] left-1/2 z-30 -translate-x-1/2 whitespace-nowrap rounded-full bg-miyeon-main/90 px-4 py-2 text-xs font-medium text-white shadow-xl backdrop-blur-md sm:bottom-5">
+        <div className="absolute bottom-[calc(var(--bottom-nav-h)+20px)] left-1/2 z-30 -translate-x-1/2 whitespace-nowrap rounded-full bg-miyeon-ink/90 px-4 py-2 text-xs font-medium text-white shadow-xl backdrop-blur-md sm:bottom-5">
           ⚠️ {locationError}
         </div>
       )}
@@ -554,12 +554,12 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
           </div>
 
           {isSearchOpen && searchQuery && searchResults.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-1.5 max-h-72 overflow-y-auto no-scrollbar rounded-2xl border border-miyeon-neutral bg-white shadow-2xl">
+            <div className="absolute top-full left-0 right-0 mt-1.5 max-h-72 overflow-y-auto no-scrollbar rounded-2xl border border-miyeon-line bg-white shadow-2xl">
               {searchResults.map((p) => (
                 <button
                   key={p.id}
                   onClick={() => handleJumpToPlace(p)}
-                  className="flex w-full items-center gap-3 px-3.5 py-2.5 hover:bg-miyeon-neutral/30"
+                  className="flex w-full items-center gap-3 px-3.5 py-2.5 hover:bg-miyeon-surface/30"
                 >
                   <span className="text-lg leading-none">{categoryMeta[p.category].icon}</span>
                   <div className="min-w-0 flex-1 text-left">
@@ -584,7 +584,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
                 </p>
                 <div className="flex shrink-0 items-center gap-3">
                   {tripIdParam && (
-                    <Link to={`/itinerary/${tripIdParam}`} className="text-[11px] font-semibold text-miyeon-sub1">
+                    <Link to={`/itinerary/${tripIdParam}`} className="text-[11px] font-semibold text-miyeon-accent">
                       Open
                     </Link>
                   )}
@@ -604,7 +604,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
                 </p>
                 <div className="flex shrink-0 items-center gap-3">
                   {curatorFilterCreator && (
-                    <Link to={`/curator/${curatorFilterCreator.id}`} className="text-[11px] font-semibold text-miyeon-sub1">
+                    <Link to={`/curator/${curatorFilterCreator.id}`} className="text-[11px] font-semibold text-miyeon-accent">
                       Profile
                     </Link>
                   )}
@@ -662,7 +662,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
                       src={pick.creator.avatar_url}
                       alt={pick.creator.display_name}
                       referrerPolicy="no-referrer"
-                      className="h-11 w-11 rounded-full object-cover ring-2 ring-miyeon-sub1/30 group-hover:ring-miyeon-sub1"
+                      className="h-11 w-11 rounded-full object-cover ring-2 ring-miyeon-accent/30 group-hover:ring-miyeon-accent"
                     />
                     <span className="max-w-[70px] truncate text-[11px] font-medium text-miyeon-main">
                       @{pick.creator.username}
@@ -683,7 +683,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
                   key={item.id}
                   type="button"
                   onClick={() => setSearchParams({ trip: item.id })}
-                  className="shrink-0 rounded-full border border-miyeon-neutral bg-white px-3 py-1.5 text-[11px] font-semibold text-miyeon-main"
+                  className="shrink-0 rounded-full border border-miyeon-line bg-white px-3 py-1.5 text-[11px] font-semibold text-miyeon-main"
                 >
                   {item.title}
                 </button>
@@ -702,7 +702,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
                 <button
                   key={itn.id}
                   type="button"
-                  className="w-full rounded-xl px-3 py-2.5 text-left text-sm text-miyeon-main hover:bg-miyeon-neutral"
+                  className="w-full rounded-xl px-3 py-2.5 text-left text-sm text-miyeon-main hover:bg-miyeon-surface"
                   onClick={() => navigate(`/itinerary/${itn.id}`)}
                 >
                   {itn.title}
@@ -730,7 +730,7 @@ const MapButton: React.FC<{ onClick: () => void; label: string; active?: boolean
     aria-label={label}
     title={label}
     className={`flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-lg border border-black/5 transition-all hover:scale-105 active:scale-95 ${
-      active ? 'text-[#007AFF] ring-2 ring-[#007AFF]/40' : 'text-miyeon-main hover:text-miyeon-sub1'
+      active ? 'text-[#007AFF] ring-2 ring-[#007AFF]/40' : 'text-miyeon-main hover:text-miyeon-accent'
     }`}
   >
     {children}
@@ -745,7 +745,7 @@ const FilterChip: React.FC<{ active: boolean; label: string; onClick: () => void
   <button
     onClick={onClick}
     className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-bold shadow-md backdrop-blur-md transition-all whitespace-nowrap ${
-      active ? 'bg-miyeon-sub1 text-white shadow-miyeon-sub1/25' : 'bg-white/95 text-miyeon-main/70 hover:bg-white hover:text-miyeon-sub1'
+      active ? 'bg-miyeon-accent text-white shadow-miyeon-accent/25' : 'bg-white/95 text-miyeon-main/70 hover:bg-white hover:text-miyeon-accent'
     }`}
   >
     {label}

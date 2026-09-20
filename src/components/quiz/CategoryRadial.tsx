@@ -27,7 +27,7 @@ export const CategoryRadial: React.FC<CategoryRadialProps> = ({
         initial={{ opacity: 0, scale: 0.6 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="flex h-24 w-24 items-center justify-center rounded-full bg-miyeon-sub1 text-center text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-miyeon-sub1/30"
+        className="flex h-24 w-24 items-center justify-center rounded-full bg-miyeon-accent text-center text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-miyeon-accent/30"
       >
         {centerLabel}
       </motion.div>
@@ -46,7 +46,7 @@ export const CategoryRadial: React.FC<CategoryRadialProps> = ({
             transition={{ type: 'spring', stiffness: 220, damping: 18, delay: 0.1 + i * 0.06 }}
             whileHover={{ scale: 1.12 }}
             whileTap={{ scale: 0.95 }}
-            className="group absolute flex h-20 w-20 flex-col items-center justify-center gap-1 rounded-full bg-miyeon-neutral text-miyeon-main shadow-sm transition-colors hover:bg-miyeon-sub1 hover:text-white"
+            className="group absolute flex h-20 w-20 flex-col items-center justify-center gap-1 rounded-full bg-miyeon-surface text-miyeon-main shadow-sm transition-colors hover:bg-miyeon-accent hover:text-white"
           >
             <span className="text-xl">{meta.icon}</span>
             <span className="text-[11px] font-semibold">{meta.label}</span>

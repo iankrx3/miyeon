@@ -27,7 +27,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({ session, onSignIn, o
     return (
       <button
         onClick={onSignIn}
-        className="w-full rounded-2xl border border-miyeon-neutral bg-miyeon-neutral/30 px-4 py-3.5 text-left text-sm text-miyeon-main/60"
+        className="w-full rounded-2xl border border-miyeon-line bg-miyeon-surface/30 px-4 py-3.5 text-left text-sm text-miyeon-main/60"
       >
         Sign in to share your experience…
       </button>
@@ -49,7 +49,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({ session, onSignIn, o
   };
 
   return (
-    <div className="rounded-2xl border border-miyeon-neutral bg-white p-4">
+    <div className="rounded-2xl border border-miyeon-line bg-white p-4">
       <div className="flex items-start gap-2.5">
         <img
           src={session.user.avatar_url}
@@ -73,7 +73,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({ session, onSignIn, o
               key={cat.id}
               onClick={() => setCategory(cat.id)}
               className={`shrink-0 rounded-full px-3 py-1 text-[11px] font-semibold transition-colors ${
-                category === cat.id ? 'bg-miyeon-main text-white' : 'bg-miyeon-neutral/60 text-miyeon-main/70'
+                category === cat.id ? 'bg-miyeon-ink text-white' : 'bg-miyeon-surface/60 text-miyeon-main/70'
               }`}
             >
               {cat.label}
@@ -85,7 +85,7 @@ export const PostComposer: React.FC<PostComposerProps> = ({ session, onSignIn, o
           whileTap={!text.trim() || submitting ? undefined : { scale: 0.95 }}
           onClick={handleSubmit}
           disabled={!text.trim() || submitting}
-          className="shrink-0 rounded-full bg-miyeon-sub1 px-4 py-1.5 text-xs font-bold text-white shadow-sm shadow-miyeon-sub1/30 disabled:opacity-40"
+          className="shrink-0 rounded-full bg-miyeon-accent px-4 py-1.5 text-xs font-bold text-white shadow-sm shadow-miyeon-accent/30 disabled:opacity-40"
         >
           {submitting ? 'Posting…' : 'Post'}
         </motion.button>

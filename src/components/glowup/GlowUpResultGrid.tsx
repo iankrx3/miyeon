@@ -16,8 +16,8 @@ const PlaceBlock: React.FC<{ item: GlowUpSlotItem; onOpenSpot?: (spotId: string)
 }) => {
   const spot = item.spotId ? getSpot(item.spotId) : undefined;
   return (
-    <article className="rounded-xl border border-miyeon-neutral bg-white px-3 py-2.5">
-      <p className="text-[11px] font-bold uppercase tracking-wider text-miyeon-sub1">
+    <article className="rounded-xl border border-miyeon-line bg-white px-3 py-2.5">
+      <p className="text-[11px] font-bold uppercase tracking-wider text-miyeon-accent">
         {item.emoji} {item.label}
       </p>
       {spot ? (
@@ -35,7 +35,7 @@ const PlaceBlock: React.FC<{ item: GlowUpSlotItem; onOpenSpot?: (spotId: string)
           href={item.url}
           target="_blank"
           rel="noreferrer"
-          className="mt-1.5 inline-block text-[11px] font-bold text-miyeon-sub1"
+          className="mt-1.5 inline-block text-[11px] font-bold text-miyeon-accent"
         >
           Find more on Creatrip →
         </a>
@@ -48,7 +48,7 @@ const SlotCell: React.FC<{ slot: GlowUpSlot; onOpenSpot?: (spotId: string) => vo
   const [expanded, setExpanded] = useState(false);
   if (slot.items.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-miyeon-neutral px-3 py-3 text-center text-xs text-miyeon-main/40">
+      <div className="rounded-xl border border-dashed border-miyeon-line px-3 py-3 text-center text-xs text-miyeon-main/40">
         Free time
       </div>
     );
@@ -81,7 +81,7 @@ export const GlowUpResultGrid: React.FC<{ days: GlowUpDay[]; onOpenSpot?: (spotI
 }) => (
   <div className="space-y-5">
     {days.map((day) => (
-      <section key={day.dayIndex} className="rounded-3xl border border-miyeon-neutral p-4">
+      <section key={day.dayIndex} className="rounded-3xl border border-miyeon-line p-4">
         <h3 className="mb-3 font-display text-lg text-miyeon-main">DAY {day.dayIndex}</h3>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {day.slots.map((slot) => (

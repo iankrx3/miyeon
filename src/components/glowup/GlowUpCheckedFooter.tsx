@@ -14,12 +14,12 @@ export const GlowUpCheckedFooter: React.FC<{ profile: GlowUpProfile }> = ({ prof
   ];
 
   return (
-    <div className="rounded-3xl border border-miyeon-neutral bg-white p-5">
+    <div className="rounded-3xl border border-miyeon-line bg-white p-5">
       <h3 className="font-display text-lg text-miyeon-main">MIYEON CHECKED.</h3>
       <div className="mt-3 space-y-3">
         {rows.map((row) => (
           <div key={row.label} className="flex items-start gap-2.5">
-            <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-miyeon-sub1" />
+            <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-miyeon-accent" />
             <div>
               <p className="text-[11px] font-bold uppercase tracking-wider text-miyeon-main/45">{row.label}</p>
               <p className="text-sm text-miyeon-main">{row.detail}</p>

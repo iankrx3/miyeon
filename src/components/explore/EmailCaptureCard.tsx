@@ -34,14 +34,14 @@ export const EmailCaptureCard: React.FC<EmailCaptureCardProps> = ({ answers, top
   };
 
   return (
-    <div className="rounded-3xl border border-miyeon-neutral bg-white p-5">
+    <div className="rounded-3xl border border-miyeon-line bg-white p-5">
       <h3 className="text-sm font-bold text-miyeon-main">📋 Take this to your consultation.</h3>
       <p className="mt-1 text-xs text-miyeon-main/60">
         Your answers, your matches, and the questions to ask the doctor.
       </p>
 
       {status === 'saved' ? (
-        <div className="mt-4 rounded-2xl bg-miyeon-sub2/50 px-4 py-3 text-xs text-miyeon-main">
+        <div className="mt-4 rounded-2xl bg-miyeon-accent-soft/50 px-4 py-3 text-xs text-miyeon-main">
           ✓ Saved — we'll be in touch before your trip. Good clinics fill up 2–3 weeks ahead.
         </div>
       ) : (
@@ -52,7 +52,7 @@ export const EmailCaptureCard: React.FC<EmailCaptureCardProps> = ({ answers, top
               type="date"
               value={tripDate}
               onChange={(e) => setTripDate(e.target.value)}
-              className="w-full rounded-xl border border-miyeon-neutral bg-white px-3 py-2 text-sm text-miyeon-main"
+              className="w-full rounded-xl border border-miyeon-line bg-white px-3 py-2 text-sm text-miyeon-main"
             />
           </div>
           <div>
@@ -63,13 +63,13 @@ export const EmailCaptureCard: React.FC<EmailCaptureCardProps> = ({ answers, top
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full rounded-xl border border-miyeon-neutral bg-white px-3 py-2 text-sm text-miyeon-main"
+              className="w-full rounded-xl border border-miyeon-line bg-white px-3 py-2 text-sm text-miyeon-main"
             />
           </div>
           <button
             type="submit"
             disabled={status === 'saving'}
-            className="w-full rounded-full bg-miyeon-sub1 py-3 text-sm font-bold text-white shadow-sm shadow-miyeon-sub1/30 disabled:opacity-50"
+            className="w-full rounded-full bg-miyeon-accent py-3 text-sm font-bold text-white shadow-sm shadow-miyeon-accent/30 disabled:opacity-50"
           >
             {status === 'saving' ? 'Saving…' : 'Send me my card'}
           </button>

@@ -25,7 +25,7 @@ export const MagazineComposer: React.FC<MagazineComposerProps> = ({ session, onS
     return (
       <button
         onClick={onSignIn}
-        className="w-full rounded-2xl border border-miyeon-neutral bg-miyeon-neutral/30 px-4 py-3.5 text-left text-sm text-miyeon-main/60"
+        className="w-full rounded-2xl border border-miyeon-line bg-miyeon-surface/30 px-4 py-3.5 text-left text-sm text-miyeon-main/60"
       >
         Sign in to write a column…
       </button>
@@ -34,7 +34,7 @@ export const MagazineComposer: React.FC<MagazineComposerProps> = ({ session, onS
 
   if (!session.creator) {
     return (
-      <div className="rounded-2xl border border-miyeon-neutral bg-miyeon-neutral/30 px-4 py-3.5 text-sm text-miyeon-main/70">
+      <div className="rounded-2xl border border-miyeon-line bg-miyeon-surface/30 px-4 py-3.5 text-sm text-miyeon-main/70">
         Only curators can publish to the Magazine.{' '}
         <Link to="/curator/signup" className="font-semibold text-miyeon-main hover:underline">
           Become a curator →
@@ -62,14 +62,14 @@ export const MagazineComposer: React.FC<MagazineComposerProps> = ({ session, onS
   };
 
   return (
-    <div className="space-y-2.5 rounded-2xl border border-miyeon-neutral bg-white p-4">
+    <div className="space-y-2.5 rounded-2xl border border-miyeon-line bg-white p-4">
       <div className="flex gap-1.5">
         {KINDS.map((k) => (
           <button
             key={k}
             onClick={() => setKind(k)}
             className={`shrink-0 rounded-full px-3 py-1 text-[11px] font-semibold transition-colors ${
-              kind === k ? 'bg-miyeon-main text-white' : 'bg-miyeon-neutral/60 text-miyeon-main/70'
+              kind === k ? 'bg-miyeon-ink text-white' : 'bg-miyeon-surface/60 text-miyeon-main/70'
             }`}
           >
             {k}
@@ -81,20 +81,20 @@ export const MagazineComposer: React.FC<MagazineComposerProps> = ({ session, onS
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Column title"
-        className="w-full rounded-xl border border-miyeon-neutral bg-transparent px-3 py-2 text-sm text-miyeon-main placeholder:text-miyeon-main/50 focus:outline-none"
+        className="w-full rounded-xl border border-miyeon-line bg-transparent px-3 py-2 text-sm text-miyeon-main placeholder:text-miyeon-main/50 focus:outline-none"
       />
       <input
         value={imageUrl}
         onChange={(e) => setImageUrl(e.target.value)}
         placeholder="Cover photo URL"
-        className="w-full rounded-xl border border-miyeon-neutral bg-transparent px-3 py-2 text-sm text-miyeon-main placeholder:text-miyeon-main/50 focus:outline-none"
+        className="w-full rounded-xl border border-miyeon-line bg-transparent px-3 py-2 text-sm text-miyeon-main placeholder:text-miyeon-main/50 focus:outline-none"
       />
       <textarea
         value={body}
         onChange={(e) => setBody(e.target.value)}
         placeholder="Write the column… separate paragraphs with a blank line."
         rows={5}
-        className="w-full resize-none rounded-xl border border-miyeon-neutral bg-transparent px-3 py-2 text-sm text-miyeon-main placeholder:text-miyeon-main/50 focus:outline-none"
+        className="w-full resize-none rounded-xl border border-miyeon-line bg-transparent px-3 py-2 text-sm text-miyeon-main placeholder:text-miyeon-main/50 focus:outline-none"
       />
 
       <div className="flex justify-end">
@@ -103,7 +103,7 @@ export const MagazineComposer: React.FC<MagazineComposerProps> = ({ session, onS
           whileTap={canSubmit ? { scale: 0.95 } : undefined}
           onClick={handleSubmit}
           disabled={!canSubmit}
-          className="shrink-0 rounded-full bg-miyeon-sub1 px-4 py-1.5 text-xs font-bold text-white shadow-sm shadow-miyeon-sub1/30 disabled:opacity-40"
+          className="shrink-0 rounded-full bg-miyeon-accent px-4 py-1.5 text-xs font-bold text-white shadow-sm shadow-miyeon-accent/30 disabled:opacity-40"
         >
           {submitting ? 'Publishing…' : 'Publish'}
         </motion.button>

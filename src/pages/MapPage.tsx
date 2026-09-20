@@ -28,8 +28,8 @@ export default function MapPage({ session, onSignIn }: { session: UserSession; o
   return (
     <div className="relative">
       {!spotsReady ? (
-        <div className="flex h-[calc(100dvh-64px)] w-full items-center justify-center bg-miyeon-neutral/30">
-          <Loader2 className="h-6 w-6 animate-spin text-miyeon-sub1" />
+        <div className="flex h-[calc(100dvh-64px)] w-full items-center justify-center bg-miyeon-surface/30">
+          <Loader2 className="h-6 w-6 animate-spin text-miyeon-accent" />
         </div>
       ) : (
         <>
@@ -48,7 +48,7 @@ export default function MapPage({ session, onSignIn }: { session: UserSession; o
         onClick={() => setViewMode(viewMode === 'map' ? 'list' : 'map')}
         aria-label={viewMode === 'map' ? 'Switch to list view' : 'Switch to map view'}
         title={viewMode === 'map' ? 'Switch to list view' : 'Switch to map view'}
-        className="absolute left-3 bottom-[calc(var(--bottom-nav-h)+20px)] z-20 flex h-10 w-10 items-center justify-center rounded-xl bg-white text-miyeon-main shadow-lg border border-black/5 hover:text-miyeon-sub1 sm:bottom-5"
+        className="absolute left-3 bottom-[calc(var(--bottom-nav-h)+20px)] z-20 flex h-10 w-10 items-center justify-center rounded-xl bg-white text-miyeon-main shadow-lg border border-black/5 hover:text-miyeon-accent sm:bottom-5"
       >
         <AnimatePresence mode="wait" initial={false}>
           <motion.span
@@ -71,7 +71,7 @@ export default function MapPage({ session, onSignIn }: { session: UserSession; o
             whileTap={{ scale: 0.97 }}
             onClick={handleCreateItinerary}
             aria-label="Create an itinerary"
-            className="flex items-center gap-1.5 rounded-full bg-miyeon-main px-4 py-2 text-xs font-bold text-white shadow-lg"
+            className="flex items-center gap-1.5 rounded-full bg-miyeon-ink px-4 py-2 text-xs font-bold text-white shadow-lg"
           >
             <ListPlus className="h-3.5 w-3.5" />
             Create an itinerary
@@ -87,7 +87,7 @@ export default function MapPage({ session, onSignIn }: { session: UserSession; o
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 30, scale: 0.96 }}
               transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-              className="relative rounded-2xl border border-miyeon-neutral bg-white p-4 shadow-2xl"
+              className="relative rounded-2xl border border-miyeon-line bg-white p-4 shadow-2xl"
             >
               <button
                 onClick={() => setSelectedPlace(null)}
@@ -97,14 +97,14 @@ export default function MapPage({ session, onSignIn }: { session: UserSession; o
               </button>
               <p className="pr-6 text-sm font-semibold text-miyeon-main">{selectedPlace.name}</p>
               <p className="mt-0.5 flex items-center gap-1 text-xs text-miyeon-main/60">
-                <Star className="h-3 w-3 fill-miyeon-sub1 text-miyeon-sub1" /> {selectedPlace.rating} · {selectedPlace.priceRange} · {selectedPlace.area}
+                <Star className="h-3 w-3 fill-miyeon-accent text-miyeon-accent" /> {selectedPlace.rating} · {selectedPlace.priceRange} · {selectedPlace.area}
               </p>
               <div className="mt-3 flex gap-2">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => navigate(`/place/${selectedPlace.id}`)}
-                  className="flex-1 rounded-full bg-miyeon-main px-4 py-2 text-xs font-bold text-white"
+                  className="flex-1 rounded-full bg-miyeon-ink px-4 py-2 text-xs font-bold text-white"
                 >
                   VIEW PLACE
                 </motion.button>
@@ -119,7 +119,7 @@ export default function MapPage({ session, onSignIn }: { session: UserSession; o
                     toggleSave(selectedPlace);
                   }}
                   className={`flex items-center justify-center gap-1.5 rounded-full border px-4 py-2 text-xs font-bold ${
-                    isSaved(selectedPlace.id) ? 'border-miyeon-sub1 bg-miyeon-sub1 text-white' : 'border-miyeon-neutral text-miyeon-main'
+                    isSaved(selectedPlace.id) ? 'border-miyeon-accent bg-miyeon-accent text-white' : 'border-miyeon-line text-miyeon-main'
                   }`}
                 >
                   <Bookmark className="h-3.5 w-3.5" fill={isSaved(selectedPlace.id) ? 'currentColor' : 'none'} />

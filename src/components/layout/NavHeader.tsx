@@ -63,7 +63,7 @@ export const NavHeader: React.FC<NavHeaderProps> = ({ session, onSignIn, onSignO
                 src={session.user.avatar_url}
                 alt={session.user.name}
                 referrerPolicy="no-referrer"
-                className="h-7 w-7 rounded-full object-cover ring-1 ring-miyeon-neutral"
+                className="h-7 w-7 rounded-full object-cover ring-1 ring-miyeon-line"
               />
             </NavLink>
             <motion.button

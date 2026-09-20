@@ -39,7 +39,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({ postId, title, classNa
       <Share2 className="h-4 w-4" />
       Share
       {copied && (
-        <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-miyeon-main px-2.5 py-1 text-[10px] font-semibold text-white shadow-md">
+        <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-miyeon-ink px-2.5 py-1 text-[10px] font-semibold text-white shadow-md">
           Link copied
         </span>
       )}

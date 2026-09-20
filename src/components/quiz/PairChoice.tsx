@@ -21,14 +21,14 @@ export const PairChoice: React.FC<PairChoiceProps> = ({ pair, value, onChange })
         transition={{ duration: 0.25 }}
         className={`rounded-2xl border px-3 py-4 text-sm font-medium transition-colors ${
           value === option
-            ? 'border-miyeon-sub1 bg-miyeon-sub1 text-white shadow-sm shadow-miyeon-sub1/25'
-            : 'border-miyeon-neutral bg-white text-miyeon-main hover:border-miyeon-sub1/50'
+            ? 'border-miyeon-accent bg-miyeon-accent text-white shadow-sm shadow-miyeon-accent/25'
+            : 'border-miyeon-line bg-white text-miyeon-main hover:border-miyeon-accent/50'
         }`}
       >
         {option}
       </motion.button>
     ))}
-    <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-miyeon-neutral bg-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-miyeon-main/70 shadow-sm">
+    <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-miyeon-line bg-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-miyeon-main/70 shadow-sm">
       OR
     </span>
   </div>

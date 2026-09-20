@@ -23,7 +23,7 @@ export default function CuratorSignupPage({ session, onSignIn, onCreatorUpdated 
         <p className="text-sm text-miyeon-main/60">Sign in first to set up your curator profile.</p>
         <button
           onClick={onSignIn}
-          className="rounded-full bg-miyeon-sub1 px-5 py-2.5 text-sm font-bold text-white shadow-sm shadow-miyeon-sub1/30"
+          className="rounded-full bg-miyeon-accent px-5 py-2.5 text-sm font-bold text-white shadow-sm shadow-miyeon-accent/30"
         >
           Sign in
         </button>

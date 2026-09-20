@@ -53,7 +53,7 @@ export default function MagazineDetailPage({ session }: MagazineDetailPageProps)
       <img src={article.imageUrl} alt={article.title} className="aspect-[5/3] w-full rounded-2xl object-cover" />
 
       <div>
-        <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-miyeon-sub1">{article.kind}</p>
+        <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-miyeon-accent">{article.kind}</p>
         <h1 className="mt-1 font-display text-2xl leading-snug text-miyeon-main">{article.title}</h1>
         <div className="mt-3 flex items-center gap-2 text-xs text-miyeon-main/60">
           {article.authorAvatarUrl && (

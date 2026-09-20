@@ -67,7 +67,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
   if (!spotsReady && !hasPinnedVenues) {
     return (
       <div className="flex h-[60vh] items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-miyeon-sub1" />
+        <Loader2 className="h-6 w-6 animate-spin text-miyeon-accent" />
       </div>
     );
   }
@@ -162,7 +162,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
           ))}
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4 pb-24 sm:pb-8">
+        <div className="px-4 pb-24 sm:flex-1 sm:overflow-y-auto sm:pb-8">
           <ItineraryTimeline
             day={day}
             profile={itinerary.profileSnapshot}
@@ -192,7 +192,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
                 <button
                   key={label}
                   type="button"
-                  className="w-full rounded-xl px-3 py-2.5 text-left text-sm text-miyeon-main hover:bg-miyeon-neutral"
+                  className="w-full rounded-xl px-3 py-2.5 text-left text-sm text-miyeon-main hover:bg-miyeon-surface"
                   onClick={() => {
                     if (label === 'View details') {
                       navigate(`/place/${menu.spot.id}`, { state: { fromItinerary: itinerary.id } });
@@ -238,7 +238,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
                     <button
                       key={d.dayIndex}
                       type="button"
-                      className="w-full rounded-xl px-3 py-2.5 text-left text-sm text-miyeon-main hover:bg-miyeon-neutral"
+                      className="w-full rounded-xl px-3 py-2.5 text-left text-sm text-miyeon-main hover:bg-miyeon-surface"
                       onClick={() => {
                         if (menu) persist(moveSpotToDay(itinerary, day.dayIndex, menu.blockId, d.dayIndex));
                         setSheet(null);
@@ -253,7 +253,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
                   <button
                     key={opt.id}
                     type="button"
-                    className="w-full rounded-xl px-3 py-2.5 text-left text-sm text-miyeon-main hover:bg-miyeon-neutral"
+                    className="w-full rounded-xl px-3 py-2.5 text-left text-sm text-miyeon-main hover:bg-miyeon-surface"
                     onClick={() => {
                       if (menu) {
                         persist(
@@ -272,7 +272,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
                   <button
                     key={opt.id}
                     type="button"
-                    className="w-full rounded-xl px-3 py-2.5 text-left text-sm text-miyeon-main hover:bg-miyeon-neutral"
+                    className="w-full rounded-xl px-3 py-2.5 text-left text-sm text-miyeon-main hover:bg-miyeon-surface"
                     onClick={() => {
                       persist(regenerateItinerary(itinerary, opt.id as RegeneratePreference));
                       setDayIndex(1);

@@ -43,7 +43,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({ result, rank, quote }) =
       transition={{ duration: 0.4, delay: (rank - 1) * 0.1, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -3 }}
       className={`rounded-3xl border bg-white p-5 shadow-sm transition-shadow hover:shadow-lg hover:shadow-miyeon-main/10 ${
-        isPrimary ? 'border-miyeon-sub1/50' : 'border-miyeon-neutral'
+        isPrimary ? 'border-miyeon-accent/50' : 'border-miyeon-line'
       }`}
     >
       <div className="flex items-center justify-between">
@@ -54,7 +54,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({ result, rank, quote }) =
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 300, damping: 15, delay: (rank - 1) * 0.1 + 0.2 }}
-          className="text-xs font-semibold text-miyeon-sub1"
+          className="text-xs font-semibold text-miyeon-accent"
         >
           Miyeon says: {matchScore}% Match
         </motion.span>
@@ -80,7 +80,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({ result, rank, quote }) =
       <div className="mt-3 space-y-1">
         {reasons.slice(0, bulletCount).map((reason) => (
           <p key={reason} className="flex items-start gap-1.5 text-xs text-miyeon-main/70">
-            <span className="text-miyeon-sub1">✓</span> {reason}
+            <span className="text-miyeon-accent">✓</span> {reason}
           </p>
         ))}
       </div>
@@ -109,7 +109,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({ result, rank, quote }) =
           href={withCreatripAffiliate(treatment.creatripUrl || place.bookingUrl || CREATRIP_BASE_URL)}
           target="_blank"
           rel="noreferrer"
-          className="flex-1 rounded-full bg-miyeon-sub1 px-4 py-2.5 text-center text-xs font-bold text-white shadow-sm shadow-miyeon-sub1/30"
+          className="flex-1 rounded-full bg-miyeon-accent px-4 py-2.5 text-center text-xs font-bold text-white shadow-sm shadow-miyeon-accent/30"
         >
           CHECK AVAILABILITY →
         </motion.a>

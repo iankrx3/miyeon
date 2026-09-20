@@ -17,7 +17,7 @@ interface CuratorProfileFormProps {
 }
 
 const inputClass =
-  'w-full rounded-xl border border-miyeon-neutral bg-white px-3.5 py-2.5 text-sm text-miyeon-main placeholder:text-miyeon-main/60 focus:outline-none focus:border-miyeon-sub1/50';
+  'w-full rounded-xl border border-miyeon-line bg-white px-3.5 py-2.5 text-sm text-miyeon-main placeholder:text-miyeon-main/60 focus:outline-none focus:border-miyeon-accent/50';
 
 const Field: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
   <label className="block space-y-1.5">
@@ -101,7 +101,7 @@ export const CuratorProfileForm: React.FC<CuratorProfileFormProps> = ({
       <button
         onClick={handleSubmit}
         disabled={!canSubmit}
-        className="w-full rounded-full bg-miyeon-sub1 py-3 text-sm font-bold text-white shadow-sm shadow-miyeon-sub1/30 disabled:opacity-40"
+        className="w-full rounded-full bg-miyeon-accent py-3 text-sm font-bold text-white shadow-sm shadow-miyeon-accent/30 disabled:opacity-40"
       >
         {submitting ? submittingLabel : submitLabel}
       </button>
