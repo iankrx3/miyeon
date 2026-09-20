@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Bookmark, ChevronLeft } from 'lucide-react';
 import type { Itinerary, ItineraryDay } from '../../types';
 import { budgetLabel, regionLabel } from '../../data/glowUpQuiz';
 import { guideFor } from '../../data/categoryGuides';
 import { GlowUpCategoryList } from './GlowUpCategoryList';
+import { BeautyCardSheet } from './BeautyCardSheet';
 
 interface GlowUpResultViewProps {
   itinerary: Itinerary;
@@ -12,6 +13,8 @@ interface GlowUpResultViewProps {
   saved: boolean;
   onToggleSave: () => void;
   onBack: () => void;
+  /** Signed-in user's email, pre-filled in the Beauty Card form. */
+  userEmail?: string;
 }
 
 const DOWNTIME_CHIP: Record<string, string> = {
@@ -36,7 +39,9 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({
   saved,
   onToggleSave,
   onBack,
+  userEmail,
 }) => {
+  const [beautyCardOpen, setBeautyCardOpen] = useState(false);
   const profile = itinerary.glowUpSnapshot;
   const stops = day.blocks.filter((b) => b.glowUpSubtype);
   const firstGuide = stops[0]?.glowUpSubtype ? guideFor(stops[0].glowUpSubtype) : undefined;
@@ -115,12 +120,16 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({
 
         <button
           type="button"
-          onClick={onToggleSave}
+          onClick={() => setBeautyCardOpen(true)}
           className="mt-6 w-full rounded-full bg-miyeon-ink py-4 text-[14.5px] font-medium text-white"
         >
-          {saved ? 'Saved' : 'Save this plan →'}
+          Get my Beauty Card →
         </button>
       </section>
+
+      {beautyCardOpen && (
+        <BeautyCardSheet itinerary={itinerary} defaultEmail={userEmail} onClose={() => setBeautyCardOpen(false)} />
+      )}
     </div>
   );
 };

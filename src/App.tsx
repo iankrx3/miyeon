@@ -90,7 +90,7 @@ export default function App() {
                 element={<PlaceDetailPage session={session} onSignIn={() => setIsAuthOpen(true)} />}
               />
               <Route path="/treatment/:id" element={<TreatmentDetailPage />} />
-              <Route path="/category/:subtype" element={<CategoryDetailPage />} />
+              <Route path="/category/:subtype" element={<CategoryDetailPage session={session} />} />
               <Route
                 path="/curator/signup"
                 element={

@@ -18,7 +18,8 @@ import {
   fixOptions,
   glowUpTransitionMessages,
   languageOptions,
-  regionOptions,
+  regionOptionsFor,
+  cityOptions,
   restoreOptions,
   tripDaysOptions,
 } from '../data/glowUpQuiz';
@@ -48,14 +49,15 @@ const STEP_DISPLAY_INDEX: Record<Step, number> = {
 };
 const TOTAL_STEPS = 6;
 
-type Base = 'seoul' | 'busan' | 'unsure';
+/** null until the user taps one of the base-city chips. */
+type Base = 'seoul' | 'busan' | 'unsure' | null;
 
 /** Wizard progress kept at module scope so it survives ExplorePage unmounting when the
  * user visits another tab (Map, Community…) and comes back. Cleared once a plan is built. */
 const freshWizardMemory = () => ({
   step: 'home' as Step,
   profile: emptyGlowUpProfile(),
-  base: 'seoul' as Base,
+  base: null as Base,
 });
 let wizardMemory = freshWizardMemory();
 
@@ -123,6 +125,11 @@ export default function ExplorePage() {
   };
 
   const setTripDays = (id: GlowUpTripDays) => setProfile((p) => ({ ...p, tripDays: id }));
+  const pickCity = (id: NonNullable<Base>) => {
+    setBase(id);
+    // Switching city clears the district — the chips below belong to the previous city.
+    setProfile((p) => ({ ...p, city: id === 'unsure' ? undefined : id, region: null }));
+  };
   const setRegion = (id: GlowUpRegion) => setProfile((p) => ({ ...p, region: id }));
   const setBudget = (id: GlowUpBudget) => setProfile((p) => ({ ...p, budget: id }));
 
@@ -271,32 +278,23 @@ export default function ExplorePage() {
                     WHERE ARE YOU BASED?
                   </p>
                   <div className="grid grid-cols-3 gap-2.5">
-                    {(
-                      [
-                        ['seoul', 'Seoul'],
-                        ['busan', 'Busan'],
-                        ['unsure', 'Not sure yet'],
-                      ] as const
-                    ).map(([id, label]) => (
+                    {cityOptions.map((opt) => (
                       <Chip
-                        key={id}
-                        label={label}
-                        selected={base === id}
-                        onClick={() => {
-                          setBase(id);
-                          if (id !== 'seoul') setProfile((p) => ({ ...p, region: null }));
-                        }}
+                        key={opt.id}
+                        label={opt.label}
+                        selected={base === opt.id}
+                        onClick={() => pickCity(opt.id)}
                       />
                     ))}
                   </div>
                 </div>
-                {base === 'seoul' && (
+                {(base === 'seoul' || base === 'busan') && (
                   <div className="rounded-2xl bg-miyeon-surface p-3.5">
                     <p className="mb-2.5 text-[10.5px] font-medium tracking-[0.12em] text-miyeon-main/50">
-                      WHICH PART OF SEOUL?
+                      {base === 'seoul' ? 'WHICH PART OF SEOUL?' : 'WHICH PART OF BUSAN?'}
                     </p>
                     <div className="grid grid-cols-2 gap-2.5">
-                      {regionOptions.map((opt) => (
+                      {regionOptionsFor(base).map((opt) => (
                         <Chip
                           key={opt.id}
                           label={opt.label}

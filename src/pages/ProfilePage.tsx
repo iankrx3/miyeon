@@ -8,6 +8,7 @@ import type { Itinerary, UserSession } from '../types';
 import { useSavedItineraries } from '../hooks/useSavedItineraries';
 import { useSavedPlaces } from '../hooks/useSavedPlaces';
 import { SwipeRow } from '../components/common/SwipeRow';
+import { MyGlowUpPlan } from '../components/profile/MyGlowUpPlan';
 import { firstSpotImage, upsertItinerary } from '../lib/localItineraryStore';
 import { itinerarySpotCount } from '../services/itinerary/generate';
 import { createUserItinerary, deleteUserItinerary, fetchUserItineraries } from '../services/userItinerary';
@@ -125,6 +126,10 @@ export default function ProfilePage({ session, onSignIn, onSignOut }: ProfilePag
       </div>
 
       <div className="mx-auto max-w-2xl px-5 pt-6">
+        <div className="mb-8">
+          <MyGlowUpPlan />
+        </div>
+
         <div id="itineraries" className="flex scroll-mt-20 items-center justify-between gap-3">
           <h2 className="font-display text-lg font-bold text-miyeon-ink">My itineraries</h2>
           {myItineraries.length > 0 && (

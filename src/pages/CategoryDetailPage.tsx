@@ -1,23 +1,28 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
-import type { GlowUpSubtype } from '../types';
+import type { GlowUpSubtype, UserSession } from '../types';
 import { guideFor } from '../data/categoryGuides';
 import { getStoredItinerary } from '../lib/localItineraryStore';
 import { buildGlowUpCreatripUrl, CREATRIP_DISCLOSURE } from '../lib/creatrip';
 import { SwipeRow } from '../components/common/SwipeRow';
+import { BeautyCardSheet } from '../components/glowup/BeautyCardSheet';
 
 /** Figma "DETAIL — Personal Color": explains a Plan category before sending the
  * user to Creatrip for real options. */
-export default function CategoryDetailPage() {
+export default function CategoryDetailPage({ session }: { session?: UserSession }) {
   const { subtype } = useParams<{ subtype: string }>();
   const navigate = useNavigate();
   const location = useLocation();
   const guide = subtype ? guideFor(subtype) : undefined;
   const [stepIndex, setStepIndex] = useState(0);
   const galleryRef = useRef<HTMLDivElement>(null);
+  const [beautyCardOpen, setBeautyCardOpen] = useState(false);
 
   const fromItinerary = (location.state as { fromItinerary?: string } | null)?.fromItinerary;
+
+  // The plan this page was opened from — needed for the Beauty Card email.
+  const plan = useMemo(() => (fromItinerary ? getStoredItinerary(fromItinerary) : null), [fromItinerary]);
 
   const creatripHref = useMemo(() => {
     if (!guide) return null;
@@ -100,12 +105,7 @@ export default function CategoryDetailPage() {
                 key={step.title}
                 className="relative h-[280px] w-[230px] shrink-0 snap-start overflow-hidden rounded-[16px] bg-miyeon-line"
               >
-                <img
-                  src={guide.image}
-                  alt=""
-                  className="h-full w-full object-cover"
-                  style={{ objectPosition: `${i * 50}% 50%` }}
-                />
+                <img src={step.image} alt="" className="h-full w-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-miyeon-ink/80" />
                 <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
                   <p className="text-[10px] font-medium tracking-[0.12em] text-white/80">
@@ -167,6 +167,15 @@ export default function CategoryDetailPage() {
           >
             See options on Creatrip →
           </a>
+          {plan && (
+            <button
+              type="button"
+              onClick={() => setBeautyCardOpen(true)}
+              className="mt-3 block w-full rounded-full border-[1.5px] border-miyeon-accent bg-white py-[13px] text-center text-[14.5px] font-medium text-miyeon-accent-dark"
+            >
+              Get my Beauty Card
+            </button>
+          )}
           <p className="mt-2.5 text-center text-[10.5px] leading-snug text-miyeon-main/45">{CREATRIP_DISCLOSURE}</p>
         </div>
       )}
@@ -186,6 +195,10 @@ export default function CategoryDetailPage() {
             See options →
           </a>
         </div>
+      )}
+
+      {beautyCardOpen && plan && (
+        <BeautyCardSheet itinerary={plan} defaultEmail={session?.user?.email} onClose={() => setBeautyCardOpen(false)} />
       )}
     </div>
   );

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 280" width="230" height="280">
+<defs><linearGradient id="g_yoga1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F9E9E7"/><stop offset="1" stop-color="#EBD3CF"/></linearGradient></defs>
+<rect width="230" height="280" fill="url(#g_yoga1)"/>
+<circle cx="200" cy="30" r="64" fill="#FFFFFF" opacity="0.28"/>
+<circle cx="20" cy="250" r="80" fill="#FFFFFF" opacity="0.18"/>
+<g transform="translate(70 100) rotate(0) scale(1)"><rect x="-18" y="-40" width="36" height="80" rx="18" fill="#D49A9A"/><ellipse cx="0" cy="-40" rx="18" ry="8" fill="#F7E6E6"/><ellipse cx="0" cy="-40" rx="9" ry="4" fill="#D49A9A"/></g><g transform="translate(120 120) rotate(0) scale(0.9)"><rect x="-13" y="-30" width="26" height="70" rx="10" fill="#9DB8C9"/><rect x="-8" y="-42" width="16" height="14" rx="4" fill="#5A514D"/><rect x="-13" y="-4" width="26" height="22" fill="#FFFFFF" opacity="0.55"/></g><g transform="translate(170 116) rotate(0) scale(1)"><path d="M-14 22 h28 l-4 24 h-20z" fill="#D49A9A"/><path d="M0 22 C-2 4 -22 -4 -26 -22 C-6 -18 0 -2 0 22Z" fill="#8FA58A"/><path d="M0 22 C2 0 20 -6 26 -30 C6 -24 0 -4 0 22Z" fill="#8FA58A"/></g><g transform="translate(120 176) rotate(0) scale(1)"><rect x="-60" y="0" width="120" height="14" rx="7" fill="#E2637F"/><path d="M-50 7 h100" stroke="#FFFFFF" stroke-width="1.6" opacity="0.5"/></g><g transform="translate(44 44) rotate(0) scale(1)"><path d="M0 -10 Q1.5 -1.5 10 0 Q1.5 1.5 0 10 Q-1.5 1.5 -10 0 Q-1.5 -1.5 0 -10Z" fill="#E2637F"/></g>
+</svg>

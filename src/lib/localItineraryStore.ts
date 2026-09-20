@@ -60,7 +60,7 @@ export function removeItinerary(id: string) {
 
 // Excludes `snap_`-prefixed itineraries: those are personal saved snapshots
 // (see useSavedItineraries.saveItinerary) that clone a curator's source/curatorId
-// verbatim so the "Saved trips" bar can show where they came from. Without this
+// verbatim so the map's "Saved itinerary" bar can show where they came from. Without this
 // exclusion, saving a curator's itinerary would make it show up a second time
 // in every "this curator's itineraries" listing (map picks, curator profile).
 export function listCuratorItineraries(curatorId: string): Itinerary[] {
@@ -80,6 +80,23 @@ export function listUserItineraries(userId: string): Itinerary[] {
   return listItineraries().filter(
     (i) => i.source === 'user' && i.userId === userId && !i.id.startsWith('snap_')
   );
+}
+
+/** True for a Glow Up plan made of category recommendations (no venue blocks). */
+export function isCategoryPlan(itinerary: Itinerary): boolean {
+  return (
+    Boolean(itinerary.glowUpSnapshot && !itinerary.profileSnapshot) &&
+    itinerary.days.every((d) => d.blocks.every((b) => !b.spotId && !b.venueName))
+  );
+}
+
+/** The most recently generated Glow Up category plan — shown as "My Glow Up Plan" on the profile. */
+export function latestGlowUpPlan(): Itinerary | null {
+  const plans = listItineraries().filter(
+    (i) => i.source === 'miyeon' && !i.id.startsWith('snap_') && isCategoryPlan(i)
+  );
+  plans.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  return plans[0] ?? null;
 }
 
 export function savedKeyFor(userId?: string): string {

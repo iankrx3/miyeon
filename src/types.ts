@@ -407,7 +407,17 @@ export type GlowUpSubtype = FixItem | ChangeItem | RestoreItem;
 export type GlowUpCategory = 'fix' | 'change' | 'restore';
 
 export type GlowUpTripDays = '1' | '2-3' | '4-7' | '7-plus';
-export type GlowUpRegion = 'gangnam' | 'hongdae-mapo' | 'myeongdong' | 'seongsu' | 'auto';
+export type GlowUpCity = 'seoul' | 'busan';
+export type GlowUpRegion =
+  | 'gangnam'
+  | 'hongdae-mapo'
+  | 'myeongdong'
+  | 'seongsu'
+  | 'seomyeon'
+  | 'haeundae'
+  | 'gwangalli'
+  | 'nampo'
+  | 'auto';
 export type GlowUpBudget = 'under-100k' | '100-300k' | '300-500k' | 'no-preference';
 /** Creatrip's spot-list filters support these 5 languages (Korean excluded —
  * target users are foreign tourists). Each maps to a `theme` id (see lib/creatrip.ts). */
@@ -423,6 +433,8 @@ export interface GlowUpProfile {
   change: ChangeItem[];
   restore: RestoreItem[];
   tripDays: GlowUpTripDays | null;
+  /** Set when the user picked Seoul or Busan; absent for "Not sure yet" and older saved plans. */
+  city?: GlowUpCity;
   region: GlowUpRegion | null;
   budget: GlowUpBudget | null;
   languages: GlowUpLanguage[];

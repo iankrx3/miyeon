@@ -9,7 +9,7 @@ import { ItineraryTimeline } from '../components/itinerary/ItineraryTimeline';
 import { GlowUpResultView } from '../components/glowup/GlowUpResultView';
 import { useSavedItineraries } from '../hooks/useSavedItineraries';
 import { useSpotsCatalog } from '../hooks/useSpotsCatalog';
-import { getStoredItinerary, upsertItinerary } from '../lib/localItineraryStore';
+import { getStoredItinerary, isCategoryPlan, upsertItinerary } from '../lib/localItineraryStore';
 import { persistUserItinerary } from '../services/userItinerary';
 import {
   itinerarySpotCount,
@@ -64,10 +64,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
 
   // Glow Up plans are category recommendations (no venues, no map). Older saved
   // Glow Up plans still carry venue blocks and keep the map + timeline layout.
-  const isCategoryPlan =
-    Boolean(itinerary.glowUpSnapshot && !itinerary.profileSnapshot) &&
-    itinerary.days.every((d) => d.blocks.every((b) => !b.spotId && !b.venueName));
-  if (isCategoryPlan) {
+  if (isCategoryPlan(itinerary)) {
     return (
       <GlowUpResultView
         itinerary={itinerary}
@@ -76,6 +73,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
         saved={isSaved(itinerary.id)}
         onToggleSave={() => (session.isLoggedIn ? toggleSave(itinerary) : onSignIn())}
         onBack={() => navigate(-1)}
+        userEmail={session.user?.email}
       />
     );
   }

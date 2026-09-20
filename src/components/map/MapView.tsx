@@ -494,7 +494,10 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
     tripChipIds.add(itn.id);
     tripChips.push({ id: itn.id, title: itn.title });
   }
+  // Saved itinerary bar: itineraries I built plus curators' itineraries I saved. Glow Up
+  // category plans are left out — they have no places to pin on the map.
   for (const item of saved) {
+    if (item.snapshot.source !== 'curator' && item.snapshot.source !== 'user') continue;
     const id = item.snapshot.id;
     if (tripChipIds.has(id) || tripChipIds.has(item.itineraryId)) continue;
     tripChipIds.add(id);
@@ -674,7 +677,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
 
         {tripChips.length > 0 && !curatorFilterActive && !tripFilterActive && !(isSearchOpen && searchQuery) && (
           <div className="pointer-events-auto rounded-2xl bg-white/90 shadow-lg backdrop-blur-md border border-white/60">
-            <p className="px-3.5 pt-2.5 text-[11px] font-bold uppercase tracking-wider text-miyeon-main/60">Saved trips</p>
+            <p className="px-3.5 pt-2.5 text-[11px] font-bold uppercase tracking-wider text-miyeon-main/60">Saved itinerary</p>
             <div className="flex gap-2 overflow-x-auto no-scrollbar px-3.5 py-2.5">
               {tripChips.map((item) => (
                 <button

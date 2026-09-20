@@ -40,7 +40,7 @@ export default function PostDetailPage({ session, onSignIn }: PostDetailPageProp
   const handleDeletePost = async () => {
     if (!post) return;
     await deleteCommunityPost(post.id, session);
-    navigate('/community');
+    navigate('/community?tab=qna');
   };
 
   if (loading) return <div className="px-4 py-10 text-sm text-miyeon-main/60">Loading…</div>;
@@ -48,7 +48,7 @@ export default function PostDetailPage({ session, onSignIn }: PostDetailPageProp
 
   return (
     <div className="mx-auto max-w-2xl space-y-4 px-4 py-8">
-      <Link to="/community" className="flex items-center gap-1 text-xs font-semibold text-miyeon-main/60">
+      <Link to="/community?tab=qna" className="flex items-center gap-1 text-xs font-semibold text-miyeon-main/60">
         <ChevronLeft className="h-3.5 w-3.5" /> Back to community
       </Link>
 

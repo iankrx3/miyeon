@@ -4,6 +4,7 @@ import type {
   FixItem,
   GlowUpBudget,
   GlowUpLanguage,
+  GlowUpCity,
   GlowUpRegion,
   GlowUpTripDays,
   RestoreItem,
@@ -72,13 +73,31 @@ export const tripDaysOptions: { id: GlowUpTripDays; label: string }[] = [
   { id: '7-plus', label: 'A week+' },
 ];
 
-export const regionOptions: { id: GlowUpRegion; label: string }[] = [
+export const cityOptions: { id: GlowUpCity | 'unsure'; label: string }[] = [
+  { id: 'seoul', label: 'Seoul' },
+  { id: 'busan', label: 'Busan' },
+  { id: 'unsure', label: 'Not sure yet' },
+];
+
+const SEOUL_REGIONS: { id: GlowUpRegion; label: string }[] = [
   { id: 'gangnam', label: 'Gangnam' },
   { id: 'hongdae-mapo', label: 'Hongdae · Mapo' },
   { id: 'myeongdong', label: 'Myeongdong' },
   { id: 'seongsu', label: 'Seongsu' },
   { id: 'auto', label: 'Not sure yet' },
 ];
+
+const BUSAN_REGIONS: { id: GlowUpRegion; label: string }[] = [
+  { id: 'seomyeon', label: 'Seomyeon' },
+  { id: 'haeundae', label: 'Haeundae' },
+  { id: 'gwangalli', label: 'Gwangalli · Suyeong' },
+  { id: 'nampo', label: 'Nampo · Jung-gu' },
+  { id: 'auto', label: 'Not sure yet' },
+];
+
+/** The district chips shown once a base city is picked (none for "Not sure yet"). */
+export const regionOptionsFor = (city: GlowUpCity | null): { id: GlowUpRegion; label: string }[] =>
+  city === 'seoul' ? SEOUL_REGIONS : city === 'busan' ? BUSAN_REGIONS : [];
 
 export const budgetOptions: { id: GlowUpBudget; label: string; caption: string }[] = [
   { id: 'under-100k', label: '~₩100k', caption: 'Nails, scrub, a quick facial' },
@@ -112,7 +131,7 @@ export function labelForSubtype(subtype: string): string {
 }
 
 export const regionLabel = (id: GlowUpRegion | null): string =>
-  regionOptions.find((r) => r.id === id)?.label ?? 'Not sure yet';
+  [...SEOUL_REGIONS, ...BUSAN_REGIONS].find((r) => r.id === id)?.label ?? 'Not sure yet';
 
 export const budgetLabel = (id: GlowUpBudget | null): string =>
   budgetOptions.find((b) => b.id === id)?.label ?? 'No preference';

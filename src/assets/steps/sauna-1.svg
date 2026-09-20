@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 280" width="230" height="280">
+<defs><linearGradient id="g_sauna1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F8E4D6"/><stop offset="1" stop-color="#E8BEA4"/></linearGradient></defs>
+<rect width="230" height="280" fill="url(#g_sauna1)"/>
+<circle cx="200" cy="30" r="64" fill="#FFFFFF" opacity="0.28"/>
+<circle cx="20" cy="250" r="80" fill="#FFFFFF" opacity="0.18"/>
+<g transform="translate(76 118) rotate(0) scale(1.3)"><circle r="26" fill="none" stroke="#E2637F" stroke-width="12"/><path d="M-10 -22 h20" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g><g transform="translate(150 102) rotate(-10) scale(1)"><circle cx="-22" cy="0" r="14" fill="none" stroke="#F2B45E" stroke-width="7"/><path d="M-8 0 H40 M28 0 v12 M38 0 v9" stroke="#F2B45E" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g><g transform="translate(150 158) rotate(0) scale(1)"><rect x="-32" y="10" width="64" height="16" rx="6" fill="#FFFFFF"/><rect x="-28" y="-6" width="56" height="16" rx="6" fill="#F7E6E6"/><rect x="-32" y="-22" width="64" height="16" rx="6" fill="#FFFFFF"/><path d="M-20 -14 h40" stroke="#D49A9A" stroke-width="2"/></g><g transform="translate(40 44) rotate(0) scale(1)"><path d="M0 -11 Q1.5 -1.5 11 0 Q1.5 1.5 0 11 Q-1.5 1.5 -11 0 Q-1.5 -1.5 0 -11Z" fill="#FFFFFF"/></g>
+</svg>

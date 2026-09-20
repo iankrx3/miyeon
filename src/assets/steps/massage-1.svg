@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 280" width="230" height="280">
+<defs><linearGradient id="g_massage1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3EDE6"/><stop offset="1" stop-color="#DDCEC0"/></linearGradient></defs>
+<rect width="230" height="280" fill="url(#g_massage1)"/>
+<circle cx="200" cy="30" r="64" fill="#FFFFFF" opacity="0.28"/>
+<circle cx="20" cy="250" r="80" fill="#FFFFFF" opacity="0.18"/>
+<g transform="translate(112 110) rotate(0) scale(1.05)"><path d="M-46 60 Q-52 4 -30 -14 Q-12 -26 -12 -40 h24 q0 14 18 26 Q52 4 46 60Z" fill="#F3D3C2"/><circle cy="-58" r="20" fill="#F3D3C2"/></g><circle cx="84" cy="98" r="12" fill="#E2637F" opacity="0.28"/><circle cx="84" cy="98" r="5" fill="#E2637F"/><circle cx="140" cy="98" r="12" fill="#E2637F" opacity="0.28"/><circle cx="140" cy="98" r="5" fill="#E2637F"/><circle cx="112" cy="132" r="12" fill="#E2637F" opacity="0.28"/><circle cx="112" cy="132" r="5" fill="#E2637F"/><g transform="translate(196 50) rotate(0) scale(1)"><path d="M0 -10 Q1.5 -1.5 10 0 Q1.5 1.5 0 10 Q-1.5 1.5 -10 0 Q-1.5 -1.5 0 -10Z" fill="#E2637F"/></g>
+</svg>

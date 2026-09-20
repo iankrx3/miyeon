@@ -70,12 +70,13 @@ export function buildCategoryItinerary(
 ): GlowUpResult {
   const area = regionLabel(profile.region);
   const hasRegion = profile.region != null && profile.region !== 'auto';
+  const cityName = profile.city === 'busan' ? 'Busan' : profile.city === 'seoul' || hasRegion ? 'Seoul' : 'Korea';
 
   const itineraryDays: ItineraryDay[] = result.days.map((day) => {
     const blocks = blocksForDay(day);
     return {
       dayIndex: day.dayIndex,
-      areaLabel: hasRegion ? area : 'Seoul',
+      areaLabel: hasRegion ? area : cityName,
       theme: dayTheme(day, blocks),
       blocks,
     };
@@ -90,7 +91,7 @@ export function buildCategoryItinerary(
 
   const itinerary: Itinerary = {
     id: newId('itn'),
-    title: `${n} day${n === 1 ? '' : 's'} in ${hasRegion ? 'Seoul' : 'Korea'}, in the right order`,
+    title: `${n} day${n === 1 ? '' : 's'} in ${cityName}, in the right order`,
     source: 'miyeon',
     glowUpSnapshot: result.profileSnapshot,
     days: itineraryDays,

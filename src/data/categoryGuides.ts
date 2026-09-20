@@ -37,13 +37,16 @@ export interface CategoryGuide {
   /** Sentence under the day title when this is the day's first stop. */
   orderNote: string;
   whyKorea: string;
-  steps: { title: string; body: string }[];
+  /** Three steps, each with its own illustration (src/assets/steps/{subtype}-{n}.svg). */
+  steps: { title: string; body: string; image: string }[];
   leaveWith: { title: string; body: string }[];
   beforeYouBook: string[];
   image: string;
 }
 
-export const CATEGORY_GUIDES: Record<GlowUpSubtype, CategoryGuide> = {
+type RawGuide = Omit<CategoryGuide, 'steps'> & { steps: { title: string; body: string }[] };
+
+const RAW_GUIDES: Record<GlowUpSubtype, RawGuide> = {
   skin: {
     subtype: 'skin',
     name: 'Skin Clinic',
@@ -409,6 +412,23 @@ export const CATEGORY_GUIDES: Record<GlowUpSubtype, CategoryGuide> = {
     image: restoreYoga,
   },
 };
+
+const stepImages = import.meta.glob('../assets/steps/*.svg', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+}) as Record<string, string>;
+
+/** Each step gets the illustration whose file name matches: `{subtype}-{stepNumber}.svg`. */
+export const CATEGORY_GUIDES = Object.fromEntries(
+  Object.entries(RAW_GUIDES).map(([subtype, guide]) => [
+    subtype,
+    {
+      ...guide,
+      steps: guide.steps.map((step, i) => ({ ...step, image: stepImages[`../assets/steps/${subtype}-${i + 1}.svg`] })),
+    },
+  ])
+) as Record<GlowUpSubtype, CategoryGuide>;
 
 export function guideFor(subtype: string): CategoryGuide | undefined {
   return (CATEGORY_GUIDES as Record<string, CategoryGuide | undefined>)[subtype];

@@ -22,14 +22,16 @@ const CATEGORIES: { id: CommunityPost['category'] | 'all'; label: string }[] = [
   { id: 'questions', label: 'Questions' },
 ];
 
-const TABS: { id: 'community' | 'magazine'; label: string }[] = [
+const TABS: { id: 'magazine' | 'qna'; label: string }[] = [
   { id: 'magazine', label: 'Magazine' },
-  { id: 'community', label: 'Community' },
+  { id: 'qna', label: 'Q&A' },
 ];
 
 export default function CommunityPage({ session, onSignIn }: CommunityPageProps) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get('tab') === 'magazine' ? 'magazine' : 'community';
+  // Magazine is the default tab. `community` is the old name for the Q&A tab.
+  const tabParam = searchParams.get('tab');
+  const activeTab = tabParam === 'qna' || tabParam === 'community' ? 'qna' : 'magazine';
   const [filter, setFilter] = useState<(typeof CATEGORIES)[number]['id']>('all');
   const { posts, loading, createPost, toggleLike, deletePost } = useCommunityPosts(session);
   const { articles, createArticle, deleteArticle } = useMagazineArticles(session);
@@ -51,18 +53,25 @@ export default function CommunityPage({ session, onSignIn }: CommunityPageProps)
       </div>
 
       <div className="mx-auto max-w-2xl space-y-5 px-5 py-5">
-        <div className="flex gap-6 border-b border-miyeon-line">
+        <div className="grid grid-cols-2 gap-2">
           {TABS.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setSearchParams(tab.id === 'community' ? {} : { tab: tab.id })}
-              className={`-mb-px border-b-2 pb-2.5 text-sm font-bold transition-colors ${
-                activeTab === tab.id
-                  ? 'border-miyeon-accent text-miyeon-ink'
-                  : 'border-transparent text-miyeon-main/50'
-              }`}
+              onClick={() => setSearchParams(tab.id === 'magazine' ? {} : { tab: tab.id })}
+              className="group text-center"
             >
-              {tab.label}
+              <span
+                className={`block pb-2.5 text-[13px] transition-colors ${
+                  activeTab === tab.id ? 'font-bold text-miyeon-ink' : 'font-medium text-miyeon-main/50'
+                }`}
+              >
+                {tab.label}
+              </span>
+              <span
+                className={`block h-[3px] rounded-full transition-colors ${
+                  activeTab === tab.id ? 'bg-miyeon-accent' : 'bg-miyeon-line'
+                }`}
+              />
             </button>
           ))}
         </div>
