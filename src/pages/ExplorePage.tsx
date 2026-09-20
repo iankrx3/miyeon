@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import type {
@@ -16,7 +16,6 @@ import {
   changeOptions,
   fixDowntimeOptions,
   fixOptions,
-  fixReactionCopy,
   glowUpTransitionMessages,
   languageOptions,
   regionOptions,
@@ -25,30 +24,21 @@ import {
 } from '../data/glowUpQuiz';
 import { HomeLanding } from '../components/home/HomeLanding';
 import { OptionCard } from '../components/onboarding/OptionCard';
+import { Chip } from '../components/onboarding/Chip';
 import { WizardShell } from '../components/onboarding/WizardShell';
 import { AITransition } from '../components/quiz/AITransition';
 import { buildGlowUpResult, emptyGlowUpProfile } from '../services/glowUp/generate';
 import { upsertItinerary } from '../lib/localItineraryStore';
 
-type Step =
-  | 'home'
-  | 'fix'
-  | 'fixDowntime'
-  | 'change'
-  | 'restore'
-  | 'tripInfo'
-  | 'budget'
-  | 'language'
-  | 'transition';
+type Step = 'home' | 'fix' | 'change' | 'restore' | 'tripInfo' | 'budget' | 'language' | 'transition';
 
 const stepTransition = { duration: 0.3, ease: [0.16, 1, 0.3, 1] as const };
 
-// fixDowntime is a conditional sub-step of Screen 1, not a 7th screen — the
-// progress dots always show 6, keyed off this display map rather than flow.length.
+const FLOW: Step[] = ['fix', 'change', 'restore', 'tripInfo', 'budget', 'language'];
+
 const STEP_DISPLAY_INDEX: Record<Step, number> = {
   home: 0,
   fix: 1,
-  fixDowntime: 1,
   change: 2,
   restore: 3,
   tripInfo: 4,
@@ -63,33 +53,27 @@ export default function ExplorePage() {
   const generatingRef = useRef(false);
   const [step, setStep] = useState<Step>('home');
   const [profile, setProfile] = useState<GlowUpProfile>(emptyGlowUpProfile());
+  const [base, setBase] = useState<'seoul' | 'busan' | 'unsure'>('seoul');
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [step]);
 
-  const flow = useMemo<Step[]>(() => {
-    const steps: Step[] = ['fix'];
-    if (profile.fix.items.length > 0) steps.push('fixDowntime');
-    steps.push('change', 'restore', 'tripInfo', 'budget', 'language');
-    return steps;
-  }, [profile.fix.items.length]);
-
   const stepIndex = STEP_DISPLAY_INDEX[step];
 
   const goNextFrom = (current: Step) => {
-    const idx = flow.indexOf(current);
-    const next = flow[idx + 1] ?? 'transition';
+    const idx = FLOW.indexOf(current);
+    const next = FLOW[idx + 1] ?? 'transition';
     setStep(next);
   };
 
   const goBackFrom = (current: Step) => {
-    const idx = flow.indexOf(current);
+    const idx = FLOW.indexOf(current);
     if (idx <= 0) {
       setStep('home');
       return;
     }
-    setStep(flow[idx - 1]);
+    setStep(FLOW[idx - 1]);
   };
 
   const toggleFix = (id: FixItem) => {
@@ -160,19 +144,22 @@ export default function ExplorePage() {
         >
           {step === 'fix' && (
             <WizardShell
-              title="FIX — want to fix up skin & face?"
-              subtitle="Pick what applies, or skip."
+              kicker="FIX"
+              title="Fix — start with your face"
+              subtitle="Pick what you'd become. Or skip."
               step={stepIndex}
               total={TOTAL_STEPS}
               onBack={() => setStep('home')}
               onNext={() => goNextFrom('fix')}
-              nextLabel={profile.fix.items.length > 0 ? 'Next →' : 'Skip'}
+              nextLabel={profile.fix.items.length > 0 ? 'Next' : 'Skip — nothing to fix'}
+              nextVariant={profile.fix.items.length > 0 ? 'primary' : 'skip'}
             >
               <div className="grid grid-cols-2 gap-2.5">
                 {fixOptions.map((opt) => (
                   <OptionCard
                     key={opt.id}
-                    emoji={opt.emoji}
+                    image={opt.image}
+                    headline={opt.headline}
                     label={opt.label}
                     selected={profile.fix.items.includes(opt.id)}
                     onClick={() => toggleFix(opt.id)}
@@ -182,45 +169,24 @@ export default function ExplorePage() {
             </WizardShell>
           )}
 
-          {step === 'fixDowntime' && (
-            <WizardShell
-              title="Is puffiness or redness okay during your trip?"
-              subtitle={profile.fix.downtime ? fixReactionCopy(profile.fix.items) : "This won't be sent anywhere — it just helps us schedule your days."}
-              step={stepIndex}
-              total={TOTAL_STEPS}
-              onBack={() => goBackFrom('fixDowntime')}
-            >
-              <div className="space-y-2.5">
-                {fixDowntimeOptions.map((opt) => (
-                  <OptionCard
-                    key={opt.id}
-                    label={opt.label}
-                    selected={profile.fix.downtime === opt.id}
-                    onClick={() => {
-                      setProfile((p) => ({ ...p, fix: { ...p.fix, downtime: opt.id } }));
-                      setTimeout(() => goNextFrom('fixDowntime'), 900);
-                    }}
-                  />
-                ))}
-              </div>
-            </WizardShell>
-          )}
-
           {step === 'change' && (
             <WizardShell
-              title="CHANGE — want to switch things up?"
-              subtitle="Pick as many as you like, or skip."
+              kicker="CHANGE"
+              title="Change — maximize your trip"
+              subtitle="Pick what you'd like. As many as you want."
               step={stepIndex}
               total={TOTAL_STEPS}
               onBack={() => goBackFrom('change')}
               onNext={() => goNextFrom('change')}
-              nextLabel={profile.change.length > 0 ? 'Next →' : 'Skip'}
+              nextLabel={profile.change.length > 0 ? 'Next' : 'Skip — none of these'}
+              nextVariant={profile.change.length > 0 ? 'primary' : 'skip'}
             >
               <div className="grid grid-cols-2 gap-2.5">
                 {changeOptions.map((opt) => (
                   <OptionCard
                     key={opt.id}
-                    emoji={opt.emoji}
+                    image={opt.image}
+                    headline={opt.headline}
                     label={opt.label}
                     selected={profile.change.includes(opt.id)}
                     onClick={() => toggleChange(opt.id)}
@@ -232,19 +198,22 @@ export default function ExplorePage() {
 
           {step === 'restore' && (
             <WizardShell
-              title="RESTORE — want to take it slow?"
-              subtitle="Pick as many as you like, or skip."
+              kicker="RESTORE"
+              title="Restore — take it slow"
+              subtitle="K-recovery is on another level."
               step={stepIndex}
               total={TOTAL_STEPS}
               onBack={() => goBackFrom('restore')}
               onNext={() => goNextFrom('restore')}
-              nextLabel={profile.restore.length > 0 ? 'Next →' : 'Skip'}
+              nextLabel={profile.restore.length > 0 ? 'Next' : "Skip — I'll keep moving"}
+              nextVariant={profile.restore.length > 0 ? 'primary' : 'skip'}
             >
-              <div className="space-y-2.5">
+              <div className="grid grid-cols-2 gap-2.5">
                 {restoreOptions.map((opt) => (
                   <OptionCard
                     key={opt.id}
-                    emoji={opt.emoji}
+                    image={opt.image}
+                    headline={opt.headline}
                     label={opt.label}
                     selected={profile.restore.includes(opt.id)}
                     onClick={() => toggleRestore(opt.id)}
@@ -256,19 +225,22 @@ export default function ExplorePage() {
 
           {step === 'tripInfo' && (
             <WizardShell
-              title="Tell us about the trip."
+              title="Boring, but important"
+              subtitle="How long you've got, and where you're staying."
               step={stepIndex}
               total={TOTAL_STEPS}
               onBack={() => goBackFrom('tripInfo')}
               onNext={() => goNextFrom('tripInfo')}
-              nextLabel="Next →"
+              nextLabel="Next"
             >
               <div className="space-y-6">
                 <div>
-                  <p className="mb-2.5 text-xs font-semibold text-miyeon-main/60">How many days?</p>
+                  <p className="mb-2.5 text-[11px] font-medium tracking-[0.12em] text-miyeon-main/50">
+                    HOW MANY DAYS?
+                  </p>
                   <div className="grid grid-cols-2 gap-2.5">
                     {tripDaysOptions.map((opt) => (
-                      <OptionCard
+                      <Chip
                         key={opt.id}
                         label={opt.label}
                         selected={profile.tripDays === opt.id}
@@ -278,18 +250,91 @@ export default function ExplorePage() {
                   </div>
                 </div>
                 <div>
-                  <p className="mb-1 text-xs font-semibold text-miyeon-main/60">
-                    Which area are you based in?{' '}
-                    <span className="font-medium text-miyeon-main/45">Optional</span>
+                  <p className="mb-2.5 text-[11px] font-medium tracking-[0.12em] text-miyeon-main/50">
+                    WHERE ARE YOU BASED?
                   </p>
-                  <p className="mb-2.5 text-xs text-miyeon-main/50">Skip if you don't have a base.</p>
-                  <div className="grid grid-cols-2 gap-2.5">
-                    {regionOptions.map((opt) => (
+                  <div className="grid grid-cols-3 gap-2.5">
+                    {(
+                      [
+                        ['seoul', 'Seoul'],
+                        ['busan', 'Busan'],
+                        ['unsure', 'Not sure yet'],
+                      ] as const
+                    ).map(([id, label]) => (
+                      <Chip
+                        key={id}
+                        label={label}
+                        selected={base === id}
+                        onClick={() => {
+                          setBase(id);
+                          if (id !== 'seoul') setProfile((p) => ({ ...p, region: null }));
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+                {base === 'seoul' && (
+                  <div className="rounded-2xl bg-miyeon-surface p-3.5">
+                    <p className="mb-2.5 text-[10.5px] font-medium tracking-[0.12em] text-miyeon-main/50">
+                      WHICH PART OF SEOUL?
+                    </p>
+                    <div className="grid grid-cols-2 gap-2.5">
+                      {regionOptions.map((opt) => (
+                        <Chip
+                          key={opt.id}
+                          label={opt.label}
+                          selected={profile.region === opt.id}
+                          onClick={() => setRegion(opt.id)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </WizardShell>
+          )}
+
+          {step === 'budget' && (
+            <WizardShell
+              title="Practical and a must"
+              subtitle="So that we can actually plan, only for you."
+              step={stepIndex}
+              total={TOTAL_STEPS}
+              onBack={() => goBackFrom('budget')}
+              onNext={() => goNextFrom('budget')}
+              nextLabel="Next"
+            >
+              <div className="space-y-6">
+                <div>
+                  <p className="mb-2.5 text-[11px] font-medium tracking-[0.12em] text-miyeon-main/50">
+                    HOW MUCH FOR ONE EXPERIENCE?
+                  </p>
+                  <div className="space-y-2.5">
+                    {budgetOptions.map((opt) => (
                       <OptionCard
                         key={opt.id}
                         label={opt.label}
-                        selected={profile.region === opt.id}
-                        onClick={() => setRegion(opt.id)}
+                        caption={opt.caption}
+                        selected={profile.budget === opt.id}
+                        onClick={() => setBudget(opt.id)}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-[11px] font-medium tracking-[0.12em] text-miyeon-main/50">
+                    CAN YOU AFFORD TO LOOK A LITTLE RED?
+                  </p>
+                  <p className="mb-2.5 mt-1 text-xs text-miyeon-main/55">
+                    Some treatments leave you puffy. Our plan considers it.
+                  </p>
+                  <div className="space-y-2.5">
+                    {fixDowntimeOptions.map((opt) => (
+                      <OptionCard
+                        key={opt.id}
+                        label={opt.label}
+                        selected={profile.fix.downtime === opt.id}
+                        onClick={() => setProfile((p) => ({ ...p, fix: { ...p.fix, downtime: opt.id } }))}
                       />
                     ))}
                   </div>
@@ -298,49 +343,33 @@ export default function ExplorePage() {
             </WizardShell>
           )}
 
-          {step === 'budget' && (
-            <WizardShell
-              title="How much do you want to spend on beauty?"
-              step={stepIndex}
-              total={TOTAL_STEPS}
-              onBack={() => goBackFrom('budget')}
-            >
-              <div className="space-y-2.5">
-                {budgetOptions.map((opt) => (
-                  <OptionCard
-                    key={opt.id}
-                    label={opt.label}
-                    selected={profile.budget === opt.id}
-                    onClick={() => {
-                      setBudget(opt.id);
-                      setTimeout(() => goNextFrom('budget'), 180);
-                    }}
-                  />
-                ))}
-              </div>
-            </WizardShell>
-          )}
-
           {step === 'language' && (
             <WizardShell
-              title="Do you need staff who speak a specific language?"
-              subtitle="Optional — pick as many as you like, or skip."
+              title="English available, and...?"
+              subtitle="English is already covered — pick any extras."
               step={stepIndex}
               total={TOTAL_STEPS}
               onBack={() => goBackFrom('language')}
               onNext={() => goNextFrom('language')}
-              nextLabel={profile.languages.length > 0 ? 'Next →' : 'Skip'}
+              nextLabel="See my Glow Up"
             >
-              <div className="grid grid-cols-2 gap-2.5">
-                {languageOptions.map((opt) => (
-                  <OptionCard
-                    key={opt.id}
-                    emoji={opt.emoji}
-                    label={opt.label}
-                    selected={profile.languages.includes(opt.id)}
-                    onClick={() => toggleLanguage(opt.id)}
-                  />
-                ))}
+              <div className="space-y-2.5">
+                {languageOptions
+                  .filter((opt) => opt.id !== 'English')
+                  .map((opt) => (
+                    <OptionCard
+                      key={opt.id}
+                      label={opt.label}
+                      selected={profile.languages.includes(opt.id)}
+                      onClick={() => toggleLanguage(opt.id)}
+                    />
+                  ))}
+                <OptionCard
+                  label="No, English is fine"
+                  caption="Most people choose this"
+                  selected={profile.languages.length === 0}
+                  onClick={() => setProfile((p) => ({ ...p, languages: [] }))}
+                />
               </div>
             </WizardShell>
           )}

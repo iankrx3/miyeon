@@ -1,5 +1,4 @@
 import React from 'react';
-import { HomeSearchBar } from './HomeSearchBar';
 import { HomeHero } from './HomeHero';
 import { HomePartners } from './HomePartners';
 import { HomeGlowUpEntries } from './HomeGlowUpEntries';
@@ -18,7 +17,6 @@ interface HomeLandingProps {
 export const HomeLanding: React.FC<HomeLandingProps> = ({ onStartAnalysis }) => {
   return (
     <div>
-      <HomeSearchBar />
       <HomeHero onStartAnalysis={onStartAnalysis} />
       <HomePartners />
       <HomeGlowUpEntries onStartAnalysis={onStartAnalysis} />

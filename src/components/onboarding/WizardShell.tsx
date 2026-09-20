@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { ChevronLeft } from 'lucide-react';
 
 interface WizardShellProps {
+  kicker?: string;
   title: string;
   subtitle?: string;
   step: number;
@@ -11,10 +11,13 @@ interface WizardShellProps {
   onNext?: () => void;
   nextLabel?: string;
   nextDisabled?: boolean;
+  /** 'primary' = dark filled pill (Next/See my Glow Up). 'skip' = light muted pill, no arrow. */
+  nextVariant?: 'primary' | 'skip';
   children: React.ReactNode;
 }
 
 export const WizardShell: React.FC<WizardShellProps> = ({
+  kicker,
   title,
   subtitle,
   step,
@@ -23,43 +26,51 @@ export const WizardShell: React.FC<WizardShellProps> = ({
   onNext,
   nextLabel = 'Next',
   nextDisabled,
+  nextVariant = 'primary',
   children,
 }) => (
-  <div className="space-y-6">
-    <div className="flex items-center justify-between">
-      <button
-        type="button"
-        onClick={onBack}
-        className="flex items-center gap-1 text-xs font-semibold text-miyeon-main/60"
-      >
-        <ChevronLeft className="h-3.5 w-3.5" /> Back
+  <div>
+    <div className="flex items-center justify-between pb-5">
+      <button type="button" onClick={onBack} className="text-[13px] text-miyeon-main/70">
+        ‹ Back
       </button>
       <div className="flex items-center gap-1">
         {Array.from({ length: total }).map((_, i) => (
           <span
             key={i}
-            className={`h-1 rounded-full transition-all ${
-              i < step ? 'w-4 bg-miyeon-sub1' : i === step - 1 ? 'w-6 bg-miyeon-sub1' : 'w-3 bg-miyeon-neutral'
+            className={`h-[3px] rounded-full transition-all ${
+              i + 1 === step ? 'w-5 bg-miyeon-accent' : i + 1 < step ? 'w-[11px] bg-miyeon-accent' : 'w-[11px] bg-miyeon-line'
             }`}
           />
         ))}
       </div>
     </div>
-    <div>
-      <h2 className="font-display text-2xl text-miyeon-main">{title}</h2>
-      {subtitle && <p className="mt-1 text-sm text-miyeon-main/60">{subtitle}</p>}
-    </div>
-    {children}
+
+    {kicker && (
+      <p className="flex items-center gap-1 text-[11px] font-bold tracking-[0.2em] text-miyeon-accent">
+        <span>✦</span>
+        {kicker}
+      </p>
+    )}
+    <h2 className={`font-display text-2xl font-medium text-miyeon-ink ${kicker ? 'mt-2' : ''}`}>{title}</h2>
+    {subtitle && <p className="mt-2 text-[13.5px] leading-relaxed text-miyeon-main/60">{subtitle}</p>}
+
+    <div className="mt-[22px]">{children}</div>
+
     {onNext && (
       <motion.button
         type="button"
-        whileHover={nextDisabled ? undefined : { scale: 1.02 }}
-        whileTap={nextDisabled ? undefined : { scale: 0.97 }}
+        whileHover={nextDisabled ? undefined : { scale: 1.01 }}
+        whileTap={nextDisabled ? undefined : { scale: 0.98 }}
         onClick={onNext}
         disabled={nextDisabled}
-        className="w-full rounded-full bg-miyeon-sub1 py-3.5 text-sm font-bold text-white shadow-sm shadow-miyeon-sub1/30 disabled:opacity-30"
+        className={`mt-5 w-full rounded-full py-[17px] text-[14.5px] font-medium disabled:opacity-30 ${
+          nextVariant === 'skip'
+            ? 'bg-miyeon-surface text-miyeon-main/85'
+            : 'bg-miyeon-ink text-[15px] text-white shadow-[0_6px_16px_rgba(90,81,77,0.2)]'
+        }`}
       >
-        {nextLabel}
+        {nextVariant === 'skip' ? nextLabel : `${nextLabel} →`}
       </motion.button>
     )}
   </div>
