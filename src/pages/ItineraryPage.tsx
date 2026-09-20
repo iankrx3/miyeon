@@ -10,6 +10,7 @@ import { GlowUpResultView } from '../components/glowup/GlowUpResultView';
 import { useSavedItineraries } from '../hooks/useSavedItineraries';
 import { useSpotsCatalog } from '../hooks/useSpotsCatalog';
 import { getStoredItinerary, isCategoryPlan, upsertItinerary } from '../lib/localItineraryStore';
+import { isSavableItinerary } from '../services/savedItineraries';
 import { persistUserItinerary } from '../services/userItinerary';
 import {
   itinerarySpotCount,
@@ -70,8 +71,6 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
         itinerary={itinerary}
         day={day}
         onSelectDay={setDayIndex}
-        saved={isSaved(itinerary.id)}
-        onToggleSave={() => (session.isLoggedIn ? toggleSave(itinerary) : onSignIn())}
         onBack={() => navigate(-1)}
         userEmail={session.user?.email}
       />
@@ -127,18 +126,20 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
                   <Sparkles className="h-3 w-3" /> Regenerate
                 </button>
               )}
-              <button
-                type="button"
-                onClick={() => (session.isLoggedIn ? toggleSave(itinerary) : onSignIn())}
-                className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-bold ${
-                  isSaved(itinerary.id)
-                    ? 'bg-miyeon-accent text-white'
-                    : 'bg-white/70 text-miyeon-ink'
-                }`}
-              >
-                <Bookmark className="h-3 w-3" fill={isSaved(itinerary.id) ? 'currentColor' : 'none'} />
-                {isSaved(itinerary.id) ? 'Saved' : 'Save'}
-              </button>
+              {isSavableItinerary(itinerary) && (
+                <button
+                  type="button"
+                  onClick={() => (session.isLoggedIn ? toggleSave(itinerary) : onSignIn())}
+                  className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-bold ${
+                    isSaved(itinerary.id)
+                      ? 'bg-miyeon-accent text-white'
+                      : 'bg-white/70 text-miyeon-ink'
+                  }`}
+                >
+                  <Bookmark className="h-3 w-3" fill={isSaved(itinerary.id) ? 'currentColor' : 'none'} />
+                  {isSaved(itinerary.id) ? 'Saved' : 'Save'}
+                </button>
+              )}
             </div>
           </div>
           <p className="mt-3 text-[10.5px] font-medium tracking-[0.18em] text-miyeon-accent-dark">

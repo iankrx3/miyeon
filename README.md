@@ -71,9 +71,11 @@ it. The old category/quiz/match screen this replaced is still in the tree as dea
   more relaxing, start later, finish earlier) — all pure functions in
   `services/itinerary/generate.ts` that preserve the original profile's constraints.
 - **Save an itinerary** (`src/hooks/useSavedItineraries.ts`,
-  `src/services/savedItineraries.ts`) — works for any signed-in user (not just
-  curators), always written to `localStorage`, and mirrored to Supabase
-  `saved_itineraries` when configured. Saved trips show up on `/profile`.
+  `src/services/savedItineraries.ts`) — bookmarks **curators' itineraries only**
+  (`isSavableItinerary`); generated Glow Up plans and hand-built itineraries have no
+  Save button and live in "My Glow Up Plan" / "My itineraries". Any signed-in user can
+  save; entries are written to `localStorage` and mirrored to Supabase
+  `saved_itineraries` when configured. Saved itineraries show up on `/profile`.
 - **Map** (`src/pages/MapPage.tsx`, `src/components/map/MapView.tsx`) — pins now come
   from `services/curator.ts#fetchCuratedMapData()`, i.e. the same curated
   `src/data/spots.ts` catalog plus every curator's published itineraries, **not**

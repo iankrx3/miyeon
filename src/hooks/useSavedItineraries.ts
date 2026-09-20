@@ -13,6 +13,8 @@ import {
   excludeDeletedSavedItineraries,
   fetchRemoteSavedItineraries,
   insertRemoteSavedItinerary,
+  isSavableItinerary,
+  keepCuratorSavedItineraries,
   mergeSavedItineraries,
   pushLocalSavedItineraries,
   reconcileDeletedSavedItineraries,
@@ -21,7 +23,7 @@ import {
 
 export function useSavedItineraries(userId?: string) {
   const [saved, setSaved] = useState<SavedItinerary[]>(() =>
-    excludeDeletedSavedItineraries(listSavedItineraries(userId), userId)
+    keepCuratorSavedItineraries(excludeDeletedSavedItineraries(listSavedItineraries(userId), userId))
   );
   const [syncError, setSyncError] = useState<string | null>(null);
   const hydratedUserId = useRef(userId);
@@ -29,7 +31,9 @@ export function useSavedItineraries(userId?: string) {
 
   useEffect(() => {
     hydratedUserId.current = userId;
-    const migrated = excludeDeletedSavedItineraries(migrateGuestSavedItineraries(userId), userId);
+    const migrated = keepCuratorSavedItineraries(
+      excludeDeletedSavedItineraries(migrateGuestSavedItineraries(userId), userId)
+    );
     setSaved(migrated);
     setSyncError(null);
     let cancelled = false;
@@ -41,9 +45,9 @@ export function useSavedItineraries(userId?: string) {
         return;
       }
       const localNow = excludeDeletedSavedItineraries(listSavedItineraries(userId), userId);
-      const merged = excludeDeletedSavedItineraries(mergeSavedItineraries(localNow, remote), userId).filter(
-        (entry) => !savedItineraryKeys(entry).some((id) => deletedIds.current.has(id))
-      );
+      const merged = keepCuratorSavedItineraries(
+        excludeDeletedSavedItineraries(mergeSavedItineraries(localNow, remote), userId)
+      ).filter((entry) => !savedItineraryKeys(entry).some((id) => deletedIds.current.has(id)));
       merged.forEach((entry) => upsertItinerary(entry.snapshot));
       setSaved(merged);
       await reconcileDeletedSavedItineraries(userId, remote);
@@ -69,6 +73,7 @@ export function useSavedItineraries(userId?: string) {
 
   const saveItinerary = useCallback(
     (itinerary: Itinerary) => {
+      if (!isSavableItinerary(itinerary)) return null;
       const snapshot: Itinerary = {
         ...(JSON.parse(JSON.stringify(itinerary)) as Itinerary),
         id: `snap_${crypto.randomUUID()}`,

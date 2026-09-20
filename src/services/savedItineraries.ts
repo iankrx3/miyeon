@@ -41,6 +41,16 @@ export function savedItineraryKeys(entry: SavedItinerary): string[] {
   return [entry.itineraryId, entry.savedId, entry.snapshot?.id].filter((id): id is string => Boolean(id));
 }
 
+/** "Saved itineraries" bookmarks curators' itineraries only. Generated plans live in
+ * "My Glow Up Plan" and hand-built ones in "My itineraries", so older saves of those are dropped. */
+export function isSavableItinerary(itinerary: Pick<Itinerary, 'source'>): boolean {
+  return itinerary.source === 'curator';
+}
+
+export function keepCuratorSavedItineraries(entries: SavedItinerary[]): SavedItinerary[] {
+  return entries.filter((entry) => Boolean(entry.snapshot) && isSavableItinerary(entry.snapshot));
+}
+
 export function excludeDeletedSavedItineraries(entries: SavedItinerary[], userId?: string): SavedItinerary[] {
   const dead = listTombstones(TOMBSTONE_SAVED_ITINERARIES, userId);
   if (dead.size === 0) return entries;

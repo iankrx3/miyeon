@@ -494,10 +494,8 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
     tripChipIds.add(itn.id);
     tripChips.push({ id: itn.id, title: itn.title });
   }
-  // Saved itinerary bar: itineraries I built plus curators' itineraries I saved. Glow Up
-  // category plans are left out — they have no places to pin on the map.
+  // Saved itinerary bar: itineraries I built plus curators' itineraries I saved.
   for (const item of saved) {
-    if (item.snapshot.source !== 'curator' && item.snapshot.source !== 'user') continue;
     const id = item.snapshot.id;
     if (tripChipIds.has(id) || tripChipIds.has(item.itineraryId)) continue;
     tripChipIds.add(id);

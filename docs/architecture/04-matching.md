@@ -54,7 +54,7 @@ purpose → goals → (goals에 skin 포함 시) skin → (skin === 'medical' �
 
 ### 4.4 저장 (`useSavedItineraries`)
 
-Save 버튼은 로그인 없이도 누를 수 있게 UI엔 노출되지만 실제로는 로그인을 요구한다(`onSignIn()` 폴백). 저장된 항목은 `/profile`(ProfilePage, "Your trips")에서 다시 열 수 있고, 로그인 사용자는 Supabase `saved_itineraries`(스냅샷 JSON 컬럼)에도 동기화된다 — 자세한 저장 계층은 [§11](11-curator-tools.md#4-저장된-일정-servicessaveditinerariests) 참고.
+Save 버튼은 **curator 일정(`source === 'curator'`)에만** 노출된다(`isSavableItinerary`). 플랜 생성으로 만든 일정(Glow Up 등)과 유저가 직접 만든 일정은 저장 대상이 아니며(각각 프로필의 "My Glow Up Plan"·"My itineraries"에 있다), 예전에 저장된 비-curator 항목도 훅이 목록에서 걸러낸다. 버튼은 로그인 없이도 누를 수 있게 UI엔 노출되지만 실제로는 로그인을 요구한다(`onSignIn()` 폴백). 저장된 항목은 `/profile`(ProfilePage, "Saved itineraries")에서 다시 열 수 있고, 로그인 사용자는 Supabase `saved_itineraries`(스냅샷 JSON 컬럼)에도 동기화된다 — 자세한 저장 계층은 [§11](11-curator-tools.md#4-저장된-일정-servicessaveditinerariests) 참고.
 
 ### 4.5 지금은 죽은 코드 — 예전 매칭 엔진
 

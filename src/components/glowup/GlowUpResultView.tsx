@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bookmark, ChevronLeft } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import type { Itinerary, ItineraryDay } from '../../types';
 import { budgetLabel, regionLabel } from '../../data/glowUpQuiz';
 import { guideFor } from '../../data/categoryGuides';
@@ -10,8 +10,6 @@ interface GlowUpResultViewProps {
   itinerary: Itinerary;
   day: ItineraryDay;
   onSelectDay: (dayIndex: number) => void;
-  saved: boolean;
-  onToggleSave: () => void;
   onBack: () => void;
   /** Signed-in user's email, pre-filled in the Beauty Card form. */
   userEmail?: string;
@@ -36,8 +34,6 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({
   itinerary,
   day,
   onSelectDay,
-  saved,
-  onToggleSave,
   onBack,
   userEmail,
 }) => {
@@ -53,16 +49,6 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({
         <div className="flex items-center justify-between">
           <button type="button" onClick={onBack} className="flex items-center gap-1 text-[13px] text-miyeon-main/70">
             <ChevronLeft className="h-3.5 w-3.5" /> Back
-          </button>
-          <button
-            type="button"
-            onClick={onToggleSave}
-            className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-bold ${
-              saved ? 'bg-miyeon-accent text-white' : 'bg-white/70 text-miyeon-ink'
-            }`}
-          >
-            <Bookmark className="h-3 w-3" fill={saved ? 'currentColor' : 'none'} />
-            {saved ? 'Saved' : 'Save'}
           </button>
         </div>
         <p className="mt-3 text-[10.5px] font-medium tracking-[0.18em] text-miyeon-accent-dark">✦ YOUR GLOW UP PLAN</p>
