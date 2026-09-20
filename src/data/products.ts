@@ -3,6 +3,8 @@ export interface Product {
   name: string;
   imageUrl: string;
   price: number;
+  originalPrice?: number;
+  rankBadge?: string;
   concernTags: string[];
   oliveYoungUrl: string;
   tagline?: string;
@@ -75,9 +77,11 @@ export const homeProducts: Product[] = [
   {
     id: 'home-barrier-cream',
     name: 'Barrier Cream',
-    tagline: 'For post-treatment days',
+    tagline: 'Post-treatment care',
+    rankBadge: '#1',
     imageUrl: 'https://images.unsplash.com/photo-1620916297397-a4a5402a3c6c?q=80&w=600',
     price: 24,
+    originalPrice: 32,
     concernTags: ['Dryness', 'Fine Lines'],
     oliveYoungUrl: oliveYoungSearch('barrier cream'),
   },
@@ -87,15 +91,17 @@ export const homeProducts: Product[] = [
     tagline: 'Low-pH, no stripping',
     imageUrl: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=600',
     price: 18,
+    originalPrice: 24,
     concernTags: ['Dryness', 'Acne'],
     oliveYoungUrl: oliveYoungSearch('gentle cleanser low ph'),
   },
   {
     id: 'home-spf-fluid',
     name: 'SPF 50+ Fluid',
-    tagline: 'The one dermatologists push',
+    tagline: 'Dermatologist pick',
     imageUrl: 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?q=80&w=600',
     price: 21,
+    originalPrice: 26,
     concernTags: ['Pigmentation', 'Fine Lines'],
     oliveYoungUrl: oliveYoungSearch('sunscreen spf 50 fluid'),
   },

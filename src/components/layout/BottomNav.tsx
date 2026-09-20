@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Compass, MapPin, User, Users } from 'lucide-react';
+import { Compass, MapPin, MessageCircle, User } from 'lucide-react';
 import type { UserSession } from '../../types';
 
 interface BottomNavProps {
@@ -9,29 +9,29 @@ interface BottomNavProps {
 }
 
 const tabs = [
-  { to: '/', label: 'Plan', icon: Compass },
+  { to: '/', label: 'Explore', icon: Compass },
   { to: '/map', label: 'Map', icon: MapPin },
-  { to: '/community', label: 'Community', icon: Users },
+  { to: '/community', label: 'Community', icon: MessageCircle },
 ];
 
 export const BottomNav: React.FC<BottomNavProps> = ({ session, onSignIn }) => {
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 flex h-14 items-stretch border-t border-miyeon-neutral bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md sm:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 flex h-14 items-stretch border-t border-miyeon-line bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md sm:hidden">
       {tabs.map(({ to, label, icon: Icon }) => (
         <NavLink
           key={to}
           to={to}
           end={to === '/'}
-          className="flex flex-1 flex-col items-center justify-center gap-0.5 text-[9px] font-medium"
+          className="flex flex-1 flex-col items-center justify-center gap-1 text-[10px]"
         >
           {({ isActive }) => (
             <>
               <Icon
                 strokeWidth={1.5}
-                className={`h-5 w-5 ${isActive ? 'text-miyeon-main' : 'text-miyeon-main/30'}`}
+                className={`h-[22px] w-[22px] ${isActive ? 'text-miyeon-ink' : 'text-miyeon-main/50'}`}
               />
-              <span className={isActive ? 'text-miyeon-main' : 'text-miyeon-main/30'}>{label}</span>
+              <span className={isActive ? 'font-medium text-miyeon-ink' : 'text-miyeon-main/50'}>{label}</span>
             </>
           )}
         </NavLink>
@@ -40,7 +40,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ session, onSignIn }) => {
       {session.isLoggedIn && session.user ? (
         <NavLink
           to="/profile"
-          className="flex flex-1 flex-col items-center justify-center gap-0.5 text-[9px] font-medium"
+          className="flex flex-1 flex-col items-center justify-center gap-1 text-[10px]"
         >
           {({ isActive }) => (
             <>
@@ -48,21 +48,21 @@ export const BottomNav: React.FC<BottomNavProps> = ({ session, onSignIn }) => {
                 src={session.user!.avatar_url}
                 alt=""
                 referrerPolicy="no-referrer"
-                className={`h-5 w-5 rounded-full object-cover ${
-                  isActive ? 'ring-2 ring-miyeon-main' : 'ring-1 ring-miyeon-neutral'
+                className={`h-[22px] w-[22px] rounded-full object-cover ${
+                  isActive ? 'ring-2 ring-miyeon-ink' : 'ring-1 ring-miyeon-line'
                 }`}
               />
-              <span className={isActive ? 'text-miyeon-main' : 'text-miyeon-main/30'}>Profile</span>
+              <span className={isActive ? 'font-medium text-miyeon-ink' : 'text-miyeon-main/50'}>My</span>
             </>
           )}
         </NavLink>
       ) : (
         <button
           onClick={onSignIn}
-          className="flex flex-1 flex-col items-center justify-center gap-0.5 text-[9px] font-medium text-miyeon-main/30"
+          className="flex flex-1 flex-col items-center justify-center gap-1 text-[10px] text-miyeon-main/50"
         >
-          <User strokeWidth={1.5} className="h-5 w-5" />
-          Profile
+          <User strokeWidth={1.5} className="h-[22px] w-[22px]" />
+          My
         </button>
       )}
     </nav>

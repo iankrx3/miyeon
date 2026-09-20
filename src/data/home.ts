@@ -22,8 +22,6 @@ export interface Testimonial {
   name: string;
   meta: string;
   quote: string;
-  chip: string;
-  avatarClass: string;
 }
 
 export const browseItems: BrowseItem[] = [
@@ -78,30 +76,69 @@ export const trendingItems: TrendingItem[] = [
 
 export const partnerNames = ['Creatrip', 'OLIVE YOUNG', 'amazon', 'Coupang', 'NAVER', 'o3c'] as const;
 
+export interface MostBookedItem {
+  id: string;
+  rank: number;
+  name: string;
+  best?: boolean;
+  rating: number;
+  reviews: number;
+  duration: string;
+  location: string;
+  fromPrice: number;
+}
+
+export const mostBookedItems: MostBookedItem[] = [
+  {
+    id: 'personal-color-analysis',
+    rank: 1,
+    name: 'Personal Color Analysis',
+    best: true,
+    rating: 4.9,
+    reviews: 1284,
+    duration: '90 min',
+    location: 'Hongdae',
+    fromPrice: 95,
+  },
+  {
+    id: 'skin-booster',
+    rank: 2,
+    name: 'Skin Booster',
+    rating: 4.8,
+    reviews: 962,
+    duration: '30 min',
+    location: 'Gangnam',
+    fromPrice: 120,
+  },
+  {
+    id: 'korean-hair-color',
+    rank: 3,
+    name: 'Korean Hair Color',
+    rating: 4.7,
+    reviews: 718,
+    duration: '3 hrs',
+    location: 'Cheongdam',
+    fromPrice: 89,
+  },
+];
+
 export const testimonials: Testimonial[] = [
   {
     id: 'maya',
     name: 'Maya R.',
     meta: '@mayainseoul · 12K',
-    quote:
-      'I had 4 days and no idea what was realistic. Walked into the clinic knowing exactly what to ask.',
-    chip: 'Rejuran · Gangnam',
-    avatarClass: 'bg-[#f0d2cc]',
+    quote: 'I only had 4 days and no idea what was realistic. I walked in knowing exactly what to ask.',
   },
   {
     id: 'alicia',
     name: 'Alicia T.',
     meta: 'Los Angeles',
-    quote: 'Nobody else told me which lasers were safe for my skin tone. That alone sold me.',
-    chip: 'Pico Toning · Hongdae',
-    avatarClass: 'bg-[#e8c4bc]',
+    quote: 'Nobody told me which lasers were safe for my skin tone.',
   },
   {
     id: 'jess',
     name: 'Jess W.',
     meta: '@jesskbeauty · 28K',
-    quote: 'Booked in three taps. The consultation card is the part I actually screenshot.',
-    chip: 'Ultherapy · Apgujeong',
-    avatarClass: 'bg-[#d49a9a]',
+    quote: 'Booked in three taps.',
   },
 ];

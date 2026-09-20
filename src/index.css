@@ -9,7 +9,16 @@
   --miyeon-sub2: #f7e6e6;
   --miyeon-neutral: #f3ede6;
   --miyeon-base: #ffffff;
-  --miyeon-ink: #2a2422;
+  --miyeon-ink: #2b2523;
+
+  /* Accent system — introduced with the MIYEON UX 1차 최종본 redesign
+     (Figma file oPqrqYKFxXQ7whiLkkcc8z). Sits alongside --miyeon-sub1/sub2
+     rather than replacing them, since not every screen has been redesigned yet. */
+  --miyeon-accent: #e2637f;
+  --miyeon-accent-dark: #cf3f61;
+  --miyeon-accent-soft: #fdf1f4;
+  --miyeon-surface: #faf8f8;
+  --miyeon-line: #eeeaea;
 
   /* Semantic */
   --color-bg-primary: var(--miyeon-base);
@@ -20,8 +29,9 @@
   --color-border: var(--miyeon-neutral);
 
   /* Typography */
-  --font-eng-main: 'Satoshi', 'Pretendard', sans-serif;
-  --font-eng-sub: 'Satoshi', 'Pretendard', sans-serif;
+  --font-wordmark: 'Outfit', 'Pretendard', sans-serif;
+  --font-eng-main: 'DM Sans', 'Pretendard', sans-serif;
+  --font-eng-sub: 'DM Sans', 'Pretendard', sans-serif;
   --font-kr: 'Pretendard', sans-serif;
 
   /* Mobile bottom tab bar height (BottomNav), incl. device safe area — used
@@ -71,6 +81,10 @@ body {
 
 .font-display {
   font-family: var(--font-eng-main);
+}
+
+.font-wordmark {
+  font-family: var(--font-wordmark);
 }
 
 .no-scrollbar::-webkit-scrollbar {

@@ -1,30 +1,34 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { HomeSearchBar } from './HomeSearchBar';
 import { HomeHero } from './HomeHero';
-import { HomeGlowUpEntries, type GlowUpSubEntry } from './HomeGlowUpEntries';
-import { ComingSoonOverlay } from './ComingSoonOverlay';
+import { HomePartners } from './HomePartners';
+import { HomeGlowUpEntries } from './HomeGlowUpEntries';
+import { HomeMostBooked } from './HomeMostBooked';
+import { HomeTestimonials } from './HomeTestimonials';
 import { HomeTrending } from './HomeTrending';
 import { HomeProducts } from './HomeProducts';
-import { HomePartners } from './HomePartners';
-import { HomeTestimonials } from './HomeTestimonials';
+import { HomeWhyOrderMatters } from './HomeWhyOrderMatters';
 import { HomeCta } from './HomeCta';
+import { HomeFooter } from './HomeFooter';
 
 interface HomeLandingProps {
   onStartAnalysis: () => void;
 }
 
 export const HomeLanding: React.FC<HomeLandingProps> = ({ onStartAnalysis }) => {
-  const [comingSoon, setComingSoon] = useState<GlowUpSubEntry | null>(null);
-
   return (
     <div>
+      <HomeSearchBar />
       <HomeHero onStartAnalysis={onStartAnalysis} />
-      <HomeGlowUpEntries onComingSoon={setComingSoon} />
+      <HomePartners />
+      <HomeGlowUpEntries onStartAnalysis={onStartAnalysis} />
+      <HomeMostBooked />
+      <HomeTestimonials />
       <HomeTrending />
       <HomeProducts />
-      <HomePartners />
-      <HomeTestimonials />
+      <HomeWhyOrderMatters onStartAnalysis={onStartAnalysis} />
       <HomeCta onStartAnalysis={onStartAnalysis} />
-      <ComingSoonOverlay feature={comingSoon} onClose={() => setComingSoon(null)} />
+      <HomeFooter />
     </div>
   );
 };

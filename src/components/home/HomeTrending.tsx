@@ -1,46 +1,61 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { trendingItems } from '../../data/home';
+import trendingTreatment from '../../assets/home/trending-treatment.jpg';
+import trendingGuide from '../../assets/home/trending-guide.jpg';
+
+const localImages: Record<string, string> = {
+  'rejuran-juvelook': trendingTreatment,
+  'four-days': trendingGuide,
+};
+
+const kindStyles: Record<string, string> = {
+  TREATMENT: 'bg-miyeon-accent-dark text-white',
+  GUIDE: 'bg-miyeon-accent-soft text-miyeon-accent-dark',
+  TREND: 'bg-miyeon-accent-soft text-miyeon-accent-dark',
+};
 
 export const HomeTrending: React.FC = () => (
-  <section className="bg-miyeon-neutral/70 px-5 py-12 sm:px-8 sm:py-16">
-    <div className="mx-auto max-w-6xl">
-      <div className="flex items-end justify-between">
+  <section className="bg-miyeon-surface py-7">
+    <div className="mx-auto max-w-6xl px-5 sm:px-8">
+      <div className="flex items-center justify-between">
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-miyeon-main/40">
-            What’s hot right now
+          <p className="font-display text-[10.5px] font-medium tracking-[0.18em] text-miyeon-accent">
+            SEOUL IS CHANGING
           </p>
-          <h2 className="mt-2 font-display text-2xl font-normal text-miyeon-main sm:text-3xl">
-            Trending in Seoul
-          </h2>
+          <p className="mt-1 font-display text-xl text-miyeon-ink sm:text-2xl">Know What’s Next</p>
         </div>
         <Link
           to="/community?tab=magazine"
-          className="hidden text-sm text-miyeon-main/50 transition-colors hover:text-miyeon-main md:inline"
+          className="hidden text-sm text-miyeon-main/60 transition-colors hover:text-miyeon-ink md:inline"
         >
           See all →
         </Link>
       </div>
 
-      <div className="mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 no-scrollbar md:grid md:grid-cols-3 md:overflow-visible md:pb-0">
+      <div className="mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 no-scrollbar md:grid md:grid-cols-3 md:overflow-visible md:pb-0">
         {trendingItems.map((item) => (
           <Link
             key={item.id}
             to={item.href}
-            className="min-w-[70%] snap-start md:min-w-0"
+            className="min-w-[250px] snap-start overflow-hidden rounded-2xl bg-white md:min-w-0"
           >
             <img
-              src={item.imageUrl}
+              src={localImages[item.id] ?? item.imageUrl}
               alt={item.title.replace(/\n/g, ' ')}
-              className="aspect-[5/3] w-full rounded-2xl object-cover"
+              className="aspect-[5/3] w-full object-cover"
             />
-            <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.16em] text-miyeon-sub1">
-              {item.kind}
-            </p>
-            <h3 className="mt-1 whitespace-pre-line font-display text-lg leading-snug text-miyeon-main">
-              {item.title}
-            </h3>
-            <p className="mt-1 text-sm text-miyeon-main/45">{item.minutes} min read</p>
+            <div className="p-3.5">
+              <span
+                className={`inline-block rounded px-1.5 py-0.5 text-[9.5px] font-bold tracking-wide ${kindStyles[item.kind]}`}
+              >
+                {item.kind}
+              </span>
+              <h3 className="mt-1.5 whitespace-pre-line font-display text-[14.5px] font-medium leading-[1.38] text-miyeon-ink">
+                {item.title}
+              </h3>
+              <p className="mt-1.5 text-[11px] text-miyeon-main/50">{item.minutes} min read</p>
+            </div>
           </Link>
         ))}
       </div>

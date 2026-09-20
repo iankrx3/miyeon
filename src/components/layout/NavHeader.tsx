@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion } from 'motion/react';
+import { Globe } from 'lucide-react';
 import type { UserSession } from '../../types';
 
 interface NavHeaderProps {
@@ -17,13 +18,13 @@ const tabs = [
 
 export const NavHeader: React.FC<NavHeaderProps> = ({ session, onSignIn, onSignOut }) => {
   return (
-    <header className="sticky top-0 z-40 grid grid-cols-[1fr_auto] items-center border-b border-miyeon-neutral/70 bg-white/95 px-4 py-4 backdrop-blur-md sm:grid-cols-[1fr_auto_1fr] sm:px-10">
+    <header className="sticky top-0 z-40 grid grid-cols-[1fr_auto] items-center border-b border-miyeon-line bg-white/95 px-4 py-4 backdrop-blur-md sm:grid-cols-[1fr_auto_1fr] sm:px-10">
       <NavLink
         to="/"
-        className="flex items-start gap-0.5 justify-self-start font-display text-[22px] tracking-tight text-miyeon-main"
+        className="flex items-start gap-0.5 justify-self-start font-wordmark text-[22px] font-light tracking-tight text-miyeon-ink"
       >
         miyeon
-        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-miyeon-sub1" />
+        <span className="mt-1 text-[9px] text-miyeon-accent">✦</span>
       </NavLink>
 
       <nav className="hidden items-center gap-8 sm:flex">
@@ -34,7 +35,7 @@ export const NavHeader: React.FC<NavHeaderProps> = ({ session, onSignIn, onSignO
             end={tab.to === '/'}
             className={({ isActive }) =>
               `text-sm transition-colors ${
-                isActive ? 'font-semibold text-miyeon-main' : 'text-miyeon-main/40 hover:text-miyeon-main'
+                isActive ? 'font-semibold text-miyeon-ink' : 'text-miyeon-main/40 hover:text-miyeon-ink'
               }`
             }
           >
@@ -44,7 +45,8 @@ export const NavHeader: React.FC<NavHeaderProps> = ({ session, onSignIn, onSignO
       </nav>
 
       <div className="flex items-center justify-self-end gap-3">
-        <span className="hidden text-xs font-medium tracking-wide text-miyeon-main/50 sm:inline" title="English">
+        <span className="hidden items-center gap-1 text-xs font-medium text-miyeon-main sm:flex" title="English">
+          <Globe className="h-[15px] w-[15px]" strokeWidth={1.5} />
           EN
         </span>
 
