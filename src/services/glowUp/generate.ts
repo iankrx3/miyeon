@@ -11,6 +11,7 @@ import {
   placeRoundRobin,
   planningDaysFor,
 } from './placement';
+import { attachPlaces } from './attachPlaces';
 
 export function emptyGlowUpProfile(): GlowUpProfile {
   return {
@@ -80,9 +81,9 @@ export function buildGlowUpResult(profile: GlowUpProfile): GlowUpResult {
     placeRoundRobin(days, dayScope(middleDayIndex(planningDays)), changeItems);
   }
 
-  return {
+  return attachPlaces({
     days,
     whyThisLine: buildWhyThisLine(profile, days),
     profileSnapshot: profile,
-  };
+  });
 }

@@ -141,6 +141,9 @@ export interface ItineraryBlock {
   reason?: string;
   note?: string;
   label?: string;
+  /** Glow Up subtype this block was placed for. Drives the filtered Creatrip
+   * list URL; set even when there is no catalog venue (restore / photo). */
+  glowUpSubtype?: GlowUpSubtype;
 }
 
 export interface ItineraryDay {
@@ -159,6 +162,8 @@ export interface Itinerary {
    * itinerary (see services/userItinerary.ts). */
   userId?: string;
   profileSnapshot?: BeautyTripProfile;
+  /** Set when this itinerary was built from the Glow Up quiz. */
+  glowUpSnapshot?: GlowUpProfile;
   days: ItineraryDay[];
   estimatedSpendUsd: number;
   createdAt: string;
@@ -427,6 +432,9 @@ export interface GlowUpSlotItem {
   /** Resolved Creatrip list URL (region/budget/language/category/middleCategory
    * applied). Null only if GLOWUP_CATEGORY_MAP is ever missing an entry. */
   url: string | null;
+  /** Catalog venue attached after loadSpots(); omitted for restore/photo and
+   * when the catalog has no match. */
+  spotId?: string;
 }
 
 export interface GlowUpSlot {
@@ -445,4 +453,5 @@ export interface GlowUpResult {
   days: GlowUpDay[];
   whyThisLine: string;
   profileSnapshot: GlowUpProfile;
+  itinerary: Itinerary;
 }

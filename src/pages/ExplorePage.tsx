@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import type {
   ChangeItem,
@@ -31,6 +32,8 @@ import { GlowUpWhyThis } from '../components/glowup/GlowUpWhyThis';
 import { GlowUpResultGrid } from '../components/glowup/GlowUpResultGrid';
 import { GlowUpCheckedFooter } from '../components/glowup/GlowUpCheckedFooter';
 import { buildGlowUpResult, emptyGlowUpProfile } from '../services/glowUp/generate';
+import { loadSpots } from '../data/spots';
+import { upsertItinerary } from '../lib/localItineraryStore';
 
 type Step =
   | 'home'
@@ -63,12 +66,18 @@ const STEP_DISPLAY_INDEX: Record<Step, number> = {
 const TOTAL_STEPS = 6;
 
 export default function ExplorePage() {
+  const navigate = useNavigate();
+  const generatingRef = useRef(false);
   const [step, setStep] = useState<Step>('home');
   const [profile, setProfile] = useState<GlowUpProfile>(emptyGlowUpProfile());
   const [result, setResult] = useState<GlowUpResult | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, [step]);
+
+  useEffect(() => {
+    if (step === 'transition') void loadSpots();
   }, [step]);
 
   const flow = useMemo<Step[]>(() => {
@@ -130,11 +139,19 @@ export default function ExplorePage() {
   const setBudget = (id: GlowUpBudget) => setProfile((p) => ({ ...p, budget: id }));
 
   const handleTransitionDone = () => {
-    setResult(buildGlowUpResult(profile));
-    setStep('result');
+    if (generatingRef.current) return;
+    generatingRef.current = true;
+    void (async () => {
+      await loadSpots();
+      const next = buildGlowUpResult(profile);
+      upsertItinerary(next.itinerary);
+      setResult(next);
+      setStep('result');
+    })();
   };
 
   const startOver = () => {
+    generatingRef.current = false;
     setProfile(emptyGlowUpProfile());
     setResult(null);
     setStep('home');
@@ -157,8 +174,20 @@ export default function ExplorePage() {
       <div className="mx-auto max-w-2xl space-y-5 px-4 py-8 sm:py-14">
         <h1 className="font-display text-2xl text-miyeon-main">Your Glow Up</h1>
         <GlowUpWhyThis whyThisLine={result.whyThisLine} />
-        <GlowUpResultGrid days={result.days} />
+        <GlowUpResultGrid
+          days={result.days}
+          onOpenSpot={(id) =>
+            navigate(`/place/${id}`, { state: { fromItinerary: result.itinerary.id } })
+          }
+        />
         <GlowUpCheckedFooter profile={profile} />
+        <button
+          type="button"
+          onClick={() => navigate(`/itinerary/${result.itinerary.id}`)}
+          className="w-full rounded-full bg-miyeon-sub1 py-3.5 text-sm font-bold text-white shadow-sm shadow-miyeon-sub1/30"
+        >
+          Open map itinerary
+        </button>
         <button
           type="button"
           onClick={startOver}
@@ -300,7 +329,11 @@ export default function ExplorePage() {
                   </div>
                 </div>
                 <div>
-                  <p className="mb-2.5 text-xs font-semibold text-miyeon-main/60">Which area are you based in?</p>
+                  <p className="mb-1 text-xs font-semibold text-miyeon-main/60">
+                    Which area are you based in?{' '}
+                    <span className="font-medium text-miyeon-main/45">Optional</span>
+                  </p>
+                  <p className="mb-2.5 text-xs text-miyeon-main/50">Skip if you don't have a base.</p>
                   <div className="grid grid-cols-2 gap-2.5">
                     {regionOptions.map((opt) => (
                       <OptionCard

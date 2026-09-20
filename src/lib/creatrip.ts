@@ -144,12 +144,10 @@ export const GLOWUP_REGION_ID: Partial<Record<Exclude<GlowUpRegion, 'auto'>, num
   'hongdae-mapo': 5,
 };
 
-/** Fallback for "You decide" — Gangnam only because its id is already verified;
- * swap for a real product default once one is chosen. */
-const DEFAULT_REGION_ID = GLOWUP_REGION_ID.gangnam!;
-
+/** Unset / "You decide" omit the Creatrip `region` query rather than guessing
+ * Gangnam — the place-base question is optional. */
 export function regionIdForProfile(region: GlowUpRegion | null): number | undefined {
-  if (!region || region === 'auto') return DEFAULT_REGION_ID;
+  if (!region || region === 'auto') return undefined;
   return GLOWUP_REGION_ID[region];
 }
 

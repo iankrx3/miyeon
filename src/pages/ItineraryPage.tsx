@@ -70,8 +70,9 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
   }
 
   const experiences = itinerarySpotCount(itinerary);
+  const isGlowUpOnly = Boolean(itinerary.glowUpSnapshot && !itinerary.profileSnapshot);
   const canEdit = Boolean(
-    itinerary.source === 'miyeon' ||
+    (!isGlowUpOnly && itinerary.source === 'miyeon') ||
       itinerary.id.startsWith('snap_') ||
       (session.creator?.id && session.creator.id === itinerary.curatorId) ||
       (itinerary.source === 'user' && session.user?.id === itinerary.userId)
@@ -97,7 +98,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
               <ChevronLeft className="h-3.5 w-3.5" /> Back
             </button>
             <div className="flex items-center gap-2">
-              {itinerary.source === 'miyeon' && (
+              {itinerary.source === 'miyeon' && itinerary.profileSnapshot && (
                 <button
                   type="button"
                   onClick={() => setSheet('regenerate')}
@@ -150,6 +151,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
           <ItineraryTimeline
             day={day}
             profile={itinerary.profileSnapshot}
+            glowUpProfile={itinerary.glowUpSnapshot}
             onOpenSpot={(spot) => navigate(`/place/${spot.id}`, { state: { fromItinerary: itinerary.id } })}
             onOpenMenu={
               canEdit
