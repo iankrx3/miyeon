@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { CreatorPick, Place, UserSession } from '../../types';
+import type { Place, UserSession } from '../../types';
 import { fetchCuratedMapData } from '../../services/curator';
 import { hasCreatripListing } from '../../lib/creatrip';
 import { PlaceCard } from '../place/PlaceCard';
 import { AdBadge, SponsoredPlaceCard } from '../place/SponsoredPlaceCard';
-import { MapCuratorRoutes } from './MapCuratorRoutes';
 
 export const PlaceListView: React.FC<{ session: UserSession }> = ({ session }) => {
   const navigate = useNavigate();
   const [places, setPlaces] = useState<Place[]>([]);
-  const [picks, setPicks] = useState<CreatorPick[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
     fetchCuratedMapData(session)
-      .then(({ places: curatedPlaces, picks: curatedPicks }) => {
+      .then(({ places: curatedPlaces }) => {
         setPlaces([...curatedPlaces].sort((a, b) => b.rating - a.rating));
-        setPicks(curatedPicks);
       })
       .finally(() => setLoading(false));
   }, [session.creator?.id]);
@@ -36,28 +33,24 @@ export const PlaceListView: React.FC<{ session: UserSession }> = ({ session }) =
   const rest = sponsored ? places.filter((p) => p.id !== sponsored.id) : places;
 
   return (
-    <div className="h-full overflow-y-auto pb-[calc(var(--bottom-nav-h)+64px)] sm:pb-20">
-      <MapCuratorRoutes picks={picks} />
-
-      <div className="mx-auto max-w-2xl px-4 py-4">
-        {sponsored && (
-          <div className="mb-4">
-            <SponsoredPlaceCard place={sponsored} onView={viewPlace} />
-          </div>
-        )}
-
-        <div className="space-y-4">
-          {rest.map((place) => (
-            <div key={place.id} className="relative">
-              {hasCreatripListing(place) && (
-                <div className="absolute left-2 top-2 z-10">
-                  <AdBadge label="광고" />
-                </div>
-              )}
-              <PlaceCard place={place} onView={viewPlace} />
-            </div>
-          ))}
+    <div className="mx-auto h-[calc(100dvh-64px)] max-w-2xl overflow-y-auto px-4 py-4 pb-[calc(var(--bottom-nav-h)+64px)] sm:pb-20">
+      {sponsored && (
+        <div className="mb-4">
+          <SponsoredPlaceCard place={sponsored} onView={viewPlace} />
         </div>
+      )}
+
+      <div className="space-y-4">
+        {rest.map((place) => (
+          <div key={place.id} className="relative">
+            {hasCreatripListing(place) && (
+              <div className="absolute left-2 top-2 z-10">
+                <AdBadge label="광고" />
+              </div>
+            )}
+            <PlaceCard place={place} onView={viewPlace} />
+          </div>
+        ))}
       </div>
     </div>
   );

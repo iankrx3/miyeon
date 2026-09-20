@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Locate, Loader2, Search, X, ChevronRight, Plus, Minus } from 'lucide-react';
-import type { BeautyCategory, Creator, Place, UserSession } from '../../types';
+import { Locate, Loader2, Search, X, ChevronRight, ChevronDown, Plus, Minus } from 'lucide-react';
+import type { BeautyCategory, Creator, CreatorPick, Place, UserSession } from '../../types';
 import { categoryMeta } from '../../data/mock';
 import { ENABLED_MAP_CATEGORIES } from '../../data/mapCategories';
 import {
@@ -34,10 +34,16 @@ interface MapViewProps {
   session: UserSession;
   /** Whether this MapView is the currently visible tab (vs. hidden via CSS while List view is active). */
   visible?: boolean;
-  /** Category filter — owned by MapPage so its page-level filter pills stay in sync with the map. */
-  category: 'all' | BeautyCategory;
-  onCategoryChange: (category: 'all' | BeautyCategory) => void;
 }
+
+const CATEGORY_FILTERS: { id: 'all' | BeautyCategory; label: string }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'skin', label: '✨ Skin' },
+  { id: 'face', label: '💎 Face' },
+  { id: 'hair', label: '✂️ Hair' },
+  { id: 'nails', label: '💅 Nails' },
+  { id: 'makeup', label: '💄 Makeup' },
+];
 
 /** Pans/zooms the map so `targets` are fully visible — a single flyTo for one place,
  * or a padded flyToBounds for several (padded so the top search/filter UI never covers a pin). */
@@ -73,13 +79,7 @@ function placesFromItinerary(itinerary: Itinerary, known: Place[]): Place[] {
   return out;
 }
 
-export const MapView: React.FC<MapViewProps> = ({
-  onSelectPlace,
-  session,
-  visible = true,
-  category,
-  onCategoryChange,
-}) => {
+export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visible = true }) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -90,10 +90,11 @@ export const MapView: React.FC<MapViewProps> = ({
   const markerMapRef = useRef<Map<string, L.Marker>>(new Map());
 
   const [places, setPlaces] = useState<Place[]>([]);
-  const [curatorCount, setCuratorCount] = useState(0);
+  const [creatorPicks, setCreatorPicks] = useState<CreatorPick[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const selectedCategory = category;
+  const [selectedCategory, setSelectedCategory] = useState<'all' | BeautyCategory>('all');
+  const [isCreatorPicksExpanded, setIsCreatorPicksExpanded] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Place[]>([]);
@@ -218,7 +219,7 @@ export const MapView: React.FC<MapViewProps> = ({
     fetchCuratedMapData(session)
       .then(({ places: curatedPlaces, picks }) => {
         setPlaces(curatedPlaces);
-        setCuratorCount(new Set(picks.map((p) => p.creator_id)).size);
+        setCreatorPicks(picks);
       })
       .finally(() => setLoading(false));
   }, [session.creator?.id]);
@@ -427,7 +428,7 @@ export const MapView: React.FC<MapViewProps> = ({
     // Live KTO results aren't in `places` (and so have no marker) until we add them.
     setPlaces((prev) => (prev.some((p) => p.id === place.id) ? prev : [...prev, place]));
     // Clear the category filter so the target place's pin is guaranteed to be visible.
-    onCategoryChange('all');
+    setSelectedCategory('all');
     setSearchQuery('');
     setIsSearchOpen(false);
     fitMapToPlaces(map, [place]);
@@ -502,7 +503,7 @@ export const MapView: React.FC<MapViewProps> = ({
   }
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-miyeon-surface">
+    <div className="relative h-[calc(100dvh-64px)] w-full overflow-hidden bg-miyeon-neutral/30">
       <div ref={mapContainerRef} className="h-full w-full z-0" />
 
       {loading && (
@@ -572,14 +573,7 @@ export const MapView: React.FC<MapViewProps> = ({
           )}
         </div>
 
-        {!(isSearchOpen && searchQuery) && !tripFilterActive && !curatorFilterActive && places.length > 0 && (
-          <div className="pointer-events-auto inline-flex items-center rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-medium text-miyeon-ink shadow-lg backdrop-blur-md">
-            {getFilteredPlaces().length} places
-            {selectedCategory === 'all' && curatorCount > 0 ? ` · ${curatorCount} curators` : ''}
-          </div>
-        )}
-
-        {!(isSearchOpen && searchQuery) && (tripFilterActive || curatorFilterActive) && (
+        {!(isSearchOpen && searchQuery) && (
           <div className="pointer-events-auto space-y-2">
             {tripFilterActive ? (
               <div className="flex items-center justify-between gap-2 rounded-2xl border border-white/60 bg-white/95 px-3.5 py-2.5 shadow-lg backdrop-blur-md">
@@ -619,7 +613,64 @@ export const MapView: React.FC<MapViewProps> = ({
                   </button>
                 </div>
               </div>
-            ) : null}
+            ) : (
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+                {CATEGORY_FILTERS.map((cat) => (
+                  <FilterChip
+                    key={cat.id}
+                    active={selectedCategory === cat.id}
+                    label={cat.label}
+                    onClick={() => setSelectedCategory(cat.id)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {creatorPicks.length > 0 && !curatorFilterActive && !tripFilterActive && !(isSearchOpen && searchQuery) && (
+          <div className="pointer-events-auto rounded-2xl bg-white/90 shadow-lg backdrop-blur-md border border-white/60">
+            <button
+              onClick={() => setIsCreatorPicksExpanded((prev) => !prev)}
+              aria-expanded={isCreatorPicksExpanded}
+              className="flex w-full items-center justify-between gap-2 px-3.5 py-2.5"
+            >
+              <p className="text-[11px] font-bold uppercase tracking-wider text-miyeon-main/60">
+                Curated by Creators
+              </p>
+              <ChevronDown
+                className={`h-3.5 w-3.5 shrink-0 text-miyeon-main/70 transition-transform ${
+                  isCreatorPicksExpanded ? 'rotate-180' : ''
+                }`}
+              />
+            </button>
+            {isCreatorPicksExpanded && (
+              <div className="flex items-center gap-3 overflow-x-auto no-scrollbar px-3.5 pb-3 pt-1">
+                {creatorPicks.map((pick) => (
+                  <button
+                    key={pick.id}
+                    type="button"
+                    onClick={() => {
+                      const theirs = listAllCuratorItineraries().filter((i) => i.curatorId === pick.creator.id);
+                      if (theirs.length === 1) navigate(`/itinerary/${theirs[0].id}`);
+                      else if (theirs.length > 1) setItineraryPicker(theirs);
+                      else setSearchParams({ curator: pick.creator.id });
+                    }}
+                    className="group flex shrink-0 flex-col items-center gap-1.5"
+                  >
+                    <img
+                      src={pick.creator.avatar_url}
+                      alt={pick.creator.display_name}
+                      referrerPolicy="no-referrer"
+                      className="h-11 w-11 rounded-full object-cover ring-2 ring-miyeon-sub1/30 group-hover:ring-miyeon-sub1"
+                    />
+                    <span className="max-w-[70px] truncate text-[11px] font-medium text-miyeon-main">
+                      @{pick.creator.username}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -683,6 +734,21 @@ const MapButton: React.FC<{ onClick: () => void; label: string; active?: boolean
     }`}
   >
     {children}
+  </button>
+);
+
+const FilterChip: React.FC<{ active: boolean; label: string; onClick: () => void }> = ({
+  active,
+  label,
+  onClick,
+}) => (
+  <button
+    onClick={onClick}
+    className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-bold shadow-md backdrop-blur-md transition-all whitespace-nowrap ${
+      active ? 'bg-miyeon-sub1 text-white shadow-miyeon-sub1/25' : 'bg-white/95 text-miyeon-main/70 hover:bg-white hover:text-miyeon-sub1'
+    }`}
+  >
+    {label}
   </button>
 );
 
