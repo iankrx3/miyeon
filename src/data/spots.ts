@@ -49,7 +49,7 @@ const DEFAULT_DURATION_BY_CATEGORY: Record<BeautyCategory, number> = {
   makeup: 75,
 };
 
-const AREA_CENTROID: Record<SpotArea, { lat: number; lng: number }> = {
+export const AREA_CENTROID: Record<SpotArea, { lat: number; lng: number }> = {
   Gangnam: { lat: 37.4979, lng: 127.0276 },
   Seongsu: { lat: 37.5446, lng: 127.0559 },
   Hongdae: { lat: 37.5563, lng: 126.9238 },
@@ -61,7 +61,7 @@ const SPOT_AREAS = Object.keys(AREA_CENTROID) as SpotArea[];
 /** Buckets a lat/lng into the nearest of the 4 neighborhoods the itinerary engine
  * organizes days around. Google/KTO addresses don't reliably say "Gangnam" etc., so
  * distance-to-centroid is more robust than parsing the address string. */
-function nearestArea(lat: number, lng: number): SpotArea {
+export function nearestArea(lat: number, lng: number): SpotArea {
   let best = SPOT_AREAS[0];
   let bestDist = Infinity;
   for (const area of SPOT_AREAS) {
@@ -162,6 +162,21 @@ export function getSpot(id: string): Spot | undefined {
 
 export function getSpots(): Spot[] {
   return cachedSpots;
+}
+
+/** Merge live Glow Up venues into the sync catalog so getSpot()/map clicks work. */
+export function ingestPlaces(places: Place[]): Spot[] {
+  const added: Spot[] = [];
+  const seen = new Set(cachedSpots.map((spot) => spot.id));
+  for (const place of places) {
+    if (!place.latitude || !place.longitude) continue;
+    if (seen.has(place.id)) continue;
+    seen.add(place.id);
+    const spot = placeToSpot(place);
+    cachedSpots.push(spot);
+    added.push(spot);
+  }
+  return added;
 }
 
 export const SUBCATEGORY_LABEL: Record<SpotSubcategory, string> = {

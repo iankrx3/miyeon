@@ -28,7 +28,6 @@ import { OptionCard } from '../components/onboarding/OptionCard';
 import { WizardShell } from '../components/onboarding/WizardShell';
 import { AITransition } from '../components/quiz/AITransition';
 import { buildGlowUpResult, emptyGlowUpProfile } from '../services/glowUp/generate';
-import { loadSpots } from '../data/spots';
 import { upsertItinerary } from '../lib/localItineraryStore';
 
 type Step =
@@ -67,10 +66,6 @@ export default function ExplorePage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [step]);
-
-  useEffect(() => {
-    if (step === 'transition') void loadSpots();
   }, [step]);
 
   const flow = useMemo<Step[]>(() => {
@@ -135,8 +130,7 @@ export default function ExplorePage() {
     if (generatingRef.current) return;
     generatingRef.current = true;
     void (async () => {
-      await loadSpots();
-      const next = buildGlowUpResult(profile);
+      const next = await buildGlowUpResult(profile);
       upsertItinerary(next.itinerary);
       navigate(`/itinerary/${next.itinerary.id}`);
     })();

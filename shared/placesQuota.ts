@@ -1,6 +1,8 @@
 /** Daily Google Places (New) budgets so a spike cannot spend a month of Pro in one day.
  * 150 × 30 = 4,500, under the 5,000/month Pro free cap. Caps are per process;
- * set the same limits in Google Cloud Console as the durable backstop. */
+ * set the same limits in Google Cloud Console as the durable backstop.
+ * Glow Up itinerary uses Nearby Pro only (max 4 live calls per generate, 24h cache),
+ * never Text Search / Details / Photos. */
 
 export type PlacesSku = 'nearby_pro' | 'text_pro' | 'details_pro' | 'photos';
 

@@ -44,7 +44,7 @@ function toSlotItem(
   };
 }
 
-export function buildGlowUpResult(profile: GlowUpProfile): GlowUpResult {
+export async function buildGlowUpResult(profile: GlowUpProfile): Promise<GlowUpResult> {
   const planningDays = planningDaysFor(profile.tripDays);
   const days = buildEmptyGrid(planningDays);
 

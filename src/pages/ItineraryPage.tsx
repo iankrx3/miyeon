@@ -61,7 +61,10 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
     );
   }
 
-  if (!spotsReady) {
+  const hasPinnedVenues = itinerary.days.some((d) =>
+    d.blocks.some((b) => b.latitude != null && b.longitude != null)
+  );
+  if (!spotsReady && !hasPinnedVenues) {
     return (
       <div className="flex h-[60vh] items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-miyeon-sub1" />

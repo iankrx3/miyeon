@@ -1,4 +1,5 @@
 import type {
+  BeautyCategory,
   GlowUpDay,
   GlowUpPeriod,
   GlowUpRegion,
@@ -8,23 +9,25 @@ import type {
   Itinerary,
   ItineraryBlock,
   ItineraryDay,
+  Place,
   Spot,
   SpotArea,
-  SpotSubcategory,
 } from '../../types';
-import { getSpot, getSpots } from '../../data/spots';
+import { AREA_CENTROID, getSpot, ingestPlaces, nearestArea, placeToSpot } from '../../data/spots';
+import { discoverVenuesForGlowUp, type GlowUpVenuePools } from '../discovery';
 import { travelBetween } from '../itinerary/travel';
 
-/** Catalog spots only carry one representative subcategory per BeautyCategory. */
-const SUBTYPE_SUBCATEGORY: Partial<Record<GlowUpSubtype, SpotSubcategory>> = {
-  skin: 'skin-care',
-  face: 'aesthetics',
-  hair: 'color-perm',
-  nail: 'nail-art',
-  makeup: 'beauty-makeup',
-  'personal-color': 'beauty-makeup',
-  'permanent-makeup': 'beauty-makeup',
+const SUBTYPE_CATEGORY: Partial<Record<GlowUpSubtype, BeautyCategory>> = {
+  skin: 'skin',
+  face: 'face',
+  hair: 'hair',
+  nail: 'nails',
+  makeup: 'makeup',
+  'personal-color': 'makeup',
+  'permanent-makeup': 'makeup',
 };
+
+const SPA_SUBTYPES = new Set<GlowUpSubtype>(['sauna', 'scrub', 'massage']);
 
 const REGION_TO_AREA: Partial<Record<GlowUpRegion, SpotArea>> = {
   gangnam: 'Gangnam',
@@ -51,38 +54,82 @@ function addMinutes(hhmm: string, minutes: number): string {
   return `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
 }
 
-function pickSpot(subtype: GlowUpSubtype, region: GlowUpRegion | null, used: Set<string>): Spot | undefined {
-  const subcategory = SUBTYPE_SUBCATEGORY[subtype];
-  if (!subcategory) return undefined;
-
-  const preferredArea = region && region !== 'auto' ? REGION_TO_AREA[region] : undefined;
-  const unused = getSpots()
-    .filter((s) => s.subcategory === subcategory && !used.has(s.id))
-    .sort((a, b) => b.rating - a.rating);
-
-  if (preferredArea) {
-    const inArea = unused.filter((s) => s.area === preferredArea);
-    if (inArea[0]) return inArea[0];
-  }
-  return unused[0];
+function originFor(region: GlowUpRegion | null): { lat: number; lng: number } {
+  const area = region && region !== 'auto' ? REGION_TO_AREA[region] : undefined;
+  return area ? AREA_CENTROID[area] : AREA_CENTROID.Gangnam;
 }
 
-function attachToItems(
-  items: GlowUpSlotItem[],
-  region: GlowUpRegion | null,
+function preferredArea(region: GlowUpRegion | null): SpotArea | undefined {
+  if (!region || region === 'auto') return undefined;
+  return REGION_TO_AREA[region];
+}
+
+function ktoRank(place: Place): number {
+  return place.source === 'kto' || place.source === 'merged' ? 0 : 1;
+}
+
+function sortPlaces(places: Place[], area?: SpotArea): Place[] {
+  return places
+    .map((place, index) => ({ place, index }))
+    .sort((a, b) => {
+      const kto = ktoRank(a.place) - ktoRank(b.place);
+      if (kto !== 0) return kto;
+      if (area) {
+        const aIn = nearestArea(a.place.latitude, a.place.longitude) === area ? 0 : 1;
+        const bIn = nearestArea(b.place.latitude, b.place.longitude) === area ? 0 : 1;
+        if (aIn !== bIn) return aIn - bIn;
+      }
+      return a.index - b.index;
+    })
+    .map((row) => row.place);
+}
+
+function poolFor(subtype: GlowUpSubtype, pools: GlowUpVenuePools): Place[] {
+  const category = SUBTYPE_CATEGORY[subtype];
+  if (category) return pools.byCategory[category] ?? [];
+  if (SPA_SUBTYPES.has(subtype)) return pools.spa;
+  return [];
+}
+
+function pickPlace(
+  subtype: GlowUpSubtype,
+  pools: GlowUpVenuePools,
+  area: SpotArea | undefined,
   used: Set<string>
-): GlowUpSlotItem[] {
-  return items.map((item) => {
-    const spot = pickSpot(item.subtype, region, used);
-    if (!spot) return item;
-    used.add(spot.id);
-    return { ...item, spotId: spot.id };
-  });
+): Place | undefined {
+  const unused = poolFor(subtype, pools).filter((place) => !used.has(place.id));
+  return sortPlaces(unused, area)[0];
+}
+
+function snapshotBlock(place: Place | undefined, item: GlowUpSlotItem, time: string, spot?: Spot): ItineraryBlock {
+  const duration = spot?.durationMin ?? 60;
+  return {
+    id: newId('blk'),
+    kind: 'spot',
+    spotId: place?.id,
+    startTime: time,
+    durationMin: duration,
+    priceUsd: spot ? Math.round((spot.priceMin + spot.priceMax) / 2) : undefined,
+    glowUpSubtype: item.subtype,
+    label: `${item.emoji} ${item.label}`,
+    reason: place
+      ? `Matches your ${item.label} pick in ${nearestArea(place.latitude, place.longitude)}`
+      : `Browse ${item.label} listings on Creatrip`,
+    venueName: place?.name,
+    latitude: place?.latitude,
+    longitude: place?.longitude,
+    address: place?.address,
+    venueSource: place?.source,
+  };
 }
 
 function areaLabelFor(blocks: ItineraryBlock[]): string {
   const areas = new Set<SpotArea>();
   for (const block of blocks) {
+    if (block.latitude != null && block.longitude != null) {
+      areas.add(nearestArea(block.latitude, block.longitude));
+      continue;
+    }
     if (!block.spotId) continue;
     const spot = getSpot(block.spotId);
     if (spot) areas.add(spot.area);
@@ -102,14 +149,21 @@ function coverUrl(days: ItineraryDay[]): string | undefined {
   return undefined;
 }
 
-function blocksForDay(day: GlowUpDay): ItineraryBlock[] {
+function blocksForDay(
+  day: GlowUpDay,
+  pools: GlowUpVenuePools,
+  area: SpotArea | undefined,
+  used: Set<string>
+): ItineraryBlock[] {
   const blocks: ItineraryBlock[] = [];
   let lastSpot: Spot | undefined;
 
   for (const slot of day.slots) {
     let time = PERIOD_START[slot.period];
     for (const item of slot.items) {
-      const spot = item.spotId ? getSpot(item.spotId) : undefined;
+      const place = pickPlace(item.subtype, pools, area, used);
+      if (place) used.add(place.id);
+      const spot = place ? placeToSpot(place) : undefined;
       if (spot && lastSpot) {
         const travel = travelBetween(lastSpot, spot);
         blocks.push({
@@ -120,42 +174,64 @@ function blocksForDay(day: GlowUpDay): ItineraryBlock[] {
         time = addMinutes(time, travel.minutes);
       }
 
-      const duration = spot?.durationMin ?? 60;
-      blocks.push({
-        id: newId('blk'),
-        kind: 'spot',
-        spotId: spot?.id,
-        startTime: time,
-        durationMin: duration,
-        priceUsd: spot ? Math.round((spot.priceMin + spot.priceMax) / 2) : undefined,
-        glowUpSubtype: item.subtype,
-        label: `${item.emoji} ${item.label}`,
-        reason: spot
-          ? `Matches your ${item.label} pick in ${spot.area}`
-          : `Browse ${item.label} listings on Creatrip`,
-      });
-
+      blocks.push(snapshotBlock(place, item, time, spot));
       if (spot) lastSpot = spot;
-      time = addMinutes(time, duration);
+      time = addMinutes(time, spot?.durationMin ?? 60);
     }
   }
 
   return blocks;
 }
 
-export function attachPlaces(result: Omit<GlowUpResult, 'itinerary'>): GlowUpResult {
-  const used = new Set<string>();
+function neededCategories(days: GlowUpDay[]): BeautyCategory[] {
+  const set = new Set<BeautyCategory>();
+  for (const day of days) {
+    for (const slot of day.slots) {
+      for (const item of slot.items) {
+        const category = SUBTYPE_CATEGORY[item.subtype];
+        if (category) set.add(category);
+      }
+    }
+  }
+  return [...set];
+}
+
+function needsSpa(days: GlowUpDay[]): boolean {
+  return days.some((day) =>
+    day.slots.some((slot) => slot.items.some((item) => SPA_SUBTYPES.has(item.subtype)))
+  );
+}
+
+export async function attachPlaces(result: Omit<GlowUpResult, 'itinerary'>): Promise<GlowUpResult> {
   const region = result.profileSnapshot.region;
+  const area = preferredArea(region);
+  const pools = await discoverVenuesForGlowUp(neededCategories(result.days), originFor(region), {
+    includeSpa: needsSpa(result.days),
+  });
+
+  const ingested: Place[] = [
+    ...Object.values(pools.byCategory).flatMap((list) => list ?? []),
+    ...pools.spa,
+  ];
+  ingestPlaces(ingested);
+
+  const used = new Set<string>();
   const days = result.days.map((day) => ({
     ...day,
     slots: day.slots.map((slot) => ({
       ...slot,
-      items: attachToItems(slot.items, region, used),
+      items: slot.items.map((item) => {
+        const place = pickPlace(item.subtype, pools, area, used);
+        if (!place) return item;
+        used.add(place.id);
+        return { ...item, spotId: place.id };
+      }),
     })),
   }));
 
+  used.clear();
   const itineraryDays: ItineraryDay[] = days.map((day) => {
-    const blocks = blocksForDay(day);
+    const blocks = blocksForDay(day, pools, area, used);
     return {
       dayIndex: day.dayIndex,
       areaLabel: areaLabelFor(blocks),

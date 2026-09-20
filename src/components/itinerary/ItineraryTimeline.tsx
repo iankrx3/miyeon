@@ -46,6 +46,7 @@ export const ItineraryTimeline: React.FC<ItineraryTimelineProps> = ({
           );
         }
         const spot = block.spotId ? getSpot(block.spotId) : undefined;
+        const venueName = spot?.name ?? block.venueName;
         const glowHref =
           block.glowUpSubtype && glowUpProfile
             ? buildGlowUpCreatripUrl(block.glowUpSubtype, {
@@ -59,7 +60,7 @@ export const ItineraryTimeline: React.FC<ItineraryTimelineProps> = ({
           : null;
         const creatripHref = glowHref ?? legacyHref;
         const creatripLabel = glowHref ? 'Find more on Creatrip →' : 'Book with Creatrip →';
-        if (!spot && !block.glowUpSubtype) return null;
+        if (!spot && !block.glowUpSubtype && !venueName) return null;
         return (
           <article key={block.id} className="rounded-2xl border border-miyeon-neutral bg-white p-4 shadow-sm">
             <div className="flex items-start justify-between gap-2">
@@ -74,7 +75,7 @@ export const ItineraryTimeline: React.FC<ItineraryTimelineProps> = ({
                   {spot ? SUBCATEGORY_LABEL[spot.subcategory] : 'Creatrip listings'}
                 </p>
                 <h3 className="mt-0.5 text-base font-semibold text-miyeon-main">
-                  {spot?.name ?? block.label ?? 'Listing'}
+                  {venueName ?? block.label ?? 'Listing'}
                 </h3>
               </button>
               {onOpenMenu && spot && (
@@ -88,9 +89,11 @@ export const ItineraryTimeline: React.FC<ItineraryTimelineProps> = ({
                 </button>
               )}
             </div>
-            {spot && (
+            {(spot || block.address) && (
               <p className="mt-2 text-xs text-miyeon-main/60">
-                📍 {spot.area} · ⏱ {block.durationMin ?? spot.durationMin} min · 💰 ${block.priceUsd}
+                📍 {spot?.area ?? block.address}
+                {block.durationMin ? ` · ⏱ ${block.durationMin} min` : ''}
+                {block.priceUsd != null ? ` · 💰 $${block.priceUsd}` : ''}
               </p>
             )}
             {block.reason && (

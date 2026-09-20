@@ -55,29 +55,37 @@ export const ItineraryRouteMap: React.FC<ItineraryRouteMapProps> = ({ day, onSel
     layer.clearLayers();
     if (!day) return;
 
-    const spots = day.blocks
-      .filter((b) => b.kind === 'spot' && b.spotId)
-      .map((b) => getSpot(b.spotId!))
-      .filter((s): s is Spot => Boolean(s));
+    const pins = day.blocks
+      .filter((b) => b.kind === 'spot')
+      .map((b) => {
+        const spot = b.spotId ? getSpot(b.spotId) : undefined;
+        const latitude = b.latitude ?? spot?.latitude;
+        const longitude = b.longitude ?? spot?.longitude;
+        if (latitude == null || longitude == null) return null;
+        return { block: b, spot, latitude, longitude };
+      })
+      .filter((pin): pin is NonNullable<typeof pin> => Boolean(pin));
 
-    if (spots.length === 0) return;
+    if (pins.length === 0) return;
 
-    const latlngs = spots.map((s) => [s.latitude, s.longitude] as [number, number]);
+    const latlngs = pins.map((pin) => [pin.latitude, pin.longitude] as [number, number]);
     L.polyline(latlngs, { color: '#d49a9a', weight: 3, opacity: 0.9 }).addTo(layer);
 
-    spots.forEach((spot, i) => {
+    pins.forEach((pin, i) => {
       const icon = L.divIcon({
         className: '',
         html: `<div style="width:28px;height:28px;border-radius:999px;background:#5a514d;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.2)">${i + 1}</div>`,
         iconSize: [28, 28],
         iconAnchor: [14, 14],
       });
-      const marker = L.marker([spot.latitude, spot.longitude], { icon }).addTo(layer);
-      marker.on('click', () => onSelectSpot?.(spot));
+      const marker = L.marker([pin.latitude, pin.longitude], { icon }).addTo(layer);
+      marker.on('click', () => {
+        if (pin.spot) onSelectSpot?.(pin.spot);
+      });
     });
 
-    if (spots.length === 1) {
-      map.setView([spots[0].latitude, spots[0].longitude], 15);
+    if (pins.length === 1) {
+      map.setView([pins[0].latitude, pins[0].longitude], 15);
     } else {
       map.fitBounds(L.latLngBounds(latlngs), { padding: [40, 40], maxZoom: 16 });
     }

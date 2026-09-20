@@ -234,41 +234,114 @@ function inferGoogleCategory(hit: GooglePlaceHit, categories: BeautyCategory[]):
 
 export const GOOGLE_ON_DEMAND_CATEGORIES: BeautyCategory[] = ['hair', 'nails', 'makeup'];
 const GOOGLE_NEARBY_TTL_MS = 24 * 60 * 60 * 1000;
+/** Hard cap for one Glow Up generate so a quiz cannot fan out past the free Pro SKU. */
+export const GLOWUP_NEARBY_MAX = 4;
 const googleNearbyCache = new Map<string, { expires: number; places: Place[] }>();
 
-function googleNearbyKey(category: BeautyCategory, origin: { lat: number; lng: number }): string {
-  return `${category}|${origin.lat.toFixed(3)}|${origin.lng.toFixed(3)}`;
+function nearbyCacheKey(tag: string, origin: { lat: number; lng: number }): string {
+  return `${tag}|${origin.lat.toFixed(3)}|${origin.lng.toFixed(3)}`;
 }
 
-/** One Nearby Search Pro at `origin`, cached 24h. Hair/nails/makeup only — KTO has no keywords there. */
-export async function discoverGoogleCategory(
-  category: BeautyCategory,
-  origin?: { lat: number; lng: number }
+async function nearbyProCached(
+  tag: string,
+  includedTypes: string[],
+  origin: { lat: number; lng: number },
+  mapHits: (hits: GooglePlaceHit[]) => Place[],
+  budget?: { remaining: number }
 ): Promise<Place[]> {
-  if (!GOOGLE_ON_DEMAND_CATEGORIES.includes(category)) return [];
-  const resolved = resolveOrigin(origin);
-  const key = googleNearbyKey(category, resolved);
+  const key = nearbyCacheKey(tag, origin);
   const cached = googleNearbyCache.get(key);
   if (cached && cached.expires > Date.now()) return cached.places;
+  if (budget && budget.remaining <= 0) return [];
 
   const health = await getApiHealth();
   if (!health.google) return [];
 
   try {
+    if (budget) budget.remaining -= 1;
     const hits = await searchNearby({
-      includedTypes: categorySearch[category].googleTypes.slice(0, 1),
-      origin: resolved,
+      includedTypes,
+      origin,
       radiusM: 5000,
       maxResultCount: 20,
     });
-    const places = hits.map((hit) => toPlaceFromGoogle(hit, category));
+    const places = mapHits(hits);
     rememberDiscovery({ places, treatments: places.map((place) => treatmentForPlace(place)) });
     googleNearbyCache.set(key, { expires: Date.now() + GOOGLE_NEARBY_TTL_MS, places });
     return places;
   } catch (err) {
-    console.warn(`discoverGoogleCategory(${category}) failed`, err);
+    console.warn(`nearbyProCached(${tag}) failed`, err);
     return [];
   }
+}
+
+/** One Nearby Search Pro at `origin`, cached 24h. Hair/nails/makeup only — KTO has no keywords there. */
+export async function discoverGoogleCategory(
+  category: BeautyCategory,
+  origin?: { lat: number; lng: number },
+  budget?: { remaining: number }
+): Promise<Place[]> {
+  if (!GOOGLE_ON_DEMAND_CATEGORIES.includes(category)) return [];
+  const resolved = resolveOrigin(origin);
+  return nearbyProCached(
+    category,
+    categorySearch[category].googleTypes.slice(0, 1),
+    resolved,
+    (hits) => hits.map((hit) => toPlaceFromGoogle(hit, category)),
+    budget
+  );
+}
+
+export interface GlowUpVenuePools {
+  byCategory: Partial<Record<BeautyCategory, Place[]>>;
+  spa: Place[];
+}
+
+/** Targeted KTO + Nearby Pro for Glow Up itinerary pins. Does not enable the
+ * global USE_GOOGLE_PLACES fan-out. Nearby at most GLOWUP_NEARBY_MAX live calls. */
+export async function discoverVenuesForGlowUp(
+  categories: BeautyCategory[],
+  origin?: { lat: number; lng: number },
+  opts?: { includeSpa?: boolean }
+): Promise<GlowUpVenuePools> {
+  const resolved = resolveOrigin(origin);
+  const budget = { remaining: GLOWUP_NEARBY_MAX };
+  const unique = [...new Set(categories)];
+  const byCategory: Partial<Record<BeautyCategory, Place[]>> = {};
+
+  for (const category of unique) {
+    let places: Place[] = [];
+    if (categorySearch[category].ktoKeywords.length > 0) {
+      const result = await discoverPlaces({ category, origin: resolved, limit: 12 });
+      places = result.places.filter((place) => place.latitude && place.longitude);
+    }
+    if (places.length === 0 && GOOGLE_ON_DEMAND_CATEGORIES.includes(category)) {
+      places = await discoverGoogleCategory(category, resolved, budget);
+    } else if (places.length === 0) {
+      places = await nearbyProCached(
+        category,
+        categorySearch[category].googleTypes.slice(0, 1),
+        resolved,
+        (hits) => hits.map((hit) => toPlaceFromGoogle(hit, category)),
+        budget
+      );
+    }
+    byCategory[category] = places.filter((place) => place.latitude && place.longitude);
+  }
+
+  let spa: Place[] = [];
+  if (opts?.includeSpa) {
+    spa = await nearbyProCached(
+      'spa',
+      ['spa'],
+      resolved,
+      (hits) => hits.map((hit) => toPlaceFromGoogle(hit, 'skin')),
+      budget
+    );
+    spa = spa.filter((place) => place.latitude && place.longitude);
+  }
+
+  return { byCategory, spa };
 }
 
 async function enrichKtoMatches(places: Place[]): Promise<void> {

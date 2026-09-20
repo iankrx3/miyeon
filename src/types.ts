@@ -144,6 +144,13 @@ export interface ItineraryBlock {
   /** Glow Up subtype this block was placed for. Drives the filtered Creatrip
    * list URL; set even when there is no catalog venue (restore / photo). */
   glowUpSubtype?: GlowUpSubtype;
+  /** Snapshot of the live KTO/Google venue so the map can pin without the
+   * in-memory spots catalog. */
+  venueName?: string;
+  latitude?: number;
+  longitude?: number;
+  address?: string;
+  venueSource?: 'google' | 'kto' | 'merged' | 'mock';
 }
 
 export interface ItineraryDay {
