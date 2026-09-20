@@ -61,7 +61,6 @@ export const ItineraryTimeline: React.FC<ItineraryTimelineProps> = ({
             block.glowUpSubtype && glowUpProfile
               ? buildGlowUpCreatripUrl(block.glowUpSubtype, {
                   region: glowUpProfile.region,
-                  budget: glowUpProfile.budget,
                   languages: glowUpProfile.languages,
                 })
               : null;

@@ -1,6 +1,5 @@
 import type {
   BeautyTripProfile,
-  GlowUpBudget,
   GlowUpLanguage,
   GlowUpRegion,
   GlowUpSubtype,
@@ -58,6 +57,7 @@ export const CREATRIP_CATEGORY: Partial<Record<SpotSubcategory, { category: numb
 export const CREATRIP_THEME = {
   affordablePrice: 14,
   excellentService: 16,
+  english: 5,
   chinese: 4,
   japanese: 6,
   thai: 7,
@@ -151,35 +151,12 @@ export function regionIdForProfile(region: GlowUpRegion | null): number | undefi
   return GLOWUP_REGION_ID[region];
 }
 
-/** Creatrip's minPrice/maxPrice are plain USD numbers; the quiz's budget tiers
- * are KRW. Placeholder fixed rate — not live-fetched. */
-export const KRW_TO_USD_RATE = 1350;
-
-function krwToUsd(krw: number): number {
-  return Math.round(krw / KRW_TO_USD_RATE);
-}
-
-export function budgetRangeUsd(budget: GlowUpBudget | null): { min?: number; max?: number } {
-  switch (budget) {
-    case 'under-100k':
-      return { max: krwToUsd(100_000) };
-    case '100-300k':
-      return { min: krwToUsd(100_000), max: krwToUsd(300_000) };
-    case '300-500k':
-      return { min: krwToUsd(300_000), max: krwToUsd(500_000) };
-    default:
-      return {};
-  }
-}
-
-const GLOWUP_LANGUAGE_THEME: Partial<Record<GlowUpLanguage, number>> = {
+const GLOWUP_LANGUAGE_THEME: Record<GlowUpLanguage, number> = {
+  English: CREATRIP_THEME.english,
   Chinese: CREATRIP_THEME.chinese,
   Japanese: CREATRIP_THEME.japanese,
   Thai: CREATRIP_THEME.thai,
   Vietnamese: CREATRIP_THEME.vietnamese,
-  // English: Creatrip exposes this as a separate toolbar toggle, not a `theme=`
-  // id — TODO confirm the real param before launch. Omitted for now rather than
-  // guessed, so selecting it is UI-only until then.
 };
 
 export function themeIdsForLanguages(languages: GlowUpLanguage[]): number[] {
@@ -188,12 +165,11 @@ export function themeIdsForLanguages(languages: GlowUpLanguage[]): number[] {
 
 export interface GlowUpUrlContext {
   region: GlowUpRegion | null;
-  budget: GlowUpBudget | null;
   languages: GlowUpLanguage[];
 }
 
-/** Builds a Creatrip category-list URL for one GlowUp slot item. Region/budget/
- * language are shared across every slot in a result — only category/
+/** Builds a Creatrip category-list URL for one GlowUp slot item. Region/language
+ * are shared across every slot in a result — only category/
  * middleCategory differs per slot. Returns null only if GLOWUP_CATEGORY_MAP is
  * ever missing an entry (shouldn't happen — all 12 subtypes are mapped above). */
 export function buildGlowUpCreatripUrl(subtype: GlowUpSubtype, ctx: GlowUpUrlContext): string | null {
@@ -208,9 +184,6 @@ export function buildGlowUpCreatripUrl(subtype: GlowUpSubtype, ctx: GlowUpUrlCon
   if (mapping.middleCategory != null) params.set('middleCategory', String(mapping.middleCategory));
   const regionId = regionIdForProfile(ctx.region);
   if (regionId != null) params.set('region', String(regionId));
-  const { min, max } = budgetRangeUsd(ctx.budget);
-  if (min != null) params.set('minPrice', String(min));
-  if (max != null) params.set('maxPrice', String(max));
   for (const id of new Set(themeIdsForLanguages(ctx.languages))) params.append('theme', String(id));
   return withCreatripAffiliate(`${CREATRIP_BASE_URL}/spot/list?${params.toString()}`);
 }

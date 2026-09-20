@@ -38,7 +38,6 @@ function toSlotItem(
     emoji,
     url: buildGlowUpCreatripUrl(subtype, {
       region: profile.region,
-      budget: profile.budget,
       languages: profile.languages,
     }),
   };

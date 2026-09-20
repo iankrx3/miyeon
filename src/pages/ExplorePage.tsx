@@ -48,16 +48,32 @@ const STEP_DISPLAY_INDEX: Record<Step, number> = {
 };
 const TOTAL_STEPS = 6;
 
+type Base = 'seoul' | 'busan' | 'unsure';
+
+/** Wizard progress kept at module scope so it survives ExplorePage unmounting when the
+ * user visits another tab (Map, Community…) and comes back. Cleared once a plan is built. */
+const freshWizardMemory = () => ({
+  step: 'home' as Step,
+  profile: emptyGlowUpProfile(),
+  base: 'seoul' as Base,
+});
+let wizardMemory = freshWizardMemory();
+
 export default function ExplorePage() {
   const navigate = useNavigate();
   const generatingRef = useRef(false);
-  const [step, setStep] = useState<Step>('home');
-  const [profile, setProfile] = useState<GlowUpProfile>(emptyGlowUpProfile());
-  const [base, setBase] = useState<'seoul' | 'busan' | 'unsure'>('seoul');
+  const [step, setStep] = useState<Step>(wizardMemory.step);
+  const [profile, setProfile] = useState<GlowUpProfile>(wizardMemory.profile);
+  const [base, setBase] = useState<Base>(wizardMemory.base);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [step]);
+
+  useEffect(() => {
+    // 'transition' isn't resumable (it would re-run generation), so remember the last question.
+    wizardMemory = { step: step === 'transition' ? 'language' : step, profile, base };
+  }, [step, profile, base]);
 
   const stepIndex = STEP_DISPLAY_INDEX[step];
 
@@ -116,6 +132,7 @@ export default function ExplorePage() {
     void (async () => {
       const next = await buildGlowUpResult(profile);
       upsertItinerary(next.itinerary);
+      wizardMemory = freshWizardMemory();
       navigate(`/itinerary/${next.itinerary.id}`);
     })();
   };
@@ -345,8 +362,8 @@ export default function ExplorePage() {
 
           {step === 'language' && (
             <WizardShell
-              title="English available, and...?"
-              subtitle="English is already covered — pick any extras."
+              title="Which languages do you need?"
+              subtitle="Pick all that apply."
               step={stepIndex}
               total={TOTAL_STEPS}
               onBack={() => goBackFrom('language')}
@@ -354,19 +371,17 @@ export default function ExplorePage() {
               nextLabel="See my Glow Up"
             >
               <div className="space-y-2.5">
-                {languageOptions
-                  .filter((opt) => opt.id !== 'English')
-                  .map((opt) => (
-                    <OptionCard
-                      key={opt.id}
-                      label={opt.label}
-                      selected={profile.languages.includes(opt.id)}
-                      onClick={() => toggleLanguage(opt.id)}
-                    />
-                  ))}
+                {languageOptions.map((opt) => (
+                  <OptionCard
+                    key={opt.id}
+                    label={opt.label}
+                    selected={profile.languages.includes(opt.id)}
+                    onClick={() => toggleLanguage(opt.id)}
+                  />
+                ))}
                 <OptionCard
-                  label="No, English is fine"
-                  caption="Most people choose this"
+                  label="No preference"
+                  caption="Don't filter by language"
                   selected={profile.languages.length === 0}
                   onClick={() => setProfile((p) => ({ ...p, languages: [] }))}
                 />
