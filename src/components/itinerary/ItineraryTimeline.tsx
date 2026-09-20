@@ -1,5 +1,6 @@
 import React from 'react';
-import { MoreHorizontal } from 'lucide-react';
+import { Car, Clock, Footprints, Info, MapPin, MoreHorizontal, Train } from 'lucide-react';
+import { stripEmoji } from '../../lib/stripEmoji';
 import type { BeautyTripProfile, GlowUpProfile, ItineraryDay, Spot } from '../../types';
 import { getSpot, SUBCATEGORY_LABEL } from '../../data/spots';
 import { buildCreatripListUrl, buildGlowUpCreatripUrl, creatripThemesForProfile } from '../../lib/creatrip';
@@ -13,11 +14,11 @@ interface ItineraryTimelineProps {
   onOpenSpot?: (spot: Spot) => void;
 }
 
-const TRAVEL_ICON: Record<string, string> = {
-  walk: '🚶',
-  subway: '🚇',
-  taxi: '🚕',
-};
+const TRAVEL_ICON = {
+  walk: Footprints,
+  subway: Train,
+  taxi: Car,
+} as const;
 
 export const ItineraryTimeline: React.FC<ItineraryTimelineProps> = ({
   day,
@@ -38,9 +39,11 @@ export const ItineraryTimeline: React.FC<ItineraryTimelineProps> = ({
       <div className="space-y-2.5">
         {day.blocks.map((block) => {
           if (block.kind === 'travel' && block.travel) {
+            const TravelIcon = TRAVEL_ICON[block.travel.mode];
             return (
-              <p key={block.id} className="pl-[38px] text-xs font-medium text-miyeon-main/50">
-                {TRAVEL_ICON[block.travel.mode]} {block.travel.minutes} min {block.travel.mode}
+              <p key={block.id} className="flex items-center gap-1.5 pl-[38px] text-xs font-medium text-miyeon-main/50">
+                <TravelIcon className="h-3.5 w-3.5" strokeWidth={1.75} />
+                {block.travel.minutes} min {block.travel.mode}
               </p>
             );
           }
@@ -51,7 +54,7 @@ export const ItineraryTimeline: React.FC<ItineraryTimelineProps> = ({
                 className="ml-[38px] rounded-2xl border border-dashed border-miyeon-line px-4 py-3 text-sm text-miyeon-main/70"
               >
                 {block.startTime && <span className="mr-2 text-xs font-semibold">{block.startTime}</span>}
-                🍜 {block.label ?? 'Break'}
+                {stripEmoji(block.label ?? 'Break')}
               </div>
             );
           }
@@ -99,14 +102,19 @@ export const ItineraryTimeline: React.FC<ItineraryTimelineProps> = ({
                         </span>
                       )}
                       <h3 className="truncate text-[14.5px] font-medium text-miyeon-ink">
-                        {venueName ?? block.label ?? 'Listing'}
+                        {venueName ?? (block.label ? stripEmoji(block.label) : 'Listing')}
                       </h3>
                     </div>
                     <p className="mt-0.5 truncate text-xs text-miyeon-main/60">
                       {spot ? SUBCATEGORY_LABEL[spot.subcategory] : 'Creatrip listings'}
                       {block.priceUsd != null ? ` · ~$${block.priceUsd}` : ''}
                     </p>
-                    {block.note && <p className="mt-0.5 text-[10.5px] text-miyeon-accent-dark/90">ℹ️ {block.note}</p>}
+                    {block.note && (
+                      <p className="mt-0.5 flex items-center gap-1 text-[10.5px] text-miyeon-accent-dark/90">
+                        <Info className="h-3 w-3 shrink-0" strokeWidth={1.75} />
+                        {block.note}
+                      </p>
+                    )}
                   </button>
                   {onOpenMenu && spot ? (
                     <button
@@ -122,9 +130,16 @@ export const ItineraryTimeline: React.FC<ItineraryTimelineProps> = ({
                   )}
                 </div>
                 {(spot || block.address) && (
-                  <p className="mt-2 text-xs text-miyeon-main/55">
-                    📍 {spot?.area ?? block.address}
-                    {block.durationMin ? ` · ⏱ ${block.durationMin} min` : ''}
+                  <p className="mt-2 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs text-miyeon-main/55">
+                    <MapPin className="h-3 w-3 shrink-0" strokeWidth={1.75} />
+                    {spot?.area ?? block.address}
+                    {block.durationMin ? (
+                      <>
+                        <span aria-hidden>·</span>
+                        <Clock className="h-3 w-3 shrink-0" strokeWidth={1.75} />
+                        {block.durationMin} min
+                      </>
+                    ) : null}
                   </p>
                 )}
                 {block.reason && (

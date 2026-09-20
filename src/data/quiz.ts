@@ -17,13 +17,13 @@ export interface VibePair {
   a: string;
   b: string;
 }
-export const purposeOptions: { id: TripPurpose; emoji: string; label: string }[] = [
-  { id: 'new-me', emoji: '✨', label: 'I want a whole new me.' },
-  { id: 'event', emoji: '📸', label: 'There’s something coming up.' },
-  { id: 'korean-experience', emoji: '🇰🇷', label: 'I want the Korean experience.' },
-  { id: 'what-suits-me', emoji: '🪞', label: 'I’ve never really known what suits me.' },
-  { id: 'feel-good', emoji: '💆', label: 'I just want to feel good again.' },
-  { id: 'dont-know', emoji: '🤷', label: 'I honestly don’t know.' },
+export const purposeOptions: { id: TripPurpose; label: string }[] = [
+  { id: 'new-me', label: 'I want a whole new me.' },
+  { id: 'event', label: 'There’s something coming up.' },
+  { id: 'korean-experience', label: 'I want the Korean experience.' },
+  { id: 'what-suits-me', label: 'I’ve never really known what suits me.' },
+  { id: 'feel-good', label: 'I just want to feel good again.' },
+  { id: 'dont-know', label: 'I honestly don’t know.' },
 ];
 
 export const goalOptions: { id: BeautyGoal; label: string }[] = [
@@ -53,37 +53,37 @@ export const needleOptions: { id: NeedleComfort; label: string }[] = [
 // Creatrip subcategory (services/itinerary/generate.ts's GOAL_SUBCATS) — worded as a
 // feeling/scenario rather than a literal service-menu pick, per product direction.
 // The 'skin' goal reuses skinExperienceOptions above instead of a separate step.
-export const hairVibeOptions: { id: SpotSubcategory; emoji: string; label: string }[] = [
-  { id: 'color-perm', emoji: '💇', label: 'A whole new color or cut' },
-  { id: 'head-spa', emoji: '🧖', label: 'Deep-conditioning head spa' },
-  { id: 'hair-makeup', emoji: '💁', label: 'Styled for an occasion' },
-  { id: 'hair-extensions', emoji: '🌊', label: 'More length or volume' },
+export const hairVibeOptions: { id: SpotSubcategory; label: string }[] = [
+  { id: 'color-perm', label: 'A whole new color or cut' },
+  { id: 'head-spa', label: 'Deep-conditioning head spa' },
+  { id: 'hair-makeup', label: 'Styled for an occasion' },
+  { id: 'hair-extensions', label: 'More length or volume' },
 ];
 
-export const faceVibeOptions: { id: SpotSubcategory; emoji: string; label: string }[] = [
-  { id: 'skin-care', emoji: '✨', label: 'Clearer, healthier-looking skin' },
-  { id: 'aesthetics', emoji: '🪄', label: 'Lifting & contouring' },
-  { id: 'beauty-makeup', emoji: '💄', label: 'A full makeup transformation' },
+export const faceVibeOptions: { id: SpotSubcategory; label: string }[] = [
+  { id: 'skin-care', label: 'Clearer, healthier-looking skin' },
+  { id: 'aesthetics', label: 'Lifting & contouring' },
+  { id: 'beauty-makeup', label: 'A full makeup transformation' },
 ];
 
-export const makeupStyleVibeOptions: { id: SpotSubcategory; emoji: string; label: string }[] = [
-  { id: 'color-analysis', emoji: '🎨', label: 'Discover my personal colors' },
-  { id: 'beauty-makeup', emoji: '💄', label: 'A full glam makeup session' },
+export const makeupStyleVibeOptions: { id: SpotSubcategory; label: string }[] = [
+  { id: 'color-analysis', label: 'Discover my personal colors' },
+  { id: 'beauty-makeup', label: 'A full glam makeup session' },
 ];
 
-export const detailsVibeOptions: { id: SpotSubcategory; emoji: string; label: string }[] = [
-  { id: 'nail-art', emoji: '💅', label: 'Nails' },
-  { id: 'waxing', emoji: '🪒', label: 'Smooth, hair-free skin' },
-  { id: 'glasses', emoji: '👓', label: 'New glasses' },
-  { id: 'id-portrait', emoji: '📸', label: 'ID or passport photo' },
-  { id: 'permanent-makeup', emoji: '✏️', label: 'Long-lasting brows or lips' },
+export const detailsVibeOptions: { id: SpotSubcategory; label: string }[] = [
+  { id: 'nail-art', label: 'Nails' },
+  { id: 'waxing', label: 'Smooth, hair-free skin' },
+  { id: 'glasses', label: 'New glasses' },
+  { id: 'id-portrait', label: 'ID or passport photo' },
+  { id: 'permanent-makeup', label: 'Long-lasting brows or lips' },
 ];
 
-export const languageOptions: { id: CreatripLanguage; emoji: string; label: string }[] = [
-  { id: 'Chinese', emoji: '🇨🇳', label: 'Chinese' },
-  { id: 'Japanese', emoji: '🇯🇵', label: 'Japanese' },
-  { id: 'Thai', emoji: '🇹🇭', label: 'Thai' },
-  { id: 'Vietnamese', emoji: '🇻🇳', label: 'Vietnamese' },
+export const languageOptions: { id: CreatripLanguage; label: string }[] = [
+  { id: 'Chinese', label: 'Chinese' },
+  { id: 'Japanese', label: 'Japanese' },
+  { id: 'Thai', label: 'Thai' },
+  { id: 'Vietnamese', label: 'Vietnamese' },
 ];
 
 export const restrictionOptions: { id: Restriction; label: string }[] = [

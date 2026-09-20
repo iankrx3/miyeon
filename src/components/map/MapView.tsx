@@ -38,11 +38,11 @@ interface MapViewProps {
 
 const CATEGORY_FILTERS: { id: 'all' | BeautyCategory; label: string }[] = [
   { id: 'all', label: 'All' },
-  { id: 'skin', label: '✨ Skin' },
-  { id: 'face', label: '💎 Face' },
-  { id: 'hair', label: '✂️ Hair' },
-  { id: 'nails', label: '💅 Nails' },
-  { id: 'makeup', label: '💄 Makeup' },
+  { id: 'skin', label: 'Skin' },
+  { id: 'face', label: 'Face' },
+  { id: 'hair', label: 'Hair' },
+  { id: 'nails', label: 'Nails' },
+  { id: 'makeup', label: 'Makeup' },
 ];
 
 /** Pans/zooms the map so `targets` are fully visible — a single flyTo for one place,
@@ -308,7 +308,6 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
     markerMapRef.current.clear();
 
     getFilteredPlaces().forEach((place) => {
-      const icon = categoryMeta[place.category]?.icon ?? '✨';
       const customIcon = L.divIcon({
         html: `
           <div style="
@@ -317,7 +316,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
             border-radius:50%;box-shadow:0 4px 14px rgba(185,130,120,0.45);
             border:2px solid white;cursor:pointer;
           ">
-            <span style="font-size:14px;">${icon}</span>
+            <span style="width:10px;height:10px;border-radius:50%;background:white;"></span>
           </div>`,
         className: 'custom-pin',
         iconSize: [36, 36],
@@ -367,7 +366,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
               border-radius:50%;box-shadow:0 3px 10px rgba(118,100,93,0.4);
               border:2px solid white;
             ">
-              <span style="font-size:11px;">🌿</span>
+              <span style="width:8px;height:8px;border-radius:50%;background:white;"></span>
             </div>`,
           className: 'custom-wellness-pin',
           iconSize: [28, 28],
@@ -376,7 +375,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
         const marker = L.marker([spot.latitude, spot.longitude], { icon });
         marker.bindPopup(`
           <div style="padding:6px;font-family:inherit;">
-            <div style="font-size:12px;font-weight:bold;color:#5A514D;">🌿 ${spot.name}</div>
+            <div style="font-size:12px;font-weight:bold;color:#5A514D;">${spot.name}</div>
             <div style="font-size:10px;color:#5A514D;margin-top:2px;">KTO Wellness Pick · 자료: 한국관광공사</div>
           </div>
         `);
@@ -469,7 +468,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
             iconAnchor: [12, 12],
           });
           L.marker([latitude, longitude], { icon: userIcon })
-            .bindPopup('<div style="padding:4px 6px;font-size:12px;font-weight:600;">📍 Current Location</div>')
+            .bindPopup('<div style="padding:4px 6px;font-size:12px;font-weight:600;">Current location</div>')
             .addTo(userLocationLayerRef.current);
         }
 
@@ -503,7 +502,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
   }
 
   return (
-    <div className="relative h-[calc(100dvh-64px)] w-full overflow-hidden bg-miyeon-surface/30">
+    <div className="relative h-[calc(100dvh-var(--header-h))] w-full overflow-hidden bg-miyeon-surface/30">
       <div ref={mapContainerRef} className="h-full w-full z-0" />
 
       {loading && (
@@ -514,7 +513,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
 
       {locationError && (
         <div className="absolute bottom-[calc(var(--bottom-nav-h)+20px)] left-1/2 z-30 -translate-x-1/2 whitespace-nowrap rounded-full bg-miyeon-ink/90 px-4 py-2 text-xs font-medium text-white shadow-xl backdrop-blur-md sm:bottom-5">
-          ⚠️ {locationError}
+          {locationError}
         </div>
       )}
 
@@ -561,7 +560,6 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
                   onClick={() => handleJumpToPlace(p)}
                   className="flex w-full items-center gap-3 px-3.5 py-2.5 hover:bg-miyeon-surface/30"
                 >
-                  <span className="text-lg leading-none">{categoryMeta[p.category].icon}</span>
                   <div className="min-w-0 flex-1 text-left">
                     <p className="truncate text-xs font-semibold text-miyeon-main">{p.name}</p>
                     <p className="text-[10px] text-miyeon-main/60">{p.area} · ★{p.rating}</p>

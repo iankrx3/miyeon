@@ -17,13 +17,13 @@ const tabs = [
 export const BottomNav: React.FC<BottomNavProps> = ({ session, onSignIn }) => {
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 flex h-14 items-stretch border-t border-miyeon-line bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md sm:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 flex items-start justify-between border-t border-miyeon-line bg-white/95 px-8 pb-[max(18px,env(safe-area-inset-bottom))] pt-2.5 backdrop-blur-md sm:hidden">
       {tabs.map(({ to, label, icon: Icon }) => (
         <NavLink
           key={to}
           to={to}
           end={to === '/'}
-          className="flex flex-1 flex-col items-center justify-center gap-1 text-[10px]"
+          className="flex flex-col items-center gap-[5px] text-[10px]"
         >
           {({ isActive }) => (
             <>
@@ -40,7 +40,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ session, onSignIn }) => {
       {session.isLoggedIn && session.user ? (
         <NavLink
           to="/profile"
-          className="flex flex-1 flex-col items-center justify-center gap-1 text-[10px]"
+          className="flex flex-col items-center gap-[5px] text-[10px]"
         >
           {({ isActive }) => (
             <>
@@ -59,7 +59,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ session, onSignIn }) => {
       ) : (
         <button
           onClick={onSignIn}
-          className="flex flex-1 flex-col items-center justify-center gap-1 text-[10px] text-miyeon-main/50"
+          className="flex flex-col items-center gap-[5px] text-[10px] text-miyeon-main/50"
         >
           <User strokeWidth={1.5} className="h-[22px] w-[22px]" />
           My

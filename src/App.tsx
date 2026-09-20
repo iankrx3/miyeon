@@ -10,6 +10,7 @@ import MapPage from './pages/MapPage';
 import CommunityPage from './pages/CommunityPage';
 import PlaceDetailPage from './pages/PlaceDetailPage';
 import TreatmentDetailPage from './pages/TreatmentDetailPage';
+import CategoryDetailPage from './pages/CategoryDetailPage';
 import PostDetailPage from './pages/PostDetailPage';
 import MagazineDetailPage from './pages/MagazineDetailPage';
 import CuratorProfilePage from './pages/CuratorProfilePage';
@@ -89,6 +90,7 @@ export default function App() {
                 element={<PlaceDetailPage session={session} onSignIn={() => setIsAuthOpen(true)} />}
               />
               <Route path="/treatment/:id" element={<TreatmentDetailPage />} />
+              <Route path="/category/:subtype" element={<CategoryDetailPage />} />
               <Route
                 path="/curator/signup"
                 element={

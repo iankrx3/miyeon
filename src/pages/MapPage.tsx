@@ -28,7 +28,7 @@ export default function MapPage({ session, onSignIn }: { session: UserSession; o
   return (
     <div className="relative">
       {!spotsReady ? (
-        <div className="flex h-[calc(100dvh-64px)] w-full items-center justify-center bg-miyeon-surface/30">
+        <div className="flex h-[calc(100dvh-var(--header-h))] w-full items-center justify-center bg-miyeon-surface/30">
           <Loader2 className="h-6 w-6 animate-spin text-miyeon-accent" />
         </div>
       ) : (

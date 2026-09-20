@@ -6,6 +6,7 @@ import { regenerateOptions, replaceOptions } from '../data/quiz';
 import { getSpot } from '../data/spots';
 import { ItineraryRouteMap } from '../components/itinerary/ItineraryRouteMap';
 import { ItineraryTimeline } from '../components/itinerary/ItineraryTimeline';
+import { GlowUpResultView } from '../components/glowup/GlowUpResultView';
 import { useSavedItineraries } from '../hooks/useSavedItineraries';
 import { useSpotsCatalog } from '../hooks/useSpotsCatalog';
 import { getStoredItinerary, upsertItinerary } from '../lib/localItineraryStore';
@@ -61,6 +62,24 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
     );
   }
 
+  // Glow Up plans are category recommendations (no venues, no map). Older saved
+  // Glow Up plans still carry venue blocks and keep the map + timeline layout.
+  const isCategoryPlan =
+    Boolean(itinerary.glowUpSnapshot && !itinerary.profileSnapshot) &&
+    itinerary.days.every((d) => d.blocks.every((b) => !b.spotId && !b.venueName));
+  if (isCategoryPlan) {
+    return (
+      <GlowUpResultView
+        itinerary={itinerary}
+        day={day}
+        onSelectDay={setDayIndex}
+        saved={isSaved(itinerary.id)}
+        onToggleSave={() => (session.isLoggedIn ? toggleSave(itinerary) : onSignIn())}
+        onBack={() => navigate(-1)}
+      />
+    );
+  }
+
   const hasPinnedVenues = itinerary.days.some((d) =>
     d.blocks.some((b) => b.latitude != null && b.longitude != null)
   );
@@ -82,7 +101,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
   );
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] flex-col sm:flex-row">
+    <div className="flex min-h-[calc(100vh-var(--header-h))] flex-col sm:flex-row">
       <div className="h-[300px] sm:h-auto sm:flex-1">
         <ItineraryRouteMap
           day={day}
@@ -145,7 +164,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
           </div>
         </header>
 
-        <div className="sticky top-16 z-10 flex shrink-0 gap-2 overflow-x-auto bg-white px-4 py-3.5 no-scrollbar sm:static">
+        <div className="sticky top-[var(--header-h)] z-10 flex shrink-0 gap-2 overflow-x-auto bg-white px-4 py-3.5 no-scrollbar sm:static">
           {itinerary.days.map((d) => (
             <button
               key={d.dayIndex}

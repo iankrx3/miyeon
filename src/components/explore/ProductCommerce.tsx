@@ -17,7 +17,7 @@ export const ProductCommerce: React.FC<ProductCommerceProps> = ({ concerns }) =>
 
   return (
     <div className="rounded-3xl border border-miyeon-line bg-miyeon-accent-soft/40 p-5">
-      <h3 className="text-sm font-bold text-miyeon-main">🧴 And at home</h3>
+      <h3 className="text-sm font-bold text-miyeon-main">And at home</h3>
       <p className="mt-1 text-xs text-miyeon-main/60">
         Whatever you decide at the clinic, these help with {concernLabel}.
       </p>

@@ -16,10 +16,10 @@ interface CommunityPageProps {
 
 const CATEGORIES: { id: CommunityPost['category'] | 'all'; label: string }[] = [
   { id: 'all', label: 'All' },
-  { id: 'trending', label: '🔥 Trending' },
-  { id: 'treatment-reviews', label: '✨ Treatment Reviews' },
-  { id: 'seoul-places', label: '📍 Seoul Beauty Places' },
-  { id: 'questions', label: '💬 Questions' },
+  { id: 'trending', label: 'Trending' },
+  { id: 'treatment-reviews', label: 'Treatment Reviews' },
+  { id: 'seoul-places', label: 'Seoul Beauty Places' },
+  { id: 'questions', label: 'Questions' },
 ];
 
 const TABS: { id: 'community' | 'magazine'; label: string }[] = [

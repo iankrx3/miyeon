@@ -670,10 +670,10 @@ export const mockPostComments: PostComment[] = [
   },
 ];
 
-export const categoryMeta: Record<BeautyCategory, { label: string; icon: string }> = {
-  skin: { label: 'Skin', icon: '✨' },
-  face: { label: 'Face', icon: '💎' },
-  hair: { label: 'Hair', icon: '💇' },
-  nails: { label: 'Nails', icon: '💅' },
-  makeup: { label: 'Makeup', icon: '💄' },
+export const categoryMeta: Record<BeautyCategory, { label: string }> = {
+  skin: { label: 'Skin' },
+  face: { label: 'Face' },
+  hair: { label: 'Hair' },
+  nails: { label: 'Nails' },
+  makeup: { label: 'Makeup' },
 };

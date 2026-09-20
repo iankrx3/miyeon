@@ -11,10 +11,10 @@ interface PostComposerProps {
 }
 
 const POST_CATEGORIES: { id: CommunityPost['category']; label: string }[] = [
-  { id: 'trending', label: '🔥 Trending' },
-  { id: 'treatment-reviews', label: '✨ Treatment Review' },
-  { id: 'seoul-places', label: '📍 Seoul Beauty Place' },
-  { id: 'questions', label: '💬 Question' },
+  { id: 'trending', label: 'Trending' },
+  { id: 'treatment-reviews', label: 'Treatment Review' },
+  { id: 'seoul-places', label: 'Seoul Beauty Place' },
+  { id: 'questions', label: 'Question' },
 ];
 
 export const PostComposer: React.FC<PostComposerProps> = ({ session, onSignIn, onSubmit }) => {

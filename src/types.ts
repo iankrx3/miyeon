@@ -434,13 +434,9 @@ export interface GlowUpSlotItem {
   category: GlowUpCategory;
   subtype: GlowUpSubtype;
   label: string;
-  emoji: string;
-  /** Resolved Creatrip list URL (region/budget/language/category/middleCategory
+  /** Resolved Creatrip list URL (region/language/category/middleCategory
    * applied). Null only if GLOWUP_CATEGORY_MAP is ever missing an entry. */
   url: string | null;
-  /** Catalog venue attached after loadSpots(); omitted for restore/photo and
-   * when the catalog has no match. */
-  spotId?: string;
 }
 
 export interface GlowUpSlot {

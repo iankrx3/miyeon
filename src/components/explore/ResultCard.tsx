@@ -12,9 +12,9 @@ interface ResultCardProps {
 }
 
 const TIER = {
-  1: { badge: '🥇', label: 'YOUR MATCH', fallbackTagline: "Miyeon's top pick for you." },
-  2: { badge: '💎', label: 'GO BIGGER', fallbackTagline: 'Same direction — stronger effect.' },
-  3: { badge: '🔄', label: 'THE OTHER ROUTE', fallbackTagline: 'A different way to get there.' },
+  1: { label: 'YOUR MATCH', fallbackTagline: "Miyeon's top pick for you." },
+  2: { label: 'GO BIGGER', fallbackTagline: 'Same direction — stronger effect.' },
+  3: { label: 'THE OTHER ROUTE', fallbackTagline: 'A different way to get there.' },
 } as const;
 
 const DOWNTIME_LABEL: Record<string, string> = {
@@ -48,7 +48,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({ result, rank, quote }) =
     >
       <div className="flex items-center justify-between">
         <span className="text-xs font-semibold uppercase tracking-wider text-miyeon-main/60">
-          {tier.badge} {tier.label}
+          {tier.label}
         </span>
         <motion.span
           initial={{ scale: 0 }}

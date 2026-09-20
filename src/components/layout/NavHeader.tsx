@@ -18,13 +18,13 @@ const tabs = [
 
 export const NavHeader: React.FC<NavHeaderProps> = ({ session, onSignIn, onSignOut }) => {
   return (
-    <header className="sticky top-0 z-40 grid grid-cols-[1fr_auto] items-center border-b border-miyeon-line bg-white/95 px-4 py-4 backdrop-blur-md sm:grid-cols-[1fr_auto_1fr] sm:px-10">
+    <header className="sticky top-0 z-40 grid grid-cols-[1fr_auto] items-center h-[var(--header-h)] border-b border-miyeon-line bg-white/95 px-5 backdrop-blur-md sm:grid-cols-[1fr_auto_1fr] sm:px-10">
       <NavLink
         to="/"
-        className="flex items-start gap-0.5 justify-self-start font-wordmark text-[22px] font-light tracking-tight text-miyeon-ink"
+        className="flex items-start gap-0.5 justify-self-start font-wordmark text-[24px] font-light tracking-[0.05em] text-miyeon-ink"
       >
         miyeon
-        <span className="mt-1 text-[9px] text-miyeon-accent">✦</span>
+        <span className="mt-1 text-[9px] font-normal tracking-normal text-miyeon-accent">✦</span>
       </NavLink>
 
       <nav className="hidden items-center gap-8 sm:flex">
@@ -80,7 +80,7 @@ export const NavHeader: React.FC<NavHeaderProps> = ({ session, onSignIn, onSignO
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             onClick={onSignIn}
-            className="text-xs font-semibold text-miyeon-main/70 transition-colors hover:text-miyeon-main sm:text-sm"
+            className="text-[13px] text-miyeon-main/60 transition-colors hover:text-miyeon-main sm:text-sm"
           >
             Sign in
           </motion.button>

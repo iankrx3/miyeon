@@ -143,14 +143,14 @@ export default function ExplorePage() {
 
   if (step === 'transition') {
     return (
-      <div className="mx-auto max-w-xl px-4 py-8">
+      <div className="mx-auto max-w-xl px-5 py-8">
         <AITransition onDone={handleTransitionDone} messages={glowUpTransitionMessages} />
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-xl overflow-hidden px-4 py-8 sm:py-14">
+    <div className="mx-auto max-w-xl overflow-hidden px-5 py-8 sm:py-14">
       <AnimatePresence mode="wait">
         <motion.div
           key={step}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
-import { Heart, MessageCircle, Star, Trash2 } from 'lucide-react';
+import { Heart, MapPin, MessageCircle, Star, Trash2 } from 'lucide-react';
 import type { CommunityPost, PostComment, UserSession } from '../../types';
 import { addComment, deleteComment, fetchComments } from '../../services/community';
 import { ShareButton } from './ShareButton';
@@ -151,7 +151,8 @@ export const PostCard: React.FC<PostCardProps> = ({
           to={`/place/${post.placeId}`}
           className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-miyeon-surface px-3 py-1 text-[11px] font-medium text-miyeon-ink"
         >
-          📍 {post.placeName}
+          <MapPin className="h-3 w-3" strokeWidth={1.75} />
+          {post.placeName}
           {post.treatmentName ? ` · ${post.treatmentName}` : ''}
         </Link>
       )}

@@ -25,9 +25,9 @@ import restoreYoga from '../assets/quiz/restore-yoga.jpg';
 // Itinerary flow (ItineraryPage.tsx still imports its regenerateOptions/
 // replaceOptions live).
 
-export const fixOptions: { id: FixItem; emoji: string; label: string; headline: string; image: string }[] = [
-  { id: 'skin', emoji: '✨', label: 'Skin', headline: 'Filter-Free Glow', image: fixSkin },
-  { id: 'face', emoji: '🪄', label: 'Face', headline: 'Model-Like Lift', image: fixFace },
+export const fixOptions: { id: FixItem; label: string; headline: string; image: string }[] = [
+  { id: 'skin', label: 'Skin', headline: 'Filter-Free Glow', image: fixSkin },
+  { id: 'face', label: 'Face', headline: 'Model-Like Lift', image: fixFace },
 ];
 
 export const fixDowntimeOptions: { id: FixDowntimeAnswer; label: string }[] = [
@@ -49,20 +49,20 @@ export function fixReactionCopy(items: FixItem[]): string {
   return FIX_REACTION_COPY.skin;
 }
 
-export const changeOptions: { id: ChangeItem; emoji: string; label: string; headline: string; image: string }[] = [
-  { id: 'personal-color', emoji: '🎨', label: 'Personal Color', headline: "What's Your Color?", image: changePersonalColor },
-  { id: 'hair', emoji: '💇', label: 'Hair Salon', headline: 'Korea-Exclusive Hair', image: changeHairSalon },
-  { id: 'makeup', emoji: '💄', label: 'Makeup', headline: 'K-Pop Idol Inspired', image: changeMakeup },
-  { id: 'permanent-makeup', emoji: '✏️', label: 'Permanent Makeup', headline: 'Matching Eyebrows', image: changePermanentMakeup },
-  { id: 'photo', emoji: '📸', label: 'Photo Studio', headline: "Photos You'll Keep", image: changePhotoStudio },
-  { id: 'nail', emoji: '💅', label: 'Nail Art', headline: 'Nail That Suits You', image: changeNailArt },
+export const changeOptions: { id: ChangeItem; label: string; headline: string; image: string }[] = [
+  { id: 'personal-color', label: 'Personal Color', headline: "What's Your Color?", image: changePersonalColor },
+  { id: 'hair', label: 'Hair Salon', headline: 'Korea-Exclusive Hair', image: changeHairSalon },
+  { id: 'makeup', label: 'Makeup', headline: 'K-Pop Idol Inspired', image: changeMakeup },
+  { id: 'permanent-makeup', label: 'Permanent Makeup', headline: 'Matching Eyebrows', image: changePermanentMakeup },
+  { id: 'photo', label: 'Photo Studio', headline: "Photos You'll Keep", image: changePhotoStudio },
+  { id: 'nail', label: 'Nail Art', headline: 'Nail That Suits You', image: changeNailArt },
 ];
 
-export const restoreOptions: { id: RestoreItem; emoji: string; label: string; headline: string; image: string }[] = [
-  { id: 'sauna', emoji: '♨️', label: 'Sauna / Jjimjilbang', headline: 'The K-Bathhouse', image: restoreSauna },
-  { id: 'scrub', emoji: '🧼', label: 'Body Scrub', headline: 'Peel Away The Stress', image: restoreScrub },
-  { id: 'massage', emoji: '💆', label: 'Massage', headline: 'Undo All That Walking', image: restoreMassage },
-  { id: 'yoga', emoji: '🧘', label: 'Yoga / Wellness', headline: 'Reset, Even Your Spirit', image: restoreYoga },
+export const restoreOptions: { id: RestoreItem; label: string; headline: string; image: string }[] = [
+  { id: 'sauna', label: 'Sauna / Jjimjilbang', headline: 'The K-Bathhouse', image: restoreSauna },
+  { id: 'scrub', label: 'Body Scrub', headline: 'Peel Away The Stress', image: restoreScrub },
+  { id: 'massage', label: 'Massage', headline: 'Undo All That Walking', image: restoreMassage },
+  { id: 'yoga', label: 'Yoga / Wellness', headline: 'Reset, Even Your Spirit', image: restoreYoga },
 ];
 
 export const tripDaysOptions: { id: GlowUpTripDays; label: string }[] = [
@@ -87,12 +87,12 @@ export const budgetOptions: { id: GlowUpBudget; label: string; caption: string }
   { id: 'no-preference', label: 'No preference', caption: 'Show me everything' },
 ];
 
-export const languageOptions: { id: GlowUpLanguage; emoji: string; label: string }[] = [
-  { id: 'English', emoji: '🇬🇧', label: 'English' },
-  { id: 'Japanese', emoji: '🇯🇵', label: 'Japanese' },
-  { id: 'Chinese', emoji: '🇨🇳', label: 'Chinese' },
-  { id: 'Vietnamese', emoji: '🇻🇳', label: 'Vietnamese' },
-  { id: 'Thai', emoji: '🇹🇭', label: 'Thai' },
+export const languageOptions: { id: GlowUpLanguage; label: string }[] = [
+  { id: 'English', label: 'English' },
+  { id: 'Japanese', label: 'Japanese' },
+  { id: 'Chinese', label: 'Chinese' },
+  { id: 'Vietnamese', label: 'Vietnamese' },
+  { id: 'Thai', label: 'Thai' },
 ];
 
 export const glowUpTransitionMessages = [
@@ -103,12 +103,12 @@ export const glowUpTransitionMessages = [
   'Finding real options — checking real prices, not ad prices',
 ];
 
-const OPTION_LABEL_BY_SUBTYPE: Record<string, { label: string; emoji: string }> = Object.fromEntries(
-  [...fixOptions, ...changeOptions, ...restoreOptions].map((opt) => [opt.id, { label: opt.label, emoji: opt.emoji }])
+const OPTION_LABEL_BY_SUBTYPE: Record<string, string> = Object.fromEntries(
+  [...fixOptions, ...changeOptions, ...restoreOptions].map((opt) => [opt.id, opt.label])
 );
 
-export function labelForSubtype(subtype: string): { label: string; emoji: string } {
-  return OPTION_LABEL_BY_SUBTYPE[subtype] ?? { label: subtype, emoji: '✨' };
+export function labelForSubtype(subtype: string): string {
+  return OPTION_LABEL_BY_SUBTYPE[subtype] ?? subtype;
 }
 
 export const regionLabel = (id: GlowUpRegion | null): string =>

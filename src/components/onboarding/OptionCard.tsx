@@ -30,16 +30,16 @@ export const OptionCard: React.FC<OptionCardProps> = ({
         whileTap={disabled ? undefined : { scale: 0.98 }}
         onClick={onClick}
         disabled={disabled}
-        className={`w-full overflow-hidden rounded-2xl border text-left transition-colors ${
+        className={`w-full overflow-hidden rounded-[14px] border text-left transition-colors ${
           selected ? 'border-miyeon-accent' : 'border-miyeon-line hover:border-miyeon-accent/40'
         }`}
       >
-        <div className="aspect-[168/100] w-full sm:aspect-[168/150]">
+        <div className="h-[150px] w-full">
           <img src={image} alt="" className="h-full w-full object-cover" />
         </div>
-        <div className="px-3 pb-3.5 pt-2.5">
-          <p className="text-[13px] leading-snug text-miyeon-ink">{headline}</p>
-          <p className="mt-0.5 text-[10px] font-medium tracking-wide text-miyeon-accent">{label}</p>
+        <div className="flex flex-col gap-[3px] px-3 pb-[13px] pt-[11px]">
+          <p className="text-[13px] font-medium leading-[1.36] text-miyeon-ink">{headline}</p>
+          <p className="text-[10px] font-medium tracking-[0.4px] text-miyeon-accent">{label}</p>
         </div>
       </motion.button>
     );

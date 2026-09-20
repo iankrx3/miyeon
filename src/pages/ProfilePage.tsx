@@ -7,6 +7,7 @@ const HELP_EMAIL = 'o3c.korea@gmail.com';
 import type { Itinerary, UserSession } from '../types';
 import { useSavedItineraries } from '../hooks/useSavedItineraries';
 import { useSavedPlaces } from '../hooks/useSavedPlaces';
+import { SwipeRow } from '../components/common/SwipeRow';
 import { firstSpotImage, upsertItinerary } from '../lib/localItineraryStore';
 import { itinerarySpotCount } from '../services/itinerary/generate';
 import { createUserItinerary, deleteUserItinerary, fetchUserItineraries } from '../services/userItinerary';
@@ -123,52 +124,8 @@ export default function ProfilePage({ session, onSignIn, onSignOut }: ProfilePag
         )}
       </div>
 
-      <div className="mx-auto max-w-2xl px-5 py-6">
-        <h2 className="font-display text-lg font-bold text-miyeon-ink">Saved places</h2>
-
-        {visibleSavedPlaces.length === 0 ? (
-          <div className="mt-3 rounded-2xl border border-dashed border-miyeon-line px-4 py-10 text-center">
-            <p className="text-sm text-miyeon-main/60">Nothing saved yet.</p>
-            <button
-              type="button"
-              onClick={() => navigate('/map')}
-              className="mt-4 rounded-full bg-miyeon-ink px-4 py-2 text-xs font-medium text-white"
-            >
-              Explore the map
-            </button>
-          </div>
-        ) : (
-          <div className="mt-3 flex gap-3 overflow-x-auto pb-1 no-scrollbar">
-            {visibleSavedPlaces.map((entry) => {
-              const place = entry.snapshot;
-              return (
-                <div key={entry.placeId} className="w-32 shrink-0">
-                  <div className="relative">
-                    <Link to={`/place/${entry.placeId}`} className="block">
-                      <img src={place.photoUrl} alt={place.name} className="h-[110px] w-full rounded-xl object-cover" />
-                    </Link>
-                    <button
-                      type="button"
-                      aria-label="Remove from saved"
-                      onClick={() => unsavePlace(entry.placeId)}
-                      className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-black/40 text-white"
-                    >
-                      <Bookmark className="h-3.5 w-3.5" fill="currentColor" />
-                    </button>
-                  </div>
-                  <Link to={`/place/${entry.placeId}`} className="mt-2 block">
-                    <p className="truncate text-[12.5px] font-medium text-miyeon-ink">{place.name}</p>
-                    <p className="flex items-center gap-1 text-[11px] text-miyeon-main/60">
-                      <Star className="h-3 w-3 fill-miyeon-accent-dark text-miyeon-accent-dark" /> {place.rating}
-                    </p>
-                  </Link>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        <div id="itineraries" className="mt-8 flex scroll-mt-20 items-center justify-between gap-3">
+      <div className="mx-auto max-w-2xl px-5 pt-6">
+        <div id="itineraries" className="flex scroll-mt-20 items-center justify-between gap-3">
           <h2 className="font-display text-lg font-bold text-miyeon-ink">My itineraries</h2>
           {myItineraries.length > 0 && (
             <button
@@ -236,66 +193,124 @@ export default function ProfilePage({ session, onSignIn, onSignOut }: ProfilePag
             })}
           </div>
         )}
+      </div>
 
-        <h2 className="mt-8 font-display text-lg font-bold text-miyeon-ink">Saved itineraries</h2>
-
-        {saved.length === 0 ? (
-          <div className="mt-3 rounded-2xl border border-dashed border-miyeon-line px-4 py-10 text-center">
-            <p className="text-sm text-miyeon-main/60">Nothing saved yet.</p>
-            <button
-              type="button"
-              onClick={() => navigate('/')}
-              className="mt-4 rounded-full bg-miyeon-ink px-4 py-2 text-xs font-medium text-white"
-            >
-              Plan a trip
-            </button>
+      <section className="mt-7 bg-miyeon-surface">
+        <div className="mx-auto max-w-2xl px-5 pb-[26px] pt-6">
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-[18px] font-bold text-miyeon-ink">Saved places</h2>
+            {visibleSavedPlaces.length > 0 && (
+              <p className="text-[12px] font-medium text-miyeon-main/60">
+                {visibleSavedPlaces.length} item{visibleSavedPlaces.length === 1 ? '' : 's'}
+              </p>
+            )}
           </div>
-        ) : (
-          <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {saved.map((item, i) => {
-              const cover = firstSpotImage(item.snapshot);
-              const spots = itinerarySpotCount(item.snapshot);
-              return (
-                <motion.div
-                  key={item.savedId}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: i * 0.05 }}
-                  className="overflow-hidden rounded-[14px] border border-miyeon-line bg-white"
-                >
-                  <Link to={`/itinerary/${item.snapshot.id}`} className="block">
-                    {cover ? (
-                      <img src={cover} alt="" className="h-32 w-full object-cover" />
-                    ) : (
-                      <div className="flex h-32 w-full items-center justify-center bg-miyeon-surface text-miyeon-main/40">
-                        <MapPin className="h-6 w-6" />
-                      </div>
-                    )}
-                  </Link>
-                  <div className="flex items-start justify-between gap-2 p-3">
-                    <Link to={`/itinerary/${item.snapshot.id}`} className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-miyeon-ink">{item.snapshot.title}</p>
-                      <p className="text-[11px] text-miyeon-main/60">
-                        {item.snapshot.days.length} day{item.snapshot.days.length === 1 ? '' : 's'} · {spots} experience
-                        {spots === 1 ? '' : 's'}
-                        {item.source === 'curator' ? ' · Curator' : item.source === 'user' ? ' · Mine' : ' · MIYEON'}
+
+          {visibleSavedPlaces.length === 0 ? (
+            <div className="mt-3.5 rounded-2xl border border-dashed border-miyeon-line bg-white px-4 py-10 text-center">
+              <p className="text-sm text-miyeon-main/60">Nothing saved yet.</p>
+              <button
+                type="button"
+                onClick={() => navigate('/map')}
+                className="mt-4 rounded-full bg-miyeon-ink px-4 py-2 text-xs font-medium text-white"
+              >
+                Explore the map
+              </button>
+            </div>
+          ) : (
+            <SwipeRow gap="gap-[11px]" className="mt-3.5">
+              {visibleSavedPlaces.map((entry) => {
+                const place = entry.snapshot;
+                return (
+                  <div key={entry.placeId} className="w-[128px] shrink-0 snap-start">
+                    <div className="relative">
+                      <Link to={`/place/${entry.placeId}`} className="block">
+                        <img src={place.photoUrl} alt={place.name} className="h-[110px] w-full rounded-[12px] object-cover" />
+                      </Link>
+                      <button
+                        type="button"
+                        aria-label="Remove from saved"
+                        onClick={() => unsavePlace(entry.placeId)}
+                        className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-black/40 text-white"
+                      >
+                        <Bookmark className="h-3.5 w-3.5" fill="currentColor" />
+                      </button>
+                    </div>
+                    <Link to={`/place/${entry.placeId}`} className="mt-[9px] block">
+                      <p className="truncate text-[12.5px] font-medium text-miyeon-ink">{place.name}</p>
+                      <p className="mt-[3px] flex items-center gap-1 text-[12px] font-medium text-miyeon-accent-dark">
+                        <Star className="h-3 w-3 fill-miyeon-accent-dark text-miyeon-accent-dark" /> {place.rating}
                       </p>
                     </Link>
-                    <button
-                      type="button"
-                      aria-label="Remove from saved"
-                      onClick={() => unsave(item.itineraryId)}
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-miyeon-accent hover:bg-miyeon-surface"
-                    >
-                      <Bookmark className="h-4 w-4" fill="currentColor" />
-                    </button>
                   </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        )}
+                );
+              })}
+            </SwipeRow>
+          )}
 
+          <div className="mt-7 flex items-center justify-between">
+            <h2 className="font-display text-[18px] font-bold text-miyeon-ink">Saved itineraries</h2>
+            {saved.length > 0 && (
+              <p className="text-[12px] font-medium text-miyeon-main/60">
+                {saved.length} item{saved.length === 1 ? '' : 's'}
+              </p>
+            )}
+          </div>
+  
+          {saved.length === 0 ? (
+            <div className="mt-3.5 rounded-2xl border border-dashed border-miyeon-line bg-white px-4 py-10 text-center">
+              <p className="text-sm text-miyeon-main/60">Nothing saved yet.</p>
+              <button
+                type="button"
+                onClick={() => navigate('/')}
+                className="mt-4 rounded-full bg-miyeon-ink px-4 py-2 text-xs font-medium text-white"
+              >
+                Plan a trip
+              </button>
+            </div>
+          ) : (
+            <SwipeRow gap="gap-[11px]" className="mt-3.5">
+              {saved.map((item) => {
+                const cover = firstSpotImage(item.snapshot);
+                const spots = itinerarySpotCount(item.snapshot);
+                const days = item.snapshot.days.length;
+                return (
+                  <div key={item.savedId} className="w-[160px] shrink-0 snap-start">
+                    <div className="relative">
+                      <Link to={`/itinerary/${item.snapshot.id}`} className="block">
+                        {cover ? (
+                          <img src={cover} alt="" className="h-[110px] w-full rounded-[12px] object-cover" />
+                        ) : (
+                          <div className="flex h-[110px] w-full items-center justify-center rounded-[12px] bg-white text-miyeon-main/40">
+                            <MapPin className="h-6 w-6" />
+                          </div>
+                        )}
+                      </Link>
+                      <button
+                        type="button"
+                        aria-label="Remove from saved"
+                        onClick={() => unsave(item.itineraryId)}
+                        className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-black/40 text-white"
+                      >
+                        <Bookmark className="h-3.5 w-3.5" fill="currentColor" />
+                      </button>
+                    </div>
+                    <Link to={`/itinerary/${item.snapshot.id}`} className="mt-[9px] block">
+                      <p className="truncate text-[12.5px] font-medium text-miyeon-ink">{item.snapshot.title}</p>
+                      <p className="mt-[3px] truncate text-[11px] text-miyeon-main/60">
+                        {days} day{days === 1 ? '' : 's'} · {spots} experience{spots === 1 ? '' : 's'}
+                        {item.source === 'curator' ? ' · Curator' : item.source === 'user' ? ' · Mine' : ''}
+                      </p>
+                    </Link>
+                  </div>
+                );
+              })}
+            </SwipeRow>
+          )}
+          </div>
+      </section>
+
+      <div className="mx-auto max-w-2xl px-5 pb-6">
         <div className="mt-8">
           <MenuRow title="My Beauty Card" caption="Show this at the clinic" disabled />
           <MenuRow

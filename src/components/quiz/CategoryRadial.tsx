@@ -48,7 +48,6 @@ export const CategoryRadial: React.FC<CategoryRadialProps> = ({
             whileTap={{ scale: 0.95 }}
             className="group absolute flex h-20 w-20 flex-col items-center justify-center gap-1 rounded-full bg-miyeon-surface text-miyeon-main shadow-sm transition-colors hover:bg-miyeon-accent hover:text-white"
           >
-            <span className="text-xl">{meta.icon}</span>
             <span className="text-[11px] font-semibold">{meta.label}</span>
           </motion.button>
         );

@@ -36,7 +36,7 @@ export const PlaceCard: React.FC<PlaceCardProps> = ({ place, saved, onSave, onVi
         <div className="flex items-start justify-between gap-2">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-wider text-miyeon-accent">
-              {meta.icon} {meta.label} · {place.area}
+              {meta.label} · {place.area}
             </p>
             <h3 className="mt-0.5 text-base font-semibold text-miyeon-main">{place.name}</h3>
           </div>

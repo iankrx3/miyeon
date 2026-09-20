@@ -11,7 +11,7 @@ import {
   placeRoundRobin,
   planningDaysFor,
 } from './placement';
-import { attachPlaces } from './attachPlaces';
+import { buildCategoryItinerary } from './buildItinerary';
 
 export function emptyGlowUpProfile(): GlowUpProfile {
   return {
@@ -30,12 +30,10 @@ function toSlotItem(
   subtype: GlowUpSlotItem['subtype'],
   profile: GlowUpProfile
 ): GlowUpSlotItem {
-  const { label, emoji } = labelForSubtype(subtype);
   return {
     category,
     subtype,
-    label,
-    emoji,
+    label: labelForSubtype(subtype),
     url: buildGlowUpCreatripUrl(subtype, {
       region: profile.region,
       languages: profile.languages,
@@ -80,9 +78,12 @@ export async function buildGlowUpResult(profile: GlowUpProfile): Promise<GlowUpR
     placeRoundRobin(days, dayScope(middleDayIndex(planningDays)), changeItems);
   }
 
-  return attachPlaces({
-    days,
-    whyThisLine: buildWhyThisLine(profile, days),
-    profileSnapshot: profile,
-  });
+  return buildCategoryItinerary(
+    {
+      days,
+      whyThisLine: buildWhyThisLine(profile, days),
+      profileSnapshot: profile,
+    },
+    profile
+  );
 }

@@ -35,7 +35,7 @@ export const EmailCaptureCard: React.FC<EmailCaptureCardProps> = ({ answers, top
 
   return (
     <div className="rounded-3xl border border-miyeon-line bg-white p-5">
-      <h3 className="text-sm font-bold text-miyeon-main">📋 Take this to your consultation.</h3>
+      <h3 className="text-sm font-bold text-miyeon-main">Take this to your consultation.</h3>
       <p className="mt-1 text-xs text-miyeon-main/60">
         Your answers, your matches, and the questions to ask the doctor.
       </p>
@@ -47,7 +47,7 @@ export const EmailCaptureCard: React.FC<EmailCaptureCardProps> = ({ answers, top
       ) : (
         <form onSubmit={handleSubmit} className="mt-4 space-y-3">
           <div>
-            <label className="mb-1 block text-[11px] font-semibold text-miyeon-main/70">📅 When's your trip?</label>
+            <label className="mb-1 block text-[11px] font-semibold text-miyeon-main/70">When's your trip?</label>
             <input
               type="date"
               value={tripDate}
@@ -56,7 +56,7 @@ export const EmailCaptureCard: React.FC<EmailCaptureCardProps> = ({ answers, top
             />
           </div>
           <div>
-            <label className="mb-1 block text-[11px] font-semibold text-miyeon-main/70">✉️ Email</label>
+            <label className="mb-1 block text-[11px] font-semibold text-miyeon-main/70">Email</label>
             <input
               type="email"
               required
