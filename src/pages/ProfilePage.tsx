@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Bookmark, ListPlus, LogOut, MapPin, Star, Trash2 } from 'lucide-react';
+
+const HELP_EMAIL = 'o3c.korea@gmail.com';
 import type { Itinerary, UserSession } from '../types';
 import { useSavedItineraries } from '../hooks/useSavedItineraries';
 import { useSavedPlaces } from '../hooks/useSavedPlaces';
@@ -136,43 +138,37 @@ export default function ProfilePage({ session, onSignIn, onSignOut }: ProfilePag
             </button>
           </div>
         ) : (
-          <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {visibleSavedPlaces.map((entry, i) => {
+          <div className="mt-3 flex gap-3 overflow-x-auto pb-1 no-scrollbar">
+            {visibleSavedPlaces.map((entry) => {
               const place = entry.snapshot;
               return (
-                <motion.div
-                  key={entry.placeId}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: i * 0.05 }}
-                  className="overflow-hidden rounded-[14px] border border-miyeon-line bg-white"
-                >
-                  <Link to={`/place/${entry.placeId}`} className="block">
-                    <img src={place.photoUrl} alt={place.name} className="h-32 w-full object-cover" />
-                  </Link>
-                  <div className="flex items-start justify-between gap-2 p-3">
-                    <Link to={`/place/${entry.placeId}`} className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-miyeon-ink">{place.name}</p>
-                      <p className="flex items-center gap-1 text-[11px] text-miyeon-main/60">
-                        <Star className="h-3 w-3 fill-miyeon-accent-dark text-miyeon-accent-dark" /> {place.rating} · {place.area}
-                      </p>
+                <div key={entry.placeId} className="w-32 shrink-0">
+                  <div className="relative">
+                    <Link to={`/place/${entry.placeId}`} className="block">
+                      <img src={place.photoUrl} alt={place.name} className="h-[110px] w-full rounded-xl object-cover" />
                     </Link>
                     <button
                       type="button"
                       aria-label="Remove from saved"
                       onClick={() => unsavePlace(entry.placeId)}
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-miyeon-accent hover:bg-miyeon-surface"
+                      className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-black/40 text-white"
                     >
-                      <Bookmark className="h-4 w-4" fill="currentColor" />
+                      <Bookmark className="h-3.5 w-3.5" fill="currentColor" />
                     </button>
                   </div>
-                </motion.div>
+                  <Link to={`/place/${entry.placeId}`} className="mt-2 block">
+                    <p className="truncate text-[12.5px] font-medium text-miyeon-ink">{place.name}</p>
+                    <p className="flex items-center gap-1 text-[11px] text-miyeon-main/60">
+                      <Star className="h-3 w-3 fill-miyeon-accent-dark text-miyeon-accent-dark" /> {place.rating}
+                    </p>
+                  </Link>
+                </div>
               );
             })}
           </div>
         )}
 
-        <div className="mt-8 flex items-center justify-between gap-3">
+        <div id="itineraries" className="mt-8 flex scroll-mt-20 items-center justify-between gap-3">
           <h2 className="font-display text-lg font-bold text-miyeon-ink">My itineraries</h2>
           {myItineraries.length > 0 && (
             <button
@@ -300,11 +296,20 @@ export default function ProfilePage({ session, onSignIn, onSignOut }: ProfilePag
           </div>
         )}
 
-        <div className="mt-8 border-t border-miyeon-line pt-4">
+        <div className="mt-8">
+          <MenuRow title="My Beauty Card" caption="Show this at the clinic" disabled />
+          <MenuRow
+            title="Booking history"
+            caption={`${myItineraries.length + saved.length} itinerar${myItineraries.length + saved.length === 1 ? 'y' : 'ies'}`}
+            onClick={() => document.getElementById('itineraries')?.scrollIntoView({ behavior: 'smooth' })}
+          />
+          <MenuRow title="Language & region" caption="English · USD" disabled />
+          <MenuRow title="Notifications" caption="Trip reminders" disabled />
+          <MenuRow title="Help & contact" href={`mailto:${HELP_EMAIL}`} />
           <button
             type="button"
             onClick={onSignOut}
-            className="flex items-center gap-2 text-[13px] font-medium text-miyeon-main/60 hover:text-miyeon-ink"
+            className="flex w-full items-center gap-2 py-4 text-[13px] font-medium text-miyeon-main/60 hover:text-miyeon-ink"
           >
             <LogOut className="h-4 w-4" /> Sign out
           </button>
@@ -313,3 +318,45 @@ export default function ProfilePage({ session, onSignIn, onSignOut }: ProfilePag
     </div>
   );
 }
+
+interface MenuRowProps {
+  title: string;
+  caption?: string;
+  onClick?: () => void;
+  href?: string;
+  disabled?: boolean;
+}
+
+const MenuRow: React.FC<MenuRowProps> = ({ title, caption, onClick, href, disabled }) => {
+  const content = (
+    <>
+      <div className="min-w-0 flex-1">
+        <p className={`text-[14.5px] font-medium ${disabled ? 'text-miyeon-ink/40' : 'text-miyeon-ink'}`}>{title}</p>
+        {caption && <p className="text-[11px] text-miyeon-main/45">{caption}</p>}
+      </div>
+      {!disabled && <span className="text-lg text-miyeon-main/35">›</span>}
+    </>
+  );
+
+  const rowClass = 'flex w-full items-center gap-2 border-b border-miyeon-line py-[15px] text-left';
+
+  if (disabled) {
+    return (
+      <div className={rowClass} aria-disabled="true">
+        {content}
+      </div>
+    );
+  }
+  if (href) {
+    return (
+      <a href={href} className={rowClass}>
+        {content}
+      </a>
+    );
+  }
+  return (
+    <button type="button" onClick={onClick} className={rowClass}>
+      {content}
+    </button>
+  );
+};

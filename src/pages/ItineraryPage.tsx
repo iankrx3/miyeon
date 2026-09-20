@@ -83,14 +83,14 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col sm:flex-row">
-      <div className="h-[42vh] min-h-[240px] sm:h-auto sm:flex-1">
+      <div className="h-[300px] sm:h-auto sm:flex-1">
         <ItineraryRouteMap
           day={day}
           onSelectSpot={(spot) => navigate(`/place/${spot.id}`, { state: { fromItinerary: itinerary.id } })}
         />
       </div>
 
-      <section className="flex max-h-[58vh] flex-col overflow-hidden border-t border-miyeon-line bg-white sm:max-h-none sm:w-[26rem] sm:border-l sm:border-t-0">
+      <section className="flex flex-col border-t border-miyeon-line bg-white sm:overflow-hidden sm:w-[26rem] sm:border-l sm:border-t-0">
         <header className="shrink-0 bg-gradient-to-b from-[#f9dde4] to-[#fef6f8] px-5 pb-4 pt-4">
           <div className="flex items-center justify-between">
             <button
@@ -145,7 +145,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
           </div>
         </header>
 
-        <div className="flex shrink-0 gap-2 overflow-x-auto px-4 py-3.5 no-scrollbar">
+        <div className="sticky top-16 z-10 flex shrink-0 gap-2 overflow-x-auto bg-white px-4 py-3.5 no-scrollbar sm:static">
           {itinerary.days.map((d) => (
             <button
               key={d.dayIndex}
