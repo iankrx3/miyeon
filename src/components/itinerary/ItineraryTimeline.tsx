@@ -103,7 +103,7 @@ export const ItineraryTimeline: React.FC<ItineraryTimelineProps> = ({
                 target="_blank"
                 rel="noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="mt-2 inline-block text-[11px] font-semibold text-miyeon-sub1"
+                className="mt-3 block w-full rounded-full bg-miyeon-sub1 py-2.5 text-center text-sm font-bold text-white shadow-sm shadow-miyeon-sub1/30"
               >
                 {creatripLabel}
               </a>

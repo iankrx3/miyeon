@@ -127,6 +127,9 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
               {itinerary.days.length} days · {experiences} experiences
               {itinerary.estimatedSpendUsd > 0 && ` · Estimated beauty spend $${itinerary.estimatedSpendUsd}`}
             </p>
+            {itinerary.description && (
+              <p className="mt-1 text-xs leading-snug text-miyeon-main/70">{itinerary.description}</p>
+            )}
           </div>
           <div className="flex gap-2 overflow-x-auto no-scrollbar">
             {itinerary.days.map((d) => (

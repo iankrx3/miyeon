@@ -8,7 +8,6 @@ import type {
   GlowUpLanguage,
   GlowUpProfile,
   GlowUpRegion,
-  GlowUpResult,
   GlowUpTripDays,
   RestoreItem,
 } from '../types';
@@ -28,9 +27,6 @@ import { HomeLanding } from '../components/home/HomeLanding';
 import { OptionCard } from '../components/onboarding/OptionCard';
 import { WizardShell } from '../components/onboarding/WizardShell';
 import { AITransition } from '../components/quiz/AITransition';
-import { GlowUpWhyThis } from '../components/glowup/GlowUpWhyThis';
-import { GlowUpResultGrid } from '../components/glowup/GlowUpResultGrid';
-import { GlowUpCheckedFooter } from '../components/glowup/GlowUpCheckedFooter';
 import { buildGlowUpResult, emptyGlowUpProfile } from '../services/glowUp/generate';
 import { loadSpots } from '../data/spots';
 import { upsertItinerary } from '../lib/localItineraryStore';
@@ -44,8 +40,7 @@ type Step =
   | 'tripInfo'
   | 'budget'
   | 'language'
-  | 'transition'
-  | 'result';
+  | 'transition';
 
 const stepTransition = { duration: 0.3, ease: [0.16, 1, 0.3, 1] as const };
 
@@ -61,7 +56,6 @@ const STEP_DISPLAY_INDEX: Record<Step, number> = {
   budget: 5,
   language: 6,
   transition: 6,
-  result: 6,
 };
 const TOTAL_STEPS = 6;
 
@@ -70,7 +64,6 @@ export default function ExplorePage() {
   const generatingRef = useRef(false);
   const [step, setStep] = useState<Step>('home');
   const [profile, setProfile] = useState<GlowUpProfile>(emptyGlowUpProfile());
-  const [result, setResult] = useState<GlowUpResult | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -145,16 +138,8 @@ export default function ExplorePage() {
       await loadSpots();
       const next = buildGlowUpResult(profile);
       upsertItinerary(next.itinerary);
-      setResult(next);
-      setStep('result');
+      navigate(`/itinerary/${next.itinerary.id}`);
     })();
-  };
-
-  const startOver = () => {
-    generatingRef.current = false;
-    setProfile(emptyGlowUpProfile());
-    setResult(null);
-    setStep('home');
   };
 
   if (step === 'home') {
@@ -165,36 +150,6 @@ export default function ExplorePage() {
     return (
       <div className="mx-auto max-w-xl px-4 py-8">
         <AITransition onDone={handleTransitionDone} messages={glowUpTransitionMessages} />
-      </div>
-    );
-  }
-
-  if (step === 'result' && result) {
-    return (
-      <div className="mx-auto max-w-2xl space-y-5 px-4 py-8 sm:py-14">
-        <h1 className="font-display text-2xl text-miyeon-main">Your Glow Up</h1>
-        <GlowUpWhyThis whyThisLine={result.whyThisLine} />
-        <GlowUpResultGrid
-          days={result.days}
-          onOpenSpot={(id) =>
-            navigate(`/place/${id}`, { state: { fromItinerary: result.itinerary.id } })
-          }
-        />
-        <GlowUpCheckedFooter profile={profile} />
-        <button
-          type="button"
-          onClick={() => navigate(`/itinerary/${result.itinerary.id}`)}
-          className="w-full rounded-full bg-miyeon-sub1 py-3.5 text-sm font-bold text-white shadow-sm shadow-miyeon-sub1/30"
-        >
-          Open map itinerary
-        </button>
-        <button
-          type="button"
-          onClick={startOver}
-          className="w-full rounded-full border border-miyeon-neutral py-3.5 text-sm font-bold text-miyeon-main"
-        >
-          Start over
-        </button>
       </div>
     );
   }
