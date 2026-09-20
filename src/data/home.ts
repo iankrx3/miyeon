@@ -86,6 +86,8 @@ export interface MostBookedItem {
   duration: string;
   location: string;
   fromPrice: number;
+  /** Real Creatrip spot page; the affiliate params are added at render time. */
+  creatripUrl: string;
 }
 
 export const mostBookedItems: MostBookedItem[] = [
@@ -99,6 +101,7 @@ export const mostBookedItems: MostBookedItem[] = [
     duration: '90 min',
     location: 'Hongdae',
     fromPrice: 95,
+    creatripUrl: 'https://creatrip.com/en/spot/13315',
   },
   {
     id: 'skin-booster',
@@ -109,6 +112,7 @@ export const mostBookedItems: MostBookedItem[] = [
     duration: '30 min',
     location: 'Gangnam',
     fromPrice: 120,
+    creatripUrl: 'https://creatrip.com/en/spot/15801',
   },
   {
     id: 'korean-hair-color',
@@ -119,6 +123,7 @@ export const mostBookedItems: MostBookedItem[] = [
     duration: '3 hrs',
     location: 'Cheongdam',
     fromPrice: 89,
+    creatripUrl: 'https://creatrip.com/en/spot/13574',
   },
 ];
 

@@ -71,9 +71,9 @@ export default function MapPage({ session, onSignIn }: { session: UserSession; o
             whileTap={{ scale: 0.97 }}
             onClick={handleCreateItinerary}
             aria-label="Create an itinerary"
-            className="flex items-center gap-1.5 rounded-full bg-miyeon-ink px-4 py-2 text-xs font-bold text-white shadow-lg"
+            className="flex items-center gap-1.5 rounded-full bg-miyeon-ink px-3 py-1.5 text-[11px] font-bold text-white shadow-lg sm:px-4 sm:py-2 sm:text-xs"
           >
-            <ListPlus className="h-3.5 w-3.5" />
+            <ListPlus className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
             Create an itinerary
           </motion.button>
         </div>

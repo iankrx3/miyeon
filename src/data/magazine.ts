@@ -1,4 +1,8 @@
 import type { MagazineArticle } from '../types';
+// Same photos as the home "Know What's Next" cards (components/home/HomeTrending.tsx), so the
+// article you land on matches the card you clicked.
+import trendingTreatment from '../assets/home/trending-treatment.jpg';
+import trendingGuide from '../assets/home/trending-guide.jpg';
 
 // Seed content for the Community tab's "Magazine" view — editorial columns, not user posts.
 // Real curator-submitted columns (via MagazineComposer) are merged on top of this list at fetch
@@ -13,7 +17,7 @@ export const mockMagazineArticles: MagazineArticle[] = [
     kind: 'TREATMENT',
     title: 'Rejuran vs Juvelook — which one is for you?',
     minutes: 5,
-    imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1200',
+    imageUrl: trendingTreatment,
     excerpt:
       'Both are skin-booster injectables, but they solve different problems. Here’s how clinics actually pick.',
     body:
@@ -30,7 +34,7 @@ export const mockMagazineArticles: MagazineArticle[] = [
     kind: 'GUIDE',
     title: 'What you can realistically get done in 4 days',
     minutes: 7,
-    imageUrl: 'https://images.unsplash.com/photo-1517154421773-0529f29ea451?q=80&w=1200',
+    imageUrl: trendingGuide,
     excerpt: 'A day-by-day plan for a short trip, so downtime never overlaps with your flight home.',
     body:
       'Four days sounds short, but it’s enough for one meaningful treatment plus a buffer — if you sequence it right.\n\n' +

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Star, MapPin } from 'lucide-react';
 import { mostBookedItems } from '../../data/home';
+import { withCreatripAffiliate, CREATRIP_DISCLOSURE } from '../../lib/creatrip';
 import mostBooked1 from '../../assets/home/mostbooked-1-personal-color.png';
 import mostBooked2 from '../../assets/home/mostbooked-2-skin-booster.png';
 import mostBooked3 from '../../assets/home/mostbooked-3-hair-color.png';
@@ -26,7 +27,13 @@ export const HomeMostBooked: React.FC = () => (
 
       <div className="mt-3.5 divide-y divide-miyeon-line">
         {mostBookedItems.map((item) => (
-          <div key={item.id} className="flex items-center gap-3 py-3">
+          <a
+            key={item.id}
+            href={withCreatripAffiliate(item.creatripUrl)}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            className="group flex items-center gap-3 py-3"
+          >
             <img
               src={images[item.id]}
               alt={item.name}
@@ -55,10 +62,11 @@ export const HomeMostBooked: React.FC = () => (
               </span>
               <p className="mt-1 text-[12.5px] font-medium text-miyeon-ink">From ${item.fromPrice}</p>
             </div>
-            <span className="shrink-0 text-miyeon-main/45">→</span>
-          </div>
+            <span className="shrink-0 text-miyeon-main/45 transition-colors group-hover:text-miyeon-accent">→</span>
+          </a>
         ))}
       </div>
+      <p className="mt-2 text-[10px] text-miyeon-main/60">{CREATRIP_DISCLOSURE}</p>
     </div>
   </section>
 );
