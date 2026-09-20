@@ -114,34 +114,34 @@ export const PostCard: React.FC<PostCardProps> = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="rounded-2xl border border-miyeon-neutral bg-white p-4"
+      className="rounded-[14px] border border-miyeon-line bg-white p-4"
     >
       {defaultExpanded ? (
         <div>
           <div className="flex items-center gap-2.5">
             <AuthorProfileLink post={post} />
             {post.rating && (
-              <span className="ml-auto flex items-center gap-1 text-xs font-semibold text-miyeon-main">
-                <Star className="h-3 w-3 fill-miyeon-sub1 text-miyeon-sub1" /> {post.rating}
+              <span className="ml-auto flex items-center gap-1 text-xs font-medium text-miyeon-ink">
+                <Star className="h-3 w-3 fill-miyeon-accent-dark text-miyeon-accent-dark" /> {post.rating}
               </span>
             )}
           </div>
 
-          <p className="mt-3 text-sm leading-relaxed text-miyeon-main/90">{post.text}</p>
+          <p className="mt-3 text-sm leading-relaxed text-miyeon-ink/90">{post.text}</p>
         </div>
       ) : (
         <div>
           <div className="flex items-center gap-2.5">
             <AuthorProfileLink post={post} />
             {post.rating && (
-              <span className="ml-auto flex items-center gap-1 text-xs font-semibold text-miyeon-main">
-                <Star className="h-3 w-3 fill-miyeon-sub1 text-miyeon-sub1" /> {post.rating}
+              <span className="ml-auto flex items-center gap-1 text-xs font-medium text-miyeon-ink">
+                <Star className="h-3 w-3 fill-miyeon-accent-dark text-miyeon-accent-dark" /> {post.rating}
               </span>
             )}
           </div>
 
           <Link to={`/community/${post.id}`} className="block">
-            <p className="mt-3 text-sm leading-relaxed text-miyeon-main/90">{post.text}</p>
+            <p className="mt-3 text-sm leading-relaxed text-miyeon-ink/90">{post.text}</p>
           </Link>
         </div>
       )}
@@ -149,19 +149,19 @@ export const PostCard: React.FC<PostCardProps> = ({
       {post.placeId && post.placeName && (
         <Link
           to={`/place/${post.placeId}`}
-          className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-miyeon-neutral px-3 py-1 text-[11px] font-medium text-miyeon-main"
+          className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-miyeon-surface px-3 py-1 text-[11px] font-medium text-miyeon-ink"
         >
           📍 {post.placeName}
           {post.treatmentName ? ` · ${post.treatmentName}` : ''}
         </Link>
       )}
 
-      <div className="mt-3.5 flex items-center gap-5 border-t border-miyeon-neutral pt-3">
+      <div className="mt-3.5 flex items-center gap-5 border-t border-miyeon-line pt-3">
         <motion.button
           whileTap={{ scale: 0.9 }}
           onClick={handleLike}
-          className={`flex items-center gap-1.5 text-xs font-semibold ${
-            post.likedByMe ? 'text-miyeon-sub1' : 'text-miyeon-main/70 hover:text-miyeon-main'
+          className={`flex items-center gap-1.5 text-xs font-medium ${
+            post.likedByMe ? 'text-miyeon-accent' : 'text-miyeon-main/60 hover:text-miyeon-ink'
           }`}
         >
           <motion.span animate={post.likedByMe ? { scale: [1, 1.4, 1] } : { scale: 1 }} transition={{ duration: 0.3 }}>
@@ -207,7 +207,7 @@ export const PostCard: React.FC<PostCardProps> = ({
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
-        <div className="mt-3 space-y-2.5 border-t border-miyeon-neutral pt-3">
+        <div className="mt-3 space-y-2.5 border-t border-miyeon-line pt-3">
           {commentsLoaded && comments.length === 0 && (
             <p className="text-xs text-miyeon-main/70">No comments yet.</p>
           )}
@@ -219,7 +219,7 @@ export const PostCard: React.FC<PostCardProps> = ({
                 referrerPolicy="no-referrer"
                 className="h-6 w-6 shrink-0 rounded-full object-cover"
               />
-              <div className="flex items-center gap-1.5 rounded-2xl bg-miyeon-neutral/50 px-3 py-1.5 text-xs text-miyeon-main">
+              <div className="flex items-center gap-1.5 rounded-2xl bg-miyeon-surface px-3 py-1.5 text-xs text-miyeon-ink">
                 <span>
                   <span className="font-semibold">{c.authorName}</span>{' '}
                   <span className="text-miyeon-main/80">{c.text}</span>
@@ -246,12 +246,12 @@ export const PostCard: React.FC<PostCardProps> = ({
                   if (e.key === 'Enter') handleSubmitComment();
                 }}
                 placeholder="Add a comment…"
-                className="w-full rounded-full border border-miyeon-neutral px-3.5 py-1.5 text-xs text-miyeon-main placeholder:text-miyeon-main/60 focus:outline-none focus:border-miyeon-sub1/50"
+                className="w-full rounded-full border border-miyeon-line px-3.5 py-1.5 text-xs text-miyeon-ink placeholder:text-miyeon-main/50 focus:outline-none focus:border-miyeon-accent/50"
               />
               <button
                 onClick={handleSubmitComment}
                 disabled={!commentText.trim() || submitting}
-                className="shrink-0 text-xs font-bold text-miyeon-sub1 disabled:opacity-40"
+                className="shrink-0 text-xs font-bold text-miyeon-accent-dark disabled:opacity-40"
               >
                 {submitting ? 'Posting…' : 'Post'}
               </button>

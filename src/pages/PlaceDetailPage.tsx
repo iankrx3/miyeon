@@ -73,17 +73,17 @@ export default function PlaceDetailPage({
         className="h-64 w-full object-cover sm:h-80"
       />
 
-      <div className="space-y-6 px-4 py-6">
+      <div className="space-y-6 px-5 py-6">
         <Link
           to={fromItinerary ? `/itinerary/${fromItinerary}` : '/map'}
-          className="flex items-center gap-1 text-xs font-semibold text-miyeon-main/60"
+          className="flex items-center gap-1 text-[13px] text-miyeon-main/70"
         >
           <ChevronLeft className="h-3.5 w-3.5" /> {fromItinerary ? 'Back to itinerary' : 'Back to map'}
         </Link>
 
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h1 className="font-display text-3xl text-miyeon-main">{place.name}</h1>
+            <h1 className="font-display text-[26px] font-bold text-miyeon-ink">{place.name}</h1>
             <p className="mt-1 text-xs text-miyeon-main/60">{place.address}</p>
           </div>
           <motion.button
@@ -96,8 +96,8 @@ export default function PlaceDetailPage({
               }
               toggleSave(place);
             }}
-            className={`flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-bold ${
-              isSaved(place.id) ? 'border-miyeon-sub1 bg-miyeon-sub1 text-white' : 'border-miyeon-neutral text-miyeon-main'
+            className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold ${
+              isSaved(place.id) ? 'bg-miyeon-accent text-white' : 'bg-miyeon-surface text-miyeon-ink'
             }`}
           >
             <motion.span animate={isSaved(place.id) ? { scale: [1, 1.3, 1] } : { scale: 1 }} transition={{ duration: 0.3 }}>
@@ -107,14 +107,14 @@ export default function PlaceDetailPage({
           </motion.button>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 text-sm text-miyeon-main">
-          <span className="flex items-center gap-1 font-semibold">
-            <Star className="h-4 w-4 fill-miyeon-sub1 text-miyeon-sub1" /> {place.rating}
+        <div className="flex flex-wrap items-center gap-2 text-sm text-miyeon-ink">
+          <span className="flex items-center gap-1 font-medium">
+            <Star className="h-4 w-4 fill-miyeon-accent-dark text-miyeon-accent-dark" /> {place.rating}
           </span>
-          <span className="text-miyeon-main/70">({place.reviewCount} reviews)</span>
-          <span>·</span>
+          <span className="text-miyeon-main/60">({place.reviewCount} reviews)</span>
+          <span className="text-miyeon-main/40">·</span>
           <span>{place.priceRange}</span>
-          <span>·</span>
+          <span className="text-miyeon-main/40">·</span>
           <span>{place.language.join(', ')}</span>
         </div>
 
@@ -122,12 +122,12 @@ export default function PlaceDetailPage({
           const spot = getSpot(place.id);
           if (!spot) return null;
           return (
-            <section className="rounded-2xl border border-miyeon-neutral bg-miyeon-neutral/40 p-4 text-sm text-miyeon-main">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-miyeon-sub1">
+            <section className="rounded-[14px] bg-miyeon-surface p-4 text-sm text-miyeon-ink">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-miyeon-accent-dark">
                 {SUBCATEGORY_LABEL[spot.subcategory]}
               </p>
               <p className="mt-2">{spot.description}</p>
-              <p className="mt-2 text-xs text-miyeon-main/70">
+              <p className="mt-2 text-xs text-miyeon-main/60">
                 ${spot.priceMin}–{spot.priceMax} (est.) · ~{spot.durationMin} min · {spot.languages.join(' · ')}
               </p>
             </section>
@@ -141,7 +141,7 @@ export default function PlaceDetailPage({
               href={link.url}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-1.5 rounded-full border border-miyeon-neutral px-3.5 py-1.5 text-xs font-semibold text-miyeon-main hover:border-miyeon-sub1/50"
+              className="flex items-center gap-1.5 rounded-full border border-miyeon-line px-3.5 py-1.5 text-xs font-medium text-miyeon-ink hover:border-miyeon-accent/40"
             >
               <Navigation className="h-3.5 w-3.5" /> {link.label}
             </a>
@@ -150,8 +150,8 @@ export default function PlaceDetailPage({
 
         {place.whyPeopleLikeIt && place.whyPeopleLikeIt.length > 0 && (
           <section>
-            <h2 className="text-sm font-semibold text-miyeon-main">Why people like it</h2>
-            <ul className="mt-2 space-y-1 text-sm text-miyeon-main/80">
+            <h2 className="font-display text-lg font-bold text-miyeon-ink">Why people like it</h2>
+            <ul className="mt-2 space-y-1 text-sm text-miyeon-main/75">
               {place.whyPeopleLikeIt.map((reason) => (
                 <li key={reason}>· {reason}</li>
               ))}
@@ -161,7 +161,7 @@ export default function PlaceDetailPage({
 
         {treatments.length > 0 && (
           <section>
-            <h2 className="text-sm font-semibold text-miyeon-main">Treatments</h2>
+            <h2 className="font-display text-lg font-bold text-miyeon-ink">Treatments</h2>
             <div className="mt-2 space-y-2">
               {treatments.map((t, i) => (
                 <motion.div
@@ -173,10 +173,10 @@ export default function PlaceDetailPage({
                 >
                   <Link
                     to={`/treatment/${t.id}`}
-                    className="flex items-center justify-between rounded-xl border border-miyeon-neutral px-3.5 py-3 text-sm transition-colors hover:border-miyeon-sub1/50"
+                    className="flex items-center justify-between rounded-[14px] border border-miyeon-line px-3.5 py-3 text-sm transition-colors hover:border-miyeon-accent/40"
                   >
-                    <span className="font-medium text-miyeon-main">{t.name}</span>
-                    <span className="text-xs text-miyeon-main/60">
+                    <span className="font-medium text-miyeon-ink">{t.name}</span>
+                    <span className="text-xs text-miyeon-main/55">
                       ${t.price.min}–${t.price.max}
                     </span>
                   </Link>
@@ -191,15 +191,15 @@ export default function PlaceDetailPage({
 
         {reviews.length > 0 && (
           <section>
-            <h2 className="text-sm font-semibold text-miyeon-main">Community Reviews</h2>
+            <h2 className="font-display text-lg font-bold text-miyeon-ink">Community Reviews</h2>
             <div className="mt-2 space-y-2">
               {reviews.map((r) => (
                 <Link
                   key={r.id}
                   to={`/community/${r.id}`}
-                  className="block rounded-xl border border-miyeon-neutral px-3.5 py-3 text-sm text-miyeon-main/80 hover:border-miyeon-sub1/50"
+                  className="block rounded-[14px] border border-miyeon-line px-3.5 py-3 text-sm text-miyeon-main/75 hover:border-miyeon-accent/40"
                 >
-                  <p className="font-medium text-miyeon-main">{r.authorName}</p>
+                  <p className="font-medium text-miyeon-ink">{r.authorName}</p>
                   <p className="mt-1">{r.text}</p>
                 </Link>
               ))}
@@ -215,12 +215,12 @@ export default function PlaceDetailPage({
               href={hasCreatripListing(place) ? withCreatripAffiliate(place.bookingUrl) : place.bookingUrl}
               target="_blank"
               rel="noreferrer"
-              className="block rounded-full bg-miyeon-sub1 py-3.5 text-center text-sm font-bold text-white shadow-sm shadow-miyeon-sub1/30"
+              className="block rounded-full bg-miyeon-ink py-[15px] text-center text-[14.5px] font-medium text-white"
             >
               Book →
             </motion.a>
             {hasCreatripListing(place) && (
-              <p className="text-center text-[10px] text-miyeon-main/60">{CREATRIP_DISCLOSURE}</p>
+              <p className="text-center text-[10.5px] text-miyeon-main/45">{CREATRIP_DISCLOSURE}</p>
             )}
           </div>
         )}

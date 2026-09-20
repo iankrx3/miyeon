@@ -63,7 +63,9 @@ export default function App() {
               <Route path="/" element={<ExplorePage />} />
               <Route
                 path="/profile"
-                element={<ProfilePage session={session} onSignIn={() => setIsAuthOpen(true)} />}
+                element={
+                  <ProfilePage session={session} onSignIn={() => setIsAuthOpen(true)} onSignOut={signOut} />
+                }
               />
               <Route
                 path="/itinerary/:id"

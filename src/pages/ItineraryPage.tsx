@@ -90,13 +90,13 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
         />
       </div>
 
-      <section className="flex max-h-[58vh] flex-col overflow-hidden border-t border-miyeon-neutral bg-white sm:max-h-none sm:w-[26rem] sm:border-l sm:border-t-0">
-        <header className="shrink-0 space-y-3 px-4 pb-3 pt-4">
+      <section className="flex max-h-[58vh] flex-col overflow-hidden border-t border-miyeon-line bg-white sm:max-h-none sm:w-[26rem] sm:border-l sm:border-t-0">
+        <header className="shrink-0 bg-gradient-to-b from-[#f9dde4] to-[#fef6f8] px-5 pb-4 pt-4">
           <div className="flex items-center justify-between">
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="flex items-center gap-1 text-xs font-semibold text-miyeon-main/60"
+              className="flex items-center gap-1 text-[13px] text-miyeon-main/70"
             >
               <ChevronLeft className="h-3.5 w-3.5" /> Back
             </button>
@@ -105,7 +105,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
                 <button
                   type="button"
                   onClick={() => setSheet('regenerate')}
-                  className="flex items-center gap-1 rounded-full border border-miyeon-neutral px-3 py-1.5 text-[11px] font-bold text-miyeon-main"
+                  className="flex items-center gap-1 rounded-full bg-white/70 px-3 py-1.5 text-[11px] font-bold text-miyeon-ink"
                 >
                   <Sparkles className="h-3 w-3" /> Regenerate
                 </button>
@@ -113,10 +113,10 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
               <button
                 type="button"
                 onClick={() => (session.isLoggedIn ? toggleSave(itinerary) : onSignIn())}
-                className={`flex items-center gap-1 rounded-full border px-3 py-1.5 text-[11px] font-bold ${
+                className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-bold ${
                   isSaved(itinerary.id)
-                    ? 'border-miyeon-sub1 bg-miyeon-sub1 text-white'
-                    : 'border-miyeon-neutral text-miyeon-main'
+                    ? 'bg-miyeon-accent text-white'
+                    : 'bg-white/70 text-miyeon-ink'
                 }`}
               >
                 <Bookmark className="h-3 w-3" fill={isSaved(itinerary.id) ? 'currentColor' : 'none'} />
@@ -124,34 +124,43 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
               </button>
             </div>
           </div>
-          <div>
-            <h1 className="font-display text-2xl text-miyeon-main">{itinerary.title}</h1>
-            <p className="text-xs text-miyeon-main/60">
+          <p className="mt-3 text-[10.5px] font-medium tracking-[0.18em] text-miyeon-accent-dark">
+            ✦ YOUR GLOW UP PLAN
+          </p>
+          <h1 className="mt-1.5 font-display text-[22px] font-bold leading-[1.25] text-miyeon-ink">
+            {itinerary.title}
+          </h1>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            <span className="rounded-full bg-white/80 px-2.5 py-1 text-[10.5px] font-medium text-miyeon-main">
+              {day.areaLabel}
+            </span>
+            <span className="rounded-full bg-white/80 px-2.5 py-1 text-[10.5px] font-medium text-miyeon-main">
               {itinerary.days.length} days · {experiences} experiences
-              {itinerary.estimatedSpendUsd > 0 && ` · Estimated beauty spend $${itinerary.estimatedSpendUsd}`}
-            </p>
-            {itinerary.description && (
-              <p className="mt-1 text-xs leading-snug text-miyeon-main/70">{itinerary.description}</p>
+            </span>
+            {itinerary.estimatedSpendUsd > 0 && (
+              <span className="rounded-full bg-white/80 px-2.5 py-1 text-[10.5px] font-medium text-miyeon-main">
+                ~${itinerary.estimatedSpendUsd}
+              </span>
             )}
           </div>
-          <div className="flex gap-2 overflow-x-auto no-scrollbar">
-            {itinerary.days.map((d) => (
-              <button
-                key={d.dayIndex}
-                type="button"
-                onClick={() => setDayIndex(d.dayIndex)}
-                className={`shrink-0 rounded-full px-3 py-1.5 text-[11px] font-bold ${
-                  d.dayIndex === day.dayIndex
-                    ? 'bg-miyeon-main text-white'
-                    : 'border border-miyeon-neutral text-miyeon-main/70'
-                }`}
-              >
-                DAY {d.dayIndex}
-                <span className="ml-1 font-medium opacity-80">{d.areaLabel}</span>
-              </button>
-            ))}
-          </div>
         </header>
+
+        <div className="flex shrink-0 gap-2 overflow-x-auto px-4 py-3.5 no-scrollbar">
+          {itinerary.days.map((d) => (
+            <button
+              key={d.dayIndex}
+              type="button"
+              onClick={() => setDayIndex(d.dayIndex)}
+              className={`shrink-0 rounded-full px-4 py-2 text-[12.5px] font-medium ${
+                d.dayIndex === day.dayIndex
+                  ? 'bg-miyeon-ink text-white'
+                  : 'border border-miyeon-line bg-miyeon-surface text-miyeon-main'
+              }`}
+            >
+              Day {d.dayIndex}
+            </button>
+          ))}
+        </div>
 
         <div className="flex-1 overflow-y-auto px-4 pb-24 sm:pb-8">
           <ItineraryTimeline
