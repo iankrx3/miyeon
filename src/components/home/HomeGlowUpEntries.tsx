@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import pillarFix from '../../assets/home/pillar-fix.jpg';
 import pillarChange from '../../assets/home/pillar-change.jpg';
-import pillarRestore from '../../assets/home/pillar-restore.jpg';
+import pillarRestore from '../../assets/quiz/restore-massage.jpg';
 
 interface Pillar {
   id: 'fix' | 'change' | 'restore';

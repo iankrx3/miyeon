@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Sparkles, CheckCircle2, AlertCircle, User } from 'lucide-react';
+import { X, CheckCircle2, AlertCircle, User } from 'lucide-react';
 import { isSupabaseConfigured, signInWithGoogle, type AuthReturnTab } from '../../services/auth';
 
 interface GoogleAuthModalProps {
@@ -68,8 +68,9 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
           </button>
 
           <div className="text-center pt-2 pb-6">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-miyeon-accent text-white shadow-md shadow-miyeon-accent/25">
-              <Sparkles className="h-6 w-6" />
+            <div className="mb-3 flex items-start justify-center gap-0.5 font-wordmark text-[34px] font-light leading-none tracking-[0.05em] text-miyeon-ink">
+              miyeon
+              <span className="mt-1.5 text-[12px] font-normal tracking-normal text-miyeon-accent">✦</span>
             </div>
             <h3 className="font-display text-2xl tracking-tight text-miyeon-main">Welcome to Miyeon</h3>
             <p className="mt-1.5 text-xs text-miyeon-main/70 leading-relaxed">
