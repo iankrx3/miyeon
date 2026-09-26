@@ -11,6 +11,7 @@ export interface BrowseItem {
 export interface TrendingItem {
   id: string;
   kind: 'TREATMENT' | 'GUIDE' | 'TREND';
+  hot?: boolean;
   title: string;
   minutes: number;
   href: string;

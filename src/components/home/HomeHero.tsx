@@ -16,7 +16,7 @@ interface HomeHeroProps {
 }
 
 export const HomeHero: React.FC<HomeHeroProps> = ({ onStartAnalysis }) => (
-  <section className="relative overflow-hidden bg-gradient-to-b from-[#f9dde4] via-[#fce9ee] to-[#fef6f8] px-6 pb-14 pt-7 text-center sm:px-8 sm:py-24 lg:py-28">
+  <section className="relative overflow-hidden bg-gradient-to-b from-[#f9dde4] via-[#fce9ee] to-[#fef6f8] px-6 pb-8 pt-7 text-center sm:px-8 sm:py-24 lg:py-28">
     <div className="relative z-10 mx-auto max-w-3xl">
       <p className="font-display text-[10.5px] font-medium tracking-[0.2em] text-miyeon-accent sm:text-xs">
         FIRST TIME IN SEOUL?
@@ -54,13 +54,13 @@ export const HomeHero: React.FC<HomeHeroProps> = ({ onStartAnalysis }) => (
       </div>
     </div>
 
-    <div className="pointer-events-none absolute inset-x-0 bottom-[-40px] flex justify-center opacity-80">
+    <div className="pointer-events-none absolute inset-x-0 bottom-8 flex h-0 items-start justify-center sm:bottom-[-40px] sm:h-auto sm:opacity-80">
       <div className="relative h-[190px] w-[190px]">
-        <img src={decoBlob1} alt="" className="absolute inset-0 h-full w-full" />
-        <img src={decoBlob2} alt="" className="absolute left-[15%] top-0 h-[80%] w-[80%]" />
-        <img src={decoSparkle1} alt="" className="absolute right-[8%] top-0 h-[18px] w-[18px]" />
-        <img src={decoSparkle2} alt="" className="absolute right-[4%] top-[10px] h-[11px] w-[11px]" />
-        <img src={decoSparkle3} alt="" className="absolute right-[0%] top-[18px] h-[9px] w-[9px]" />
+        <img src={decoBlob1} alt="" className="absolute -left-[26.32%] -top-[26.32%] h-[152.64%] w-[152.64%] max-w-none" />
+        <img src={decoBlob2} alt="" className="absolute left-[20px] top-0 h-[150px] w-[150px] max-w-none" />
+        <img src={decoSparkle1} alt="" className="absolute left-[calc(50%-9px)] top-0 h-[18px] w-[18px]" />
+        <img src={decoSparkle2} alt="" className="absolute left-[calc(50%-5.5px)] top-0 h-[11px] w-[11px]" />
+        <img src={decoSparkle3} alt="" className="absolute left-[calc(50%-4.5px)] top-0 h-[9px] w-[9px]" />
       </div>
     </div>
   </section>

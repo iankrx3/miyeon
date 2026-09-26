@@ -24,7 +24,7 @@ const CATEGORIES: { id: CommunityPost['category'] | 'all'; label: string }[] = [
 
 const TABS: { id: 'magazine' | 'qna'; label: string }[] = [
   { id: 'magazine', label: 'Magazine' },
-  { id: 'qna', label: 'Q&A' },
+  { id: 'qna', label: 'Community' },
 ];
 
 export default function CommunityPage({ session, onSignIn }: CommunityPageProps) {

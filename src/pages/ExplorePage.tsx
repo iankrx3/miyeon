@@ -157,7 +157,7 @@ export default function ExplorePage() {
   }
 
   return (
-    <div className="mx-auto max-w-xl overflow-hidden px-5 py-8 sm:py-14">
+    <div className="mx-auto max-w-xl overflow-hidden px-5 pb-8 pt-0 sm:py-14">
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
@@ -210,6 +210,7 @@ export default function ExplorePage() {
                   <OptionCard
                     key={opt.id}
                     image={opt.image}
+                    imageHeight={100}
                     headline={opt.headline}
                     label={opt.label}
                     selected={profile.change.includes(opt.id)}
@@ -237,6 +238,7 @@ export default function ExplorePage() {
                   <OptionCard
                     key={opt.id}
                     image={opt.image}
+                    imageHeight={100}
                     headline={opt.headline}
                     label={opt.label}
                     selected={profile.restore.includes(opt.id)}
@@ -259,10 +261,10 @@ export default function ExplorePage() {
             >
               <div className="space-y-6">
                 <div>
-                  <p className="mb-2.5 text-[11px] font-medium tracking-[0.12em] text-miyeon-main/50">
+                  <p className="mb-2.5 text-[11px] font-medium tracking-[1.2px] text-miyeon-main/50">
                     HOW MANY DAYS?
                   </p>
-                  <div className="grid grid-cols-2 gap-2.5">
+                  <div className="grid grid-cols-2 gap-[9px]">
                     {tripDaysOptions.map((opt) => (
                       <Chip
                         key={opt.id}
@@ -274,10 +276,10 @@ export default function ExplorePage() {
                   </div>
                 </div>
                 <div>
-                  <p className="mb-2.5 text-[11px] font-medium tracking-[0.12em] text-miyeon-main/50">
+                  <p className="mb-2.5 text-[11px] font-medium tracking-[1.2px] text-miyeon-main/50">
                     WHERE ARE YOU BASED?
                   </p>
-                  <div className="grid grid-cols-3 gap-2.5">
+                  <div className="grid grid-cols-3 gap-[9px]">
                     {cityOptions.map((opt) => (
                       <Chip
                         key={opt.id}
@@ -289,11 +291,11 @@ export default function ExplorePage() {
                   </div>
                 </div>
                 {(base === 'seoul' || base === 'busan') && (
-                  <div className="rounded-2xl bg-miyeon-surface p-3.5">
-                    <p className="mb-2.5 text-[10.5px] font-medium tracking-[0.12em] text-miyeon-main/50">
+                  <div className="-mt-3 rounded-[14px] bg-miyeon-surface p-3.5">
+                    <p className="mb-2.5 text-[10.5px] font-medium tracking-[1.2px] text-miyeon-main/50">
                       {base === 'seoul' ? 'WHICH PART OF SEOUL?' : 'WHICH PART OF BUSAN?'}
                     </p>
-                    <div className="grid grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-2 gap-[9px]">
                       {regionOptionsFor(base).map((opt) => (
                         <Chip
                           key={opt.id}
@@ -321,7 +323,7 @@ export default function ExplorePage() {
             >
               <div className="space-y-6">
                 <div>
-                  <p className="mb-2.5 text-[11px] font-medium tracking-[0.12em] text-miyeon-main/50">
+                  <p className="mb-2.5 text-[10.5px] font-medium tracking-[1.3px] text-miyeon-main/50">
                     HOW MUCH FOR ONE EXPERIENCE?
                   </p>
                   <div className="space-y-2.5">
@@ -337,10 +339,10 @@ export default function ExplorePage() {
                   </div>
                 </div>
                 <div>
-                  <p className="text-[11px] font-medium tracking-[0.12em] text-miyeon-main/50">
+                  <p className="text-[10.5px] font-medium tracking-[1.3px] text-miyeon-main/50">
                     CAN YOU AFFORD TO LOOK A LITTLE RED?
                   </p>
-                  <p className="mb-2.5 mt-1 text-xs text-miyeon-main/55">
+                  <p className="mb-3 mt-1 text-[12px] leading-[1.48] text-miyeon-main/55">
                     Some treatments leave you puffy. Our plan considers it.
                   </p>
                   <div className="space-y-2.5">
@@ -348,6 +350,7 @@ export default function ExplorePage() {
                       <OptionCard
                         key={opt.id}
                         label={opt.label}
+                        compact
                         selected={profile.fix.downtime === opt.id}
                         onClick={() => setProfile((p) => ({ ...p, fix: { ...p.fix, downtime: opt.id } }))}
                       />

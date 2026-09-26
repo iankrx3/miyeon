@@ -21,10 +21,10 @@ export const NavHeader: React.FC<NavHeaderProps> = ({ session, onSignIn, onSignO
     <header className="sticky top-0 z-40 grid grid-cols-[1fr_auto] items-center h-[var(--header-h)] border-b border-miyeon-line bg-white/95 px-5 backdrop-blur-md sm:grid-cols-[1fr_auto_1fr] sm:px-10">
       <NavLink
         to="/"
-        className="flex items-start gap-0.5 justify-self-start font-wordmark text-[24px] font-light tracking-[0.05em] text-miyeon-ink"
+        className="flex items-start gap-[3px] justify-self-start font-wordmark text-[22px] font-light tracking-[0.05em] text-miyeon-ink sm:text-[24px]"
       >
         miyeon
-        <span className="mt-1 text-[9px] font-normal tracking-normal text-miyeon-accent">✦</span>
+        <span className="mt-1 text-[8px] font-normal tracking-normal text-miyeon-accent sm:text-[9px]">✦</span>
       </NavLink>
 
       <nav className="hidden items-center gap-8 sm:flex">
@@ -45,7 +45,7 @@ export const NavHeader: React.FC<NavHeaderProps> = ({ session, onSignIn, onSignO
       </nav>
 
       <div className="flex items-center justify-self-end gap-3">
-        <span className="hidden items-center gap-1 text-xs font-medium text-miyeon-main sm:flex" title="English">
+        <span className="flex items-center gap-1 text-xs font-medium text-miyeon-main" title="English">
           <Globe className="h-[15px] w-[15px]" strokeWidth={1.5} />
           EN
         </span>

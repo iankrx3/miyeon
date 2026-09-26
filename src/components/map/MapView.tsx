@@ -105,6 +105,14 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
   const [isLocating, setIsLocating] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
 
+  // Deep link from the Home search bar: /map?q=<term> pre-fills and opens the search.
+  const homeSearchParam = searchParams.get('q');
+  useEffect(() => {
+    if (!homeSearchParam) return;
+    setSearchQuery(homeSearchParam);
+    setIsSearchOpen(true);
+  }, [homeSearchParam]);
+
   const curatorIdParam = searchParams.get('curator');
   const tripIdParam = searchParams.get('trip') || searchParams.get('itinerary') || searchParams.get('list');
   const curatorFilterActive = Boolean(curatorIdParam) && !tripIdParam;

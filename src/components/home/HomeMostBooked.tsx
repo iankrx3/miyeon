@@ -1,7 +1,7 @@
 import React from 'react';
 import { Star, MapPin } from 'lucide-react';
 import { mostBookedItems } from '../../data/home';
-import { withCreatripAffiliate, CREATRIP_DISCLOSURE } from '../../lib/creatrip';
+import { withCreatripAffiliate } from '../../lib/creatrip';
 import mostBooked1 from '../../assets/home/mostbooked-1-personal-color.png';
 import mostBooked2 from '../../assets/home/mostbooked-2-skin-booster.png';
 import mostBooked3 from '../../assets/home/mostbooked-3-hair-color.png';
@@ -20,9 +20,9 @@ export const HomeMostBooked: React.FC = () => (
           <p className="font-display text-[10.5px] font-medium tracking-[0.18em] text-miyeon-accent">
             THEY ALREADY GLOW
           </p>
-          <p className="mt-1 font-display text-xl text-miyeon-ink">Most Booked This Week</p>
+          <p className="mt-1 font-display text-[20px] font-medium text-miyeon-ink">Most Booked This Week</p>
         </div>
-        <span className="text-xs text-miyeon-main/60">See all →</span>
+        <span className="text-[12.5px] font-medium text-miyeon-main/60">See all →</span>
       </div>
 
       <div className="mt-3.5 divide-y divide-miyeon-line">
@@ -50,8 +50,8 @@ export const HomeMostBooked: React.FC = () => (
                 )}
               </div>
               <div className="mt-1 flex items-center gap-1 text-[11px] text-miyeon-main/55">
-                <Star className="h-[11px] w-[11px] fill-miyeon-ink text-miyeon-ink" />
-                <span className="font-medium text-miyeon-ink">{item.rating}</span>
+                <Star className="h-[11px] w-[11px] fill-miyeon-accent text-miyeon-accent" />
+                <span className="text-[11.5px] font-medium text-miyeon-ink">{item.rating}</span>
                 <span>({item.reviews.toLocaleString()})</span>
                 <span>·</span>
                 <span>{item.duration}</span>
@@ -62,11 +62,10 @@ export const HomeMostBooked: React.FC = () => (
               </span>
               <p className="mt-1 text-[12.5px] font-medium text-miyeon-ink">From ${item.fromPrice}</p>
             </div>
-            <span className="shrink-0 text-miyeon-main/45 transition-colors group-hover:text-miyeon-accent">→</span>
+            <span className="shrink-0 text-[15px] text-miyeon-main/45 transition-colors group-hover:text-miyeon-accent">→</span>
           </a>
         ))}
       </div>
-      <p className="mt-2 text-[10px] text-miyeon-main/60">{CREATRIP_DISCLOSURE}</p>
     </div>
   </section>
 );

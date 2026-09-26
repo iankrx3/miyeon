@@ -11,6 +11,10 @@ interface OptionCardProps {
   /** Photo card variant (Fix/Change/Restore): headline over an image, label as the pink category line. */
   image?: string;
   headline?: string;
+  /** Photo height in px for the image variant. Fix uses 150; Change/Restore use a denser 100. */
+  imageHeight?: number;
+  /** Denser text-only variant (downtime choices): 14px label, tighter padding. */
+  compact?: boolean;
 }
 
 export const OptionCard: React.FC<OptionCardProps> = ({
@@ -21,6 +25,8 @@ export const OptionCard: React.FC<OptionCardProps> = ({
   caption,
   image,
   headline,
+  imageHeight = 150,
+  compact,
 }) => {
   if (image) {
     return (
@@ -34,7 +40,7 @@ export const OptionCard: React.FC<OptionCardProps> = ({
           selected ? 'border-miyeon-accent' : 'border-miyeon-line hover:border-miyeon-accent/40'
         }`}
       >
-        <div className="h-[150px] w-full">
+        <div className="w-full" style={{ height: imageHeight }}>
           <img src={image} alt="" className="h-full w-full object-cover" />
         </div>
         <div className="flex flex-col gap-[3px] px-3 pb-[13px] pt-[11px]">
@@ -52,7 +58,9 @@ export const OptionCard: React.FC<OptionCardProps> = ({
       whileTap={disabled ? undefined : { scale: 0.98 }}
       onClick={onClick}
       disabled={disabled}
-      className={`w-full rounded-2xl border px-[18px] py-4 text-left transition-colors ${
+      className={`w-full border px-[18px] text-left transition-colors ${
+        compact ? 'rounded-[13px] py-[15px]' : 'rounded-[14px] py-4'
+      } ${
         selected
           ? 'border-[1.5px] border-miyeon-accent bg-miyeon-accent-soft'
           : disabled
@@ -60,7 +68,7 @@ export const OptionCard: React.FC<OptionCardProps> = ({
             : 'border-miyeon-line bg-white hover:border-miyeon-accent/40'
       }`}
     >
-      <span className="block text-[15px] font-medium text-miyeon-ink">{label}</span>
+      <span className={`block font-medium text-miyeon-ink ${compact ? 'text-[14px]' : 'text-[15px]'}`}>{label}</span>
       {caption && <span className="mt-1 block text-[11.5px] text-miyeon-main/55">{caption}</span>}
     </motion.button>
   );

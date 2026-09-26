@@ -30,22 +30,22 @@ export const HomeWhyOrderMatters: React.FC<HomeWhyOrderMattersProps> = ({ onStar
 
       <div className="mt-5 flex flex-col gap-2.5">
         {steps.map((item) => (
-          <div key={item.step} className="flex items-start gap-3">
+          <div key={item.step} className="flex items-start gap-[13px]">
             <div
               className={`flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-full text-[11.5px] font-bold ${
                 item.step === 1
                   ? 'bg-miyeon-accent text-white'
-                  : 'bg-miyeon-accent-soft text-miyeon-accent'
+                  : 'border border-miyeon-accent bg-white text-miyeon-accent'
               }`}
             >
               {item.step}
             </div>
-            <div className="flex-1 rounded-2xl border border-miyeon-line bg-white px-3.5 pb-3.5 pt-3">
-              <div className="flex items-center gap-1.5">
-                <span className="rounded-full bg-miyeon-accent-soft px-1.5 py-0.5 text-[9px] font-bold tracking-wide text-miyeon-accent-dark">
+            <div className="flex-1 rounded-[13px] border border-miyeon-line bg-white px-3.5 pb-[13px] pt-3">
+              <div className="flex items-center gap-[7px]">
+                <span className="rounded-full bg-miyeon-accent-soft px-[7px] py-[3px] text-[9px] font-bold tracking-[0.6px] text-miyeon-accent-dark">
                   {item.tag}
                 </span>
-                <p className="text-sm font-medium text-miyeon-ink">{item.title}</p>
+                <p className="text-[14px] font-medium text-miyeon-ink">{item.title}</p>
               </div>
               <p className="mt-0.5 text-[11.5px] text-miyeon-main/60">{item.caption}</p>
             </div>
@@ -57,7 +57,7 @@ export const HomeWhyOrderMatters: React.FC<HomeWhyOrderMattersProps> = ({ onStar
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={onStartAnalysis}
-        className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-full border-[1.4px] border-miyeon-accent bg-white py-[15px] text-sm font-medium text-miyeon-accent-dark"
+        className="mt-[18px] flex w-full items-center justify-center gap-[7px] rounded-full border-[1.4px] border-miyeon-accent bg-white py-[15px] text-[14px] font-medium text-miyeon-accent-dark"
       >
         Build my plan
         <ArrowRight className="h-4 w-4" />

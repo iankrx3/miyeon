@@ -30,8 +30,8 @@ export const WizardShell: React.FC<WizardShellProps> = ({
   children,
 }) => (
   <div>
-    <div className="flex items-center justify-between pb-5">
-      <button type="button" onClick={onBack} className="text-[13px] text-miyeon-main/70">
+    <div className="flex items-center justify-between pb-[22px]">
+      <button type="button" onClick={onBack} className="text-[13px] leading-[1.3] text-miyeon-main/70">
         ‹ Back
       </button>
       <div className="flex items-center gap-1">
@@ -47,12 +47,17 @@ export const WizardShell: React.FC<WizardShellProps> = ({
     </div>
 
     {kicker && (
-      <p className="flex items-center gap-1 text-[11px] font-bold tracking-[2.4px] text-miyeon-accent">
+      <p className="flex items-center gap-1 text-[11px] font-bold leading-[1.3] tracking-[2.4px] text-miyeon-accent">
         <span>✦</span>
         {kicker}
       </p>
     )}
-    <h2 className={`font-display text-2xl font-medium text-miyeon-ink ${kicker ? 'mt-2' : ''}`}>{title}</h2>
+    <h2
+      className={`font-display text-2xl font-medium text-miyeon-ink ${kicker ? 'mt-2' : 'flex items-start gap-[5px] leading-[1.3]'}`}
+    >
+      {!kicker && <span className="mt-[7px] shrink-0 text-[12px] leading-none text-miyeon-accent">✦</span>}
+      {title}
+    </h2>
     {subtitle && <p className="mt-2 text-[13.5px] leading-[1.5] text-miyeon-main/[0.62]">{subtitle}</p>}
 
     <div className="mt-[22px]">{children}</div>
@@ -64,7 +69,7 @@ export const WizardShell: React.FC<WizardShellProps> = ({
         whileTap={nextDisabled ? undefined : { scale: 0.98 }}
         onClick={onNext}
         disabled={nextDisabled}
-        className={`mt-5 w-full rounded-full py-4 text-[14.5px] font-medium disabled:opacity-30 ${
+        className={`mt-[22px] w-full rounded-full py-[17px] text-[14.5px] font-medium disabled:opacity-30 ${
           nextVariant === 'skip'
             ? 'bg-miyeon-surface text-miyeon-main/85'
             : 'bg-miyeon-ink text-[15px] text-white shadow-[0_6px_16px_rgba(90,81,77,0.2)]'

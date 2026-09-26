@@ -9,12 +9,6 @@ const localImages: Record<string, string> = {
   'four-days': trendingGuide,
 };
 
-const kindStyles: Record<string, string> = {
-  TREATMENT: 'bg-miyeon-accent-dark text-white',
-  GUIDE: 'bg-miyeon-accent-soft text-miyeon-accent-dark',
-  TREND: 'bg-miyeon-accent-soft text-miyeon-accent-dark',
-};
-
 export const HomeTrending: React.FC = () => (
   <section className="bg-miyeon-surface py-7">
     <div className="mx-auto max-w-6xl px-5 sm:px-8">
@@ -23,11 +17,11 @@ export const HomeTrending: React.FC = () => (
           <p className="font-display text-[10.5px] font-medium tracking-[0.18em] text-miyeon-accent">
             SEOUL IS CHANGING
           </p>
-          <p className="mt-1 font-display text-xl text-miyeon-ink sm:text-2xl">Know What’s Next</p>
+          <p className="mt-1 font-display text-[20px] font-medium text-miyeon-ink sm:text-2xl">Know What’s Next</p>
         </div>
         <Link
           to="/community?tab=magazine"
-          className="hidden text-sm text-miyeon-main/60 transition-colors hover:text-miyeon-ink md:inline"
+          className="text-[12.5px] font-medium text-miyeon-main/60 transition-colors hover:text-miyeon-ink md:text-sm"
         >
           See all →
         </Link>
@@ -38,19 +32,22 @@ export const HomeTrending: React.FC = () => (
           <Link
             key={item.id}
             to={item.href}
-            className="min-w-[250px] snap-start overflow-hidden rounded-2xl bg-white md:min-w-0"
+            className="min-w-[250px] snap-start overflow-hidden rounded-[14px] bg-white md:min-w-0"
           >
             <img
               src={localImages[item.id] ?? item.imageUrl}
               alt={item.title.replace(/\n/g, ' ')}
-              className="aspect-[5/3] w-full object-cover"
+              className="h-[140px] w-full object-cover md:aspect-[5/3] md:h-auto"
             />
-            <div className="p-3.5">
-              <span
-                className={`inline-block rounded px-1.5 py-0.5 text-[9.5px] font-bold tracking-wide ${kindStyles[item.kind]}`}
-              >
-                {item.kind}
-              </span>
+            <div className="px-3.5 pb-3.5 pt-3">
+              <div className="flex items-center gap-1.5">
+                {item.hot && (
+                  <span className="rounded bg-miyeon-accent-dark px-1.5 py-[2.5px] text-[8px] font-bold tracking-[0.5px] text-white">
+                    HOT
+                  </span>
+                )}
+                <span className="text-[9.5px] font-medium tracking-[1.4px] text-miyeon-accent">{item.kind}</span>
+              </div>
               <h3 className="mt-1.5 whitespace-pre-line font-display text-[14.5px] font-medium leading-[1.38] text-miyeon-ink">
                 {item.title}
               </h3>

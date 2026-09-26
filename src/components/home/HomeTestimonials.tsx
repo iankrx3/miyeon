@@ -17,7 +17,7 @@ export const HomeTestimonials: React.FC = () => (
       <p className="font-display text-[10.5px] font-medium tracking-[0.18em] text-miyeon-accent">
         STILL DOOMSCROLLING?
       </p>
-      <p className="mt-1 font-display text-xl text-miyeon-ink sm:text-2xl">Not Anymore</p>
+      <p className="mt-1 font-display text-[20px] font-medium text-miyeon-ink sm:text-2xl">Not Anymore</p>
 
       <div className="mt-4 flex snap-x snap-mandatory gap-2.5 overflow-x-auto pb-2 no-scrollbar md:grid md:grid-cols-3 md:overflow-visible md:pb-0">
         {testimonials.map((item) => (
