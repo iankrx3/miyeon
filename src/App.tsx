@@ -48,7 +48,8 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-miyeon-main">
+    <div className="min-h-screen bg-[#f1eeee] text-miyeon-main">
+      <div className="relative mx-auto min-h-screen w-full max-w-[430px] bg-white shadow-[0_0_40px_rgba(43,37,35,0.08)]">
       <NavHeader session={session} onSignIn={() => setIsAuthOpen(true)} onSignOut={signOut} />
 
       <main className={fullBleed ? '' : 'pb-[var(--bottom-nav-h)] sm:pb-0'}>
@@ -125,6 +126,7 @@ export default function App() {
         returnTab={authReturnTab}
         onDemoSignIn={signInAsDemo}
       />
+      </div>
     </div>
   );
 }

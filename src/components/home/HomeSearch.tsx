@@ -14,7 +14,7 @@ export const HomeSearch: React.FC = () => {
   };
 
   return (
-    <form onSubmit={submit} className="bg-white px-5 pb-3 sm:hidden">
+    <form onSubmit={submit} className="bg-white px-5 pb-1 pt-2">
       <label className="flex items-center gap-2.5 rounded-full bg-miyeon-surface px-4 py-[13px]">
         <Search className="h-[18px] w-[18px] shrink-0 text-miyeon-main/60" strokeWidth={1.5} />
         <input
@@ -23,7 +23,7 @@ export const HomeSearch: React.FC = () => {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search treatments, salons, clinics"
           enterKeyHint="search"
-          className="min-w-0 flex-1 bg-transparent text-[14px] text-miyeon-ink placeholder:text-miyeon-main/55 focus:outline-none"
+          className="min-w-0 flex-1 bg-transparent text-[16px] text-miyeon-ink placeholder:text-[14px] placeholder:text-miyeon-main/55 focus:outline-none"
         />
       </label>
     </form>

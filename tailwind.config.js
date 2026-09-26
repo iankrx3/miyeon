@@ -2,6 +2,16 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    // MIYEON is a mobile-first product: desktop and tablet render the same 390px-style
+    // layout, centered in App.tsx. The default breakpoints are pushed out of reach so the
+    // legacy `sm:`/`md:`/`lg:` desktop variants sitting in components never activate.
+    screens: {
+      sm: '99999px',
+      md: '99999px',
+      lg: '99999px',
+      xl: '99999px',
+      '2xl': '99999px',
+    },
     extend: {
       fontSize: {
         xs: ['var(--fs-xs)', { lineHeight: '1.4' }],

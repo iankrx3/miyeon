@@ -17,7 +17,7 @@ const tabs = [
 export const BottomNav: React.FC<BottomNavProps> = ({ session, onSignIn }) => {
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 flex items-start justify-between border-t border-miyeon-line bg-white/95 px-8 pb-[max(18px,env(safe-area-inset-bottom))] pt-2.5 backdrop-blur-md sm:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-40 mx-auto flex w-full max-w-[430px] items-start justify-between border-t border-miyeon-line bg-white/95 px-8 pb-[max(18px,env(safe-area-inset-bottom))] pt-2.5 backdrop-blur-md">
       {tabs.map(({ to, label, icon: Icon }) => (
         <NavLink
           key={to}

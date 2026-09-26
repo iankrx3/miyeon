@@ -551,7 +551,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
                 setIsSearchOpen(true);
               }}
               onFocus={() => setIsSearchOpen(true)}
-              className="flex-1 bg-transparent text-xs text-miyeon-main placeholder-miyeon-main/40 focus:outline-none"
+              className="min-w-0 flex-1 bg-transparent text-[16px] text-miyeon-main placeholder-miyeon-main/40 placeholder:text-xs focus:outline-none"
             />
             {isSearchLoading && <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-miyeon-main/60" />}
             {searchQuery && (

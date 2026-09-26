@@ -54,7 +54,7 @@ export const NavHeader: React.FC<NavHeaderProps> = ({ session, onSignIn, onSignO
           <div className="flex items-center gap-3">
             <NavLink
               to={session.creator ? `/curator/${session.creator.id}` : '/curator/signup'}
-              className="hidden text-xs font-semibold text-miyeon-main/70 transition-colors hover:text-miyeon-main sm:inline"
+              className="whitespace-nowrap text-xs font-semibold text-miyeon-main/70 transition-colors hover:text-miyeon-main"
             >
               {session.creator ? 'My Curator Page' : 'Become a Curator'}
             </NavLink>

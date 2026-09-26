@@ -181,7 +181,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
       )}
 
       {creatripHref && (
-        <div className="fixed inset-x-0 bottom-[var(--bottom-nav-h)] z-30 flex items-center justify-between border-t border-miyeon-line bg-white px-5 py-3.5 shadow-[0_-3px_12px_rgba(0,0,0,0.07)] sm:bottom-0">
+        <div className="fixed inset-x-0 bottom-[var(--bottom-nav-h)] z-30 mx-auto flex max-w-[430px] items-center justify-between border-t border-miyeon-line bg-white px-5 py-3.5 shadow-[0_-3px_12px_rgba(0,0,0,0.07)] sm:bottom-0">
           <div>
             <p className="text-[15px] font-bold text-miyeon-ink">From ~${guide.fromUsd}</p>
             <p className="text-[10.5px] text-miyeon-main/55">{guide.name}</p>
