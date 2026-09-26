@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Check } from 'lucide-react';
 import type { Itinerary } from '../../types';
 import { requestBeautyCard } from '../../services/beautyCard';
+import { useT } from '../../i18n';
 
 interface EmailCaptureInlineProps {
   itinerary: Itinerary;
@@ -10,6 +11,7 @@ interface EmailCaptureInlineProps {
 
 /** Figma "Want this saved?": optional — the plan is fully usable without an email. */
 export const EmailCaptureInline: React.FC<EmailCaptureInlineProps> = ({ itinerary, defaultEmail = '' }) => {
+  const t = useT();
   const [email, setEmail] = useState(defaultEmail);
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'skipped'>('idle');
   const [error, setError] = useState<string | null>(null);
@@ -31,23 +33,23 @@ export const EmailCaptureInline: React.FC<EmailCaptureInlineProps> = ({ itinerar
   if (status === 'skipped') {
     return (
       <p className="px-5 py-8 text-center text-[12.5px] text-miyeon-main/50">
-        No problem — your plan stays on this device. Find it again under My.
+        {t('No problem — your plan stays on this device. Find it again under My.')}
       </p>
     );
   }
 
   return (
     <section className="px-5 pb-10 pt-9 text-center">
-      <h3 className="font-display text-[21px] font-bold text-miyeon-ink">Want this saved?</h3>
+      <h3 className="font-display text-[21px] font-bold text-miyeon-ink">{t('Want this saved?')}</h3>
       <p className="mx-auto mt-2 max-w-[300px] text-[13.5px] leading-snug text-miyeon-main/60">
-        We&apos;ll send the full plan and remind you when it&apos;s time to book.
+        {t("We'll send the full plan and remind you when it's time to book.")}
       </p>
 
       {status === 'done' ? (
         <div className="mt-5 flex items-start gap-2.5 rounded-[14px] bg-miyeon-accent-soft px-4 py-3.5 text-left text-[13px] leading-snug text-miyeon-main">
           <Check className="mt-0.5 h-4 w-4 shrink-0 text-miyeon-accent" />
           <p>
-            Saved — we&apos;ll send your plan to <span className="font-medium">{email.trim()}</span>.
+            {t("Saved — we'll send your plan to {email}.", { email: email.trim() })}
           </p>
         </div>
       ) : (
@@ -62,7 +64,7 @@ export const EmailCaptureInline: React.FC<EmailCaptureInlineProps> = ({ itinerar
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="your@email.com"
+            placeholder={t('your@email.com')}
             className="w-full rounded-full border border-miyeon-line bg-miyeon-surface px-5 py-3.5 text-[14.5px] text-miyeon-ink outline-none placeholder:text-miyeon-main/35 focus:border-miyeon-accent"
           />
           {error && (
@@ -75,14 +77,14 @@ export const EmailCaptureInline: React.FC<EmailCaptureInlineProps> = ({ itinerar
             disabled={status === 'sending'}
             className="mt-3 w-full rounded-full bg-miyeon-ink py-[15px] text-[14.5px] font-medium text-white disabled:opacity-40"
           >
-            {status === 'sending' ? 'Sending…' : 'Email me my plan'}
+            {status === 'sending' ? t('Sending…') : t('Email me my plan')}
           </button>
           <button
             type="button"
             onClick={() => setStatus('skipped')}
             className="mt-4 text-[13px] text-miyeon-main/50"
           >
-            Skip for now
+            {t('Skip for now')}
           </button>
         </form>
       )}

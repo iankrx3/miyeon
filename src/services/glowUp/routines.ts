@@ -13,6 +13,7 @@ import type {
 import { guideFor } from '../../data/categoryGuides';
 import { budgetMaxUsdOf, labelForSubtype } from '../../data/glowUpQuiz';
 import { buildGlowUpCreatripUrl } from '../../lib/creatrip';
+import type { TFunction } from '../../i18n';
 import { haversineKm, travelForDistance } from '../itinerary/travel';
 
 // V2 result: instead of a Day 1/2/3 grid of categories, pick a real, bookable venue per
@@ -199,10 +200,21 @@ const toMin = (hhmm: string): number => {
 };
 const roundUp15 = (min: number): number => Math.ceil(min / 15) * 15;
 
-export function formatDuration(minutes: number): string {
-  if (minutes < 60) return `${minutes} min`;
+export function formatDuration(minutes: number, t?: TFunction): string {
+  const tt: TFunction = t ?? ((key, vars) => key.replace(/\{(\w+)\}/g, (m, n) => String(vars?.[n] ?? m)));
+  if (minutes < 60) return tt('{n} min', { n: minutes });
   const h = minutes / 60;
-  return `${Number.isInteger(h) ? h : (Math.round(h * 2) / 2).toString()} hr`;
+  return tt('{n} hr', { n: Number.isInteger(h) ? h : (Math.round(h * 2) / 2).toString() });
+}
+
+/** Stop hints are stored in English; this renders the fixed shapes (travel time, downtime notes) in the
+ * traveller's language and leaves venue-specific text as written. */
+export function translateHint(hint: string, t: TFunction): string {
+  const walk = hint.match(/^(\d+) min walk from (.+)$/);
+  if (walk) return t('{n} min walk from {name}', { n: walk[1], name: walk[2] });
+  const ride = hint.match(/^(\d+) min by (\w+) from (.+)$/);
+  if (ride) return t('{n} min by {mode} from {name}', { n: ride[1], mode: t(ride[2]), name: ride[3] });
+  return t(hint);
 }
 
 /** What to tell the traveller about aftercare for this venue. Venue-stated facts win; otherwise the
@@ -359,6 +371,7 @@ function leftOutNoVenue(subtype: GlowUpSubtype, profile: GlowUpProfile): GlowUpL
     // No region filter: a district-filtered list is the one most likely to come back empty.
     url: buildGlowUpCreatripUrl(subtype, { region: null, languages: profile.languages }),
     canAdd: false,
+    reasonCode: constrained ? 'no-venue-budget' : 'no-venue',
   };
 }
 
@@ -386,6 +399,7 @@ export function buildRoutines(profile: GlowUpProfile, places: GlowUpPlace[], opt
       reason: 'It works best on a day after your styling, and your trip is too tight. Still want it?',
       url: buildGlowUpCreatripUrl('photo', { region: null, languages: profile.languages }),
       canAdd: true,
+      reasonCode: 'tight-trip',
     });
   }
 

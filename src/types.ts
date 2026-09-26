@@ -531,6 +531,8 @@ export interface GlowUpLeftOut {
   url: string | null;
   /** True when a venue exists but was held back (e.g. trip too short) — the user can add it back. */
   canAdd: boolean;
+  /** Which message `reason` is, so the UI can show it in the traveller's language. */
+  reasonCode?: 'tight-trip' | 'no-venue' | 'no-venue-budget';
 }
 
 export interface GlowUpPlanV2 {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { useT } from '../../i18n';
 
 interface WizardShellProps {
   kicker?: string;
@@ -16,7 +17,13 @@ interface WizardShellProps {
   children: React.ReactNode;
 }
 
-export const WizardShell: React.FC<WizardShellProps> = ({
+export const WizardShell: React.FC<WizardShellProps> = (props) => {
+  const t = useT();
+  return <WizardShellView {...props} backLabel={t('Back')} />;
+};
+
+const WizardShellView: React.FC<WizardShellProps & { backLabel: string }> = ({
+  backLabel,
   kicker,
   title,
   subtitle,
@@ -32,7 +39,7 @@ export const WizardShell: React.FC<WizardShellProps> = ({
   <div>
     <div className="flex items-center justify-between pb-5">
       <button type="button" onClick={onBack} className="text-[13px] leading-[1.3] text-miyeon-main/70">
-        ‹ Back
+        ‹ {backLabel}
       </button>
       <div className="flex items-center gap-1">
         {Array.from({ length: total }).map((_, i) => (

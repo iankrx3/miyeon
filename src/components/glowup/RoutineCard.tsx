@@ -3,7 +3,8 @@ import { Info, MapPin, TriangleAlert } from 'lucide-react';
 import type { GlowUpProfile, GlowUpRoutine, GlowUpStop } from '../../types';
 import { guideFor } from '../../data/categoryGuides';
 import { labelForSubtype } from '../../data/glowUpQuiz';
-import { checksFor, formatDuration } from '../../services/glowUp/routines';
+import { checksFor, formatDuration, translateHint } from '../../services/glowUp/routines';
+import { useT } from '../../i18n';
 
 interface RoutineCardProps {
   routine: GlowUpRoutine;
@@ -12,22 +13,24 @@ interface RoutineCardProps {
 }
 
 /** Figma "루틴 카드": title, the categories in order, time/timing, downtime + area, numbered stops. */
-export const RoutineCard: React.FC<RoutineCardProps> = ({ routine, profile, onOpenStop }) => (
+export const RoutineCard: React.FC<RoutineCardProps> = ({ routine, profile, onOpenStop }) => {
+  const t = useT();
+  return (
   <div className="rounded-[18px] border-[1.5px] border-miyeon-accent bg-white p-4">
     <h3 className="flex items-center gap-2 font-display text-[21px] font-medium leading-tight text-miyeon-ink">
       <span aria-hidden className="text-[9px] text-miyeon-accent">
         ✦
       </span>
-      {routine.title}
+      {t(routine.title)}
     </h3>
     <p className="mt-1.5 text-[14px] text-miyeon-accent-dark">
-      {routine.subtypes.map((s) => guideFor(s)?.name ?? labelForSubtype(s)).join(' → ')}
+      {routine.subtypes.map((s) => t(guideFor(s)?.name ?? labelForSubtype(s))).join(' → ')}
     </p>
     <p className="mt-2.5 text-[14px] text-miyeon-ink">
-      <span className="font-medium">{formatDuration(routine.totalMinutes)}</span> · {routine.bestTiming}
+      <span className="font-medium">{formatDuration(routine.totalMinutes, t)}</span> · {t(routine.bestTiming)}
     </p>
     <p className="mt-1 flex flex-wrap items-center gap-x-3 text-[12.5px] text-miyeon-main/55">
-      <span>{routine.downtimeNote}</span>
+      <span>{t(routine.downtimeNote)}</span>
       <span className="flex items-center gap-1">
         <MapPin className="h-3 w-3 text-miyeon-accent" aria-hidden />
         {routine.areaLabel}
@@ -40,7 +43,8 @@ export const RoutineCard: React.FC<RoutineCardProps> = ({ routine, profile, onOp
       ))}
     </ol>
   </div>
-);
+  );
+};
 
 const StopRow: React.FC<{ stop: GlowUpStop; index: number; profile: GlowUpProfile | undefined; onOpen: () => void }> = ({
   stop,
@@ -49,11 +53,12 @@ const StopRow: React.FC<{ stop: GlowUpStop; index: number; profile: GlowUpProfil
   onOpen,
 }) => {
   const guide = guideFor(stop.subtype);
+  const t = useT();
   const { place } = stop;
   // "BEST" only when the venue data confirms (almost) everything we filter on.
   const best = checksFor(place, stop.subtype, profile).filter((c) => c.ok).length >= 3;
   const HintIcon = stop.hintTone === 'warn' ? TriangleAlert : Info;
-  const product = place.products.find((p) => p.priceUsd)?.name ?? guide?.summary ?? labelForSubtype(stop.subtype);
+  const product = place.products.find((p) => p.priceUsd)?.name ?? t(guide?.summary ?? labelForSubtype(stop.subtype));
   const name = place.branch && !place.name.toLowerCase().includes(place.branch.toLowerCase()) ? `${place.name} ${place.branch}` : place.name;
 
   return (
@@ -83,7 +88,7 @@ const StopRow: React.FC<{ stop: GlowUpStop; index: number; profile: GlowUpProfil
             <span className="truncate text-[15px] font-medium text-miyeon-ink">{name}</span>
             {best && (
               <span className="shrink-0 rounded bg-miyeon-accent px-1 py-0.5 text-[8.5px] font-bold tracking-wide text-white">
-                BEST
+                {t('BEST')}
               </span>
             )}
           </span>
@@ -94,7 +99,7 @@ const StopRow: React.FC<{ stop: GlowUpStop; index: number; profile: GlowUpProfil
           {stop.hint && (
             <span className="mt-0.5 flex items-center gap-1 text-[11.5px] text-miyeon-accent-dark">
               <HintIcon className="h-3 w-3 shrink-0" strokeWidth={1.75} aria-hidden />
-              <span className="truncate">{stop.hint}</span>
+              <span className="truncate">{translateHint(stop.hint, t)}</span>
             </span>
           )}
         </span>

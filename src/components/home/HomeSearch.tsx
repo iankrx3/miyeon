@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search } from 'lucide-react';
+import { useT } from '../../i18n';
 
 /** Home search bar. Submitting hands the term to the map search via /map?q=. */
 export const HomeSearch: React.FC = () => {
   const navigate = useNavigate();
+  const t = useT();
   const [query, setQuery] = useState('');
 
   const submit = (e: React.FormEvent) => {
@@ -21,7 +23,7 @@ export const HomeSearch: React.FC = () => {
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search treatments, salons, clinics"
+          placeholder={t('Search treatments, salons, clinics')}
           enterKeyHint="search"
           className="min-w-0 flex-1 bg-transparent text-[16px] text-miyeon-ink placeholder:text-[14px] placeholder:text-miyeon-main/55 focus:outline-none"
         />

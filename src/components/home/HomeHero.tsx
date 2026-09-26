@@ -5,6 +5,7 @@ import heroAvatar1 from '../../assets/home/hero-avatar-1.png';
 import heroAvatar2 from '../../assets/home/hero-avatar-2.png';
 import heroAvatar3 from '../../assets/home/hero-avatar-3.png';
 import heroAvatar4 from '../../assets/home/hero-avatar-4.png';
+import { useT } from '../../i18n';
 import decoBlob1 from '../../assets/home/hero-deco-blob-1.svg';
 import decoBlob2 from '../../assets/home/hero-deco-blob-2.svg';
 import decoSparkle1 from '../../assets/home/hero-deco-sparkle-1.svg';
@@ -15,20 +16,22 @@ interface HomeHeroProps {
   onStartAnalysis: () => void;
 }
 
-export const HomeHero: React.FC<HomeHeroProps> = ({ onStartAnalysis }) => (
+export const HomeHero: React.FC<HomeHeroProps> = ({ onStartAnalysis }) => {
+  const t = useT();
+  return (
   <section className="relative overflow-hidden bg-gradient-to-b from-[#f9dde4] via-[#fce9ee] to-[#fef6f8] px-6 pb-8 pt-7 text-center sm:px-8 sm:py-24 lg:py-28">
     <div className="relative z-10 mx-auto max-w-3xl">
       <p className="font-display text-[10.5px] font-medium tracking-[0.2em] text-miyeon-accent sm:text-xs">
-        FIRST TIME IN SEOUL?
+        {t('FIRST TIME IN SEOUL?')}
       </p>
       <h1 className="mt-3.5 font-display leading-[1.2] text-miyeon-ink">
-        <span className="block text-[31px] font-bold sm:text-5xl lg:text-[3.25rem]">K-Glow Up,</span>
-        <span className="block text-[29px] font-light sm:text-5xl lg:text-[3.25rem]">only for you</span>
+        <span className="block text-[31px] font-bold sm:text-5xl lg:text-[3.25rem]">{t('K-Glow Up,')}</span>
+        <span className="block text-[29px] font-light sm:text-5xl lg:text-[3.25rem]">{t('only for you')}</span>
       </h1>
       <p className="mt-4 text-[13.5px] leading-[1.55] text-miyeon-main/70 sm:text-base">
-        6 questions · 30 seconds
+        {t('6 questions · 30 seconds')}
         <br />
-        Leave Seoul as your best self
+        {t('Leave Seoul as your best self')}
       </p>
       <motion.button
         whileHover={{ scale: 1.03 }}
@@ -36,7 +39,7 @@ export const HomeHero: React.FC<HomeHeroProps> = ({ onStartAnalysis }) => (
         onClick={onStartAnalysis}
         className="mt-6 inline-flex items-center gap-2 rounded-full bg-miyeon-ink py-[17px] pl-[34px] pr-7 text-[15px] font-medium text-white shadow-[0px_6px_16px_0px_rgba(90,81,77,0.22)]"
       >
-        Start Glowing
+        {t('Start Glowing')}
         <ArrowRight className="h-4 w-4" />
       </motion.button>
       <div className="mt-5 flex items-center justify-center gap-2.5">
@@ -50,7 +53,7 @@ export const HomeHero: React.FC<HomeHeroProps> = ({ onStartAnalysis }) => (
             />
           ))}
         </div>
-        <p className="text-xs text-miyeon-main/70">Used by 1,200+ travelers worldwide</p>
+        <p className="text-xs text-miyeon-main/70">{t('Used by 1,200+ travelers worldwide')}</p>
       </div>
     </div>
 
@@ -64,4 +67,5 @@ export const HomeHero: React.FC<HomeHeroProps> = ({ onStartAnalysis }) => (
       </div>
     </div>
   </section>
-);
+  );
+};

@@ -9,6 +9,7 @@ import type {
   GlowUpTripDays,
   RestoreItem,
 } from '../types';
+import type { TFunction } from '../i18n';
 import fixSkin from '../assets/quiz/fix-skin.jpg';
 import fixFace from '../assets/quiz/fix-face.jpg';
 import changePersonalColor from '../assets/quiz/change-personal-color.jpg';
@@ -154,26 +155,31 @@ export interface Interlude {
 }
 
 /** After RESTORE: echo what was picked, in the order they'll be planned. Null when nothing was picked. */
-export function pickedInterlude(profile: Pick<GlowUpProfile, 'fix' | 'change' | 'restore'>): Interlude | null {
+const identity: TFunction = (key, vars) => (vars ? key.replace(/\{(\w+)\}/g, (m, n) => (n in vars ? String(vars[n]) : m)) : key);
+
+export function pickedInterlude(
+  profile: Pick<GlowUpProfile, 'fix' | 'change' | 'restore'>,
+  t: TFunction = identity
+): Interlude | null {
   const picks: string[] = [...profile.fix.items, ...profile.change, ...profile.restore];
   if (picks.length === 0) return null;
 
   const shown = picks.slice(0, 3);
-  const words = shown.map((p) => SHORT_LABEL[p] ?? labelForSubtype(p));
+  const words = shown.map((p) => t(SHORT_LABEL[p] ?? labelForSubtype(p)));
   const lastIsRestore = profile.restore.length > 0 && shown[shown.length - 1] === profile.restore[profile.restore.length - 1];
 
   let body: string;
-  if (words.length === 1) body = `${words[0]} it is.`;
+  if (words.length === 1) body = t('{w} it is.', { w: words[0] });
   else {
-    const lead = `${words[0]} first.`;
-    const mid = words.slice(1, -1).map((w) => `${w} next.`);
-    const last = `${words[words.length - 1]} ${lastIsRestore ? 'for the reset' : 'to finish'}.`;
+    const lead = t('{w} first.', { w: words[0] });
+    const mid = words.slice(1, -1).map((w) => t('{w} next.', { w }));
+    const last = t(lastIsRestore ? '{w} for the reset.' : '{w} to finish.', { w: words[words.length - 1] });
     body = [lead, ...mid, last].join(' ');
   }
 
-  const chips = shown.map((p) => labelForSubtype(p));
+  const chips = shown.map((p) => t(labelForSubtype(p)));
   if (picks.length > shown.length) chips.push(`+${picks.length - shown.length}`);
-  return { title: 'Okay, good picks. You have taste.', body, chips };
+  return { title: t('Okay, good picks. You have taste.'), body, chips };
 }
 
 /** Max price per experience (USD) the traveller set: the slider value, or — for plans saved before
@@ -193,31 +199,34 @@ export function budgetMaxUsdOf(profile: Pick<GlowUpProfile, 'budget' | 'budgetMa
 }
 
 /** "Up to $300" — or null when there is no limit. */
-export function budgetChipLabel(profile: Pick<GlowUpProfile, 'budget' | 'budgetMaxUsd'>): string | null {
+export function budgetChipLabel(profile: Pick<GlowUpProfile, 'budget' | 'budgetMaxUsd'>, t: TFunction = identity): string | null {
   const max = budgetMaxUsdOf(profile);
-  return max == null ? null : `Up to $${max}`;
+  return max == null ? null : t('Up to ${n}', { n: max });
 }
 
 /** After budget + downtime: what we'll filter on. Null when neither answer narrows anything. */
-export function constraintsInterlude(profile: Pick<GlowUpProfile, 'budget' | 'budgetMaxUsd' | 'fix'>): Interlude | null {
+export function constraintsInterlude(
+  profile: Pick<GlowUpProfile, 'budget' | 'budgetMaxUsd' | 'fix'>,
+  t: TFunction = identity
+): Interlude | null {
   const downtime = profile.fix.downtime;
   const max = budgetMaxUsdOf(profile);
   const parts: string[] = [];
   const chips: string[] = [];
-  let title = "Got it. We'll work with that.";
+  let title = t("Got it. We'll work with that.");
 
   if (downtime === 'no-daily-photos') {
-    title = 'Got it. You have places to be.';
-    parts.push('Photo-friendly. No major downtime.');
-    chips.push('No downtime');
+    title = t('Got it. You have places to be.');
+    parts.push(t('Photo-friendly. No major downtime.'));
+    chips.push(t('No downtime'));
   } else if (downtime === 'day-or-two-ok') {
-    title = 'Got it. A little recovery is fine.';
-    parts.push('A day or two of downtime is fine.');
-    chips.push('A day or two of downtime');
+    title = t('Got it. A little recovery is fine.');
+    parts.push(t('A day or two of downtime is fine.'));
+    chips.push(t('A day or two of downtime'));
   }
   if (max != null) {
-    parts.push(`Up to $${max} each.`);
-    chips.unshift(`Up to $${max}`);
+    parts.push(t('Up to ${n} each.', { n: max }));
+    chips.unshift(t('Up to ${n}', { n: max }));
   }
   if (parts.length === 0) return null;
   return { title, body: parts.join(' '), chips };

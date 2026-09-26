@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Compass, MapPin, MessageCircle, User } from 'lucide-react';
 import type { UserSession } from '../../types';
+import { useT } from '../../i18n';
 
 interface BottomNavProps {
   session: UserSession;
@@ -15,6 +16,7 @@ const tabs = [
 ];
 
 export const BottomNav: React.FC<BottomNavProps> = ({ session, onSignIn }) => {
+  const t = useT();
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 mx-auto flex w-full max-w-[430px] items-start justify-between border-t border-miyeon-line bg-white/95 px-8 pb-[max(18px,env(safe-area-inset-bottom))] pt-2.5 backdrop-blur-md">
@@ -31,7 +33,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ session, onSignIn }) => {
                 strokeWidth={1.5}
                 className={`h-[22px] w-[22px] ${isActive ? 'text-miyeon-ink' : 'text-miyeon-main/50'}`}
               />
-              <span className={isActive ? 'font-medium text-miyeon-ink' : 'text-miyeon-main/50'}>{label}</span>
+              <span className={isActive ? 'font-medium text-miyeon-ink' : 'text-miyeon-main/50'}>{t(label)}</span>
             </>
           )}
         </NavLink>
@@ -52,7 +54,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ session, onSignIn }) => {
                   isActive ? 'ring-2 ring-miyeon-ink' : 'ring-1 ring-miyeon-line'
                 }`}
               />
-              <span className={isActive ? 'font-medium text-miyeon-ink' : 'text-miyeon-main/50'}>My</span>
+              <span className={isActive ? 'font-medium text-miyeon-ink' : 'text-miyeon-main/50'}>{t('My')}</span>
             </>
           )}
         </NavLink>
@@ -62,7 +64,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ session, onSignIn }) => {
           className="flex flex-col items-center gap-[5px] text-[10px] text-miyeon-main/50"
         >
           <User strokeWidth={1.5} className="h-[22px] w-[22px]" />
-          My
+          {t('My')}
         </button>
       )}
     </nav>

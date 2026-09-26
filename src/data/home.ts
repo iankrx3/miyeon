@@ -52,6 +52,7 @@ export const trendingItems: TrendingItem[] = [
   {
     id: 'rejuran-juvelook',
     kind: 'TREATMENT',
+    hot: true,
     title: 'Rejuran vs Juvelook —\nwhich one is for you?',
     minutes: 5,
     href: '/magazine/rejuran-juvelook',

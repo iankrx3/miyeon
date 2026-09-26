@@ -30,6 +30,7 @@ import { BudgetSlider } from '../components/onboarding/BudgetSlider';
 import { WizardShell } from '../components/onboarding/WizardShell';
 import { AITransition } from '../components/quiz/AITransition';
 import { PinkTransition } from '../components/quiz/PinkTransition';
+import { useT } from '../i18n';
 import { buildGlowUpItinerary, emptyGlowUpProfile } from '../services/glowUp/generate';
 import { upsertItinerary } from '../lib/localItineraryStore';
 
@@ -77,6 +78,7 @@ let wizardMemory = freshWizardMemory();
 
 export default function ExplorePage() {
   const navigate = useNavigate();
+  const t = useT();
   const generatingRef = useRef(false);
   const [step, setStep] = useState<Step>(wizardMemory.step);
   const [profile, setProfile] = useState<GlowUpProfile>(wizardMemory.profile);
@@ -100,8 +102,8 @@ export default function ExplorePage() {
     const idx = FLOW.indexOf(current);
     const next = FLOW[idx + 1] ?? 'transition';
     // Reflect the answers just given before moving on — skipped when there is nothing to reflect.
-    if (current === 'restore' && pickedInterlude(profile)) return setStep('interlude1');
-    if (current === 'budget' && constraintsInterlude(profile)) return setStep('interlude2');
+    if (current === 'restore' && pickedInterlude(profile, t)) return setStep('interlude1');
+    if (current === 'budget' && constraintsInterlude(profile, t)) return setStep('interlude2');
     setStep(next);
   };
 
@@ -169,7 +171,7 @@ export default function ExplorePage() {
   }
 
   if (step === 'interlude1' || step === 'interlude2') {
-    const copy = step === 'interlude1' ? pickedInterlude(profile) : constraintsInterlude(profile);
+    const copy = step === 'interlude1' ? pickedInterlude(profile, t) : constraintsInterlude(profile, t);
     const next: Step = step === 'interlude1' ? 'tripInfo' : 'language';
     if (!copy) {
       setStep(next);
@@ -181,7 +183,7 @@ export default function ExplorePage() {
   if (step === 'transition') {
     return (
       <div className="mx-auto max-w-xl px-5 py-8">
-        <AITransition onDone={handleTransitionDone} messages={glowUpTransitionMessages} />
+        <AITransition onDone={handleTransitionDone} messages={glowUpTransitionMessages.map((m) => t(m))} />
       </div>
     );
   }
@@ -198,14 +200,14 @@ export default function ExplorePage() {
         >
           {step === 'fix' && (
             <WizardShell
-              kicker="FIX"
-              title="Fix — start with your face"
-              subtitle="Pick what you'd become. Or skip."
+              kicker={t("FIX")}
+              title={t("Fix — start with your face")}
+              subtitle={t("Pick what you'd become. Or skip.")}
               step={stepIndex}
               total={TOTAL_STEPS}
               onBack={() => setStep('home')}
               onNext={() => goNextFrom('fix')}
-              nextLabel={profile.fix.items.length > 0 ? 'Next' : 'Skip — nothing to fix'}
+              nextLabel={profile.fix.items.length > 0 ? t('Next') : t('Skip — nothing to fix')}
               nextVariant={profile.fix.items.length > 0 ? 'primary' : 'skip'}
             >
               <div className="grid grid-cols-2 gap-2.5">
@@ -213,8 +215,8 @@ export default function ExplorePage() {
                   <OptionCard
                     key={opt.id}
                     image={opt.image}
-                    headline={opt.headline}
-                    label={opt.label}
+                    headline={t(opt.headline)}
+                    label={t(opt.label)}
                     selected={profile.fix.items.includes(opt.id)}
                     onClick={() => toggleFix(opt.id)}
                   />
@@ -225,14 +227,14 @@ export default function ExplorePage() {
 
           {step === 'change' && (
             <WizardShell
-              kicker="CHANGE"
-              title="Change — maximize your trip"
-              subtitle="Pick what you'd like. As many as you want."
+              kicker={t("CHANGE")}
+              title={t("Change — maximize your trip")}
+              subtitle={t("Pick what you'd like. As many as you want.")}
               step={stepIndex}
               total={TOTAL_STEPS}
               onBack={() => goBackFrom('change')}
               onNext={() => goNextFrom('change')}
-              nextLabel={profile.change.length > 0 ? 'Next' : 'Skip — none of these'}
+              nextLabel={profile.change.length > 0 ? t('Next') : t('Skip — none of these')}
               nextVariant={profile.change.length > 0 ? 'primary' : 'skip'}
             >
               <div className="grid grid-cols-2 gap-2.5">
@@ -240,8 +242,8 @@ export default function ExplorePage() {
                   <OptionCard
                     key={opt.id}
                     image={opt.image}
-                    headline={opt.headline}
-                    label={opt.label}
+                    headline={t(opt.headline)}
+                    label={t(opt.label)}
                     selected={profile.change.includes(opt.id)}
                     onClick={() => toggleChange(opt.id)}
                   />
@@ -252,14 +254,14 @@ export default function ExplorePage() {
 
           {step === 'restore' && (
             <WizardShell
-              kicker="RESTORE"
-              title="Restore — take it slow"
-              subtitle="K-recovery is on another level."
+              kicker={t("RESTORE")}
+              title={t("Restore — take it slow")}
+              subtitle={t("K-recovery is on another level.")}
               step={stepIndex}
               total={TOTAL_STEPS}
               onBack={() => goBackFrom('restore')}
               onNext={() => goNextFrom('restore')}
-              nextLabel={profile.restore.length > 0 ? 'Next' : "Skip — I'll keep moving"}
+              nextLabel={profile.restore.length > 0 ? t('Next') : t("Skip — I'll keep moving")}
               nextVariant={profile.restore.length > 0 ? 'primary' : 'skip'}
             >
               <div className="grid grid-cols-2 gap-2.5">
@@ -267,8 +269,8 @@ export default function ExplorePage() {
                   <OptionCard
                     key={opt.id}
                     image={opt.image}
-                    headline={opt.headline}
-                    label={opt.label}
+                    headline={t(opt.headline)}
+                    label={t(opt.label)}
                     selected={profile.restore.includes(opt.id)}
                     onClick={() => toggleRestore(opt.id)}
                   />
@@ -279,24 +281,24 @@ export default function ExplorePage() {
 
           {step === 'tripInfo' && (
             <WizardShell
-              title="Boring, but important"
-              subtitle="How long you've got, and where you're staying."
+              title={t("Boring, but important")}
+              subtitle={t("How long you've got, and where you're staying.")}
               step={stepIndex}
               total={TOTAL_STEPS}
               onBack={() => goBackFrom('tripInfo')}
               onNext={() => goNextFrom('tripInfo')}
-              nextLabel="Next"
+              nextLabel={t("Next")}
             >
               <div className="space-y-6">
                 <div>
                   <p className="mb-2.5 text-[11px] font-medium tracking-[1.2px] text-miyeon-main/50">
-                    HOW MANY DAYS?
+                    {t('HOW MANY DAYS?')}
                   </p>
                   <div className="grid grid-cols-2 gap-[9px]">
                     {tripDaysOptions.map((opt) => (
                       <Chip
                         key={opt.id}
-                        label={opt.label}
+                        label={t(opt.label)}
                         selected={profile.tripDays === opt.id}
                         onClick={() => setTripDays(opt.id)}
                       />
@@ -305,13 +307,13 @@ export default function ExplorePage() {
                 </div>
                 <div>
                   <p className="mb-2.5 text-[11px] font-medium tracking-[1.2px] text-miyeon-main/50">
-                    WHERE ARE YOU BASED?
+                    {t('WHERE ARE YOU BASED?')}
                   </p>
                   <div className="grid grid-cols-3 gap-[9px]">
                     {cityOptions.map((opt) => (
                       <Chip
                         key={opt.id}
-                        label={opt.label}
+                        label={t(opt.label)}
                         selected={base === opt.id}
                         onClick={() => pickCity(opt.id)}
                       />
@@ -321,13 +323,13 @@ export default function ExplorePage() {
                 {(base === 'seoul' || base === 'busan') && (
                   <div className="-mt-3 rounded-[14px] bg-miyeon-surface p-3.5">
                     <p className="mb-2.5 text-[10.5px] font-medium tracking-[1.2px] text-miyeon-main/50">
-                      {base === 'seoul' ? 'WHICH PART OF SEOUL?' : 'WHICH PART OF BUSAN?'}
+                      {base === 'seoul' ? t('WHICH PART OF SEOUL?') : t('WHICH PART OF BUSAN?')}
                     </p>
                     <div className="grid grid-cols-2 gap-[9px]">
                       {regionOptionsFor(base).map((opt) => (
                         <Chip
                           key={opt.id}
-                          label={opt.label}
+                          label={t(opt.label)}
                           selected={profile.region === opt.id}
                           onClick={() => setRegion(opt.id)}
                         />
@@ -341,33 +343,33 @@ export default function ExplorePage() {
 
           {step === 'budget' && (
             <WizardShell
-              title="Practical and a must"
-              subtitle="So that we can actually plan, only for you."
+              title={t("Practical and a must")}
+              subtitle={t("So that we can actually plan, only for you.")}
               step={stepIndex}
               total={TOTAL_STEPS}
               onBack={() => goBackFrom('budget')}
               onNext={() => goNextFrom('budget')}
-              nextLabel="Next"
+              nextLabel={t("Next")}
             >
               <div className="space-y-6">
                 <div>
                   <p className="mb-2.5 text-[10.5px] font-medium tracking-[1.3px] text-miyeon-main/50">
-                    HOW MUCH FOR ONE EXPERIENCE?
+                    {t('HOW MUCH FOR ONE EXPERIENCE?')}
                   </p>
                   <BudgetSlider value={profile.budgetMaxUsd ?? null} onChange={setBudgetMax} />
                 </div>
                 <div>
                   <p className="text-[10.5px] font-medium tracking-[1.3px] text-miyeon-main/50">
-                    CAN YOU AFFORD TO LOOK A LITTLE RED?
+                    {t('CAN YOU AFFORD TO LOOK A LITTLE RED?')}
                   </p>
                   <p className="mb-3 mt-1 text-[12px] leading-[1.48] text-miyeon-main/55">
-                    Some treatments leave you puffy. Our plan considers it.
+                    {t('Some treatments leave you puffy. Our plan considers it.')}
                   </p>
                   <div className="space-y-2.5">
                     {fixDowntimeOptions.map((opt) => (
                       <OptionCard
                         key={opt.id}
-                        label={opt.label}
+                        label={t(opt.label)}
                         compact
                         selected={profile.fix.downtime === opt.id}
                         onClick={() => setProfile((p) => ({ ...p, fix: { ...p.fix, downtime: opt.id } }))}
@@ -381,25 +383,25 @@ export default function ExplorePage() {
 
           {step === 'language' && (
             <WizardShell
-              title="Which languages do you need?"
-              subtitle="Pick all that apply."
+              title={t("Which languages do you need?")}
+              subtitle={t("Pick all that apply.")}
               step={stepIndex}
               total={TOTAL_STEPS}
               onBack={() => goBackFrom('language')}
               onNext={() => goNextFrom('language')}
-              nextLabel="See my Glow Up"
+              nextLabel={t("See my Glow Up")}
             >
               <div className="space-y-2.5">
                 <OptionCard
-                  label="No preference"
-                  caption="Don't filter by language"
+                  label={t('No preference')}
+                  caption={t("Don't filter by language")}
                   selected={profile.languages.length === 0}
                   onClick={() => setProfile((p) => ({ ...p, languages: [] }))}
                 />
                 {languageOptions.map((opt) => (
                   <OptionCard
                     key={opt.id}
-                    label={opt.label}
+                    label={t(opt.label)}
                     selected={profile.languages.includes(opt.id)}
                     onClick={() => toggleLanguage(opt.id)}
                   />

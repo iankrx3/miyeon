@@ -4,6 +4,7 @@ import type { GlowUpMixPreset, GlowUpStop, GlowUpSubtype, Itinerary } from '../.
 import { budgetChipLabel, tripDaysLabel } from '../../data/glowUpQuiz';
 import { addBackCategory, remixItinerary } from '../../services/glowUp/generate';
 import { cityLabel } from '../../services/glowUp/routines';
+import { useLang, useT } from '../../i18n';
 import { RoutineMap } from './RoutineMap';
 import { RoutineCard } from './RoutineCard';
 import { TryAnotherMix } from './TryAnotherMix';
@@ -31,9 +32,16 @@ function pickLine(count: number): string {
   return "Pick what fits — it's your trip.";
 }
 
+const REASON_KEY: Record<string, string> = {
+  'tight-trip': 'It works best on a day after your styling, and your trip is too tight. Still want it?',
+  'no-venue': "We don't have a {label} we can book yet. Compare options on Creatrip.",
+  'no-venue-budget': "We don't have a {label} we can book that fits your budget and language yet. Compare options on Creatrip.",
+};
+
 /** Figma "RESULT v2": map on top, then the Glow-up routines as tabs + swipeable cards. */
 export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, onUpdate, userEmail }) => {
   const navigate = useNavigate();
+  const { lang, t } = useLang();
   const plan = itinerary.glowUpV2;
   const profile = itinerary.glowUpSnapshot;
   const routines = plan?.routines ?? [];
@@ -77,22 +85,22 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
   };
 
   const downtimeChip = profile.fix.downtime ? DOWNTIME_CHIP[profile.fix.downtime] : undefined;
-  const budgetChip = budgetChipLabel(profile);
-  const city = cityLabel(profile);
+  const budgetChip = budgetChipLabel(profile, t);
+  const city = t(cityLabel(profile));
 
   return (
     <div className="mx-auto max-w-xl pb-6">
       <header className="bg-gradient-to-b from-[#f9dde4] to-[#fef6f8] px-5 pb-5 pt-5">
-        <p className="text-[11px] font-medium tracking-[0.18em] text-miyeon-accent-dark">✦ YOUR GLOW UP PLAN</p>
+        <p className="text-[11px] font-medium tracking-[0.18em] text-miyeon-accent-dark">✦ {t('YOUR GLOW UP PLAN')}</p>
         <h1 className="mt-2 font-display text-[28px] font-bold leading-[1.2] text-miyeon-ink">
-          {city} called,
+          {t('{city} called,', { city })}
           <br />
-          your K-glow is on
+          {t('your K-glow is on')}
         </h1>
-        <p className="mt-2 text-[14px] text-miyeon-main/55">{pickLine(routines.length)}</p>
+        <p className="mt-2 text-[14px] text-miyeon-main/55">{t(pickLine(routines.length))}</p>
         <div className="mt-3.5 flex flex-wrap gap-2">
           <span className={chipClass}>
-            {city} · {tripDaysLabel(profile.tripDays)}
+            {t('{city} · {days}', { city, days: t(tripDaysLabel(profile.tripDays)) })}
           </span>
           {budgetChip && <span className={chipClass}>{budgetChip}</span>}
           {downtimeChip && <span className={chipClass}>{downtimeChip}</span>}
@@ -111,7 +119,7 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
             }}
           />
 
-          <div className="flex gap-2.5 overflow-x-auto px-5 py-4 no-scrollbar" role="tablist" aria-label="Routines">
+          <div className="flex gap-2.5 overflow-x-auto px-5 py-4 no-scrollbar" role="tablist" aria-label={t('Routines')}>
             {routines.map((r) => {
               const active = r.id === activeId;
               return (
@@ -126,7 +134,7 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
                   }`}
                 >
                   <span className={`h-2 w-2 rounded-full ${active ? 'bg-miyeon-accent' : 'bg-miyeon-line'}`} />
-                  {r.tab}
+                  {t(r.tab)}
                 </button>
               );
             })}
@@ -150,13 +158,13 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
                   />
                 ))}
               </div>
-              <p className="mt-2 text-center text-[11.5px] text-miyeon-main/40">← swipe to see your other routines →</p>
+              <p className="mt-2 text-center text-[11.5px] text-miyeon-main/40">{t('← swipe to see your other routines →')}</p>
             </>
           )}
         </>
       ) : (
         <div className="mx-5 mt-5 rounded-[16px] border border-dashed border-miyeon-line px-5 py-8 text-center text-[13.5px] leading-snug text-miyeon-main/60">
-          We couldn&apos;t match any bookable place to your picks yet. The categories below still link to Creatrip.
+          {t("We couldn't match any bookable place to your picks yet. The categories below still link to Creatrip.")}
         </div>
       )}
 
@@ -164,8 +172,12 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
         {plan.leftOut.map((item) => (
           <LeftOutCard
             key={item.subtype}
-            label={item.label}
-            reason={item.reason}
+            label={t(item.label)}
+            reason={
+              item.reasonCode
+                ? t(REASON_KEY[item.reasonCode], { label: lang === 'en' ? item.label.toLowerCase() : t(item.label) })
+                : item.reason
+            }
             canAdd={item.canAdd}
             url={item.url}
             busy={busy}
@@ -196,10 +208,12 @@ const LeftOutCard: React.FC<{
   url: string | null;
   busy: boolean;
   onAdd: () => void;
-}> = ({ label, reason, canAdd, url, busy, onAdd }) => (
+}> = ({ label, reason, canAdd, url, busy, onAdd }) => {
+  const t = useT();
+  return (
   <div className="flex items-start justify-between gap-3 rounded-[14px] border border-miyeon-line bg-white px-4 py-3.5 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
     <div className="min-w-0">
-      <p className="text-[14.5px] font-medium text-miyeon-ink">We left out {label}</p>
+      <p className="text-[14.5px] font-medium text-miyeon-ink">{t('We left out {label}', { label })}</p>
       <p className="mt-1 text-[12.5px] leading-snug text-miyeon-main/55">{reason}</p>
     </div>
     {canAdd ? (
@@ -209,7 +223,7 @@ const LeftOutCard: React.FC<{
         onClick={onAdd}
         className="shrink-0 pt-0.5 text-[14px] font-medium text-miyeon-accent-dark disabled:opacity-40"
       >
-        Add →
+        {t('Add →')}
       </button>
     ) : (
       url && (
@@ -219,9 +233,10 @@ const LeftOutCard: React.FC<{
           rel="noreferrer"
           className="shrink-0 pt-0.5 text-[14px] font-medium text-miyeon-accent-dark"
         >
-          Browse →
+          {t('Browse →')}
         </a>
       )
     )}
   </div>
-);
+  );
+};

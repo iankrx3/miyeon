@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import type { GlowUpRoutine } from '../../types';
 import { addBasemap } from '../../lib/leafletBasemap';
+import { useT } from '../../i18n';
 
 interface RoutineMapProps {
   routines: GlowUpRoutine[];
@@ -31,6 +32,7 @@ export const RoutineMap: React.FC<RoutineMapProps> = ({ routines, activeId, onSe
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
+  const t = useT();
   const cbRef = useRef({ onSelectRoutine, onOpenStop });
   cbRef.current = { onSelectRoutine, onOpenStop };
 
@@ -89,7 +91,8 @@ export const RoutineMap: React.FC<RoutineMapProps> = ({ routines, activeId, onSe
     <div className="relative h-[300px] w-full bg-[#e8e4df]">
       <div ref={containerRef} className="h-full w-full" />
       <span className="pointer-events-none absolute left-4 top-4 z-[500] rounded-full bg-white px-3 py-1.5 text-[12px] font-medium text-miyeon-ink shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
-        {places} place{places === 1 ? '' : 's'} · {routines.length} routine{routines.length === 1 ? '' : 's'}
+        {t(places === 1 ? '{n} place' : '{n} places', { n: places })} ·{' '}
+        {t(routines.length === 1 ? '{n} routine' : '{n} routines', { n: routines.length })}
       </span>
     </div>
   );

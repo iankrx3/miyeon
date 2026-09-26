@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
+import { useT } from '../../i18n';
 
 interface PinkTransitionProps {
   title: string;
@@ -13,6 +14,7 @@ interface PinkTransitionProps {
 /** Figma "전환화면" — full-screen pink interstitial between quiz steps that reflects
  * the answers just given. Auto-advances; a tap moves on right away. */
 export const PinkTransition: React.FC<PinkTransitionProps> = ({ title, body, chips, onDone, durationMs = 2200 }) => {
+  const t = useT();
   const doneRef = useRef(onDone);
   doneRef.current = onDone;
 
@@ -67,7 +69,7 @@ export const PinkTransition: React.FC<PinkTransitionProps> = ({ title, body, chi
             transition={{ duration: durationMs / 1000, ease: 'easeOut' }}
           />
         </div>
-        <span className="text-[11px] text-miyeon-main/55">moving on…</span>
+        <span className="text-[11px] text-miyeon-main/55">{t('moving on…')}</span>
       </div>
     </button>
   );

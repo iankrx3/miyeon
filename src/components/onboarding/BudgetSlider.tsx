@@ -1,4 +1,5 @@
 import React from 'react';
+import { useT } from '../../i18n';
 
 export const BUDGET_MIN_USD = 20;
 export const BUDGET_MAX_USD = 500;
@@ -12,16 +13,17 @@ interface BudgetSliderProps {
 
 /** Single-handle "up to $X per experience" slider. Pushing it to the end means no limit. */
 export const BudgetSlider: React.FC<BudgetSliderProps> = ({ value, onChange }) => {
+  const t = useT();
   const shown = value ?? BUDGET_MAX_USD;
   const pct = ((shown - BUDGET_MIN_USD) / (BUDGET_MAX_USD - BUDGET_MIN_USD)) * 100;
-  const label = value == null ? 'No limit' : `Up to $${value}`;
+  const label = value == null ? t('No limit') : t('Up to ${n}', { n: value });
 
   return (
     <div className="rounded-[14px] border border-miyeon-line bg-white px-[18px] pb-4 pt-5">
       <p className="text-center font-display text-[26px] font-bold leading-none text-miyeon-ink" aria-hidden>
         {label}
       </p>
-      <p className="mt-1.5 text-center text-[11.5px] text-miyeon-main/55">per experience</p>
+      <p className="mt-1.5 text-center text-[11.5px] text-miyeon-main/55">{t('per experience')}</p>
 
       <input
         type="range"
@@ -33,7 +35,7 @@ export const BudgetSlider: React.FC<BudgetSliderProps> = ({ value, onChange }) =
           const n = Number(e.target.value);
           onChange(n >= BUDGET_MAX_USD ? null : n);
         }}
-        aria-label="Maximum price per experience"
+        aria-label={t('Maximum price per experience')}
         aria-valuetext={label}
         className="budget-slider mt-5 w-full"
         style={{ '--pct': `${pct}%` } as React.CSSProperties}
@@ -41,7 +43,7 @@ export const BudgetSlider: React.FC<BudgetSliderProps> = ({ value, onChange }) =
 
       <div className="mt-1.5 flex justify-between text-[11px] text-miyeon-main/50">
         <span>${BUDGET_MIN_USD}</span>
-        <span>No limit</span>
+        <span>{t('No limit')}</span>
       </div>
     </div>
   );
