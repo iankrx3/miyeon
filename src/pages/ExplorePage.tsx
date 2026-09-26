@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'motion/react';
 import type {
   ChangeItem,
   FixItem,
-  GlowUpBudget,
   GlowUpLanguage,
   GlowUpProfile,
   GlowUpRegion,
@@ -12,7 +11,6 @@ import type {
   RestoreItem,
 } from '../types';
 import {
-  budgetOptions,
   changeOptions,
   fixDowntimeOptions,
   fixOptions,
@@ -28,6 +26,7 @@ import {
 import { HomeLanding } from '../components/home/HomeLanding';
 import { OptionCard } from '../components/onboarding/OptionCard';
 import { Chip } from '../components/onboarding/Chip';
+import { BudgetSlider } from '../components/onboarding/BudgetSlider';
 import { WizardShell } from '../components/onboarding/WizardShell';
 import { AITransition } from '../components/quiz/AITransition';
 import { PinkTransition } from '../components/quiz/PinkTransition';
@@ -152,7 +151,7 @@ export default function ExplorePage() {
     setProfile((p) => ({ ...p, city: id === 'unsure' ? undefined : id, region: null }));
   };
   const setRegion = (id: GlowUpRegion) => setProfile((p) => ({ ...p, region: id }));
-  const setBudget = (id: GlowUpBudget) => setProfile((p) => ({ ...p, budget: id }));
+  const setBudgetMax = (max: number | null) => setProfile((p) => ({ ...p, budgetMaxUsd: max }));
 
   const handleTransitionDone = () => {
     if (generatingRef.current) return;
@@ -188,7 +187,7 @@ export default function ExplorePage() {
   }
 
   return (
-    <div className="mx-auto max-w-xl overflow-hidden px-5 pb-8 pt-0 sm:py-14">
+    <div className="mx-auto max-w-xl overflow-hidden px-5 pb-8 pt-8">
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
@@ -241,7 +240,6 @@ export default function ExplorePage() {
                   <OptionCard
                     key={opt.id}
                     image={opt.image}
-                    imageHeight={100}
                     headline={opt.headline}
                     label={opt.label}
                     selected={profile.change.includes(opt.id)}
@@ -269,7 +267,6 @@ export default function ExplorePage() {
                   <OptionCard
                     key={opt.id}
                     image={opt.image}
-                    imageHeight={100}
                     headline={opt.headline}
                     label={opt.label}
                     selected={profile.restore.includes(opt.id)}
@@ -357,17 +354,7 @@ export default function ExplorePage() {
                   <p className="mb-2.5 text-[10.5px] font-medium tracking-[1.3px] text-miyeon-main/50">
                     HOW MUCH FOR ONE EXPERIENCE?
                   </p>
-                  <div className="space-y-2.5">
-                    {budgetOptions.map((opt) => (
-                      <OptionCard
-                        key={opt.id}
-                        label={opt.label}
-                        caption={opt.caption}
-                        selected={profile.budget === opt.id}
-                        onClick={() => setBudget(opt.id)}
-                      />
-                    ))}
-                  </div>
+                  <BudgetSlider value={profile.budgetMaxUsd ?? null} onChange={setBudgetMax} />
                 </div>
                 <div>
                   <p className="text-[10.5px] font-medium tracking-[1.3px] text-miyeon-main/50">
@@ -403,6 +390,12 @@ export default function ExplorePage() {
               nextLabel="See my Glow Up"
             >
               <div className="space-y-2.5">
+                <OptionCard
+                  label="No preference"
+                  caption="Don't filter by language"
+                  selected={profile.languages.length === 0}
+                  onClick={() => setProfile((p) => ({ ...p, languages: [] }))}
+                />
                 {languageOptions.map((opt) => (
                   <OptionCard
                     key={opt.id}
@@ -411,12 +404,6 @@ export default function ExplorePage() {
                     onClick={() => toggleLanguage(opt.id)}
                   />
                 ))}
-                <OptionCard
-                  label="No preference"
-                  caption="Don't filter by language"
-                  selected={profile.languages.length === 0}
-                  onClick={() => setProfile((p) => ({ ...p, languages: [] }))}
-                />
               </div>
             </WizardShell>
           )}

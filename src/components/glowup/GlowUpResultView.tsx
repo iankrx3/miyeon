@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { GlowUpMixPreset, GlowUpStop, GlowUpSubtype, Itinerary } from '../../types';
-import { budgetUsdLabel, tripDaysLabel } from '../../data/glowUpQuiz';
+import { budgetChipLabel, tripDaysLabel } from '../../data/glowUpQuiz';
 import { addBackCategory, remixItinerary } from '../../services/glowUp/generate';
 import { cityLabel } from '../../services/glowUp/routines';
 import { RoutineMap } from './RoutineMap';
@@ -77,7 +77,7 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
   };
 
   const downtimeChip = profile.fix.downtime ? DOWNTIME_CHIP[profile.fix.downtime] : undefined;
-  const budgetChip = budgetUsdLabel(profile.budget);
+  const budgetChip = budgetChipLabel(profile);
   const city = cityLabel(profile);
 
   return (

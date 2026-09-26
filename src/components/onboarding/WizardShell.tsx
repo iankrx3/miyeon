@@ -30,7 +30,7 @@ export const WizardShell: React.FC<WizardShellProps> = ({
   children,
 }) => (
   <div>
-    <div className="flex items-center justify-between pb-[22px]">
+    <div className="flex items-center justify-between pb-5">
       <button type="button" onClick={onBack} className="text-[13px] leading-[1.3] text-miyeon-main/70">
         ‹ Back
       </button>

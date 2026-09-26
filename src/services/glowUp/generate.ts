@@ -11,6 +11,7 @@ export function emptyGlowUpProfile(): GlowUpProfile {
     tripDays: null,
     region: null,
     budget: null,
+    budgetMaxUsd: null,
     languages: [],
   };
 }

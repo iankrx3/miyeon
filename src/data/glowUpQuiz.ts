@@ -2,7 +2,6 @@ import type {
   ChangeItem,
   FixDowntimeAnswer,
   FixItem,
-  GlowUpBudget,
   GlowUpLanguage,
   GlowUpProfile,
   GlowUpCity,
@@ -100,13 +99,6 @@ const BUSAN_REGIONS: { id: GlowUpRegion; label: string }[] = [
 export const regionOptionsFor = (city: GlowUpCity | null): { id: GlowUpRegion; label: string }[] =>
   city === 'seoul' ? SEOUL_REGIONS : city === 'busan' ? BUSAN_REGIONS : [];
 
-export const budgetOptions: { id: GlowUpBudget; label: string; caption: string }[] = [
-  { id: 'under-100k', label: '~₩100k', caption: 'Nails, scrub, a quick facial' },
-  { id: '100-300k', label: '₩100k–300k', caption: 'Most personal color, hair, skin sessions' },
-  { id: '300-500k', label: '₩300k–500k', caption: 'Lifting, photo packages, premium clinics' },
-  { id: 'no-preference', label: 'No preference', caption: 'Show me everything' },
-];
-
 export const languageOptions: { id: GlowUpLanguage; label: string }[] = [
   { id: 'English', label: 'English' },
   { id: 'Japanese', label: 'Japanese' },
@@ -133,9 +125,6 @@ export function labelForSubtype(subtype: string): string {
 
 export const regionLabel = (id: GlowUpRegion | null): string =>
   [...SEOUL_REGIONS, ...BUSAN_REGIONS].find((r) => r.id === id)?.label ?? 'Not sure yet';
-
-export const budgetLabel = (id: GlowUpBudget | null): string =>
-  budgetOptions.find((b) => b.id === id)?.label ?? 'No preference';
 
 export const tripDaysLabel = (id: GlowUpTripDays | null): string =>
   tripDaysOptions.find((d) => d.id === id)?.label ?? '2-3 days';
@@ -187,23 +176,32 @@ export function pickedInterlude(profile: Pick<GlowUpProfile, 'fix' | 'change' | 
   return { title: 'Okay, good picks. You have taste.', body, chips };
 }
 
-/** Rough USD range for the per-experience budget answer (₩1,000 ≈ $1). */
-export const budgetUsd: Record<GlowUpBudget, { min: number; max: number | null; label: string; sentence: string } | null> = {
-  'under-100k': { min: 0, max: 100, label: 'Under $100', sentence: 'Under $100 each.' },
-  '100-300k': { min: 100, max: 300, label: '$100–300', sentence: '$100–$300 each.' },
-  '300-500k': { min: 300, max: 500, label: '$300–500', sentence: '$300–$500 each.' },
-  'no-preference': null,
-};
+/** Max price per experience (USD) the traveller set: the slider value, or — for plans saved before
+ * the slider existed — the old tier's upper bound. null = no limit. */
+export function budgetMaxUsdOf(profile: Pick<GlowUpProfile, 'budget' | 'budgetMaxUsd'>): number | null {
+  if (profile.budgetMaxUsd !== undefined) return profile.budgetMaxUsd;
+  switch (profile.budget) {
+    case 'under-100k':
+      return 100;
+    case '100-300k':
+      return 300;
+    case '300-500k':
+      return 500;
+    default:
+      return null;
+  }
+}
 
-export function budgetUsdLabel(id: GlowUpBudget | null): string | null {
-  return (id && budgetUsd[id]?.label) || null;
+/** "Up to $300" — or null when there is no limit. */
+export function budgetChipLabel(profile: Pick<GlowUpProfile, 'budget' | 'budgetMaxUsd'>): string | null {
+  const max = budgetMaxUsdOf(profile);
+  return max == null ? null : `Up to $${max}`;
 }
 
 /** After budget + downtime: what we'll filter on. Null when neither answer narrows anything. */
-export function constraintsInterlude(profile: Pick<GlowUpProfile, 'budget' | 'fix'>): Interlude | null {
+export function constraintsInterlude(profile: Pick<GlowUpProfile, 'budget' | 'budgetMaxUsd' | 'fix'>): Interlude | null {
   const downtime = profile.fix.downtime;
-  const budgetInfo = profile.budget ? budgetUsd[profile.budget] : null;
-  const budget = budgetInfo?.label ?? null;
+  const max = budgetMaxUsdOf(profile);
   const parts: string[] = [];
   const chips: string[] = [];
   let title = "Got it. We'll work with that.";
@@ -217,9 +215,9 @@ export function constraintsInterlude(profile: Pick<GlowUpProfile, 'budget' | 'fi
     parts.push('A day or two of downtime is fine.');
     chips.push('A day or two of downtime');
   }
-  if (budget) {
-    parts.push(budgetInfo!.sentence);
-    chips.unshift(budget);
+  if (max != null) {
+    parts.push(`Up to $${max} each.`);
+    chips.unshift(`Up to $${max}`);
   }
   if (parts.length === 0) return null;
   return { title, body: parts.join(' '), chips };

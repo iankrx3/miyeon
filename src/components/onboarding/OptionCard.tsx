@@ -11,7 +11,7 @@ interface OptionCardProps {
   /** Photo card variant (Fix/Change/Restore): headline over an image, label as the pink category line. */
   image?: string;
   headline?: string;
-  /** Photo height in px for the image variant. Fix uses 150; Change/Restore use a denser 100. */
+  /** Photo height in px for the image variant (Figma: 150 for Fix, Change and Restore). */
   imageHeight?: number;
   /** Denser text-only variant (downtime choices): 14px label, tighter padding. */
   compact?: boolean;

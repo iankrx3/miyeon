@@ -11,7 +11,7 @@ import type {
   GlowUpSubtype,
 } from '../../types';
 import { guideFor } from '../../data/categoryGuides';
-import { budgetUsd, labelForSubtype } from '../../data/glowUpQuiz';
+import { budgetMaxUsdOf, labelForSubtype } from '../../data/glowUpQuiz';
 import { buildGlowUpCreatripUrl } from '../../lib/creatrip';
 import { haversineKm, travelForDistance } from '../itinerary/travel';
 
@@ -74,7 +74,6 @@ export const cityLabel = (profile: GlowUpProfile): string => CITY_LABEL[profileC
 const preferredRegion = (p: GlowUpProfile): Exclude<GlowUpRegion, 'auto'> | null =>
   p.region && p.region !== 'auto' ? p.region : null;
 
-const budgetMax = (p: GlowUpProfile): number | null => (p.budget ? (budgetUsd[p.budget]?.max ?? null) : null);
 
 const point = (pl: GlowUpPlace): [number, number] => [pl.lat ?? 0, pl.lng ?? 0];
 const kmBetween = (a: [number, number], b: [number, number]): number =>
@@ -93,7 +92,7 @@ export function languageFit(place: GlowUpPlace, wanted: GlowUpProfile['languages
 
 /** true = fits, false = known to be over budget, null = price not stated. */
 export function budgetFit(place: GlowUpPlace, profile: GlowUpProfile): boolean | null {
-  const max = budgetMax(profile);
+  const max = budgetMaxUsdOf(profile);
   if (max == null) return true;
   if (place.priceFromUsd == null) return null;
   return place.priceFromUsd <= max;
@@ -152,7 +151,7 @@ function scorePlace(
   const proximity = anchor ? Math.max(0, 1 - kmBetween(point(place), anchor) / 6) : 0.5;
   const lang = languageFit(place, profile.languages);
   const language = lang === true ? 1 : lang === null ? 0.4 : 0;
-  const max = budgetMax(profile);
+  const max = budgetMaxUsdOf(profile);
   const price =
     place.priceFromUsd == null
       ? 0.4
@@ -352,7 +351,7 @@ function makeRoutine(
 
 function leftOutNoVenue(subtype: GlowUpSubtype, profile: GlowUpProfile): GlowUpLeftOut {
   const label = labelForSubtype(subtype);
-  const constrained = profile.budget && profile.budget !== 'no-preference' ? ' that fits your budget and language' : '';
+  const constrained = budgetMaxUsdOf(profile) != null ? ' that fits your budget and language' : '';
   return {
     subtype,
     label,

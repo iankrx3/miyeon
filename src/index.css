@@ -93,3 +93,53 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Onboarding price slider (components/onboarding/BudgetSlider.tsx) */
+.budget-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 28px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+.budget-slider:focus-visible {
+  outline: none;
+}
+.budget-slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 9999px;
+  background: linear-gradient(to right, #e2637f var(--pct, 100%), #eeeaea var(--pct, 100%));
+}
+.budget-slider::-moz-range-track {
+  height: 4px;
+  border-radius: 9999px;
+  background: #eeeaea;
+}
+.budget-slider::-moz-range-progress {
+  height: 4px;
+  border-radius: 9999px;
+  background: #e2637f;
+}
+.budget-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  margin-top: -11px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 2px solid #e2637f;
+  box-shadow: 0 2px 8px rgba(207, 63, 97, 0.25);
+}
+.budget-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 2px solid #e2637f;
+  box-shadow: 0 2px 8px rgba(207, 63, 97, 0.25);
+}
+.budget-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px rgba(226, 99, 127, 0.25);
+}

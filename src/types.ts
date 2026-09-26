@@ -438,7 +438,10 @@ export interface GlowUpProfile {
   /** Set when the user picked Seoul or Busan; absent for "Not sure yet" and older saved plans. */
   city?: GlowUpCity;
   region: GlowUpRegion | null;
+  /** Legacy tier from plans saved before the price slider — read via budgetMaxUsdOf(), never written. */
   budget: GlowUpBudget | null;
+  /** Max price per experience in USD from the slider. null = no limit; undefined = an older saved plan. */
+  budgetMaxUsd?: number | null;
   languages: GlowUpLanguage[];
 }
 

@@ -14,7 +14,7 @@ export const HomeSearch: React.FC = () => {
   };
 
   return (
-    <form onSubmit={submit} className="bg-white px-5 pb-1 pt-2">
+    <form onSubmit={submit} className="bg-white px-5 py-3">
       <label className="flex items-center gap-2.5 rounded-full bg-miyeon-surface px-4 py-[13px]">
         <Search className="h-[18px] w-[18px] shrink-0 text-miyeon-main/60" strokeWidth={1.5} />
         <input
