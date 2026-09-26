@@ -1,0 +1,858 @@
+[
+  {
+    "sourceFolder": "k-beauty",
+    "branch": null,
+    "tagline": "Hongdae ID Photo Studio",
+    "extraSubtypes": [],
+    "region": "hongdae-mapo",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 434,
+    "languages": [
+      "English",
+      "Chinese"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 26,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 26,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Date-specific ticket"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Korean-style ID photo with professional shoot and retouching",
+      "Retouching refined together with the photographer",
+      "Free rental of jackets, shirts and blouses"
+    ],
+    "notes": "Membership price 23.4 USD. Address and subway not in dump.",
+    "id": "11138",
+    "name": "Time On Me Studio",
+    "subtype": "photo",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": null,
+    "tagline": "Celebrity Hair & Makeup Studio",
+    "extraSubtypes": [
+      "makeup",
+      "photo",
+      "skin"
+    ],
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 797,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "Near Apgujeong Rodeo Station",
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 19.3,
+        "originalPriceUsd": 57.39
+      }
+    ],
+    "priceFromUsd": 19.3,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Hair, makeup, K-pop makeup class, scalp head spa and semi-profile photo shoot offered",
+      "Profile photo: one basic retouched photo included, print in about 10 min",
+      "Free Creatrip Buddy assistant (English support via WhatsApp/LINE)"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": null,
+    "highlights": [
+      "Salon frequented by celebrities",
+      "Head stylist appeared on Japanese TV",
+      "Skin analysis and fascia care before hair and makeup"
+    ],
+    "notes": "Membership price 17.76 USD. Title tagged [Special Event]. Page shows both 3-day and 1-day confirmation; left null.",
+    "id": "13165",
+    "name": "HOSU DOSAN",
+    "subtype": "hair",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": "Hongdae",
+    "tagline": "English Personal Color Analysis & Styling",
+    "extraSubtypes": [],
+    "region": "hongdae-mapo",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 5,
+    "reviewCount": 397,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "Near Hongdae Entrance Station",
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 154.03,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 154.03,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Coupons not applicable",
+      "English and Chinese interpretation offered during diagnosis"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": null,
+    "highlights": [
+      "Personal color diagnosis with product and color application advice",
+      "English and Chinese interpretation",
+      "Near Hongdae Entrance Station"
+    ],
+    "notes": "Membership price 138.63 USD.",
+    "id": "13315",
+    "name": "Color of You",
+    "subtype": "personal-color",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": "Myeongdong",
+    "tagline": "Nail Art",
+    "extraSubtypes": [],
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.6,
+    "reviewCount": 267,
+    "languages": [
+      "English",
+      "Chinese"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "Myeongdong Station 3 min walk",
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 11.19,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 11.19,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Also offers pedicure, eyelashes and waxing"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": null,
+    "highlights": [
+      "Multiple people can be served at the same time",
+      "Wide range of nail designs and shapes",
+      "3 minutes from Myeongdong Station"
+    ],
+    "notes": "Membership price 10.07 USD. Confirmation stated as within 1 day (spec allows only 1-2 days; left null). 82% satisfied.",
+    "id": "13493",
+    "name": "Pro Beauty",
+    "subtype": "nail",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": "Cheongdam",
+    "tagline": "Celebrity Hair & Makeup Salon",
+    "extraSubtypes": [
+      "hair"
+    ],
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.3,
+    "reviewCount": 249,
+    "languages": [],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 98.68,
+        "originalPriceUsd": 213.8
+      }
+    ],
+    "priceFromUsd": 98.68,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Date-specific ticket"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": null,
+    "highlights": [
+      "Salon trusted by K-pop idols and actors",
+      "Camera-ready natural K-Beauty styling",
+      "Located in upscale Cheongdam"
+    ],
+    "notes": "Membership price 88.81 USD. English Available flag; no Available Languages list. Confirmation stated as within 1 day (left null).",
+    "id": "13574",
+    "name": "Soonsoo",
+    "subtype": "makeup",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": null,
+    "tagline": "Hair & Makeup Salon",
+    "extraSubtypes": [
+      "hair"
+    ],
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.8,
+    "reviewCount": 87,
+    "languages": [
+      "English",
+      "Japanese"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "Cheongdam Station 3 min walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit of 5,000 KRW required when booking (rest paid onsite)",
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "1:1 service by one designer from start to finish"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Trendy Korean-style hair and makeup in one place",
+      "Personalized styling, trusted by celebrities",
+      "Staff experienced in weddings, commercials, photo shoots"
+    ],
+    "notes": "Price shown garbled (\"Membership price 2,000 USD\", likely KRW); price left null.",
+    "id": "13789",
+    "name": "HAUT BEAUTE",
+    "subtype": "makeup",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": "Hongdae",
+    "tagline": "Nail Salon",
+    "extraSubtypes": [],
+    "region": "hongdae-mapo",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 5,
+    "reviewCount": 236,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "Hapjeong Station Exit 6, 6 min walk",
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 22.43,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 22.43,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Date-specific ticket"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Wide range of designs from cute to chic",
+      "English-speaking staff",
+      "6-minute walk from Hapjeong Station Exit 6"
+    ],
+    "notes": "Membership price 20.19 USD.",
+    "id": "14157",
+    "name": "NAIL BOX",
+    "subtype": "nail",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": "Cheongdam",
+    "tagline": "Hair & Makeup Salon",
+    "extraSubtypes": [
+      "makeup"
+    ],
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 77,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit of 5,000 KRW required when booking (rest paid onsite)",
+      "Free cancellation or changes up to 3 days before",
+      "Photo review discount only when a photo review is submitted",
+      "All menus written in English with basic English conversation guides in shop"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Designers who also work in entertainment and advertising",
+      "Hair and makeup in one visit",
+      "Scalp head spa (16/18-step care, 6-step scaling)"
+    ],
+    "notes": "Price shown garbled (\"2,000 USD\"); price left null. Promo video in text is from AKNACK Hannam.",
+    "id": "14844",
+    "name": "AKNACK TOOL",
+    "subtype": "hair",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": "Myeongdong",
+    "tagline": "Makeup & Personal Color Analysis",
+    "extraSubtypes": [
+      "personal-color",
+      "hair"
+    ],
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 92,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 34.33,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 34.33,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Coupons not applicable",
+      "Mobile reservation voucher provided",
+      "Personal color analysis uses 204 fabrics (PCCS theory)",
+      "Personal color card provided to keep"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Makeup by artist Seo Su-jin",
+      "Detailed personal color analysis",
+      "Lip, blush and eyeshadow shade recommendations"
+    ],
+    "notes": "Title tagged [August Special]. Membership price 31.58 USD. No free-cancellation line in dump.",
+    "id": "14876",
+    "name": "COCOREA",
+    "subtype": "makeup",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": "Gyeongbokgung",
+    "tagline": "Complete Hair & Makeup Makeover Studio",
+    "extraSubtypes": [
+      "makeup",
+      "personal-color"
+    ],
+    "region": null,
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 3063,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit of 20,000 KRW required when booking (rest paid onsite)",
+      "Free cancellation or changes up to 3 days before",
+      "Hair, makeup, perm, color, personal color and scalp care in one visit",
+      "English consultation available"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Full makeover in one appointment",
+      "English consultations throughout the salon",
+      "Near Gyeongbokgung, Gwanghwamun, Seochon"
+    ],
+    "notes": "Region shown as Jongro (no matching region). Price garbled (\"8,000 USD\"); price left null. Subway not stated.",
+    "id": "14884",
+    "name": "ECO JARDIN",
+    "subtype": "hair",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": "Myeongdong",
+    "tagline": "Skincare, Nail Art, Foot Spa",
+    "extraSubtypes": [
+      "skin",
+      "massage"
+    ],
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 5,
+    "reviewCount": 638,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 29.84,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 29.84,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Skincare, nail art and foot spa offered"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Personalized skincare and nail art",
+      "Relaxing foot spa",
+      "Central Myeongdong location"
+    ],
+    "notes": "Membership price 26.86 USD.",
+    "id": "14955",
+    "name": "Fleur Jardin",
+    "subtype": "nail",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": "Myeongdong Main",
+    "tagline": "Personal Color Analysis",
+    "extraSubtypes": [],
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 5,
+    "reviewCount": 201,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "Near Myeongdong Station (few minutes)",
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 102.79,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 102.79,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Coupons not applicable",
+      "Includes perfume making, photo zone and self-makeup area"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Detailed color and body type analysis",
+      "Styling, makeup and accessory tips",
+      "Pink interior like a beauty pop-up"
+    ],
+    "notes": "Membership price 92.51 USD.",
+    "id": "15009",
+    "name": "COLORIZE",
+    "subtype": "personal-color",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": null,
+    "tagline": "ID & Portrait Photo Studio",
+    "extraSubtypes": [],
+    "region": null,
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 14,
+    "languages": [],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 52.21,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 52.21,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Creatrip-exclusive partner studio",
+      "Mobile reservation voucher provided",
+      "ID photo and \"Random Gift\" concept-free sessions offered"
+    ],
+    "englishSupport": null,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Analog-sensibility photo studio",
+      "Bookable only through Creatrip",
+      "Near Jongno 3-ga, Ikseon-dong, Insadong"
+    ],
+    "notes": "Region Jongro (no matching region). Membership price 46.99 USD. No English/language statement in dump; no free-cancellation line.",
+    "id": "15220",
+    "name": "Sanho Mansion",
+    "subtype": "photo",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": "COEX",
+    "tagline": "Gangnam COEX Mall Nail Salon",
+    "extraSubtypes": [],
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.4,
+    "reviewCount": 18,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "COEX 3 min walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit of 30,000 KRW required when booking (rest paid onsite)",
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Menu: nail gel, pedi gel, nail art, pedi art, nail extension (10 fingers)"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "3-minute walk from COEX",
+      "English-friendly staff",
+      "Trendy Korean nail designs"
+    ],
+    "notes": "Price garbled (\"Membership price 27,000 USD\", likely KRW); price left null.",
+    "id": "15245",
+    "name": "Koho Nail",
+    "subtype": "nail",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": "Main Branch",
+    "tagline": "K-pop Idol Contouring Lifting + Lymphatic Therapy",
+    "extraSubtypes": [],
+    "region": null,
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 12,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 57.56,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 57.56,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Bedding and treatment beds changed after each session",
+      "Whole five-story building is a private beauty space"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "JH Contouring used by K-pop idols and actors",
+      "Fascia and lymphatic line treatment",
+      "Director with 30+ years experience"
+    ],
+    "notes": "Region not stated (only \"Seoul\"). Membership price 51.8 USD. Downtime not stated (visible results after one session claimed).",
+    "id": "15248",
+    "name": "SlimM",
+    "subtype": "face",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": "Seongsu",
+    "tagline": "Premium Face Contouring Care",
+    "extraSubtypes": [],
+    "region": "seongsu",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 5,
+    "reviewCount": 3,
+    "languages": [],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 149.18,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 149.18,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Mobile reservation voucher provided",
+      "Includes 15ml lifting ampoule and skincare samples",
+      "Sample packs and V-Lift mask sheets only with a review",
+      "Manual technique, no machines"
+    ],
+    "englishSupport": null,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Hand-technique jawline and cheekbone contouring",
+      "Certified therapists",
+      "Located in trendy Seongsu"
+    ],
+    "notes": "Membership price 134.26 USD. Page lists Seongdong. No English statement; no free-cancellation line.",
+    "id": "15473",
+    "name": "CCLIME",
+    "subtype": "face",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": "Gangnam HQ",
+    "tagline": "Premium Face Contouring Care",
+    "extraSubtypes": [],
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.7,
+    "reviewCount": 15,
+    "languages": [],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 149.51,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 149.51,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Mobile reservation voucher provided",
+      "Includes 15ml lifting ampoule and skincare samples",
+      "Sample packs and V-Lift mask sheets only with a review"
+    ],
+    "englishSupport": null,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Hand-technique facial contouring",
+      "Certified therapists",
+      "Gangnam HQ branch"
+    ],
+    "notes": "Membership price 134.56 USD. No English statement; no free-cancellation line.",
+    "id": "15480",
+    "name": "CCLIME",
+    "subtype": "face",
+    "city": "seoul"
+  },
+  {
+    "sourceFolder": "k-beauty",
+    "branch": "Myeongdong",
+    "tagline": "Foot Bath, Body Scrub, Head Spa & Skin Care",
+    "extraSubtypes": [
+      "massage",
+      "skin"
+    ],
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.8,
+    "reviewCount": 257,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "Myeongdong Station Exit 4, 3 min walk",
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 13.43,
+        "originalPriceUsd": 29.11
+      }
+    ],
+    "priceFromUsd": 13.43,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Body scrub services are available to women only",
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Luggage storage available"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Foot bath cafe, head spa, skin care and body scrub in one building",
+      "Private rooms",
+      "3-minute walk from Myeongdong Station"
+    ],
+    "notes": "Programs: foot bath combo 40 min, body scrub 60/90 min, scalp spa 60 min, facial 50 min, total scalp+skin 100 min, All-Tune facial 120 min (minutes left null). Membership price 12.09 USD.",
+    "id": "15729",
+    "name": "Sola Spa",
+    "subtype": "scrub",
+    "city": "seoul"
+  }
+]

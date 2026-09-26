@@ -4,6 +4,7 @@ import type {
   FixItem,
   GlowUpBudget,
   GlowUpLanguage,
+  GlowUpProfile,
   GlowUpCity,
   GlowUpRegion,
   GlowUpTripDays,
@@ -117,9 +118,9 @@ export const languageOptions: { id: GlowUpLanguage; label: string }[] = [
 export const glowUpTransitionMessages = [
   'Checking your trip — Duration · Region',
   'Matching your goals — FIX/CHANGE/RESTORE selections',
-  'Building the order — day placement based on downtime & category nature',
+  'Building your routines — order based on downtime & category nature',
   'Applying your filters — Budget · Language',
-  'Finding real options — checking real prices, not ad prices',
+  'Finding real places — matched to your area, language & budget',
 ];
 
 const OPTION_LABEL_BY_SUBTYPE: Record<string, string> = Object.fromEntries(
@@ -138,3 +139,88 @@ export const budgetLabel = (id: GlowUpBudget | null): string =>
 
 export const tripDaysLabel = (id: GlowUpTripDays | null): string =>
   tripDaysOptions.find((d) => d.id === id)?.label ?? '2-3 days';
+
+// ---- V2: interstitial copy + budget in USD (Figma "전환화면 1/2") ----
+
+/** Short spoken form of a pick, for "Color first. Hair next." */
+const SHORT_LABEL: Record<string, string> = {
+  skin: 'Skin',
+  face: 'Face',
+  'personal-color': 'Color',
+  hair: 'Hair',
+  makeup: 'Makeup',
+  'permanent-makeup': 'Brows',
+  photo: 'Photos',
+  nail: 'Nails',
+  sauna: 'Sauna',
+  scrub: 'Scrub',
+  massage: 'Massage',
+  yoga: 'Yoga',
+};
+
+export interface Interlude {
+  title: string;
+  body: string;
+  chips: string[];
+}
+
+/** After RESTORE: echo what was picked, in the order they'll be planned. Null when nothing was picked. */
+export function pickedInterlude(profile: Pick<GlowUpProfile, 'fix' | 'change' | 'restore'>): Interlude | null {
+  const picks: string[] = [...profile.fix.items, ...profile.change, ...profile.restore];
+  if (picks.length === 0) return null;
+
+  const shown = picks.slice(0, 3);
+  const words = shown.map((p) => SHORT_LABEL[p] ?? labelForSubtype(p));
+  const lastIsRestore = profile.restore.length > 0 && shown[shown.length - 1] === profile.restore[profile.restore.length - 1];
+
+  let body: string;
+  if (words.length === 1) body = `${words[0]} it is.`;
+  else {
+    const lead = `${words[0]} first.`;
+    const mid = words.slice(1, -1).map((w) => `${w} next.`);
+    const last = `${words[words.length - 1]} ${lastIsRestore ? 'for the reset' : 'to finish'}.`;
+    body = [lead, ...mid, last].join(' ');
+  }
+
+  const chips = shown.map((p) => labelForSubtype(p));
+  if (picks.length > shown.length) chips.push(`+${picks.length - shown.length}`);
+  return { title: 'Okay, good picks. You have taste.', body, chips };
+}
+
+/** Rough USD range for the per-experience budget answer (₩1,000 ≈ $1). */
+export const budgetUsd: Record<GlowUpBudget, { min: number; max: number | null; label: string; sentence: string } | null> = {
+  'under-100k': { min: 0, max: 100, label: 'Under $100', sentence: 'Under $100 each.' },
+  '100-300k': { min: 100, max: 300, label: '$100–300', sentence: '$100–$300 each.' },
+  '300-500k': { min: 300, max: 500, label: '$300–500', sentence: '$300–$500 each.' },
+  'no-preference': null,
+};
+
+export function budgetUsdLabel(id: GlowUpBudget | null): string | null {
+  return (id && budgetUsd[id]?.label) || null;
+}
+
+/** After budget + downtime: what we'll filter on. Null when neither answer narrows anything. */
+export function constraintsInterlude(profile: Pick<GlowUpProfile, 'budget' | 'fix'>): Interlude | null {
+  const downtime = profile.fix.downtime;
+  const budgetInfo = profile.budget ? budgetUsd[profile.budget] : null;
+  const budget = budgetInfo?.label ?? null;
+  const parts: string[] = [];
+  const chips: string[] = [];
+  let title = "Got it. We'll work with that.";
+
+  if (downtime === 'no-daily-photos') {
+    title = 'Got it. You have places to be.';
+    parts.push('Photo-friendly. No major downtime.');
+    chips.push('No downtime');
+  } else if (downtime === 'day-or-two-ok') {
+    title = 'Got it. A little recovery is fine.';
+    parts.push('A day or two of downtime is fine.');
+    chips.push('A day or two of downtime');
+  }
+  if (budget) {
+    parts.push(budgetInfo!.sentence);
+    chips.unshift(budget);
+  }
+  if (parts.length === 0) return null;
+  return { title, body: parts.join(' '), chips };
+}

@@ -34,3 +34,4 @@ Explore 탭은 더 이상 "퀴즈 → Top 3 장소 매칭" 화면이 아니다. 
 9. [환경 변수](09-env-vars.md)
 10. [의도적으로 빠져 있는 것](10-known-gaps.md)
 11. [큐레이터 도구 · 매거진 · 저장된 일정](11-curator-tools.md)
+12. [Glow Up V2 — 실제 장소 루틴 · 지도 · 직접 예약](12-glowup-v2.md)

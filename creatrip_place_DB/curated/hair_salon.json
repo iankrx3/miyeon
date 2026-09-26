@@ -1,0 +1,882 @@
+[
+  {
+    "id": "11093",
+    "sourceFolder": "hair_salon",
+    "name": "SOONSIKI Hair",
+    "branch": "Hongdae Flagship",
+    "tagline": "Seoul's top-rated salon for international guests",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": "29 Wausan-ro 21-gil, Mapo-gu, Seoul",
+    "addressKo": "서울 마포구 와우산로21길 29",
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 7937,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "Hongik Univ. Station (nearby)",
+    "hours": "Wed-Sun 10:00-19:00 (closed Mon & Tue); last reservation slot 18:00",
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": 360,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit of 4,000 KRW required at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "Basic English works but bring a couple of photos of the style you want",
+      "Reservation slots Wed-Sun 10:00-18:00; listing says about 6 hrs required"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Creatrip's most-booked hair salon, popular with models and celebrities",
+      "English-speaking staff daily; head spa zone on 4F and private rooms on 5F",
+      "Transparent pricing; up to 38% off with a review (haircuts excluded)"
+    ],
+    "notes": "Options/prices not in dump. Head spa 8-step and 16-step courses, Kerastase care options. 'Membership price 1,600 USD' on page is a scrape artifact (KRW), ignored."
+  },
+  {
+    "id": "11331",
+    "sourceFolder": "hair_salon",
+    "name": "JUNO HAIR",
+    "branch": "Myeongdong 2nd",
+    "tagline": "Korea's No.1 hair salon chain",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": "3F, 18 Myeongdong 8na-gil, Jung-gu, Seoul",
+    "addressKo": "서울 중구 명동8나길 18 3F",
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 2543,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "Line 4 Myeong-dong 380m",
+    "hours": "Daily 10:00-21:30",
+    "products": [
+      {
+        "name": "Color",
+        "priceUsd": 100.92,
+        "originalPriceUsd": 112.13
+      },
+      {
+        "name": "Perm",
+        "priceUsd": 154.74,
+        "originalPriceUsd": 171.94
+      },
+      {
+        "name": "Nourishment",
+        "priceUsd": 100.92,
+        "originalPriceUsd": 112.13
+      },
+      {
+        "name": "Scalp Spa Treatment",
+        "priceUsd": 100.92,
+        "originalPriceUsd": 112.13
+      },
+      {
+        "name": "Color + Nourishment",
+        "priceUsd": 188.38,
+        "originalPriceUsd": 209.32
+      },
+      {
+        "name": "Perm + Color",
+        "priceUsd": 255.66,
+        "originalPriceUsd": 284.07
+      }
+    ],
+    "priceFromUsd": 100.92,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 14.95 USD (10,000 KRW) at booking; not covered by the 10% member discount",
+      "Free cancellation or changes up to 3 days before; deposit not refunded after",
+      "Listed prices are averages; hair length, damage and designer level may add charges",
+      "Staff communicate in English, may use a translation app for details"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1 day",
+    "highlights": [
+      "Professional, knowledgeable stylists who explain each step",
+      "Welcoming service with smooth communication despite language barriers",
+      "High-quality cuts, color and scalp treatments; relaxing atmosphere"
+    ],
+    "notes": "Korean name 준오헤어 명동2호점, phone 02-757-0605. Price shown is 10% member discount off list. Haircut not included in listed options (per Q&A). addressEn is a romanization of the Korean address."
+  },
+  {
+    "id": "13165",
+    "sourceFolder": "hair_salon",
+    "name": "HOSU DOSAN",
+    "branch": "Apgujeong",
+    "tagline": "Celebrity Hair & Makeup Studio",
+    "subtype": "hair",
+    "extraSubtypes": [
+      "makeup",
+      "photo"
+    ],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 796,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "Apgujeong Rodeo Station (nearby)",
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting option (from price)",
+        "priceUsd": 19.27,
+        "originalPriceUsd": 57.3
+      }
+    ],
+    "priceFromUsd": 19.27,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile voucher; date-specific booking",
+      "Optional semi-profile photo shoot after hair and makeup at a nearby studio (one retouched photo included)"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-3 days",
+    "highlights": [
+      "Celebrity-frequented hair and makeup salon; head stylist featured on Japanese TV",
+      "Perm, color, makeup, K-pop makeup class and scalp head spa offered",
+      "Optional K-Beauty skin aesthetic care and profile photo shoot"
+    ],
+    "notes": "Options list not in dump; only starting price shown (66% off list 57.3 USD; member price 17.73 USD). Reservation confirmation shown as both 1 day and 3 days."
+  },
+  {
+    "id": "13466",
+    "sourceFolder": "hair_salon",
+    "name": "JUNO Hair",
+    "branch": "Myeongdong Street",
+    "tagline": "Foreigner-friendly Myeongdong salon with head spa",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": "7F, 41 Myeongdong 10-gil, Jung-gu, Seoul",
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 5,
+    "reviewCount": 13257,
+    "languages": [
+      "English",
+      "Japanese",
+      "Chinese"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "4-step premium Repair system (60 min)",
+        "priceKrw": 150000
+      },
+      {
+        "name": "Head Spa Basic Type, 15 steps (60 min)",
+        "priceKrw": 200000
+      },
+      {
+        "name": "Color",
+        "priceKrw": 135000,
+        "originalPriceKrw": 150000
+      },
+      {
+        "name": "Head Spa A Type, 18 steps anti-aging (120 min)",
+        "priceKrw": 220000
+      }
+    ],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Book at least 5 hours in advance; deposit 5,000 KRW, pay the rest onsite",
+      "Free cancellation up to 3 days before; none from 2 days before",
+      "Arriving over 10-15 minutes late auto-cancels the reservation with no refund",
+      "Several JUNO branches in Myeongdong; check the map to visit the right one"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Multilingual staff (English, Japanese, Chinese) and personalized style advice",
+      "Head spa from 15-step basic to 18-step anti-aging, oily or sensitive versions",
+      "Private single and twin head spa rooms in central Myeongdong"
+    ],
+    "notes": "Prices shown in KRW only. Also has kids head spa. 10% onsite discount for Creatrip bookers (excl. clinic treatments). Hours and subway not in dump."
+  },
+  {
+    "id": "13574",
+    "sourceFolder": "hair_salon",
+    "name": "Soonsoo",
+    "branch": "Cheongdam",
+    "tagline": "Celebrity Hair & Makeup Salon",
+    "subtype": "hair",
+    "extraSubtypes": [
+      "makeup"
+    ],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.3,
+    "reviewCount": 249,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting option (from price)",
+        "priceUsd": 98.68,
+        "originalPriceUsd": 213.8
+      }
+    ],
+    "priceFromUsd": 98.68,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile voucher; date-specific booking"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1 day",
+    "highlights": [
+      "Hair and makeup salon that has worked with BLACKPINK, NCT, IVE and many actors",
+      "Natural, camera-ready K-Beauty styling in upscale Cheongdam",
+      "Customized services and a welcoming experience for international clients"
+    ],
+    "notes": "Options not in dump; only starting price (member price 88.81 USD). Not clear whether mainly hair or makeup; category is Beauty Makeup."
+  },
+  {
+    "id": "13767",
+    "sourceFolder": "hair_salon",
+    "name": "Moclock",
+    "branch": "Gangnam Main Branch",
+    "tagline": "Celebrity scalp care and head spa",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 179,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "Nonhyeon Station Exit 3, 1-2 min walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 20,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "100% appointment basis; all treatments in a private room"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "3 days",
+    "highlights": [
+      "Scalp magnified photo and analysis, then a program matched to your scalp type",
+      "Full course includes trapezius massage, collagen pack, carbonated head spa, galvanic and LED therapy",
+      "Free scalp diagnosis and consultation (worth 30,000 KRW) with Creatrip booking"
+    ],
+    "notes": "Options and prices not in dump. Focus on hair loss, dandruff, itchiness, oiliness care."
+  },
+  {
+    "id": "13772",
+    "sourceFolder": "hair_salon",
+    "name": "The Day's Hair",
+    "branch": null,
+    "tagline": "English-friendly Hongdae salon for men's cuts and color",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 1734,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "Hongdae Station, 5 min walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 5,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "Consultation covers personal coloring, skin tone and vibe"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Whole team speaks English",
+      "Specializes in men's cuts, perms and personal-color-based dyeing",
+      "Balayage, highlights, ombre and color correction using L'Oreal Professionnel and Milbon"
+    ],
+    "notes": "Options and prices not in dump."
+  },
+  {
+    "id": "13789",
+    "sourceFolder": "hair_salon",
+    "name": "HAUT BEAUTE",
+    "branch": null,
+    "tagline": "Korean-style hair and makeup in one place",
+    "subtype": "hair",
+    "extraSubtypes": [
+      "makeup"
+    ],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.8,
+    "reviewCount": 87,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "Cheongdam Station, 3 min walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 5,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Hair and makeup all in one place, trusted by celebrities",
+      "One-on-one service from a single designer start to finish",
+      "Staff experienced with weddings, commercials and photo shoots"
+    ],
+    "notes": "Options and prices not in dump. Category Beauty Makeup; primary service (hair vs makeup) unclear."
+  },
+  {
+    "id": "13808",
+    "sourceFolder": "hair_salon",
+    "name": "SOONSIKI Hair",
+    "branch": "Hongdae Hanok",
+    "tagline": "Global customers' most booked hair salon",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": "19 Hongik-ro 5-gil, Mapo-gu, Seoul",
+    "addressKo": "서울 마포구 홍익로5길 19",
+    "lat": null,
+    "lng": null,
+    "rating": 5,
+    "reviewCount": 1260,
+    "languages": [],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": "Wed-Sun 10:00-19:00 (closed Mon & Tue); reservation slots 10:00-18:00",
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 4,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "Available reservation times Wed-Sun 10:00-18:00"
+    ],
+    "englishSupport": null,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Ranked No.1 in Creatrip hair bookings; trend-forward styling",
+      "Designer experienced with many foreign guests; clean, calming 'healing' interior",
+      "Up to 38% off with a review (haircuts excluded); 8- and 16-step head spa"
+    ],
+    "notes": "Only Korean listed under languages; English support not stated. Body text also mentions 'up to 20%' off. Options not in dump."
+  },
+  {
+    "id": "13814",
+    "sourceFolder": "hair_salon",
+    "name": "Jenny House",
+    "branch": "Cheongdam",
+    "tagline": "Celebrity Hair & Makeup Studio",
+    "subtype": "hair",
+    "extraSubtypes": [
+      "makeup",
+      "nail"
+    ],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.5,
+    "reviewCount": 283,
+    "languages": [
+      "English",
+      "Chinese"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Star Cut + Hair Styling (60 min)",
+        "priceKrw": 110000
+      },
+      {
+        "name": "Head Spa (60 min)",
+        "priceKrw": 275000
+      },
+      {
+        "name": "Star Hair Coloring (120 min)",
+        "priceKrw": 330000
+      },
+      {
+        "name": "Star Perm (180 min)",
+        "priceKrw": 550000
+      },
+      {
+        "name": "Star Makeup (60 min)",
+        "priceKrw": 240000
+      },
+      {
+        "name": "Makeup + Hair Styling (120 min)",
+        "priceKrw": 330000
+      }
+    ],
+    "priceFromUsd": 82.05,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Makeup + Hair Styling excludes haircut, perm and coloring",
+      "Wedding Hair & Makeup price covers both bride and groom"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Luxury salon with 20+ years of history and 80+ artists",
+      "Makeup, hair styling, head spa, perm, color and makeup class in one place",
+      "More than 1,200 celebrities have visited"
+    ],
+    "notes": "Prices shown in KRW; also Wedding Hair & Makeup 900,000 KRW, Makeup Class 660,000 KRW, Star Premium Full Package 1,320,000 KRW (240 min), Makeup + Hair + Nail 440,000 KRW. priceFromUsd is page 'From 82.05 USD' (member price 73.85)."
+  },
+  {
+    "id": "13940",
+    "sourceFolder": "hair_salon",
+    "name": "ONYAD HAIR",
+    "branch": "Seongsu Branch 1",
+    "tagline": "Trendy Korean hair salon in Seongsu",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "seongsu",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.8,
+    "reviewCount": 342,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "Seoul Forest Station, 1 min walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 5,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "Extra 10% off all services except haircuts if you pay via Creatrip and leave a review"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Personalized consultation based on face shape, proportions and style",
+      "Cuts, perms, color and hair treatments",
+      "English-speaking staff on site"
+    ],
+    "notes": "Options and prices not in dump."
+  },
+  {
+    "id": "13957",
+    "sourceFolder": "hair_salon",
+    "name": "GREEN Scalp & Hair Loss Care Center",
+    "branch": null,
+    "tagline": "Scalp and hair loss care specialist",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 5,
+    "reviewCount": 45,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting option (from price)",
+        "priceUsd": 73.26,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 73.26,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile voucher; date-specific booking"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Customized scalp and hair loss care with professional scalp analysis",
+      "27+ years of experience and over 400,000 customers",
+      "Wide range of scalp products; hygienic environment"
+    ],
+    "notes": "Title says 25 years, body says more than 27 years. Member price 65.93 USD. Options not in dump. Region from 'Seoul Myeongdong' label."
+  },
+  {
+    "id": "14426",
+    "sourceFolder": "hair_salon",
+    "name": "#CCONTE",
+    "branch": "Seogyo",
+    "tagline": "English-speaking hair color specialist",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 2308,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "Hongik Univ. Station, short walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 5,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "Save up to 10% by leaving a Google and Creatrip review (select services)"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Trendy bleaching, dye and balayage specialists",
+      "English-speaking stylists and English price list",
+      "L'Oreal, Wella and Milbon products to minimize damage"
+    ],
+    "notes": "Options and prices not in dump."
+  },
+  {
+    "id": "14720",
+    "sourceFolder": "hair_salon",
+    "name": "ECO JARDIN",
+    "branch": "Myeongdong",
+    "tagline": "Premium scalp and hair care with 18-step head spa",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 513,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 5,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Head spa with up to 18 detailed steps (Cell Stem Head Spa)",
+      "Top brands: Shiseido, L'Oreal and Milbon",
+      "Multilingual staff in central Myeongdong"
+    ],
+    "notes": "File is byte-identical to 15479.txt. Only 80% customer satisfaction shown. Options not in dump."
+  },
+  {
+    "id": "14835",
+    "sourceFolder": "hair_salon",
+    "name": "SOONSIKI Hair",
+    "branch": "Seongsu",
+    "tagline": "Seoul's most-booked salon for international visitors",
+    "subtype": "hair",
+    "extraSubtypes": [
+      "personal-color"
+    ],
+    "city": "seoul",
+    "region": "seongsu",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 236,
+    "languages": [],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 4,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "Up to 38% off with a review after your visit (haircuts excluded)"
+    ],
+    "englishSupport": null,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Trend-forward cuts, color and styling; transparent pricing",
+      "Designers experienced with international clients",
+      "Head spa, scalp care and professional personal color analysis"
+    ],
+    "notes": "Only Korean listed under languages; English support not stated. Options not in dump."
+  },
+  {
+    "id": "14846",
+    "sourceFolder": "hair_salon",
+    "name": "AKNACK",
+    "branch": "Seongsu",
+    "tagline": "Haircut-focused salon loved by Seongsu locals",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "seongsu",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 5,
+    "reviewCount": 151,
+    "languages": [],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 5,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "Discount after payment only if you submit a photo review"
+    ],
+    "englishSupport": null,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Known for cutting skill tailored to face and head shape",
+      "Dedicated men's hair designer on site",
+      "Scalp head spa (16/18 steps) and traveler package with hair service plus care"
+    ],
+    "notes": "Only Korean listed under languages; menus written in English and basic English conversation guides in shop, but English-speaking staff not stated. Treatment videos shown are from AKNACK Hannam. Options not in dump."
+  },
+  {
+    "id": "14884",
+    "sourceFolder": "hair_salon",
+    "name": "ECO JARDIN",
+    "branch": "Gyeongbokgung",
+    "tagline": "Complete Hair & Makeup Makeover Studio",
+    "subtype": "hair",
+    "extraSubtypes": [
+      "makeup",
+      "personal-color"
+    ],
+    "city": "seoul",
+    "region": null,
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 3063,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 20,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Personal color analysis, hair consultation, makeup, perm and color in one visit",
+      "Customized scalp care programs",
+      "English consultations available; near Gyeongbokgung Palace and Seochon"
+    ],
+    "notes": "Page area label is Jongro (not in region list), so region null. Options not in dump."
+  },
+  {
+    "id": "15429",
+    "sourceFolder": "hair_salon",
+    "name": "#CCONTE",
+    "branch": "Hongdae Yeonam",
+    "tagline": "Color specialist salon tailored for foreigners",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 5,
+    "reviewCount": 45,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": "Hongik Univ. Station, short walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 5,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "Up to 10% off with a Creatrip or Google review"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Trendy color and bleaching specialists in Yeonnam-dong",
+      "English-speaking stylists and English price list",
+      "L'Oreal, Wella and Milbon products for vivid, long-lasting color"
+    ],
+    "notes": "Icon list shows only Korean Available, but About text states English-speaking stylists. Options not in dump."
+  },
+  {
+    "id": "15479",
+    "sourceFolder": "hair_salon",
+    "name": "ECO JARDIN",
+    "branch": "Myeongdong",
+    "tagline": "Premium scalp and hair care with 18-step head spa",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": null,
+    "lng": null,
+    "rating": 4.9,
+    "reviewCount": 513,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 5,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before"
+    ],
+    "englishSupport": true,
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Head spa with up to 18 detailed steps (Cell Stem Head Spa)",
+      "Top brands: Shiseido, L'Oreal and Milbon",
+      "Multilingual staff in central Myeongdong"
+    ],
+    "notes": "File is byte-identical to 14720.txt (likely duplicate scrape); may actually be a different branch page."
+  }
+]

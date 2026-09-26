@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
-import { ChevronLeft } from 'lucide-react';
-import type { Itinerary, ItineraryDay } from '../../types';
-import { budgetLabel, regionLabel } from '../../data/glowUpQuiz';
-import { guideFor } from '../../data/categoryGuides';
-import { GlowUpCategoryList } from './GlowUpCategoryList';
-import { BeautyCardSheet } from './BeautyCardSheet';
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import type { GlowUpMixPreset, GlowUpStop, GlowUpSubtype, Itinerary } from '../../types';
+import { budgetUsdLabel, tripDaysLabel } from '../../data/glowUpQuiz';
+import { addBackCategory, remixItinerary } from '../../services/glowUp/generate';
+import { cityLabel } from '../../services/glowUp/routines';
+import { RoutineMap } from './RoutineMap';
+import { RoutineCard } from './RoutineCard';
+import { TryAnotherMix } from './TryAnotherMix';
+import { EmailCaptureInline } from './EmailCaptureInline';
 
 interface GlowUpResultViewProps {
   itinerary: Itinerary;
-  day: ItineraryDay;
-  onSelectDay: (dayIndex: number) => void;
-  onBack: () => void;
-  /** Signed-in user's email, pre-filled in the Beauty Card form. */
+  /** Persist an updated plan (after "See another version" / "Add"). */
+  onUpdate: (next: Itinerary) => void;
+  /** Signed-in user's email, pre-filled in the save form. */
   userEmail?: string;
 }
 
@@ -20,102 +22,206 @@ const DOWNTIME_CHIP: Record<string, string> = {
   'day-or-two-ok': 'A day or two of downtime',
 };
 
-const CHECKED_LINES = [
-  'Order — placed so nothing works against itself',
-  'Timing — nothing overlaps',
-  'Your filters — area, language',
-  "What's real — filtered, not ads",
-];
+const chipClass = 'rounded-full bg-white/85 px-3 py-1.5 text-[12px] font-medium text-miyeon-main';
 
-const chipClass = 'rounded-full bg-white/80 px-2.5 py-1 text-[10.5px] font-medium text-miyeon-main';
+function pickLine(count: number): string {
+  if (count <= 1) return "Here's your routine — it's your trip.";
+  if (count === 2) return "Pick one or both — it's your trip.";
+  if (count === 3) return "Pick one, two, or all three — it's your trip.";
+  return "Pick what fits — it's your trip.";
+}
 
-/** Figma "RESULT — Day N": a category-based plan (no venues, no map). */
-export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({
-  itinerary,
-  day,
-  onSelectDay,
-  onBack,
-  userEmail,
-}) => {
-  const [beautyCardOpen, setBeautyCardOpen] = useState(false);
+/** Figma "RESULT v2": map on top, then the Glow-up routines as tabs + swipeable cards. */
+export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, onUpdate, userEmail }) => {
+  const navigate = useNavigate();
+  const plan = itinerary.glowUpV2;
   const profile = itinerary.glowUpSnapshot;
-  const stops = day.blocks.filter((b) => b.glowUpSubtype);
-  const firstGuide = stops[0]?.glowUpSubtype ? guideFor(stops[0].glowUpSubtype) : undefined;
-  const downtimeChip = profile?.fix.downtime ? DOWNTIME_CHIP[profile.fix.downtime] : undefined;
+  const routines = plan?.routines ?? [];
+  const [activeId, setActiveId] = useState(routines[0]?.id ?? '');
+  const [busy, setBusy] = useState(false);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+
+  // A rebuilt plan may no longer have the routine that was selected.
+  useEffect(() => {
+    if (!routines.some((r) => r.id === activeId)) setActiveId(routines[0]?.id ?? '');
+  }, [routines, activeId]);
+
+  if (!plan || !profile) return null;
+
+  const activeIndex = Math.max(0, routines.findIndex((r) => r.id === activeId));
+
+  const selectRoutine = (id: string) => {
+    setActiveId(id);
+    const i = routines.findIndex((r) => r.id === id);
+    const el = scrollerRef.current;
+    if (el && i >= 0) el.scrollTo({ left: i * el.clientWidth, behavior: 'smooth' });
+  };
+
+  const onScroll: React.UIEventHandler<HTMLDivElement> = (e) => {
+    const el = e.currentTarget;
+    const i = Math.round(el.scrollLeft / Math.max(1, el.clientWidth));
+    const next = routines[i];
+    if (next && next.id !== activeId) setActiveId(next.id);
+  };
+
+  const openStop = (stop: GlowUpStop) =>
+    navigate(`/category/${stop.subtype}?place=${stop.place.id}`, { state: { fromItinerary: itinerary.id } });
+
+  const run = async (job: () => Promise<Itinerary>) => {
+    setBusy(true);
+    try {
+      onUpdate(await job());
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const downtimeChip = profile.fix.downtime ? DOWNTIME_CHIP[profile.fix.downtime] : undefined;
+  const budgetChip = budgetUsdLabel(profile.budget);
+  const city = cityLabel(profile);
 
   return (
-    <div className="mx-auto max-w-xl pb-24 sm:pb-12">
-      <header className="bg-gradient-to-b from-[#f9dde4] to-[#fef6f8] px-5 pb-5 pt-4">
-        <div className="flex items-center justify-between">
-          <button type="button" onClick={onBack} className="flex items-center gap-1 text-[13px] text-miyeon-main/70">
-            <ChevronLeft className="h-3.5 w-3.5" /> Back
-          </button>
-        </div>
-        <p className="mt-3 text-[10.5px] font-medium tracking-[0.18em] text-miyeon-accent-dark">✦ YOUR GLOW UP PLAN</p>
-        <h1 className="mt-1.5 font-display text-2xl font-bold leading-[1.25] text-miyeon-ink">{itinerary.title}</h1>
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {profile && <span className={chipClass}>{regionLabel(profile.region)}</span>}
-          {profile?.budget && profile.budget !== 'no-preference' && (
-            <span className={chipClass}>{budgetLabel(profile.budget)}</span>
-          )}
+    <div className="mx-auto max-w-xl pb-6">
+      <header className="bg-gradient-to-b from-[#f9dde4] to-[#fef6f8] px-5 pb-5 pt-5">
+        <p className="text-[11px] font-medium tracking-[0.18em] text-miyeon-accent-dark">✦ YOUR GLOW UP PLAN</p>
+        <h1 className="mt-2 font-display text-[28px] font-bold leading-[1.2] text-miyeon-ink">
+          {city} called,
+          <br />
+          your K-glow is on
+        </h1>
+        <p className="mt-2 text-[14px] text-miyeon-main/55">{pickLine(routines.length)}</p>
+        <div className="mt-3.5 flex flex-wrap gap-2">
+          <span className={chipClass}>
+            {city} · {tripDaysLabel(profile.tripDays)}
+          </span>
+          {budgetChip && <span className={chipClass}>{budgetChip}</span>}
           {downtimeChip && <span className={chipClass}>{downtimeChip}</span>}
         </div>
       </header>
 
-      <div className="flex gap-2 overflow-x-auto px-5 py-3.5 no-scrollbar">
-        {itinerary.days.map((d) => (
-          <button
-            key={d.dayIndex}
-            type="button"
-            onClick={() => onSelectDay(d.dayIndex)}
-            className={`shrink-0 rounded-full px-4 py-2 text-[12.5px] font-medium ${
-              d.dayIndex === day.dayIndex
-                ? 'bg-miyeon-ink text-white'
-                : 'border border-miyeon-line bg-miyeon-surface text-miyeon-main'
-            }`}
-          >
-            Day {d.dayIndex}
-          </button>
+      {routines.length > 0 ? (
+        <>
+          <RoutineMap
+            routines={routines}
+            activeId={activeId}
+            onSelectRoutine={selectRoutine}
+            onOpenStop={(rid, sid) => {
+              const stop = routines.find((r) => r.id === rid)?.stops.find((s) => s.id === sid);
+              if (stop) openStop(stop);
+            }}
+          />
+
+          <div className="flex gap-2.5 overflow-x-auto px-5 py-4 no-scrollbar" role="tablist" aria-label="Routines">
+            {routines.map((r) => {
+              const active = r.id === activeId;
+              return (
+                <button
+                  key={r.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => selectRoutine(r.id)}
+                  className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-[14px] ${
+                    active ? 'bg-miyeon-ink font-medium text-white' : 'border border-miyeon-line bg-white text-miyeon-main'
+                  }`}
+                >
+                  <span className={`h-2 w-2 rounded-full ${active ? 'bg-miyeon-accent' : 'bg-miyeon-line'}`} />
+                  {r.tab}
+                </button>
+              );
+            })}
+          </div>
+
+          <div ref={scrollerRef} onScroll={onScroll} className="flex snap-x snap-mandatory overflow-x-auto no-scrollbar">
+            {routines.map((r) => (
+              <div key={r.id} className="w-full shrink-0 snap-center px-5 pb-1">
+                <RoutineCard routine={r} profile={profile} onOpenStop={openStop} />
+              </div>
+            ))}
+          </div>
+
+          {routines.length > 1 && (
+            <>
+              <div className="mt-3 flex justify-center gap-1.5" aria-hidden>
+                {routines.map((r, i) => (
+                  <span
+                    key={r.id}
+                    className={`h-1.5 rounded-full transition-all ${i === activeIndex ? 'w-[18px] bg-miyeon-accent' : 'w-1.5 bg-miyeon-line'}`}
+                  />
+                ))}
+              </div>
+              <p className="mt-2 text-center text-[11.5px] text-miyeon-main/40">← swipe to see your other routines →</p>
+            </>
+          )}
+        </>
+      ) : (
+        <div className="mx-5 mt-5 rounded-[16px] border border-dashed border-miyeon-line px-5 py-8 text-center text-[13.5px] leading-snug text-miyeon-main/60">
+          We couldn&apos;t match any bookable place to your picks yet. The categories below still link to Creatrip.
+        </div>
+      )}
+
+      <div className="mt-5 space-y-3 px-5">
+        {plan.leftOut.map((item) => (
+          <LeftOutCard
+            key={item.subtype}
+            label={item.label}
+            reason={item.reason}
+            canAdd={item.canAdd}
+            url={item.url}
+            busy={busy}
+            onAdd={() => run(() => addBackCategory(itinerary, item.subtype as GlowUpSubtype))}
+          />
         ))}
       </div>
 
-      <section className="px-5 pt-3">
-        <div className="flex items-baseline justify-between gap-3">
-          <h2 className="font-display text-xl font-medium text-miyeon-ink">{day.theme ?? `Day ${day.dayIndex}`}</h2>
-          <p className="shrink-0 text-[13px] text-miyeon-main/50">
-            {stops.length} stop{stops.length === 1 ? '' : 's'}
-          </p>
-        </div>
-        {firstGuide && <p className="mt-1 text-[13px] text-miyeon-main/60">{firstGuide.orderNote}</p>}
+      <div className="mt-5">
+        <TryAnotherMix
+          key={plan.mix ?? 'none'}
+          current={plan.mix}
+          changeNote={plan.changeNote}
+          busy={busy}
+          onApply={(preset: GlowUpMixPreset) => run(() => remixItinerary(itinerary, preset))}
+        />
+      </div>
 
-        <div className="mt-4">
-          <GlowUpCategoryList day={day} itineraryId={itinerary.id} />
-        </div>
-
-        <div className="mt-6 rounded-[14px] bg-miyeon-surface px-4 py-4">
-          <p className="text-[10.5px] font-bold tracking-[0.16em] text-miyeon-accent-dark">MIYEON CHECKED</p>
-          <ul className="mt-2 space-y-1.5">
-            {CHECKED_LINES.map((line) => (
-              <li key={line} className="flex gap-1.5 text-[11.5px] leading-relaxed text-miyeon-main/75">
-                <span className="font-bold text-miyeon-accent">✓</span>
-                {line}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => setBeautyCardOpen(true)}
-          className="mt-6 w-full rounded-full bg-miyeon-ink py-4 text-[14.5px] font-medium text-white"
-        >
-          Get my Beauty Card →
-        </button>
-      </section>
-
-      {beautyCardOpen && (
-        <BeautyCardSheet itinerary={itinerary} defaultEmail={userEmail} onClose={() => setBeautyCardOpen(false)} />
-      )}
+      <EmailCaptureInline itinerary={itinerary} defaultEmail={userEmail} />
     </div>
   );
 };
+
+const LeftOutCard: React.FC<{
+  label: string;
+  reason: string;
+  canAdd: boolean;
+  url: string | null;
+  busy: boolean;
+  onAdd: () => void;
+}> = ({ label, reason, canAdd, url, busy, onAdd }) => (
+  <div className="flex items-start justify-between gap-3 rounded-[14px] border border-miyeon-line bg-white px-4 py-3.5 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
+    <div className="min-w-0">
+      <p className="text-[14.5px] font-medium text-miyeon-ink">We left out {label}</p>
+      <p className="mt-1 text-[12.5px] leading-snug text-miyeon-main/55">{reason}</p>
+    </div>
+    {canAdd ? (
+      <button
+        type="button"
+        disabled={busy}
+        onClick={onAdd}
+        className="shrink-0 pt-0.5 text-[14px] font-medium text-miyeon-accent-dark disabled:opacity-40"
+      >
+        Add →
+      </button>
+    ) : (
+      url && (
+        <a
+          href={url}
+          target="_blank"
+          rel="noreferrer"
+          className="shrink-0 pt-0.5 text-[14px] font-medium text-miyeon-accent-dark"
+        >
+          Browse →
+        </a>
+      )
+    )}
+  </div>
+);

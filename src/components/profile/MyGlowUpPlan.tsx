@@ -12,16 +12,16 @@ export const MyGlowUpPlan: React.FC = () => {
   const plan = useMemo(() => latestGlowUpPlan(), []);
   const [booked, setBooked] = useState<Set<string>>(readBookedStops);
 
+  const routines = plan?.glowUpV2?.routines ?? [];
   const stops = useMemo(
     () =>
-      (plan?.days ?? []).flatMap((day) =>
-        day.blocks
-          .filter((b) => b.glowUpSubtype)
-          .map((b) => ({
-            id: b.id,
-            dayIndex: day.dayIndex,
-            name: guideFor(b.glowUpSubtype!)?.name ?? b.label ?? 'Stop',
-          }))
+      routines.flatMap((routine) =>
+        routine.stops.map((s) => ({
+          id: s.id,
+          tag: routine.tab,
+          name: s.place.name,
+          sub: guideFor(s.subtype)?.name,
+        }))
       ),
     [plan]
   );
@@ -50,7 +50,7 @@ export const MyGlowUpPlan: React.FC = () => {
         <div className="mt-3.5 rounded-[16px] bg-miyeon-accent-soft p-4">
           <div className="flex items-center justify-between text-[15px] font-bold">
             <p className="text-miyeon-ink">
-              {plan.days.length} day{plan.days.length === 1 ? '' : 's'} · {stops.length} stop
+              {routines.length} routine{routines.length === 1 ? '' : 's'} · {stops.length} place
               {stops.length === 1 ? '' : 's'}
             </p>
             {plan.estimatedSpendUsd > 0 && (
@@ -76,8 +76,8 @@ export const MyGlowUpPlan: React.FC = () => {
                       }`}
                     />
                   </button>
-                  <span className="rounded-[4px] bg-white px-1.5 py-0.5 text-[8.5px] font-bold text-miyeon-accent-dark">
-                    DAY {stop.dayIndex}
+                  <span className="rounded-[4px] bg-white px-1.5 py-0.5 text-[8.5px] font-bold uppercase text-miyeon-accent-dark">
+                    {stop.tag}
                   </span>
                   <span
                     className={`min-w-0 flex-1 truncate text-[13px] font-medium ${

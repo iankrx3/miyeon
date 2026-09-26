@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Bookmark, ChevronLeft, Loader2, Sparkles } from 'lucide-react';
 import type { Itinerary, RegeneratePreference, ReplacePreference, Spot, UserSession } from '../types';
@@ -7,6 +7,7 @@ import { getSpot } from '../data/spots';
 import { ItineraryRouteMap } from '../components/itinerary/ItineraryRouteMap';
 import { ItineraryTimeline } from '../components/itinerary/ItineraryTimeline';
 import { GlowUpResultView } from '../components/glowup/GlowUpResultView';
+import { upgradeLegacyItinerary } from '../services/glowUp/generate';
 import { useSavedItineraries } from '../hooks/useSavedItineraries';
 import { useSpotsCatalog } from '../hooks/useSpotsCatalog';
 import { getStoredItinerary, isCategoryPlan, upsertItinerary } from '../lib/localItineraryStore';
@@ -37,6 +38,22 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
 
   const day = itinerary?.days.find((d) => d.dayIndex === dayIndex) ?? itinerary?.days[0];
 
+  // Glow Up plans saved before V2 only hold the quiz answers: rebuild them as routines once.
+  const needsUpgrade = Boolean(itinerary && !itinerary.glowUpV2 && isCategoryPlan(itinerary));
+  useEffect(() => {
+    if (!itinerary || !needsUpgrade) return;
+    let cancelled = false;
+    void upgradeLegacyItinerary(itinerary).then((next) => {
+      if (next && !cancelled) {
+        upsertItinerary(next);
+        setItinerary(next);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [itinerary, needsUpgrade]);
+
   const persist = (next: Itinerary) => {
     setItinerary(next);
     if (next.source === 'user') {
@@ -52,6 +69,27 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
     return day.blocks.map((b) => (b.spotId ? getSpot(b.spotId) : undefined)).filter((s): s is Spot => Boolean(s));
   }, [day, spotsReady]);
 
+  if (itinerary?.glowUpV2) {
+    return (
+      <GlowUpResultView
+        itinerary={itinerary}
+        onUpdate={(next) => {
+          upsertItinerary(next);
+          setItinerary(next);
+        }}
+        userEmail={session.user?.email}
+      />
+    );
+  }
+
+  if (needsUpgrade) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-miyeon-accent" />
+      </div>
+    );
+  }
+
   if (!itinerary || !day) {
     return (
       <div className="px-4 py-10 text-sm text-miyeon-main/60">
@@ -60,20 +98,6 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
           Plan a trip
         </button>
       </div>
-    );
-  }
-
-  // Glow Up plans are category recommendations (no venues, no map). Older saved
-  // Glow Up plans still carry venue blocks and keep the map + timeline layout.
-  if (isCategoryPlan(itinerary)) {
-    return (
-      <GlowUpResultView
-        itinerary={itinerary}
-        day={day}
-        onSelectDay={setDayIndex}
-        onBack={() => navigate(-1)}
-        userEmail={session.user?.email}
-      />
     );
   }
 

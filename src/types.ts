@@ -171,6 +171,8 @@ export interface Itinerary {
   profileSnapshot?: BeautyTripProfile;
   /** Set when this itinerary was built from the Glow Up quiz. */
   glowUpSnapshot?: GlowUpProfile;
+  /** Set for V2 Glow Up plans: routines of real places instead of day blocks (`days` is then empty). */
+  glowUpV2?: GlowUpPlanV2;
   days: ItineraryDay[];
   estimatedSpendUsd: number;
   createdAt: string;
@@ -440,32 +442,100 @@ export interface GlowUpProfile {
   languages: GlowUpLanguage[];
 }
 
-export type GlowUpPeriod = 'morning' | 'afternoon' | 'evening';
+// ---- GLOW UP V2 — real places (Creatrip-listed venues) grouped into routines ----
 
-export interface GlowUpSlotItem {
-  category: GlowUpCategory;
+export type GlowUpDowntime = 'none' | 'mild' | 'days';
+
+export interface GlowUpProduct {
+  name: string;
+  priceUsd: number | null;
+  originalPriceUsd: number | null;
+}
+
+/** A venue from the curated Creatrip place DB (Supabase `places` / bundled JSON). `id` is
+ * the Creatrip spot id, so the booking page is https://creatrip.com/en/spot/{id}. */
+export interface GlowUpPlace {
+  id: string;
+  name: string;
+  branch: string | null;
+  tagline: string | null;
+  subtype: GlowUpSubtype;
+  extraSubtypes: GlowUpSubtype[];
+  city: GlowUpCity;
+  region: Exclude<GlowUpRegion, 'auto'> | null;
+  addressEn: string | null;
+  addressKo: string | null;
+  lat: number | null;
+  lng: number | null;
+  /** True when lat/lng fell back to a district centre instead of a geocoded address. */
+  coordApprox: boolean;
+  rating: number | null;
+  reviewCount: number | null;
+  languages: GlowUpLanguage[];
+  koreanOnlyStaff: boolean;
+  englishSupport: boolean | null;
+  subway: string | null;
+  hours: string | null;
+  products: GlowUpProduct[];
+  priceFromUsd: number | null;
+  minutes: number | null;
+  downtime: GlowUpDowntime | null;
+  downtimeNote: string | null;
+  beforeYouBook: string[];
+  reservationConfirm: string | null;
+  highlights: string[];
+  /** Direct Creatrip product page (with affiliate params). */
+  bookingUrl: string;
+}
+
+export type GlowUpMixPreset = 'less-downtime' | 'closer' | 'lower-budget' | 'iconic';
+
+export interface GlowUpStop {
+  /** Stable within a plan; also used for the "Booked" ticks on the profile. */
+  id: string;
+  place: GlowUpPlace;
+  subtype: GlowUpSubtype;
+  startTime: string;
+  /** One line under the stop: a caution, or why it was picked ("Includes styling, not just drapin"). */
+  hint: string | null;
+  hintTone: 'info' | 'warn';
+  /** Getting here from the previous stop in the routine. */
+  travel: { mode: TravelMode; minutes: number } | null;
+  /** Why this venue was picked over the other candidates (shown on the detail page). */
+  reasons: string[];
+}
+
+export interface GlowUpRoutine {
+  id: string;
+  /** Tab label: "Skin Reset". */
+  tab: string;
+  /** Card headline: "Skin, Then Exhale". */
+  title: string;
+  subtypes: GlowUpSubtype[];
+  stops: GlowUpStop[];
+  totalMinutes: number;
+  /** "Best early in your trip". */
+  bestTiming: string;
+  downtimeNote: string;
+  areaLabel: string;
+}
+
+export interface GlowUpLeftOut {
   subtype: GlowUpSubtype;
   label: string;
-  /** Resolved Creatrip list URL (region/language/category/middleCategory
-   * applied). Null only if GLOWUP_CATEGORY_MAP is ever missing an entry. */
+  reason: string;
+  /** Filtered Creatrip list for the category — null when nothing to link. */
   url: string | null;
+  /** True when a venue exists but was held back (e.g. trip too short) — the user can add it back. */
+  canAdd: boolean;
 }
 
-export interface GlowUpSlot {
-  period: GlowUpPeriod;
-  /** Empty = "Free time". More than one entry = stacked chips in one cell
-   * (see services/glowUp/placement.ts's overflow rule). */
-  items: GlowUpSlotItem[];
-}
-
-export interface GlowUpDay {
-  dayIndex: number; // 1-based "planning day", not the literal trip day count
-  slots: GlowUpSlot[]; // always [morning, afternoon, evening]
-}
-
-export interface GlowUpResult {
-  days: GlowUpDay[];
-  whyThisLine: string;
-  profileSnapshot: GlowUpProfile;
-  itinerary: Itinerary;
+export interface GlowUpPlanV2 {
+  routines: GlowUpRoutine[];
+  leftOut: GlowUpLeftOut[];
+  mix: GlowUpMixPreset | null;
+  /** Categories the user added back after we left them out. */
+  forced: GlowUpSubtype[];
+  /** What changed after "See another version". */
+  changeNote: string | null;
 }

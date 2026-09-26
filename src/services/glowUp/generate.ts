@@ -1,17 +1,7 @@
-import type { GlowUpProfile, GlowUpResult, GlowUpSlotItem } from '../../types';
-import { buildGlowUpCreatripUrl } from '../../lib/creatrip';
-import { labelForSubtype } from '../../data/glowUpQuiz';
-import {
-  allSlotRefsInOrder,
-  buildEmptyGrid,
-  buildWhyThisLine,
-  dayScope,
-  isNonPhotoChange,
-  middleDayIndex,
-  placeRoundRobin,
-  planningDaysFor,
-} from './placement';
-import { buildCategoryItinerary } from './buildItinerary';
+import type { GlowUpMixPreset, GlowUpPlanV2, GlowUpProfile, GlowUpSubtype, Itinerary } from '../../types';
+import { guideFor } from '../../data/categoryGuides';
+import { loadGlowUpPlaces } from '../places/glowUpPlaces';
+import { buildRoutines, cityLabel, describeChange } from './routines';
 
 export function emptyGlowUpProfile(): GlowUpProfile {
   return {
@@ -25,65 +15,58 @@ export function emptyGlowUpProfile(): GlowUpProfile {
   };
 }
 
-function toSlotItem(
-  category: GlowUpSlotItem['category'],
-  subtype: GlowUpSlotItem['subtype'],
-  profile: GlowUpProfile
-): GlowUpSlotItem {
+const newId = (): string => `itn_${crypto.randomUUID()}`;
+
+function wrap(profile: GlowUpProfile, plan: GlowUpPlanV2, base?: Itinerary): Itinerary {
+  const stops = plan.routines.flatMap((r) => r.stops);
+  const now = new Date().toISOString();
+  const first = stops[0]?.subtype;
   return {
-    category,
-    subtype,
-    label: labelForSubtype(subtype),
-    url: buildGlowUpCreatripUrl(subtype, {
-      region: profile.region,
-      languages: profile.languages,
-    }),
+    id: base?.id ?? newId(),
+    title: `${cityLabel(profile)} Glow Up`,
+    source: 'miyeon',
+    glowUpSnapshot: profile,
+    glowUpV2: plan,
+    // V2 plans are routines of real venues, not day blocks.
+    days: [],
+    estimatedSpendUsd: Math.round(stops.reduce((sum, s) => sum + (s.place.priceFromUsd ?? 0), 0)),
+    createdAt: base?.createdAt ?? now,
+    updatedAt: now,
+    coverPhotoUrl: first ? guideFor(first)?.image : undefined,
+    description: `${plan.routines.length} routine${plan.routines.length === 1 ? '' : 's'} · ${stops.length} place${stops.length === 1 ? '' : 's'}`,
   };
 }
 
-export async function buildGlowUpResult(profile: GlowUpProfile): Promise<GlowUpResult> {
-  const planningDays = planningDaysFor(profile.tripDays);
-  const days = buildEmptyGrid(planningDays);
+/** Quiz profile → Glow Up plan of real venues (Supabase places, or the bundled seed). */
+export async function buildGlowUpItinerary(profile: GlowUpProfile): Promise<Itinerary> {
+  const places = await loadGlowUpPlaces();
+  return wrap(profile, buildRoutines(profile, places));
+}
 
-  // 1. FIX — both skin and face (if both picked) stack into one cell: Day 1 Morning.
-  if (profile.fix.items.length > 0) {
-    const fixItems = profile.fix.items.map((item) => toSlotItem('fix', item, profile));
-    placeRoundRobin(days, [{ dayIndex: 1, period: 'morning' }], fixItems);
-  }
+/** "See another version": rebuild every routine for a preset and explain what changed. */
+export async function remixItinerary(itinerary: Itinerary, preset: GlowUpMixPreset): Promise<Itinerary> {
+  const profile = itinerary.glowUpSnapshot;
+  const before = itinerary.glowUpV2;
+  if (!profile || !before) return itinerary;
+  const places = await loadGlowUpPlaces();
+  const after = buildRoutines(profile, places, { preset, forced: before.forced });
+  return wrap(profile, { ...after, changeNote: describeChange(before, after) }, itinerary);
+}
 
-  // 2. RESTORE — same day as FIX (after it) if FIX exists, else any day.
-  if (profile.restore.length > 0) {
-    const restoreItems = profile.restore.map((item) => toSlotItem('restore', item, profile));
-    const scope =
-      profile.fix.items.length > 0
-        ? [
-            { dayIndex: 1, period: 'afternoon' as const },
-            { dayIndex: 1, period: 'evening' as const },
-          ]
-        : allSlotRefsInOrder(days);
-    placeRoundRobin(days, scope, restoreItems);
-  }
+/** "We left out X … Add": put a held-back category back into the plan. */
+export async function addBackCategory(itinerary: Itinerary, subtype: GlowUpSubtype): Promise<Itinerary> {
+  const profile = itinerary.glowUpSnapshot;
+  const before = itinerary.glowUpV2;
+  if (!profile || !before) return itinerary;
+  const places = await loadGlowUpPlaces();
+  const forced = [...new Set([...before.forced, subtype])];
+  const after = buildRoutines(profile, places, { preset: before.mix, forced });
+  return wrap(profile, after, itinerary);
+}
 
-  // 3. CHANGE (photo) — always the last planning day's evening slot.
-  if (profile.change.includes('photo')) {
-    const photoItem = toSlotItem('change', 'photo', profile);
-    placeRoundRobin(days, [{ dayIndex: planningDays, period: 'evening' }], [photoItem]);
-  }
-
-  // 4. CHANGE (everything else) — the "middle day" (falls back to the last day
-  // for 1-/2-day trips, where no true middle day exists).
-  const nonPhotoChange = profile.change.filter(isNonPhotoChange);
-  if (nonPhotoChange.length > 0) {
-    const changeItems = nonPhotoChange.map((item) => toSlotItem('change', item, profile));
-    placeRoundRobin(days, dayScope(middleDayIndex(planningDays)), changeItems);
-  }
-
-  return buildCategoryItinerary(
-    {
-      days,
-      whyThisLine: buildWhyThisLine(profile, days),
-      profileSnapshot: profile,
-    },
-    profile
-  );
+/** Plans saved before V2 only hold the quiz answers — rebuild them as routines. */
+export async function upgradeLegacyItinerary(itinerary: Itinerary): Promise<Itinerary | null> {
+  if (!itinerary.glowUpSnapshot) return null;
+  const places = await loadGlowUpPlaces();
+  return wrap(itinerary.glowUpSnapshot, buildRoutines(itinerary.glowUpSnapshot, places), itinerary);
 }

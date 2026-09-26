@@ -20,6 +20,8 @@ import {
   languageOptions,
   regionOptionsFor,
   cityOptions,
+  constraintsInterlude,
+  pickedInterlude,
   restoreOptions,
   tripDaysOptions,
 } from '../data/glowUpQuiz';
@@ -28,10 +30,21 @@ import { OptionCard } from '../components/onboarding/OptionCard';
 import { Chip } from '../components/onboarding/Chip';
 import { WizardShell } from '../components/onboarding/WizardShell';
 import { AITransition } from '../components/quiz/AITransition';
-import { buildGlowUpResult, emptyGlowUpProfile } from '../services/glowUp/generate';
+import { PinkTransition } from '../components/quiz/PinkTransition';
+import { buildGlowUpItinerary, emptyGlowUpProfile } from '../services/glowUp/generate';
 import { upsertItinerary } from '../lib/localItineraryStore';
 
-type Step = 'home' | 'fix' | 'change' | 'restore' | 'tripInfo' | 'budget' | 'language' | 'transition';
+type Step =
+  | 'home'
+  | 'fix'
+  | 'change'
+  | 'restore'
+  | 'interlude1'
+  | 'tripInfo'
+  | 'budget'
+  | 'interlude2'
+  | 'language'
+  | 'transition';
 
 const stepTransition = { duration: 0.3, ease: [0.16, 1, 0.3, 1] as const };
 
@@ -42,8 +55,10 @@ const STEP_DISPLAY_INDEX: Record<Step, number> = {
   fix: 1,
   change: 2,
   restore: 3,
+  interlude1: 3,
   tripInfo: 4,
   budget: 5,
+  interlude2: 5,
   language: 6,
   transition: 6,
 };
@@ -73,8 +88,11 @@ export default function ExplorePage() {
   }, [step]);
 
   useEffect(() => {
-    // 'transition' isn't resumable (it would re-run generation), so remember the last question.
-    wizardMemory = { step: step === 'transition' ? 'language' : step, profile, base };
+    // 'transition' isn't resumable (it would re-run generation) and the interludes are pass-throughs,
+    // so remember the last real question instead.
+    const resumable: Step =
+      step === 'transition' || step === 'interlude2' ? 'language' : step === 'interlude1' ? 'tripInfo' : step;
+    wizardMemory = { step: resumable, profile, base };
   }, [step, profile, base]);
 
   const stepIndex = STEP_DISPLAY_INDEX[step];
@@ -82,6 +100,9 @@ export default function ExplorePage() {
   const goNextFrom = (current: Step) => {
     const idx = FLOW.indexOf(current);
     const next = FLOW[idx + 1] ?? 'transition';
+    // Reflect the answers just given before moving on — skipped when there is nothing to reflect.
+    if (current === 'restore' && pickedInterlude(profile)) return setStep('interlude1');
+    if (current === 'budget' && constraintsInterlude(profile)) return setStep('interlude2');
     setStep(next);
   };
 
@@ -137,15 +158,25 @@ export default function ExplorePage() {
     if (generatingRef.current) return;
     generatingRef.current = true;
     void (async () => {
-      const next = await buildGlowUpResult(profile);
-      upsertItinerary(next.itinerary);
+      const itinerary = await buildGlowUpItinerary(profile);
+      upsertItinerary(itinerary);
       wizardMemory = freshWizardMemory();
-      navigate(`/itinerary/${next.itinerary.id}`);
+      navigate(`/itinerary/${itinerary.id}`);
     })();
   };
 
   if (step === 'home') {
     return <HomeLanding onStartAnalysis={() => setStep('fix')} />;
+  }
+
+  if (step === 'interlude1' || step === 'interlude2') {
+    const copy = step === 'interlude1' ? pickedInterlude(profile) : constraintsInterlude(profile);
+    const next: Step = step === 'interlude1' ? 'tripInfo' : 'language';
+    if (!copy) {
+      setStep(next);
+      return null;
+    }
+    return <PinkTransition key={step} {...copy} onDone={() => setStep(next)} />;
   }
 
   if (step === 'transition') {

@@ -1,0 +1,2469 @@
+[
+  {
+    "id": "11093",
+    "name": "SOONSIKI Hair",
+    "branch": "Hongdae Flagship",
+    "tagline": "Seoul's top-rated salon for international guests",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": "29 Wausan-ro 21-gil, Mapo-gu, Seoul",
+    "addressKo": "서울 마포구 와우산로21길 29",
+    "lat": 37.552175999999996,
+    "lng": 126.92236349999999,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 7937,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Hongik Univ. Station (nearby)",
+    "hours": "Wed-Sun 10:00-19:00 (closed Mon & Tue); last reservation slot 18:00",
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": 360,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit of 4,000 KRW required at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "Basic English works but bring a couple of photos of the style you want",
+      "Reservation slots Wed-Sun 10:00-18:00; listing says about 6 hrs required"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Creatrip's most-booked hair salon, popular with models and celebrities",
+      "English-speaking staff daily; head spa zone on 4F and private rooms on 5F",
+      "Transparent pricing; up to 38% off with a review (haircuts excluded)"
+    ]
+  },
+  {
+    "id": "11138",
+    "name": "Time On Me Studio",
+    "branch": null,
+    "tagline": "Hongdae ID Photo Studio",
+    "subtype": "photo",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5552067,
+    "lng": 126.92007799999999,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 434,
+    "languages": [
+      "English",
+      "Chinese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 26,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 26,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Date-specific ticket"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Korean-style ID photo with professional shoot and retouching",
+      "Retouching refined together with the photographer",
+      "Free rental of jackets, shirts and blouses"
+    ]
+  },
+  {
+    "id": "11331",
+    "name": "JUNO HAIR",
+    "branch": "Myeongdong 2nd",
+    "tagline": "Korea's No.1 hair salon chain",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": "3F, 18 Myeongdong 8na-gil, Jung-gu, Seoul",
+    "addressKo": "서울 중구 명동8나길 18 3F",
+    "lat": 37.5615646,
+    "lng": 126.98400389999999,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 2543,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Line 4 Myeong-dong 380m",
+    "hours": "Daily 10:00-21:30",
+    "products": [
+      {
+        "name": "Color",
+        "priceUsd": 100.92,
+        "originalPriceUsd": 112.13
+      },
+      {
+        "name": "Perm",
+        "priceUsd": 154.74,
+        "originalPriceUsd": 171.94
+      },
+      {
+        "name": "Nourishment",
+        "priceUsd": 100.92,
+        "originalPriceUsd": 112.13
+      },
+      {
+        "name": "Scalp Spa Treatment",
+        "priceUsd": 100.92,
+        "originalPriceUsd": 112.13
+      },
+      {
+        "name": "Color + Nourishment",
+        "priceUsd": 188.38,
+        "originalPriceUsd": 209.32
+      },
+      {
+        "name": "Perm + Color",
+        "priceUsd": 255.66,
+        "originalPriceUsd": 284.07
+      }
+    ],
+    "priceFromUsd": 100.92,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 14.95 USD (10,000 KRW) at booking; not covered by the 10% member discount",
+      "Free cancellation or changes up to 3 days before; deposit not refunded after",
+      "Listed prices are averages; hair length, damage and designer level may add charges",
+      "Staff communicate in English, may use a translation app for details"
+    ],
+    "reservationConfirm": "1 day",
+    "highlights": [
+      "Professional, knowledgeable stylists who explain each step",
+      "Welcoming service with smooth communication despite language barriers",
+      "High-quality cuts, color and scalp treatments; relaxing atmosphere"
+    ]
+  },
+  {
+    "id": "13071",
+    "name": "S: Re Born Clinic",
+    "branch": "Hongdae",
+    "tagline": "The Leading Lifting Clinic",
+    "subtype": "face",
+    "extraSubtypes": [
+      "skin"
+    ],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": null,
+    "addressKo": "서울 마포구 양화로 162 8F",
+    "lat": 37.556399400000004,
+    "lng": 126.92387930000001,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 685,
+    "languages": [
+      "English",
+      "Chinese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Line 2 Hongik Univ. 41m",
+    "hours": "Mon/Tue/Wed/Fri 10:30-14:00 & 15:00-20:30, Thu 13:00-21:00, Sat 10:00-16:00, Sun closed",
+    "products": [
+      {
+        "name": "[First-Come] Rejuran Healer 2cc + Regeneration Laser + Moisturizing Mask Care",
+        "priceUsd": 122.52,
+        "originalPriceUsd": 246.69
+      },
+      {
+        "name": "[First-Come] Juvederm Filler 1cc",
+        "priceUsd": 189.13,
+        "originalPriceUsd": 370.04
+      },
+      {
+        "name": "[First-Come] Full-Face Skin Botox (Xeomin)",
+        "priceUsd": 81.41,
+        "originalPriceUsd": 415.27
+      }
+    ],
+    "priceFromUsd": 81.41,
+    "minutes": null,
+    "downtime": "mild",
+    "downtimeNote": "Temporary irritation, swelling, bruising or redness may occur after treatment but should subside quickly",
+    "beforeYouBook": [
+      "Book at least 1 day ahead",
+      "Bring your passport",
+      "Free cancellation until the reservation date",
+      "Sleep anesthesia: contact help@creatrip.com first (fasting required)"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Praised for friendly, professional staff who check pain tolerance and explain clearly",
+      "Strong Chinese-language support and translation help",
+      "Clean, private, easy-to-reach clinic with satisfying results"
+    ]
+  },
+  {
+    "id": "13165",
+    "name": "HOSU DOSAN",
+    "branch": "Apgujeong",
+    "tagline": "Celebrity Hair & Makeup Studio",
+    "subtype": "hair",
+    "extraSubtypes": [
+      "makeup",
+      "photo",
+      "skin"
+    ],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5196,
+    "lng": 127.0437,
+    "coordApprox": true,
+    "rating": 4.9,
+    "reviewCount": 796,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Apgujeong Rodeo Station (nearby)",
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting option (from price)",
+        "priceUsd": 19.27,
+        "originalPriceUsd": 57.3
+      }
+    ],
+    "priceFromUsd": 19.27,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile voucher; date-specific booking",
+      "Optional semi-profile photo shoot after hair and makeup at a nearby studio (one retouched photo included)"
+    ],
+    "reservationConfirm": "1-3 days",
+    "highlights": [
+      "Celebrity-frequented hair and makeup salon; head stylist featured on Japanese TV",
+      "Perm, color, makeup, K-pop makeup class and scalp head spa offered",
+      "Optional K-Beauty skin aesthetic care and profile photo shoot"
+    ]
+  },
+  {
+    "id": "13214",
+    "name": "Cheongdam Eclat De",
+    "branch": null,
+    "tagline": "1:1 Doctor Consultation",
+    "subtype": "skin",
+    "extraSubtypes": [
+      "face"
+    ],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5231092,
+    "lng": 127.04195510000001,
+    "coordApprox": true,
+    "rating": 4.9,
+    "reviewCount": 257,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free online reservation, pay on site",
+      "Sedation available: inquire in advance, additional fee applies"
+    ],
+    "reservationConfirm": "1 day",
+    "highlights": []
+  },
+  {
+    "id": "13315",
+    "name": "Color of You",
+    "branch": "Hongdae",
+    "tagline": "English Personal Color Analysis & Styling",
+    "subtype": "personal-color",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5587131,
+    "lng": 126.92330439999999,
+    "coordApprox": false,
+    "rating": 5,
+    "reviewCount": 397,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Near Hongdae Entrance Station",
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 154.03,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 154.03,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Coupons not applicable",
+      "English and Chinese interpretation offered during diagnosis"
+    ],
+    "reservationConfirm": null,
+    "highlights": [
+      "Personal color diagnosis with product and color application advice",
+      "English and Chinese interpretation",
+      "Near Hongdae Entrance Station"
+    ]
+  },
+  {
+    "id": "13335",
+    "name": "Onlif Clinic",
+    "branch": null,
+    "tagline": "Lifting Specialty, Skin Procedures & Treatments",
+    "subtype": "face",
+    "extraSubtypes": [
+      "skin"
+    ],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.4982703,
+    "lng": 127.02680840000001,
+    "coordApprox": true,
+    "rating": 4.9,
+    "reviewCount": 1355,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese",
+      "Thai"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Gangnam Station Exits 9 and 10, 3 min walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Advance deposit required (pay the rest on site)",
+      "Free cancellation or changes up to 3 days before",
+      "Skin analysis and consultation provided"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": []
+  },
+  {
+    "id": "13466",
+    "name": "JUNO Hair",
+    "branch": "Myeongdong Street",
+    "tagline": "Foreigner-friendly Myeongdong salon with head spa",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": "7F, 41 Myeongdong 10-gil, Jung-gu, Seoul",
+    "addressKo": null,
+    "lat": 37.5615646,
+    "lng": 126.98400389999999,
+    "coordApprox": false,
+    "rating": 5,
+    "reviewCount": 13257,
+    "languages": [
+      "English",
+      "Japanese",
+      "Chinese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "4-step premium Repair system (60 min)",
+        "priceUsd": 107,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Head Spa Basic Type, 15 steps (60 min)",
+        "priceUsd": 143,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Color",
+        "priceUsd": 96,
+        "originalPriceUsd": 107
+      },
+      {
+        "name": "Head Spa A Type, 18 steps anti-aging (120 min)",
+        "priceUsd": 157,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 96,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Book at least 5 hours in advance; deposit 5,000 KRW, pay the rest onsite",
+      "Free cancellation up to 3 days before; none from 2 days before",
+      "Arriving over 10-15 minutes late auto-cancels the reservation with no refund",
+      "Several JUNO branches in Myeongdong; check the map to visit the right one"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Multilingual staff (English, Japanese, Chinese) and personalized style advice",
+      "Head spa from 15-step basic to 18-step anti-aging, oily or sensitive versions",
+      "Private single and twin head spa rooms in central Myeongdong"
+    ]
+  },
+  {
+    "id": "13493",
+    "name": "Pro Beauty",
+    "branch": "Myeongdong",
+    "tagline": "Nail Art",
+    "subtype": "nail",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5617978,
+    "lng": 126.98553169999998,
+    "coordApprox": false,
+    "rating": 4.6,
+    "reviewCount": 267,
+    "languages": [
+      "English",
+      "Chinese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Myeongdong Station 3 min walk",
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 11.19,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 11.19,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Also offers pedicure, eyelashes and waxing"
+    ],
+    "reservationConfirm": null,
+    "highlights": [
+      "Multiple people can be served at the same time",
+      "Wide range of nail designs and shapes",
+      "3 minutes from Myeongdong Station"
+    ]
+  },
+  {
+    "id": "13573",
+    "name": "Medicube Clinic",
+    "branch": "Gangnam",
+    "tagline": "Premium Skincare",
+    "subtype": "skin",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5034162,
+    "lng": 127.02442860000001,
+    "coordApprox": false,
+    "rating": 5,
+    "reviewCount": 905,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Sinnonhyeon Station, 3 min walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit of 20,000 KRW required when booking",
+      "Free cancellation or changes up to 3 days before",
+      "Consultation can be booked first, treatment chosen after"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": []
+  },
+  {
+    "id": "13574",
+    "name": "Soonsoo",
+    "branch": "Cheongdam",
+    "tagline": "Celebrity Hair & Makeup Salon",
+    "subtype": "hair",
+    "extraSubtypes": [
+      "makeup"
+    ],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.524145499999996,
+    "lng": 127.04308309999999,
+    "coordApprox": true,
+    "rating": 4.3,
+    "reviewCount": 249,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting option (from price)",
+        "priceUsd": 98.68,
+        "originalPriceUsd": 213.8
+      }
+    ],
+    "priceFromUsd": 98.68,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile voucher; date-specific booking"
+    ],
+    "reservationConfirm": "1 day",
+    "highlights": [
+      "Hair and makeup salon that has worked with BLACKPINK, NCT, IVE and many actors",
+      "Natural, camera-ready K-Beauty styling in upscale Cheongdam",
+      "Customized services and a welcoming experience for international clients"
+    ]
+  },
+  {
+    "id": "13767",
+    "name": "Moclock",
+    "branch": "Gangnam Main Branch",
+    "tagline": "Celebrity scalp care and head spa",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5084965,
+    "lng": 127.02290439999999,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 179,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Nonhyeon Station Exit 3, 1-2 min walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 20,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "100% appointment basis; all treatments in a private room"
+    ],
+    "reservationConfirm": "3 days",
+    "highlights": [
+      "Scalp magnified photo and analysis, then a program matched to your scalp type",
+      "Full course includes trapezius massage, collagen pack, carbonated head spa, galvanic and LED therapy",
+      "Free scalp diagnosis and consultation (worth 30,000 KRW) with Creatrip booking"
+    ]
+  },
+  {
+    "id": "13772",
+    "name": "The Day's Hair",
+    "branch": null,
+    "tagline": "English-friendly Hongdae salon for men's cuts and color",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5538045,
+    "lng": 126.92157279999998,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 1734,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Hongdae Station, 5 min walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 5,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "Consultation covers personal coloring, skin tone and vibe"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Whole team speaks English",
+      "Specializes in men's cuts, perms and personal-color-based dyeing",
+      "Balayage, highlights, ombre and color correction using L'Oreal Professionnel and Milbon"
+    ]
+  },
+  {
+    "id": "13789",
+    "name": "HAUT BEAUTE",
+    "branch": null,
+    "tagline": "Korean-style hair and makeup in one place",
+    "subtype": "hair",
+    "extraSubtypes": [
+      "makeup"
+    ],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5208,
+    "lng": 127.0449,
+    "coordApprox": true,
+    "rating": 4.8,
+    "reviewCount": 87,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Cheongdam Station, 3 min walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 5,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Hair and makeup all in one place, trusted by celebrities",
+      "One-on-one service from a single designer start to finish",
+      "Staff experienced with weddings, commercials and photo shoots"
+    ]
+  },
+  {
+    "id": "13808",
+    "name": "SOONSIKI Hair",
+    "branch": "Hongdae Hanok",
+    "tagline": "Global customers' most booked hair salon",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": "19 Hongik-ro 5-gil, Mapo-gu, Seoul",
+    "addressKo": "서울 마포구 홍익로5길 19",
+    "lat": 37.5539537,
+    "lng": 126.92139780000001,
+    "coordApprox": false,
+    "rating": 5,
+    "reviewCount": 1260,
+    "languages": [],
+    "koreanOnlyStaff": false,
+    "englishSupport": null,
+    "subway": null,
+    "hours": "Wed-Sun 10:00-19:00 (closed Mon & Tue); reservation slots 10:00-18:00",
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 4,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "Available reservation times Wed-Sun 10:00-18:00"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Ranked No.1 in Creatrip hair bookings; trend-forward styling",
+      "Designer experienced with many foreign guests; clean, calming 'healing' interior",
+      "Up to 38% off with a review (haircuts excluded); 8- and 16-step head spa"
+    ]
+  },
+  {
+    "id": "13814",
+    "name": "Jenny House",
+    "branch": "Cheongdam",
+    "tagline": "Celebrity Hair & Makeup Studio",
+    "subtype": "hair",
+    "extraSubtypes": [
+      "makeup",
+      "nail"
+    ],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5213287,
+    "lng": 127.04426079999999,
+    "coordApprox": false,
+    "rating": 4.5,
+    "reviewCount": 283,
+    "languages": [
+      "English",
+      "Chinese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Star Cut + Hair Styling (60 min)",
+        "priceUsd": 79,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Head Spa (60 min)",
+        "priceUsd": 196,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Star Hair Coloring (120 min)",
+        "priceUsd": 236,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Star Perm (180 min)",
+        "priceUsd": 393,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Star Makeup (60 min)",
+        "priceUsd": 171,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Makeup + Hair Styling (120 min)",
+        "priceUsd": 236,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 82.05,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Makeup + Hair Styling excludes haircut, perm and coloring",
+      "Wedding Hair & Makeup price covers both bride and groom"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Luxury salon with 20+ years of history and 80+ artists",
+      "Makeup, hair styling, head spa, perm, color and makeup class in one place",
+      "More than 1,200 celebrities have visited"
+    ]
+  },
+  {
+    "id": "13898",
+    "name": "Yonseiro Clinic",
+    "branch": null,
+    "tagline": "Petite Skin Procedures",
+    "subtype": "skin",
+    "extraSubtypes": [
+      "face"
+    ],
+    "city": "seoul",
+    "region": null,
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.572534499999996,
+    "lng": 126.98045160000001,
+    "coordApprox": true,
+    "rating": 4.8,
+    "reviewCount": 43,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit from 10,000 KRW required (pay the rest on site)",
+      "Free cancellation or changes up to 3 days before",
+      "LINE reservations available"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": []
+  },
+  {
+    "id": "13940",
+    "name": "ONYAD HAIR",
+    "branch": "Seongsu Branch 1",
+    "tagline": "Trendy Korean hair salon in Seongsu",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "seongsu",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.545727299999996,
+    "lng": 127.05499499999999,
+    "coordApprox": true,
+    "rating": 4.8,
+    "reviewCount": 342,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Seoul Forest Station, 1 min walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 5,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "Extra 10% off all services except haircuts if you pay via Creatrip and leave a review"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Personalized consultation based on face shape, proportions and style",
+      "Cuts, perms, color and hair treatments",
+      "English-speaking staff on site"
+    ]
+  },
+  {
+    "id": "13957",
+    "name": "GREEN Scalp & Hair Loss Care Center",
+    "branch": null,
+    "tagline": "Scalp and hair loss care specialist",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5609514,
+    "lng": 126.9838643,
+    "coordApprox": false,
+    "rating": 5,
+    "reviewCount": 45,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting option (from price)",
+        "priceUsd": 73.26,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 73.26,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile voucher; date-specific booking"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Customized scalp and hair loss care with professional scalp analysis",
+      "27+ years of experience and over 400,000 customers",
+      "Wide range of scalp products; hygienic environment"
+    ]
+  },
+  {
+    "id": "14157",
+    "name": "NAIL BOX",
+    "branch": "Hongdae",
+    "tagline": "Nail Salon",
+    "subtype": "nail",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5485711,
+    "lng": 126.91849920000001,
+    "coordApprox": false,
+    "rating": 5,
+    "reviewCount": 236,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Hapjeong Station Exit 6, 6 min walk",
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 22.43,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 22.43,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Date-specific ticket"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Wide range of designs from cute to chic",
+      "English-speaking staff",
+      "6-minute walk from Hapjeong Station Exit 6"
+    ]
+  },
+  {
+    "id": "14201",
+    "name": "MeSO nBOM Clinic",
+    "branch": null,
+    "tagline": null,
+    "subtype": "skin",
+    "extraSubtypes": [
+      "face"
+    ],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5564134,
+    "lng": 126.923862,
+    "coordApprox": true,
+    "rating": 4.9,
+    "reviewCount": 1149,
+    "languages": [
+      "English",
+      "Chinese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Hongik Univ. Station Exit 8, right in front",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free online reservation, pay on site",
+      "Free consultation possible before choosing a treatment"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": []
+  },
+  {
+    "id": "14275",
+    "name": "Project U Clinic",
+    "branch": "Hongdae",
+    "tagline": "Expert Fillers & Rejuran Skin Clinic",
+    "subtype": "skin",
+    "extraSubtypes": [
+      "face"
+    ],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5564232,
+    "lng": 126.92383489999999,
+    "coordApprox": false,
+    "rating": 5,
+    "reviewCount": 417,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Line 2 Hongik Univ. Station Exit 8, directly in front",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free online reservation, pay on site",
+      "Same price as booking directly, no unnecessary consultation fee",
+      "Review after visit earns a free Histolab Cis Mask Pack"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": []
+  },
+  {
+    "id": "14426",
+    "name": "#CCONTE",
+    "branch": "Seogyo",
+    "tagline": "English-speaking hair color specialist",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5537807,
+    "lng": 126.92107529999998,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 2308,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Hongik Univ. Station, short walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 5,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "Save up to 10% by leaving a Google and Creatrip review (select services)"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Trendy bleaching, dye and balayage specialists",
+      "English-speaking stylists and English price list",
+      "L'Oreal, Wella and Milbon products to minimize damage"
+    ]
+  },
+  {
+    "id": "14592",
+    "name": "Abijou Clinic Global",
+    "branch": "Myeongdong",
+    "tagline": "20 Years of Trust, Foreigner-Friendly",
+    "subtype": "face",
+    "extraSubtypes": [
+      "skin"
+    ],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.564364399999995,
+    "lng": 126.9828708,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 4460,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese",
+      "Thai",
+      "Vietnamese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Euljiro 1-ga Station Exit 6, 2 min",
+    "hours": null,
+    "products": [
+      {
+        "name": "Ulthera Prime 300 shots",
+        "priceUsd": 778,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Thermage FLX 600 shots",
+        "priceUsd": 1485,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Titanium Lifting Full Face 60kj",
+        "priceUsd": 621,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Rejuran Healer 2cc + Regenerative Laser",
+        "priceUsd": 173,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Potenza PDRN Salmon 3cc + Pumping",
+        "priceUsd": 228,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Power V-Tox Contouring 6cc + Chin Toxin",
+        "priceUsd": 31,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 31,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit from 10,000 KRW required",
+      "Same-day booking available",
+      "Luggage storage on site"
+    ],
+    "reservationConfirm": "1 day",
+    "highlights": []
+  },
+  {
+    "id": "14593",
+    "name": "Abijou Clinic Global",
+    "branch": "Gangnam",
+    "tagline": "20 Years of Trust, Foreigner-Friendly",
+    "subtype": "face",
+    "extraSubtypes": [
+      "skin"
+    ],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.4986144,
+    "lng": 127.0262459,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 1668,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese",
+      "Thai",
+      "Vietnamese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Gangnam Station Exit 9 or 10, 1-2 min",
+    "hours": null,
+    "products": [
+      {
+        "name": "Ulthera Prime 300 shots",
+        "priceUsd": 778,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Thermage FLX 600 shots",
+        "priceUsd": 1485,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Titanium Lifting Full Face 60kj",
+        "priceUsd": 621,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Rejuran Healer 2cc + Regenerative Laser",
+        "priceUsd": 173,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Potenza PDRN Salmon 3cc + Pumping",
+        "priceUsd": 228,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Power V-Tox Contouring 6cc + Chin Botox",
+        "priceUsd": 31,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 31,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit from 10,000 KRW required",
+      "Free cancellation or changes up to 3 days before",
+      "Same-day booking available"
+    ],
+    "reservationConfirm": "1 day",
+    "highlights": []
+  },
+  {
+    "id": "14720",
+    "name": "ECO JARDIN",
+    "branch": "Myeongdong",
+    "tagline": "Premium scalp and hair care with 18-step head spa",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5633446,
+    "lng": 126.98410050000001,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 513,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 5,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Head spa with up to 18 detailed steps (Cell Stem Head Spa)",
+      "Top brands: Shiseido, L'Oreal and Milbon",
+      "Multilingual staff in central Myeongdong"
+    ]
+  },
+  {
+    "id": "14835",
+    "name": "SOONSIKI Hair",
+    "branch": "Seongsu",
+    "tagline": "Seoul's most-booked salon for international visitors",
+    "subtype": "hair",
+    "extraSubtypes": [
+      "personal-color"
+    ],
+    "city": "seoul",
+    "region": "seongsu",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.545147199999995,
+    "lng": 127.05172300000001,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 236,
+    "languages": [],
+    "koreanOnlyStaff": false,
+    "englishSupport": null,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 4,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "Up to 38% off with a review after your visit (haircuts excluded)"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Trend-forward cuts, color and styling; transparent pricing",
+      "Designers experienced with international clients",
+      "Head spa, scalp care and professional personal color analysis"
+    ]
+  },
+  {
+    "id": "14844",
+    "name": "AKNACK TOOL",
+    "branch": "Cheongdam",
+    "tagline": "Hair & Makeup Salon",
+    "subtype": "hair",
+    "extraSubtypes": [
+      "makeup"
+    ],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5198752,
+    "lng": 127.0484022,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 77,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit of 5,000 KRW required when booking (rest paid onsite)",
+      "Free cancellation or changes up to 3 days before",
+      "Photo review discount only when a photo review is submitted",
+      "All menus written in English with basic English conversation guides in shop"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Designers who also work in entertainment and advertising",
+      "Hair and makeup in one visit",
+      "Scalp head spa (16/18-step care, 6-step scaling)"
+    ]
+  },
+  {
+    "id": "14846",
+    "name": "AKNACK",
+    "branch": "Seongsu",
+    "tagline": "Haircut-focused salon loved by Seongsu locals",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "seongsu",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.541422499999996,
+    "lng": 127.04799609999999,
+    "coordApprox": false,
+    "rating": 5,
+    "reviewCount": 151,
+    "languages": [],
+    "koreanOnlyStaff": false,
+    "englishSupport": null,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 5,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "Discount after payment only if you submit a photo review"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Known for cutting skill tailored to face and head shape",
+      "Dedicated men's hair designer on site",
+      "Scalp head spa (16/18 steps) and traveler package with hair service plus care"
+    ]
+  },
+  {
+    "id": "14876",
+    "name": "COCOREA",
+    "branch": "Myeongdong",
+    "tagline": "Makeup & Personal Color Analysis",
+    "subtype": "makeup",
+    "extraSubtypes": [
+      "personal-color",
+      "hair"
+    ],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5628531,
+    "lng": 126.9838665,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 92,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 34.33,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 34.33,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Coupons not applicable",
+      "Mobile reservation voucher provided",
+      "Personal color analysis uses 204 fabrics (PCCS theory)",
+      "Personal color card provided to keep"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Makeup by artist Seo Su-jin",
+      "Detailed personal color analysis",
+      "Lip, blush and eyeshadow shade recommendations"
+    ]
+  },
+  {
+    "id": "14884",
+    "name": "ECO JARDIN",
+    "branch": "Gyeongbokgung",
+    "tagline": "Complete Hair & Makeup Makeover Studio",
+    "subtype": "hair",
+    "extraSubtypes": [
+      "makeup",
+      "personal-color"
+    ],
+    "city": "seoul",
+    "region": null,
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5769251,
+    "lng": 126.97214330000001,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 3063,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 20,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Personal color analysis, hair consultation, makeup, perm and color in one visit",
+      "Customized scalp care programs",
+      "English consultations available; near Gyeongbokgung Palace and Seochon"
+    ]
+  },
+  {
+    "id": "14955",
+    "name": "Fleur Jardin",
+    "branch": "Myeongdong",
+    "tagline": "Skincare, Nail Art, Foot Spa",
+    "subtype": "nail",
+    "extraSubtypes": [
+      "skin",
+      "massage"
+    ],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.563561799999995,
+    "lng": 126.9857529,
+    "coordApprox": false,
+    "rating": 5,
+    "reviewCount": 638,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 29.84,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 29.84,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Skincare, nail art and foot spa offered"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Personalized skincare and nail art",
+      "Relaxing foot spa",
+      "Central Myeongdong location"
+    ]
+  },
+  {
+    "id": "15009",
+    "name": "COLORIZE",
+    "branch": "Myeongdong Main",
+    "tagline": "Personal Color Analysis",
+    "subtype": "personal-color",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.561770200000005,
+    "lng": 126.9875957,
+    "coordApprox": false,
+    "rating": 5,
+    "reviewCount": 201,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Near Myeongdong Station (few minutes)",
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 102.79,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 102.79,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Coupons not applicable",
+      "Includes perfume making, photo zone and self-makeup area"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Detailed color and body type analysis",
+      "Styling, makeup and accessory tips",
+      "Pink interior like a beauty pop-up"
+    ]
+  },
+  {
+    "id": "15076",
+    "name": "DIORE Clinic",
+    "branch": null,
+    "tagline": "Lifting Expertise in Gangnam",
+    "subtype": "face",
+    "extraSubtypes": [
+      "skin"
+    ],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.500773699999996,
+    "lng": 127.02671289999999,
+    "coordApprox": false,
+    "rating": 4.8,
+    "reviewCount": 760,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Gangnam Station Exit 11, 3 min walk",
+    "hours": null,
+    "products": [
+      {
+        "name": "Rejuran Healer 2cc",
+        "priceUsd": 135,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Rejuran HB Plus 1cc",
+        "priceUsd": 128,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Shurink Universe 300 shots",
+        "priceUsd": 71,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "InMode FX 1 part",
+        "priceUsd": 54,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Oligio 300 shots",
+        "priceUsd": 328,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Vitamin IV injection",
+        "priceUsd": 29,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 29,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free online reservation, pay on site",
+      "Free consultation possible before choosing a treatment"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": []
+  },
+  {
+    "id": "15112",
+    "name": "LIJIN Clinic",
+    "branch": null,
+    "tagline": "Private Skin Clinic with Lifting Expertise",
+    "subtype": "skin",
+    "extraSubtypes": [
+      "face"
+    ],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.562480199999996,
+    "lng": 126.98102569999998,
+    "coordApprox": true,
+    "rating": 4.9,
+    "reviewCount": 177,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese",
+      "Thai"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Astrodome facial + LDM 12 min + Decongel Ultrasound Care",
+        "priceUsd": 134,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Premium SkinCeuticals Care + Skin Improvement IV",
+        "priceUsd": 306,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Black Peel + Silymarin CF Ampoule + Neobeam Laser + Cryocell",
+        "priceUsd": 157,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "LHALA Peel + EGF Regeneration Ampoule + Soothing Laser + Stem Cell Pack",
+        "priceUsd": 110,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 110,
+    "minutes": null,
+    "downtime": "mild",
+    "downtimeNote": "Text describes popular skin treatments with minimal downtime",
+    "beforeYouBook": [
+      "Free online reservation, pay on site",
+      "Free consultation possible before choosing a treatment",
+      "Cream anesthesia or AIRNOX gas available"
+    ],
+    "reservationConfirm": "1 day",
+    "highlights": []
+  },
+  {
+    "id": "15196",
+    "name": "DayBeau Clinic",
+    "branch": "Gangnam",
+    "tagline": null,
+    "subtype": "face",
+    "extraSubtypes": [
+      "skin"
+    ],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": "494 Gangnam-daero, Gangnam District, Seoul",
+    "addressKo": null,
+    "lat": 37.5063829,
+    "lng": 127.02405410000001,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 1500,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese",
+      "Vietnamese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": "Mon & Fri 10:00-21:00, Tue/Wed/Thu/Sat/Sun 10:00-19:00",
+    "products": [
+      {
+        "name": "Thermage FLX 300 shots (from)",
+        "priceUsd": 1421,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Ultherapy Prime 300 shots (from)",
+        "priceUsd": 993,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Onda Lifting 50,000J (from)",
+        "priceUsd": 443,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Shurink Universe 300 shots (from)",
+        "priceUsd": 106,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Rejuran Healer 2cc (from)",
+        "priceUsd": 178,
+        "originalPriceUsd": null
+      },
+      {
+        "name": "Pico Toning 1 session (from)",
+        "priceUsd": 71,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 71,
+    "minutes": null,
+    "downtime": "mild",
+    "downtimeNote": "Per-procedure downtime listed as none to 1-3 days",
+    "beforeYouBook": [
+      "Free online reservation",
+      "Reservation confirmation within 1-2 days"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": []
+  },
+  {
+    "id": "15197",
+    "name": "DayBeau Clinic",
+    "branch": "Myeongdong The Luxe",
+    "tagline": "Solo VIP Room | Book and receive 10 free sheet masks",
+    "subtype": "face",
+    "extraSubtypes": [
+      "skin"
+    ],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5650842,
+    "lng": 126.9828804,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 322,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese",
+      "Vietnamese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free online reservation, pay on site",
+      "Private rooms available for purchases over 500,000 KRW",
+      "Reservation confirmation within 1-2 days"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": []
+  },
+  {
+    "id": "15220",
+    "name": "Sanho Mansion",
+    "branch": null,
+    "tagline": "ID & Portrait Photo Studio",
+    "subtype": "photo",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": null,
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.569243,
+    "lng": 126.99522660000001,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 14,
+    "languages": [],
+    "koreanOnlyStaff": false,
+    "englishSupport": null,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 52.21,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 52.21,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Creatrip-exclusive partner studio",
+      "Mobile reservation voucher provided",
+      "ID photo and \"Random Gift\" concept-free sessions offered"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Analog-sensibility photo studio",
+      "Bookable only through Creatrip",
+      "Near Jongno 3-ga, Ikseon-dong, Insadong"
+    ]
+  },
+  {
+    "id": "15245",
+    "name": "Koho Nail",
+    "branch": "COEX",
+    "tagline": "Gangnam COEX Mall Nail Salon",
+    "subtype": "nail",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.509744399999995,
+    "lng": 127.05697400000001,
+    "coordApprox": false,
+    "rating": 4.4,
+    "reviewCount": 18,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "COEX 3 min walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit of 30,000 KRW required when booking (rest paid onsite)",
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Menu: nail gel, pedi gel, nail art, pedi art, nail extension (10 fingers)"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "3-minute walk from COEX",
+      "English-friendly staff",
+      "Trendy Korean nail designs"
+    ]
+  },
+  {
+    "id": "15248",
+    "name": "SlimM",
+    "branch": "Main Branch",
+    "tagline": "K-pop Idol Contouring Lifting + Lymphatic Therapy",
+    "subtype": "face",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": null,
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.498336699999996,
+    "lng": 126.99758990000001,
+    "coordApprox": true,
+    "rating": 4.9,
+    "reviewCount": 12,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 57.56,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 57.56,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Bedding and treatment beds changed after each session",
+      "Whole five-story building is a private beauty space"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "JH Contouring used by K-pop idols and actors",
+      "Fascia and lymphatic line treatment",
+      "Director with 30+ years experience"
+    ]
+  },
+  {
+    "id": "15274",
+    "name": "DayBeau Clinic",
+    "branch": "Myeongdong 2nd Branch",
+    "tagline": "Book and receive 10 free sheet masks",
+    "subtype": "face",
+    "extraSubtypes": [
+      "skin"
+    ],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5650842,
+    "lng": 126.9828804,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 152,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese",
+      "Vietnamese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Reservation confirmation within 1-2 days",
+      "1:1 consultation and private rooms offered"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": []
+  },
+  {
+    "id": "15357",
+    "name": "OTENA Clinic",
+    "branch": null,
+    "tagline": "Affordable Clinic with Guaranteed Privacy",
+    "subtype": "skin",
+    "extraSubtypes": [
+      "face"
+    ],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5650506,
+    "lng": 126.98280050000001,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 2935,
+    "languages": [
+      "Chinese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": null,
+    "subway": "Euljiro Station, 3 min walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": 60,
+    "downtime": "mild",
+    "downtimeNote": "Temporary soreness, mild swelling, bruising or redness may occur, usually subsiding within a few days",
+    "beforeYouBook": [
+      "Free online reservation, pay on site",
+      "Consultation can be booked before choosing a procedure",
+      "Avoid saunas, jjimjilbang and intense exercise for one week after Shurink/PicoSure"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": []
+  },
+  {
+    "id": "15376",
+    "name": "Daybeau Clinic",
+    "branch": "Seomyeon",
+    "tagline": null,
+    "subtype": "face",
+    "extraSubtypes": [
+      "skin"
+    ],
+    "city": "busan",
+    "region": "seomyeon",
+    "addressEn": "15th floor, Ion City Building, 74 Seomyeon-ro, Busan Jin-gu, Busan",
+    "addressKo": "부산 부산진구 서면로 74, 15층",
+    "lat": 35.1572312,
+    "lng": 129.0581932,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 186,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Seomyeon Station (Lines 1 and 2) Exit 7, 2 min walk",
+    "hours": "Mon-Fri 10:00-13:00 & 14:00-20:00, Sat 10:00-16:00, Sun closed",
+    "products": [
+      {
+        "name": "Free consultation",
+        "priceUsd": 0,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Treatment fee must be paid in full on site",
+      "Free cancel or change up to one day before the reservation date",
+      "Reservations are for non-Korean customers only",
+      "Confirm final procedure price on site"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Praised for clean, comfortable clinic and gentle, professional staff",
+      "Helpful Chinese interpretation and telephone translators",
+      "Patient, non-pushy consultations with reasonable first-time prices"
+    ]
+  },
+  {
+    "id": "15429",
+    "name": "#CCONTE",
+    "branch": "Hongdae Yeonam",
+    "tagline": "Color specialist salon tailored for foreigners",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.562821199999995,
+    "lng": 126.92452779999999,
+    "coordApprox": false,
+    "rating": 5,
+    "reviewCount": 45,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Hongik Univ. Station, short walk",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 5,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before",
+      "Up to 10% off with a Creatrip or Google review"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Trendy color and bleaching specialists in Yeonnam-dong",
+      "English-speaking stylists and English price list",
+      "L'Oreal, Wella and Milbon products for vivid, long-lasting color"
+    ]
+  },
+  {
+    "id": "15440",
+    "name": "Doctor Petit Clinic",
+    "branch": "Hongdae",
+    "tagline": "Premium Medical Aesthetics",
+    "subtype": "skin",
+    "extraSubtypes": [
+      "face"
+    ],
+    "city": "seoul",
+    "region": "hongdae-mapo",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5563353,
+    "lng": 126.9222782,
+    "coordApprox": true,
+    "rating": 5,
+    "reviewCount": 204,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Hongik Univ. Station Exit 1, right in front",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": "mild",
+    "downtimeNote": "Redness, warmth and slight swelling may occur but subside within 1-3 days",
+    "beforeYouBook": [
+      "Free online reservation, pay on site",
+      "Verify Creatrip membership on site",
+      "Avoid alcohol for one week after treatment",
+      "Open Sundays; luggage storage available"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": []
+  },
+  {
+    "id": "15473",
+    "name": "CCLIME",
+    "branch": "Seongsu",
+    "tagline": "Premium Face Contouring Care",
+    "subtype": "face",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "seongsu",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.543208299999996,
+    "lng": 127.0524744,
+    "coordApprox": false,
+    "rating": 5,
+    "reviewCount": 3,
+    "languages": [],
+    "koreanOnlyStaff": false,
+    "englishSupport": null,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 149.18,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 149.18,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Mobile reservation voucher provided",
+      "Includes 15ml lifting ampoule and skincare samples",
+      "Sample packs and V-Lift mask sheets only with a review",
+      "Manual technique, no machines"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Hand-technique jawline and cheekbone contouring",
+      "Certified therapists",
+      "Located in trendy Seongsu"
+    ]
+  },
+  {
+    "id": "15479",
+    "name": "ECO JARDIN",
+    "branch": "Myeongdong",
+    "tagline": "Premium scalp and hair care with 18-step head spa",
+    "subtype": "hair",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5633446,
+    "lng": 126.98410050000001,
+    "coordApprox": false,
+    "rating": 4.9,
+    "reviewCount": 513,
+    "languages": [
+      "English"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": null,
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Deposit 5,000 KRW at booking; pay the rest onsite",
+      "Free cancellation or changes up to 3 days before"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Head spa with up to 18 detailed steps (Cell Stem Head Spa)",
+      "Top brands: Shiseido, L'Oreal and Milbon",
+      "Multilingual staff in central Myeongdong"
+    ]
+  },
+  {
+    "id": "15480",
+    "name": "CCLIME",
+    "branch": "Gangnam HQ",
+    "tagline": "Premium Face Contouring Care",
+    "subtype": "face",
+    "extraSubtypes": [],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5118782,
+    "lng": 127.0410185,
+    "coordApprox": false,
+    "rating": 4.7,
+    "reviewCount": 15,
+    "languages": [],
+    "koreanOnlyStaff": false,
+    "englishSupport": null,
+    "subway": null,
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 149.51,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": 149.51,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Mobile reservation voucher provided",
+      "Includes 15ml lifting ampoule and skincare samples",
+      "Sample packs and V-Lift mask sheets only with a review"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Hand-technique facial contouring",
+      "Certified therapists",
+      "Gangnam HQ branch"
+    ]
+  },
+  {
+    "id": "15618",
+    "name": "Vands Clinic",
+    "branch": "Seomyeon",
+    "tagline": "Foreigner-Friendly Skin Clinic with On-Site Interpreters",
+    "subtype": "skin",
+    "extraSubtypes": [
+      "face"
+    ],
+    "city": "busan",
+    "region": "seomyeon",
+    "addressEn": null,
+    "addressKo": "부산 부산진구 서면로 48 현경빌딩 2F",
+    "lat": 35.1549829,
+    "lng": 129.0579958,
+    "coordApprox": false,
+    "rating": 4.8,
+    "reviewCount": 1192,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese",
+      "Thai",
+      "Vietnamese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Seomyeon Station Exit 7, right in front",
+    "hours": "Mon-Fri 10:00-20:00, Sat-Sun 10:00-18:00",
+    "products": [
+      {
+        "name": "Free consultation",
+        "priceUsd": 0,
+        "originalPriceUsd": null
+      }
+    ],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": "mild",
+    "downtimeNote": "Volnewmer downtime is minimal; keep area warm and avoid irritation",
+    "beforeYouBook": [
+      "Bring your passport",
+      "Same-day booking available",
+      "Free cancellation before the appointment date; no-shows may affect future bookings",
+      "Sedation: fast at least 6 hours and remove nail polish"
+    ],
+    "reservationConfirm": "1 day",
+    "highlights": []
+  },
+  {
+    "id": "15631",
+    "name": "Arumdaun Nara Dermatology Clinic",
+    "branch": "Gangnam",
+    "tagline": "Lifting clinic led by board-certified dermatologists",
+    "subtype": "face",
+    "extraSubtypes": [
+      "skin"
+    ],
+    "city": "seoul",
+    "region": "gangnam",
+    "addressEn": "12F, Mijin Plaza, 390 Gangnam-daero, Gangnam-gu, Seoul",
+    "addressKo": null,
+    "lat": 37.4980067,
+    "lng": 127.0286447,
+    "coordApprox": false,
+    "rating": 4.7,
+    "reviewCount": 159,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Gangnam Station Exit 1, right next to",
+    "hours": null,
+    "products": [],
+    "priceFromUsd": null,
+    "minutes": null,
+    "downtime": "days",
+    "downtimeNote": "Redness, swelling and mild pain may last a few days; bruising or embossing about 5-7 days",
+    "beforeYouBook": [
+      "Free cancellation or changes up to 3 days before",
+      "Consultation can be booked before choosing a procedure",
+      "Avoid alcohol and smoking for 5-7 days after treatment"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": []
+  },
+  {
+    "id": "15729",
+    "name": "Sola Spa",
+    "branch": "Myeongdong",
+    "tagline": "Foot Bath, Body Scrub, Head Spa & Skin Care",
+    "subtype": "scrub",
+    "extraSubtypes": [
+      "massage",
+      "skin"
+    ],
+    "city": "seoul",
+    "region": "myeongdong",
+    "addressEn": null,
+    "addressKo": null,
+    "lat": 37.5598441,
+    "lng": 126.98379510000001,
+    "coordApprox": false,
+    "rating": 4.8,
+    "reviewCount": 257,
+    "languages": [
+      "English",
+      "Chinese",
+      "Japanese"
+    ],
+    "koreanOnlyStaff": false,
+    "englishSupport": true,
+    "subway": "Myeongdong Station Exit 4, 3 min walk",
+    "hours": null,
+    "products": [
+      {
+        "name": "Starting price (lowest option)",
+        "priceUsd": 13.43,
+        "originalPriceUsd": 29.11
+      }
+    ],
+    "priceFromUsd": 13.43,
+    "minutes": null,
+    "downtime": null,
+    "downtimeNote": null,
+    "beforeYouBook": [
+      "Body scrub services are available to women only",
+      "Free cancellation or changes up to 3 days before",
+      "Mobile reservation voucher provided",
+      "Luggage storage available"
+    ],
+    "reservationConfirm": "1-2 days",
+    "highlights": [
+      "Foot bath cafe, head spa, skin care and body scrub in one building",
+      "Private rooms",
+      "3-minute walk from Myeongdong Station"
+    ]
+  }
+]

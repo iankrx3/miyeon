@@ -1,12 +1,14 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { ChevronLeft } from 'lucide-react';
-import type { GlowUpSubtype, UserSession } from '../types';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Check, ChevronLeft } from 'lucide-react';
+import type { GlowUpPlace, GlowUpSubtype, UserSession } from '../types';
 import { guideFor } from '../data/categoryGuides';
 import { getStoredItinerary } from '../lib/localItineraryStore';
 import { buildGlowUpCreatripUrl, CREATRIP_DISCLOSURE } from '../lib/creatrip';
 import { SwipeRow } from '../components/common/SwipeRow';
 import { BeautyCardSheet } from '../components/glowup/BeautyCardSheet';
+import { getGlowUpPlace } from '../services/places/glowUpPlaces';
+import { checksFor, type CheckItem, shortRegion } from '../services/glowUp/routines';
 
 /** Figma "DETAIL — Personal Color": explains a Plan category before sending the
  * user to Creatrip for real options. */
@@ -18,20 +20,41 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
   const [stepIndex, setStepIndex] = useState(0);
   const galleryRef = useRef<HTMLDivElement>(null);
   const [beautyCardOpen, setBeautyCardOpen] = useState(false);
+  const [searchParams] = useSearchParams();
+  const placeId = searchParams.get('place');
 
   const fromItinerary = (location.state as { fromItinerary?: string } | null)?.fromItinerary;
 
   // The plan this page was opened from — needed for the Beauty Card email.
   const plan = useMemo(() => (fromItinerary ? getStoredItinerary(fromItinerary) : null), [fromItinerary]);
 
+  // V2: opened from a routine stop → this page is about that specific venue.
+  const [place, setPlace] = useState<GlowUpPlace | undefined>(() =>
+    placeId ? plan?.glowUpV2?.routines.flatMap((r) => r.stops).find((s) => s.place.id === placeId)?.place : undefined
+  );
+  useEffect(() => {
+    if (!placeId || place?.id === placeId) return;
+    let cancelled = false;
+    void getGlowUpPlace(placeId).then((p) => {
+      if (!cancelled) setPlace(p);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [placeId, place?.id]);
+  const profile = plan?.glowUpSnapshot;
+
+  // Secondary CTA: the category's Creatrip list. With a venue chosen we leave out the district
+  // filter — a district-filtered list is the one most likely to come back empty.
   const creatripHref = useMemo(() => {
     if (!guide) return null;
-    const profile = fromItinerary ? getStoredItinerary(fromItinerary)?.glowUpSnapshot : undefined;
+    const snap = fromItinerary ? getStoredItinerary(fromItinerary)?.glowUpSnapshot : undefined;
     return buildGlowUpCreatripUrl(guide.subtype as GlowUpSubtype, {
-      region: profile?.region ?? null,
-      languages: profile?.languages ?? [],
+      region: place ? null : (snap?.region ?? null),
+      languages: snap?.languages ?? [],
     });
-  }, [guide, fromItinerary]);
+  }, [guide, fromItinerary, place]);
+  const bookHref = place?.bookingUrl ?? null;
 
   if (!guide) {
     return (
@@ -52,6 +75,8 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
     setStepIndex(Math.min(guide.steps.length - 1, Math.max(0, Math.round(el.scrollLeft / step))));
   };
 
+  const beforeYouBook = [...new Set([...(place?.beforeYouBook ?? []), ...guide.beforeYouBook])].slice(0, 6);
+
   const ctaClass =
     'block w-full rounded-full bg-miyeon-ink py-[15px] text-center text-[14.5px] font-medium text-white';
 
@@ -68,30 +93,77 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
           <ChevronLeft className="h-3.5 w-3.5" /> Back
         </button>
         <div className="absolute bottom-5 left-5 right-5">
-          <p className="text-[10px] font-bold tracking-[0.2em] text-white/85">{guide.kicker}</p>
+          {place ? (
+            <span className="inline-block rounded bg-miyeon-accent px-1.5 py-1 text-[9px] font-bold tracking-[0.14em] text-white">
+              BEST MATCH FOR YOU
+            </span>
+          ) : (
+            <p className="text-[10px] font-bold tracking-[0.2em] text-white/85">{guide.kicker}</p>
+          )}
           <h1 className="mt-1.5 font-display text-[28px] font-bold leading-[1.15] text-white">{guide.headline}</h1>
+          {place && (
+            <p className="mt-1.5 text-[13px] text-white/85">
+              {guide.name} · {shortRegion(place.region)}
+            </p>
+          )}
         </div>
       </div>
 
-      <div className="flex items-start px-5 py-5">
-        <Stat value={`${guide.minutes}`} label="minutes" />
-        <Stat value={guide.downtime} label="downtime" />
-        <Stat value={`~$${guide.fromUsd}`} label="to start" />
-      </div>
-
-      {creatripHref && (
-        <div className="px-5 pb-5">
-          <a href={creatripHref} target="_blank" rel="noreferrer" className={ctaClass}>
-            See options on Creatrip →
-          </a>
-          <p className="mt-2 text-center text-[11px] text-miyeon-main/45">or keep reading — 30 sec</p>
+      {place ? (
+        <div className="flex items-start px-5 py-5">
+          <Stat value={`${place.minutes ?? guide.minutes}`} label="minutes" />
+          <Stat
+            value={place.priceFromUsd != null ? `$${Math.round(place.priceFromUsd)}` : '—'}
+            label={place.priceFromUsd != null ? 'from' : 'price on Creatrip'}
+          />
+          <Stat
+            value={place.downtime === 'none' ? 'None' : place.downtime === 'mild' ? 'Mild' : place.downtime === 'days' ? 'A few days' : guide.downtime}
+            label="downtime"
+          />
+        </div>
+      ) : (
+        <div className="flex items-start px-5 py-5">
+          <Stat value={`${guide.minutes}`} label="minutes" />
+          <Stat value={guide.downtime} label="downtime" />
+          <Stat value={`~$${guide.fromUsd}`} label="to start" />
         </div>
       )}
 
-      <div className="bg-miyeon-accent-soft px-6 py-7 text-center">
-        <p className="text-[10px] font-medium tracking-[0.18em] text-miyeon-accent-dark">✦ WHY KOREA</p>
-        <p className="mt-3 font-display text-xl font-bold leading-snug text-miyeon-ink">{guide.whyKorea}</p>
-      </div>
+      {place && bookHref ? (
+        <div className="px-5 pb-5">
+          <a href={bookHref} target="_blank" rel="noreferrer sponsored" className={ctaClass}>
+            Book your Best Fit on Creatrip →
+          </a>
+          {creatripHref && (
+            <a
+              href={creatripHref}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-2.5 block w-full rounded-full border border-miyeon-line bg-white py-[14px] text-center text-[14px] text-miyeon-ink"
+            >
+              See More Options
+            </a>
+          )}
+        </div>
+      ) : (
+        creatripHref && (
+          <div className="px-5 pb-5">
+            <a href={creatripHref} target="_blank" rel="noreferrer" className={ctaClass}>
+              See options on Creatrip →
+            </a>
+            <p className="mt-2 text-center text-[11px] text-miyeon-main/45">or keep reading — 30 sec</p>
+          </div>
+        )
+      )}
+
+      {place ? (
+        <MiyeonChecked items={checksFor(place, guide.subtype as GlowUpSubtype, profile)} />
+      ) : (
+        <div className="bg-miyeon-accent-soft px-6 py-7 text-center">
+          <p className="text-[10px] font-medium tracking-[0.18em] text-miyeon-accent-dark">✦ WHY KOREA</p>
+          <p className="mt-3 font-display text-xl font-bold leading-snug text-miyeon-ink">{guide.whyKorea}</p>
+        </div>
+      )}
 
       <section className="px-5 pt-7">
         <h2 className="font-display text-lg font-bold text-miyeon-ink">How it goes</h2>
@@ -148,7 +220,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
       <section className="px-5 pt-7">
         <h2 className="font-display text-lg font-bold text-miyeon-ink">Before you book</h2>
         <div className="mt-3 space-y-1.5 rounded-[14px] bg-miyeon-accent-soft p-4">
-          {guide.beforeYouBook.map((line) => (
+          {beforeYouBook.map((line) => (
             <p key={line} className="flex gap-2 text-[12px] leading-relaxed text-miyeon-main/80">
               <span className="font-bold text-miyeon-accent-dark">•</span>
               {line}
@@ -157,7 +229,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
         </div>
       </section>
 
-      {creatripHref && (
+      {creatripHref && !place && (
         <div className="px-5 pt-6">
           <a
             href={creatripHref}
@@ -180,7 +252,26 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
         </div>
       )}
 
-      {creatripHref && (
+      {place && bookHref ? (
+        <div className="fixed inset-x-0 bottom-[var(--bottom-nav-h)] z-30 mx-auto flex max-w-[430px] items-center justify-between border-t border-miyeon-line bg-white px-5 py-3.5 shadow-[0_-3px_12px_rgba(0,0,0,0.07)] sm:bottom-0">
+          <div className="min-w-0 pr-3">
+            <p className="truncate text-[15px] font-bold text-miyeon-ink">{place.name}</p>
+            <p className="text-[10.5px] text-miyeon-main/55">
+              {place.priceFromUsd != null ? `$${Math.round(place.priceFromUsd)} · ` : ''}
+              {shortRegion(place.region)}
+            </p>
+          </div>
+          <a
+            href={bookHref}
+            target="_blank"
+            rel="noreferrer sponsored"
+            className="flex shrink-0 items-center gap-1.5 rounded-full bg-miyeon-ink px-[18px] py-3.5 text-sm font-medium text-white"
+          >
+            Book on Creatrip →
+          </a>
+        </div>
+      ) : (
+        creatripHref && (
         <div className="fixed inset-x-0 bottom-[var(--bottom-nav-h)] z-30 mx-auto flex max-w-[430px] items-center justify-between border-t border-miyeon-line bg-white px-5 py-3.5 shadow-[0_-3px_12px_rgba(0,0,0,0.07)] sm:bottom-0">
           <div>
             <p className="text-[15px] font-bold text-miyeon-ink">From ~${guide.fromUsd}</p>
@@ -195,6 +286,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
             See options →
           </a>
         </div>
+        )
       )}
 
       {beautyCardOpen && plan && (
@@ -203,6 +295,33 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
     </div>
   );
 }
+
+/** Figma "MIYEON CHECKED · n/4": ticked only where the venue data confirms it. */
+const MiyeonChecked: React.FC<{ items: CheckItem[] }> = ({ items }) => (
+  <section className="bg-miyeon-accent-soft px-5 py-5">
+    <p className="text-[11px] font-bold tracking-[0.16em] text-miyeon-accent-dark">
+      ✦ MIYEON CHECKED · {items.filter((i) => i.ok).length}/{items.length}
+    </p>
+    <div className="mt-3 grid grid-cols-2 gap-2.5">
+      {items.map((item) => (
+        <div key={item.id} className="flex items-start gap-2.5 rounded-[14px] bg-white px-3 py-3">
+          <span
+            className={`mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full ${
+              item.ok ? 'bg-miyeon-accent text-white' : 'border border-miyeon-line bg-white text-transparent'
+            }`}
+            aria-label={item.ok ? 'Checked' : 'Not confirmed'}
+          >
+            <Check className="h-3 w-3" strokeWidth={3} />
+          </span>
+          <div className="min-w-0">
+            <p className="text-[14px] font-medium leading-tight text-miyeon-ink">{item.title}</p>
+            <p className="mt-0.5 text-[11.5px] leading-snug text-miyeon-main/55">{item.detail}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+);
 
 const Stat: React.FC<{ value: string; label: string }> = ({ value, label }) => (
   <div className="flex flex-1 flex-col items-center gap-0.5">
