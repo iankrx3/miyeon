@@ -8,7 +8,6 @@ import type {
   GlowUpRoutine,
   GlowUpStop,
   GlowUpSubtype,
-  GlowUpTripDays,
 } from '../../types';
 import { guideFor } from '../../data/categoryGuides';
 import { budgetMaxUsdOf, labelForSubtype } from '../../data/glowUpQuiz';
@@ -63,15 +62,6 @@ export function isClinicSubtype(subtype: GlowUpSubtype): boolean {
 }
 const STYLE_ORDER: GlowUpSubtype[] = ['personal-color', 'hair', 'makeup', 'permanent-makeup', 'nail', 'photo'];
 const RECOVERY_ORDER: GlowUpSubtype[] = ['sauna', 'scrub', 'massage', 'yoga'];
-
-/** How many places to pick per selected category — scales with trip length so a longer
- * trip comes back with more recommendations, not the same handful as a 1-day trip. */
-const PICKS_PER_CATEGORY: Record<GlowUpTripDays, number> = {
-  '1': 1,
-  '2-3': 2,
-  '4-7': 3,
-  '7-plus': 4,
-};
 
 /** Every routine that has at least one stop gets topped up to at least this many. */
 const MIN_STOPS_PER_ROUTINE = 2;
@@ -409,25 +399,10 @@ function makeRoutine(
   };
 }
 
-/** Round-robins each category's picks (pick #1 of every category, then pick #2, ...) so a routine's
- * stop list alternates between categories instead of running through one category's whole batch first. */
-function interleave(order: GlowUpSubtype[], picks: Map<GlowUpSubtype, Pick[]>): Pick[] {
-  const lists = order.map((s) => picks.get(s) ?? []).filter((l) => l.length > 0);
-  const max = Math.max(0, ...lists.map((l) => l.length));
-  const result: Pick[] = [];
-  for (let i = 0; i < max; i++) {
-    for (const list of lists) {
-      if (list[i]) result.push(list[i]);
-    }
-  }
-  return result;
-}
-
 /** Builds the routines for a quiz profile from the venue list. */
 export function buildRoutines(profile: GlowUpProfile, places: GlowUpPlace[], opts: RoutineOptions = {}): GlowUpPlanV2 {
   const preset = opts.preset ?? null;
   const w = weightsFor(preset);
-  const perCategory = PICKS_PER_CATEGORY[profile.tripDays ?? '2-3'] ?? 2;
 
   const wanted = new Set<GlowUpSubtype>([...profile.fix.items, ...profile.change, ...profile.restore]);
 
@@ -441,7 +416,7 @@ export function buildRoutines(profile: GlowUpProfile, places: GlowUpPlace[], opt
     ...RECOVERY_ORDER.filter((s) => wanted.has(s)),
   ];
   for (const subtype of ordered) {
-    const found = pickMany(subtype, profile, places, taken, chosen, w, perCategory);
+    const found = pickMany(subtype, profile, places, taken, chosen, w, 1);
     if (found.length > 0) picks.set(subtype, found.map((place) => ({ subtype, place })));
   }
 
@@ -467,7 +442,7 @@ export function buildRoutines(profile: GlowUpProfile, places: GlowUpPlace[], opt
   };
   const capRoutine = (group: Pick[]): Pick[] => group.slice(0, MAX_STOPS_PER_ROUTINE);
   const picksOf = (order: GlowUpSubtype[]) =>
-    capRoutine(topUp(interleave(order, picks), order));
+    capRoutine(topUp(order.flatMap((s) => picks.get(s) ?? []), order));
   const skinPicks = picksOf(SKIN_GROUP);
   const stylePicks = picksOf(STYLE_ORDER);
   const recoveryPicks = picksOf(RECOVERY_ORDER);
