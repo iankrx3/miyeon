@@ -59,8 +59,19 @@ const SHORT_REGION: Record<string, string> = {
 export const shortRegion = (r: string | null | undefined): string => (r && SHORT_REGION[r]) || 'Seoul';
 
 const SKIN_GROUP: GlowUpSubtype[] = ['skin', 'face'];
+
+/** Skin/face work is clinic work, and booking a clinic on Creatrip is free (the treatment is paid at the clinic). */
+export function isClinicSubtype(subtype: GlowUpSubtype): boolean {
+  return SKIN_GROUP.includes(subtype);
+}
 const STYLE_ORDER: GlowUpSubtype[] = ['personal-color', 'hair', 'makeup', 'permanent-makeup', 'nail', 'photo'];
 const RECOVERY_ORDER: GlowUpSubtype[] = ['sauna', 'scrub', 'massage', 'yoga'];
+
+/** A routine with more places than this is too much for one outing. */
+const MAX_STOPS_PER_ROUTINE = 4;
+
+/** How far a recovery stop can be from the last skin stop and still ride along in the same routine. */
+const ATTACH_MAX_KM = 6;
 
 const CITY_LABEL = { seoul: 'Seoul', busan: 'Busan' } as const;
 
@@ -175,7 +186,12 @@ function scorePlace(
 
 /** The venues that can serve `subtype` for this traveller — known conflicts (wrong city, over budget,
  * no wanted language, lasting downtime when they need photo-ready skin) are excluded; unknowns pass. */
-function candidatesFor(subtype: GlowUpSubtype, profile: GlowUpProfile, places: GlowUpPlace[]): GlowUpPlace[] {
+function candidatesFor(
+  subtype: GlowUpSubtype,
+  profile: GlowUpProfile,
+  places: GlowUpPlace[],
+  relaxed = false
+): GlowUpPlace[] {
   const city = profileCity(profile);
   return places.filter((p) => {
     if (p.subtype !== subtype && !p.extraSubtypes.includes(subtype)) return false;
@@ -183,8 +199,9 @@ function candidatesFor(subtype: GlowUpSubtype, profile: GlowUpProfile, places: G
     if (SKIN_GROUP.includes(subtype) && !SKIN_GROUP.includes(p.subtype)) return false;
     if (p.city !== city) return false;
     if (p.lat == null || p.lng == null) return false;
-    if (languageFit(p, profile.languages) === false) return false;
-    if (budgetFit(p, profile) === false) return false;
+    // Relaxed pass (nothing fit): language and budget become soft so a pick isn't dropped for them.
+    if (!relaxed && languageFit(p, profile.languages) === false) return false;
+    if (!relaxed && budgetFit(p, profile) === false) return false;
     if (SKIN_GROUP.includes(subtype) && profile.fix.downtime === 'no-daily-photos') {
       if (p.downtime === 'days' || p.downtime === 'mild') return false;
     }
@@ -257,7 +274,8 @@ function pickOne(
   chosen: GlowUpPlace[],
   w: Weights
 ): GlowUpPlace | null {
-  const pool = candidatesFor(subtype, profile, places).filter((p) => !taken.has(p.id));
+  let pool = candidatesFor(subtype, profile, places).filter((p) => !taken.has(p.id));
+  if (pool.length === 0) pool = candidatesFor(subtype, profile, places, true).filter((p) => !taken.has(p.id));
   if (pool.length === 0) return null;
   const pref = preferredRegion(profile);
   const anchor: [number, number] | null = chosen.length
@@ -384,25 +402,6 @@ export function buildRoutines(profile: GlowUpProfile, places: GlowUpPlace[], opt
   const wanted = new Set<GlowUpSubtype>([...profile.fix.items, ...profile.change, ...profile.restore]);
   const leftOut: GlowUpLeftOut[] = [];
 
-  // A photo session wants its own day after the styling — a 1–3 day trip can't spare one. Offer it back.
-  const hasStyling = profile.change.some((s) => s !== 'photo') || profile.fix.items.length > 0;
-  if (
-    wanted.has('photo') &&
-    !forced.includes('photo') &&
-    hasStyling &&
-    (profile.tripDays === '1' || profile.tripDays === '2-3')
-  ) {
-    wanted.delete('photo');
-    leftOut.push({
-      subtype: 'photo',
-      label: labelForSubtype('photo'),
-      reason: 'It works best on a day after your styling, and your trip is too tight. Still want it?',
-      url: buildGlowUpCreatripUrl('photo', { region: null, languages: profile.languages }),
-      canAdd: true,
-      reasonCode: 'tight-trip',
-    });
-  }
-
   const taken = new Set<string>();
   const chosen: GlowUpPlace[] = [];
   const picks = new Map<GlowUpSubtype, Pick>();
@@ -423,15 +422,35 @@ export function buildRoutines(profile: GlowUpProfile, places: GlowUpPlace[], opt
     picks.set(subtype, { subtype, place });
   }
 
-  const skinPicks = SKIN_GROUP.map((s) => picks.get(s)).filter((p): p is Pick => Boolean(p));
-  const stylePicks = STYLE_ORDER.map((s) => picks.get(s)).filter((p): p is Pick => Boolean(p));
-  const recoveryPicks = RECOVERY_ORDER.map((s) => picks.get(s)).filter((p): p is Pick => Boolean(p));
+  // We only hold a pick back when its routine would reach MAX_STOPS_PER_ROUTINE + 1 places; the later ones
+  // in the day's order are offered back ("We left out …  Add"). Anything the traveller added back stays.
+  const capRoutine = (group: Pick[]): Pick[] => {
+    if (group.length <= MAX_STOPS_PER_ROUTINE) return group;
+    const keep = group.filter((p, i) => i < MAX_STOPS_PER_ROUTINE || forced.includes(p.subtype));
+    for (const p of group.filter((g) => !keep.includes(g))) {
+      leftOut.push({
+        subtype: p.subtype,
+        label: labelForSubtype(p.subtype),
+        reason: 'That would make this routine too packed (5+ stops). Still want it?',
+        url: buildGlowUpCreatripUrl(p.subtype, { region: null, languages: profile.languages }),
+        canAdd: true,
+        reasonCode: 'crowded',
+      });
+    }
+    return keep;
+  };
+  const picksOf = (order: GlowUpSubtype[]) => capRoutine(order.map((s) => picks.get(s)).filter((p): p is Pick => Boolean(p)));
+  const skinPicks = picksOf(SKIN_GROUP);
+  const stylePicks = picksOf(STYLE_ORDER);
+  const recoveryPicks = picksOf(RECOVERY_ORDER);
 
-  // "Skin, then exhale": a recovery stop close to the last skin stop rides along with it.
+  // "Skin, then exhale": the recovery stop nearest the last skin stop rides along with it, so a clinic visit
+  // isn't a one-stop routine.
   let attached: Pick | null = null;
   if (skinPicks.length > 0 && recoveryPicks.length > 0) {
-    const last = skinPicks[skinPicks.length - 1];
-    if (kmBetween(point(last.place), point(recoveryPicks[0].place)) <= 3) attached = recoveryPicks[0];
+    const last = point(skinPicks[skinPicks.length - 1].place);
+    const [nearest] = [...recoveryPicks].sort((x, y) => kmBetween(last, point(x.place)) - kmBetween(last, point(y.place)));
+    if (kmBetween(last, point(nearest.place)) <= ATTACH_MAX_KM) attached = nearest;
   }
 
   const routines: GlowUpRoutine[] = [];

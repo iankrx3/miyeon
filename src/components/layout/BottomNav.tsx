@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Compass, MapPin, MessageCircle, User } from 'lucide-react';
+import { House, MapPin, MessageCircle, User } from 'lucide-react';
 import type { UserSession } from '../../types';
 import { useT } from '../../i18n';
 
@@ -10,7 +10,7 @@ interface BottomNavProps {
 }
 
 const tabs = [
-  { to: '/', label: 'Explore', icon: Compass },
+  { to: '/', label: 'Home', icon: House },
   { to: '/map', label: 'Map', icon: MapPin },
   { to: '/community', label: 'Community', icon: MessageCircle },
 ];

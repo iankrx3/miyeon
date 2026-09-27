@@ -3,7 +3,7 @@ import { Info, MapPin, TriangleAlert } from 'lucide-react';
 import type { GlowUpProfile, GlowUpRoutine, GlowUpStop } from '../../types';
 import { guideFor } from '../../data/categoryGuides';
 import { labelForSubtype } from '../../data/glowUpQuiz';
-import { checksFor, formatDuration, translateHint } from '../../services/glowUp/routines';
+import { checksFor, formatDuration, isClinicSubtype, translateHint } from '../../services/glowUp/routines';
 import { useT } from '../../i18n';
 
 interface RoutineCardProps {
@@ -94,7 +94,11 @@ const StopRow: React.FC<{ stop: GlowUpStop; index: number; profile: GlowUpProfil
           </span>
           <span className="mt-0.5 block truncate text-[12.5px] text-miyeon-main/60">
             {product}
-            {place.priceFromUsd != null ? ` · ~$${Math.round(place.priceFromUsd)}` : ''}
+            {isClinicSubtype(stop.subtype)
+              ? ` · ${t('Free booking')}`
+              : place.priceFromUsd != null
+                ? ` · ~$${Math.round(place.priceFromUsd)}`
+                : ''}
           </span>
           {stop.hint && (
             <span className="mt-0.5 flex items-center gap-1 text-[11.5px] text-miyeon-accent-dark">

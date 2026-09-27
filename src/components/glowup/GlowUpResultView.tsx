@@ -6,6 +6,7 @@ import { addBackCategory, remixItinerary } from '../../services/glowUp/generate'
 import { cityLabel } from '../../services/glowUp/routines';
 import { useLang, useT } from '../../i18n';
 import { RoutineMap } from './RoutineMap';
+import { AftercareProducts } from './AftercareProducts';
 import { RoutineCard } from './RoutineCard';
 import { TryAnotherMix } from './TryAnotherMix';
 import { EmailCaptureInline } from './EmailCaptureInline';
@@ -34,6 +35,7 @@ function pickLine(count: number): string {
 
 const REASON_KEY: Record<string, string> = {
   'tight-trip': 'It works best on a day after your styling, and your trip is too tight. Still want it?',
+  crowded: 'That would make this routine too packed (5+ stops). Still want it?',
   'no-venue': "We don't have a {label} we can book yet. Compare options on Creatrip.",
   'no-venue-budget': "We don't have a {label} we can book that fits your budget and language yet. Compare options on Creatrip.",
 };
@@ -144,6 +146,7 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
             {routines.map((r) => (
               <div key={r.id} className="w-full shrink-0 snap-center px-5 pb-1">
                 <RoutineCard routine={r} profile={profile} onOpenStop={openStop} />
+                {r.id === 'rt_skin' && <AftercareProducts />}
               </div>
             ))}
           </div>

@@ -13,7 +13,7 @@ interface PinkTransitionProps {
 
 /** Figma "전환화면" — full-screen pink interstitial between quiz steps that reflects
  * the answers just given. Auto-advances; a tap moves on right away. */
-export const PinkTransition: React.FC<PinkTransitionProps> = ({ title, body, chips, onDone, durationMs = 2200 }) => {
+export const PinkTransition: React.FC<PinkTransitionProps> = ({ title, body, chips, onDone, durationMs = 1800 }) => {
   const t = useT();
   const doneRef = useRef(onDone);
   doneRef.current = onDone;
@@ -38,7 +38,7 @@ export const PinkTransition: React.FC<PinkTransitionProps> = ({ title, body, chi
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
         className="relative mt-[22vh] flex flex-col items-center text-center"
       >
         <span aria-hidden className="mb-3 text-[9px] text-miyeon-accent">

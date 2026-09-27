@@ -33,7 +33,7 @@ export const HomeGlowUpEntries: React.FC<HomeGlowUpEntriesProps> = ({ onStartAna
       <p className="mt-1 font-display text-[21px] font-medium text-miyeon-ink sm:text-2xl">{t('We Make It Yours')}</p>
     </div>
 
-    <div className="mt-4 flex gap-2.5 overflow-x-auto px-5 pb-2 no-scrollbar sm:px-8 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible">
+    <div className="mt-4 flex gap-2.5 overflow-x-auto px-5 pb-2 no-scrollbar">
       {pillars.map((pillar) => (
         <motion.button
           key={pillar.id}
@@ -41,13 +41,13 @@ export const HomeGlowUpEntries: React.FC<HomeGlowUpEntriesProps> = ({ onStartAna
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
           onClick={onStartAnalysis}
-          className="relative h-[150px] w-[200px] shrink-0 overflow-hidden rounded-2xl text-left sm:w-full"
+          className="relative h-[190px] w-[158px] shrink-0 overflow-hidden rounded-2xl text-left"
         >
           <img src={pillar.image} alt="" className="absolute inset-0 h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[55%] via-miyeon-ink/35 to-miyeon-ink/80" />
           <div className="absolute bottom-3.5 left-3.5 right-3.5">
-            <p className="font-display text-[16px] font-bold tracking-[0.5px] text-white">{t(pillar.label)}</p>
-            <p className="mt-[3px] text-[11px] text-white/80">{t(pillar.meta)}</p>
+            <p className="font-display text-[14px] font-bold leading-[21px] tracking-[0.35px] text-white">{t(pillar.label)}</p>
+            <p className="mt-0.5 text-[11px] leading-[16.5px] text-white/80">{t(pillar.meta)}</p>
           </div>
         </motion.button>
       ))}

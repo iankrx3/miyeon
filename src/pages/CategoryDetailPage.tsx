@@ -8,7 +8,7 @@ import { buildGlowUpCreatripUrl, CREATRIP_DISCLOSURE } from '../lib/creatrip';
 import { SwipeRow } from '../components/common/SwipeRow';
 import { BeautyCardSheet } from '../components/glowup/BeautyCardSheet';
 import { getGlowUpPlace } from '../services/places/glowUpPlaces';
-import { checksFor, type CheckItem, shortRegion } from '../services/glowUp/routines';
+import { checksFor, isClinicSubtype, type CheckItem, shortRegion } from '../services/glowUp/routines';
 
 /** Figma "DETAIL — Personal Color": explains a Plan category before sending the
  * user to Creatrip for real options. */
@@ -44,6 +44,11 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
   }, [placeId, place?.id]);
   const profile = plan?.glowUpSnapshot;
 
+  // Route changes keep the previous page's scroll offset; open on the hero, not mid-page.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [subtype, placeId]);
+
   // Secondary CTA: the category's Creatrip list. With a venue chosen we leave out the district
   // filter — a district-filtered list is the one most likely to come back empty.
   const creatripHref = useMemo(() => {
@@ -55,6 +60,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
     });
   }, [guide, fromItinerary, place]);
   const bookHref = place?.bookingUrl ?? null;
+  const freeBooking = guide ? isClinicSubtype(guide.subtype as GlowUpSubtype) : false;
 
   if (!guide) {
     return (
@@ -112,10 +118,17 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
       {place ? (
         <div className="flex items-start px-5 py-5">
           <Stat value={`${place.minutes ?? guide.minutes}`} label="minutes" />
-          <Stat
-            value={place.priceFromUsd != null ? `$${Math.round(place.priceFromUsd)}` : '—'}
-            label={place.priceFromUsd != null ? 'from' : 'price on Creatrip'}
-          />
+          {freeBooking ? (
+            <Stat
+              value="Free"
+              label={place.priceFromUsd != null ? `booking · treatment from $${Math.round(place.priceFromUsd)}` : 'booking on Creatrip'}
+            />
+          ) : (
+            <Stat
+              value={place.priceFromUsd != null ? `$${Math.round(place.priceFromUsd)}` : '—'}
+              label={place.priceFromUsd != null ? 'from' : 'price on Creatrip'}
+            />
+          )}
           <Stat
             value={place.downtime === 'none' ? 'None' : place.downtime === 'mild' ? 'Mild' : place.downtime === 'days' ? 'A few days' : guide.downtime}
             label="downtime"
@@ -125,7 +138,11 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
         <div className="flex items-start px-5 py-5">
           <Stat value={`${guide.minutes}`} label="minutes" />
           <Stat value={guide.downtime} label="downtime" />
-          <Stat value={`~$${guide.fromUsd}`} label="to start" />
+          {freeBooking ? (
+            <Stat value="Free" label="booking on Creatrip" />
+          ) : (
+            <Stat value={`~$${guide.fromUsd}`} label="to start" />
+          )}
         </div>
       )}
 
@@ -257,7 +274,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
           <div className="min-w-0 pr-3">
             <p className="truncate text-[15px] font-bold text-miyeon-ink">{place.name}</p>
             <p className="text-[10.5px] text-miyeon-main/55">
-              {place.priceFromUsd != null ? `$${Math.round(place.priceFromUsd)} · ` : ''}
+              {freeBooking ? 'Free booking · ' : place.priceFromUsd != null ? `$${Math.round(place.priceFromUsd)} · ` : ''}
               {shortRegion(place.region)}
             </p>
           </div>
@@ -274,7 +291,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
         creatripHref && (
         <div className="fixed inset-x-0 bottom-[var(--bottom-nav-h)] z-30 mx-auto flex max-w-[430px] items-center justify-between border-t border-miyeon-line bg-white px-5 py-3.5 shadow-[0_-3px_12px_rgba(0,0,0,0.07)] sm:bottom-0">
           <div>
-            <p className="text-[15px] font-bold text-miyeon-ink">From ~${guide.fromUsd}</p>
+            <p className="text-[15px] font-bold text-miyeon-ink">{freeBooking ? 'Free booking' : `From ~$${guide.fromUsd}`}</p>
             <p className="text-[10.5px] text-miyeon-main/55">{guide.name}</p>
           </div>
           <a

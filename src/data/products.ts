@@ -115,3 +115,38 @@ export const homeProducts: Product[] = [
     oliveYoungUrl: oliveYoungSearch('soothing mask'),
   },
 ];
+
+/** No affiliate tag yet — plain search links. Add `&tag=<id>` here when an Amazon Associates ID exists. */
+export function amazonSearch(query: string): string {
+  return `https://www.amazon.com/s?k=${encodeURIComponent(query)}`;
+}
+
+export interface AftercareProduct {
+  id: string;
+  /** Real product name — it is also the Amazon search query, so the link lands on that exact item. */
+  name: string;
+  tagline: string;
+  amazonUrl: string;
+}
+
+/** "After your clinic" shelf under the Skin Reset routine. */
+export const aftercareProducts: AftercareProduct[] = [
+  {
+    id: 'after-barrier-cream',
+    name: 'Dr.Jart+ Ceramidin Cream',
+    tagline: 'Rebuilds the barrier',
+    amazonUrl: amazonSearch('Dr.Jart+ Ceramidin Cream'),
+  },
+  {
+    id: 'after-gentle-cleanser',
+    name: 'COSRX Low pH Good Morning Gel Cleanser',
+    tagline: 'Gentle, no stripping',
+    amazonUrl: amazonSearch('COSRX Low pH Good Morning Gel Cleanser'),
+  },
+  {
+    id: 'after-spf',
+    name: 'Beauty of Joseon Relief Sun SPF50+',
+    tagline: 'Sun cover while it heals',
+    amazonUrl: amazonSearch('Beauty of Joseon Relief Sun Rice Probiotics SPF50+'),
+  },
+];
