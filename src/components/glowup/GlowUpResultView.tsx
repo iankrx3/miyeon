@@ -42,12 +42,25 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
   const routines = plan?.routines ?? [];
   const [activeId, setActiveId] = useState(routines[0]?.id ?? '');
   const [busy, setBusy] = useState(false);
+  const [panelHeight, setPanelHeight] = useState<number>();
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const panelRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // A rebuilt plan may no longer have the routine that was selected.
   useEffect(() => {
     if (!routines.some((r) => r.id === activeId)) setActiveId(routines[0]?.id ?? '');
   }, [routines, activeId]);
+
+  // The routine panels sit side by side in one flex row so they can swipe horizontally; without
+  // this, the row's height (and the gap before the caption below it) would default to the
+  // tallest panel (Skin Reset + the Amazon shelf) even while a shorter routine is showing.
+  useEffect(() => {
+    const el = panelRefs.current[activeId];
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => setPanelHeight(entry.contentRect.height));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [activeId]);
 
   if (!plan || !profile) return null;
 
@@ -135,9 +148,20 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
             })}
           </div>
 
-          <div ref={scrollerRef} onScroll={onScroll} className="flex snap-x snap-mandatory overflow-x-auto no-scrollbar">
+          <div
+            ref={scrollerRef}
+            onScroll={onScroll}
+            className="flex items-start snap-x snap-mandatory overflow-x-auto no-scrollbar"
+            style={panelHeight ? { height: panelHeight } : undefined}
+          >
             {routines.map((r) => (
-              <div key={r.id} className="w-full shrink-0 snap-center px-5">
+              <div
+                key={r.id}
+                ref={(el) => {
+                  panelRefs.current[r.id] = el;
+                }}
+                className="w-full shrink-0 snap-center px-5"
+              >
                 <RoutineCard routine={r} profile={profile} onOpenStop={openStop} />
                 {r.id === 'rt_skin' && <AftercareProducts />}
               </div>
