@@ -127,6 +127,9 @@ export interface AftercareProduct {
   name: string;
   tagline: string;
   amazonUrl: string;
+  /** Fallback product photo for items without a local asset — a stock placeholder until a real
+   * affiliate image feed exists. */
+  imageUrl?: string;
 }
 
 /** "After your clinic" shelf under the Skin Reset routine. */
@@ -148,5 +151,26 @@ export const aftercareProducts: AftercareProduct[] = [
     name: 'Beauty of Joseon Relief Sun SPF50+',
     tagline: 'Sun cover while it heals',
     amazonUrl: amazonSearch('Beauty of Joseon Relief Sun Rice Probiotics SPF50+'),
+  },
+  {
+    id: 'after-toner',
+    name: 'Innisfree Green Tea Hyaluronic Toner',
+    tagline: 'Hydration boost',
+    amazonUrl: amazonSearch('Innisfree Green Tea Hyaluronic Toner'),
+    imageUrl: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=600',
+  },
+  {
+    id: 'after-serum',
+    name: 'Torriden DIVE-IN Serum',
+    tagline: 'Replenishes moisture',
+    amazonUrl: amazonSearch('Torriden DIVE-IN Low Molecule Hyaluronic Acid Serum'),
+    imageUrl: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=600',
+  },
+  {
+    id: 'after-soothing-toner',
+    name: 'Anua Heartleaf 77% Soothing Toner',
+    tagline: 'Calms redness',
+    amazonUrl: amazonSearch('Anua Heartleaf 77% Soothing Toner'),
+    imageUrl: 'https://images.unsplash.com/photo-1600428853876-fb5a850b444c?q=80&w=600',
   },
 ];

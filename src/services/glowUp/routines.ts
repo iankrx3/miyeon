@@ -1,6 +1,5 @@
 import type {
   GlowUpLanguage,
-  GlowUpLeftOut,
   GlowUpMixPreset,
   GlowUpPlace,
   GlowUpPlanV2,
@@ -9,10 +8,10 @@ import type {
   GlowUpRoutine,
   GlowUpStop,
   GlowUpSubtype,
+  GlowUpTripDays,
 } from '../../types';
 import { guideFor } from '../../data/categoryGuides';
 import { budgetMaxUsdOf, labelForSubtype } from '../../data/glowUpQuiz';
-import { buildGlowUpCreatripUrl } from '../../lib/creatrip';
 import type { TFunction } from '../../i18n';
 import { haversineKm, travelForDistance } from '../itinerary/travel';
 
@@ -29,8 +28,6 @@ export const MIX_LABEL: Record<GlowUpMixPreset, string> = {
 
 export interface RoutineOptions {
   preset?: GlowUpMixPreset | null;
-  /** Categories held back for a reason that the user chose to add back anyway. */
-  forced?: GlowUpSubtype[];
 }
 
 const REGION_CENTRE: Record<Exclude<GlowUpRegion, 'auto'>, [number, number]> = {
@@ -67,8 +64,20 @@ export function isClinicSubtype(subtype: GlowUpSubtype): boolean {
 const STYLE_ORDER: GlowUpSubtype[] = ['personal-color', 'hair', 'makeup', 'permanent-makeup', 'nail', 'photo'];
 const RECOVERY_ORDER: GlowUpSubtype[] = ['sauna', 'scrub', 'massage', 'yoga'];
 
+/** How many places to pick per selected category — scales with trip length so a longer
+ * trip comes back with more recommendations, not the same handful as a 1-day trip. */
+const PICKS_PER_CATEGORY: Record<GlowUpTripDays, number> = {
+  '1': 1,
+  '2-3': 2,
+  '4-7': 3,
+  '7-plus': 4,
+};
+
+/** Every routine that has at least one stop gets topped up to at least this many. */
+const MIN_STOPS_PER_ROUTINE = 2;
+
 /** A routine with more places than this is too much for one outing. */
-const MAX_STOPS_PER_ROUTINE = 4;
+const MAX_STOPS_PER_ROUTINE = 8;
 
 /** How far a recovery stop can be from the last skin stop and still ride along in the same routine. */
 const ATTACH_MAX_KM = 6;
@@ -266,17 +275,13 @@ function reasonsFor(place: GlowUpPlace, subtype: GlowUpSubtype, profile: GlowUpP
   return out;
 }
 
-function pickOne(
+function bestOf(
+  pool: GlowUpPlace[],
   subtype: GlowUpSubtype,
   profile: GlowUpProfile,
-  places: GlowUpPlace[],
-  taken: Set<string>,
   chosen: GlowUpPlace[],
   w: Weights
-): GlowUpPlace | null {
-  let pool = candidatesFor(subtype, profile, places).filter((p) => !taken.has(p.id));
-  if (pool.length === 0) pool = candidatesFor(subtype, profile, places, true).filter((p) => !taken.has(p.id));
-  if (pool.length === 0) return null;
+): GlowUpPlace {
   const pref = preferredRegion(profile);
   const anchor: [number, number] | null = chosen.length
     ? [chosen.reduce((s, p) => s + (p.lat ?? 0), 0) / chosen.length, chosen.reduce((s, p) => s + (p.lng ?? 0), 0) / chosen.length]
@@ -286,6 +291,31 @@ function pickOne(
   return [...pool]
     .map((p) => ({ p, s: scorePlace(p, subtype, profile, anchor, w) }))
     .sort((a, b) => b.s - a.s || a.p.id.localeCompare(b.p.id))[0].p;
+}
+
+/** Picks up to `count` distinct venues for `subtype`, best-scoring first. Each pick is added to
+ * `taken`/`chosen` immediately so later picks in the same call never collide and proximity scoring
+ * keeps updating as stops accumulate. */
+function pickMany(
+  subtype: GlowUpSubtype,
+  profile: GlowUpProfile,
+  places: GlowUpPlace[],
+  taken: Set<string>,
+  chosen: GlowUpPlace[],
+  w: Weights,
+  count: number
+): GlowUpPlace[] {
+  const picked: GlowUpPlace[] = [];
+  for (let i = 0; i < count; i++) {
+    let pool = candidatesFor(subtype, profile, places).filter((p) => !taken.has(p.id));
+    if (pool.length === 0) pool = candidatesFor(subtype, profile, places, true).filter((p) => !taken.has(p.id));
+    if (pool.length === 0) break;
+    const place = bestOf(pool, subtype, profile, chosen, w);
+    taken.add(place.id);
+    chosen.push(place);
+    picked.push(place);
+  }
+  return picked;
 }
 
 interface Pick {
@@ -379,32 +409,17 @@ function makeRoutine(
   };
 }
 
-function leftOutNoVenue(subtype: GlowUpSubtype, profile: GlowUpProfile): GlowUpLeftOut {
-  const label = labelForSubtype(subtype);
-  const constrained = budgetMaxUsdOf(profile) != null ? ' that fits your budget and language' : '';
-  return {
-    subtype,
-    label,
-    reason: `We don't have a ${label.toLowerCase()} we can book${constrained} yet. Compare options on Creatrip.`,
-    // No region filter: a district-filtered list is the one most likely to come back empty.
-    url: buildGlowUpCreatripUrl(subtype, { region: null, languages: profile.languages }),
-    canAdd: false,
-    reasonCode: constrained ? 'no-venue-budget' : 'no-venue',
-  };
-}
-
 /** Builds the routines for a quiz profile from the venue list. */
 export function buildRoutines(profile: GlowUpProfile, places: GlowUpPlace[], opts: RoutineOptions = {}): GlowUpPlanV2 {
   const preset = opts.preset ?? null;
-  const forced = opts.forced ?? [];
   const w = weightsFor(preset);
+  const perCategory = PICKS_PER_CATEGORY[profile.tripDays ?? '2-3'] ?? 2;
 
   const wanted = new Set<GlowUpSubtype>([...profile.fix.items, ...profile.change, ...profile.restore]);
-  const leftOut: GlowUpLeftOut[] = [];
 
   const taken = new Set<string>();
   const chosen: GlowUpPlace[] = [];
-  const picks = new Map<GlowUpSubtype, Pick>();
+  const picks = new Map<GlowUpSubtype, Pick[]>();
 
   const ordered: GlowUpSubtype[] = [
     ...SKIN_GROUP.filter((s) => wanted.has(s)),
@@ -412,34 +427,33 @@ export function buildRoutines(profile: GlowUpProfile, places: GlowUpPlace[], opt
     ...RECOVERY_ORDER.filter((s) => wanted.has(s)),
   ];
   for (const subtype of ordered) {
-    const place = pickOne(subtype, profile, places, taken, chosen, w);
-    if (!place) {
-      leftOut.push(leftOutNoVenue(subtype, profile));
-      continue;
-    }
-    taken.add(place.id);
-    chosen.push(place);
-    picks.set(subtype, { subtype, place });
+    const found = pickMany(subtype, profile, places, taken, chosen, w, perCategory);
+    if (found.length > 0) picks.set(subtype, found.map((place) => ({ subtype, place })));
   }
 
-  // We only hold a pick back when its routine would reach MAX_STOPS_PER_ROUTINE + 1 places; the later ones
-  // in the day's order are offered back ("We left out …  Add"). Anything the traveller added back stays.
-  const capRoutine = (group: Pick[]): Pick[] => {
-    if (group.length <= MAX_STOPS_PER_ROUTINE) return group;
-    const keep = group.filter((p, i) => i < MAX_STOPS_PER_ROUTINE || forced.includes(p.subtype));
-    for (const p of group.filter((g) => !keep.includes(g))) {
-      leftOut.push({
-        subtype: p.subtype,
-        label: labelForSubtype(p.subtype),
-        reason: 'That would make this routine too packed (5+ stops). Still want it?',
-        url: buildGlowUpCreatripUrl(p.subtype, { region: null, languages: profile.languages }),
-        canAdd: true,
-        reasonCode: 'crowded',
-      });
+  // A routine with at least one stop is topped up to MIN_STOPS_PER_ROUTINE by picking more of the
+  // categories the traveller already chose for it — never a category they didn't pick.
+  const topUp = (group: Pick[], order: GlowUpSubtype[]): Pick[] => {
+    const bucket = order.filter((s) => wanted.has(s));
+    let guard = 0;
+    while (group.length > 0 && group.length < MIN_STOPS_PER_ROUTINE && guard < MIN_STOPS_PER_ROUTINE * bucket.length) {
+      guard++;
+      let added = false;
+      for (const subtype of bucket) {
+        const extra = pickMany(subtype, profile, places, taken, chosen, w, 1);
+        if (extra.length > 0) {
+          group.push({ subtype, place: extra[0] });
+          added = true;
+          if (group.length >= MIN_STOPS_PER_ROUTINE) break;
+        }
+      }
+      if (!added) break;
     }
-    return keep;
+    return group;
   };
-  const picksOf = (order: GlowUpSubtype[]) => capRoutine(order.map((s) => picks.get(s)).filter((p): p is Pick => Boolean(p)));
+  const capRoutine = (group: Pick[]): Pick[] => group.slice(0, MAX_STOPS_PER_ROUTINE);
+  const picksOf = (order: GlowUpSubtype[]) =>
+    capRoutine(topUp(order.flatMap((s) => picks.get(s) ?? []), order));
   const skinPicks = picksOf(SKIN_GROUP);
   const stylePicks = picksOf(STYLE_ORDER);
   const recoveryPicks = picksOf(RECOVERY_ORDER);
@@ -461,7 +475,7 @@ export function buildRoutines(profile: GlowUpProfile, places: GlowUpPlace[], opt
   const restPicks = recoveryPicks.filter((p) => p !== attached);
   if (restPicks.length > 0) routines.push(makeRoutine('recovery', restPicks, profile));
 
-  return { routines, leftOut, mix: preset, forced, changeNote: null };
+  return { routines, mix: preset, changeNote: null };
 }
 
 /** One line on what a "See another version" changed, comparing venue picks per category. */

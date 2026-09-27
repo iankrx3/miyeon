@@ -19,17 +19,17 @@ export const AftercareProducts: React.FC = () => {
     <section className="mt-5">
       <p className="font-display text-[10.5px] font-medium tracking-[0.18em] text-miyeon-accent">{t('AFTER THE CLINIC')}</p>
       <p className="mt-1 font-display text-[17px] font-medium text-miyeon-ink">{t('Keep the glow at home')}</p>
-      <div className="mt-3 grid grid-cols-3 gap-2.5">
+      <div className="mt-3 flex gap-2.5 overflow-x-auto no-scrollbar snap-x snap-mandatory">
         {aftercareProducts.map((product) => (
           <a
             key={product.id}
             href={product.amazonUrl}
             target="_blank"
             rel="noreferrer sponsored"
-            className="group block"
+            className="group block w-[108px] shrink-0 snap-start"
           >
             <img
-              src={images[product.id]}
+              src={images[product.id] ?? product.imageUrl}
               alt={product.name}
               className="aspect-square w-full rounded-[12px] object-cover transition-transform group-hover:scale-[1.01]"
             />

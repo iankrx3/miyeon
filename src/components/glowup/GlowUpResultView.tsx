@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { GlowUpMixPreset, GlowUpStop, GlowUpSubtype, Itinerary } from '../../types';
+import type { GlowUpMixPreset, GlowUpStop, Itinerary } from '../../types';
 import { budgetChipLabel, tripDaysLabel } from '../../data/glowUpQuiz';
-import { addBackCategory, remixItinerary } from '../../services/glowUp/generate';
+import { remixItinerary } from '../../services/glowUp/generate';
 import { cityLabel } from '../../services/glowUp/routines';
-import { useLang, useT } from '../../i18n';
+import { useLang } from '../../i18n';
 import { RoutineMap } from './RoutineMap';
 import { AftercareProducts } from './AftercareProducts';
 import { RoutineCard } from './RoutineCard';
@@ -33,17 +33,10 @@ function pickLine(count: number): string {
   return "Pick what fits — it's your trip.";
 }
 
-const REASON_KEY: Record<string, string> = {
-  'tight-trip': 'It works best on a day after your styling, and your trip is too tight. Still want it?',
-  crowded: 'That would make this routine too packed (5+ stops). Still want it?',
-  'no-venue': "We don't have a {label} we can book yet. Compare options on Creatrip.",
-  'no-venue-budget': "We don't have a {label} we can book that fits your budget and language yet. Compare options on Creatrip.",
-};
-
 /** Figma "RESULT v2": map on top, then the Glow-up routines as tabs + swipeable cards. */
 export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, onUpdate, userEmail }) => {
   const navigate = useNavigate();
-  const { lang, t } = useLang();
+  const { t } = useLang();
   const plan = itinerary.glowUpV2;
   const profile = itinerary.glowUpSnapshot;
   const routines = plan?.routines ?? [];
@@ -121,7 +114,7 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
             }}
           />
 
-          <div className="flex gap-2.5 overflow-x-auto px-5 py-4 no-scrollbar" role="tablist" aria-label={t('Routines')}>
+          <div className="flex gap-1.5 px-5 py-4" role="tablist" aria-label={t('Routines')}>
             {routines.map((r) => {
               const active = r.id === activeId;
               return (
@@ -131,12 +124,12 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
                   role="tab"
                   aria-selected={active}
                   onClick={() => selectRoutine(r.id)}
-                  className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-[14px] ${
+                  className={`flex flex-1 min-w-0 items-center justify-center gap-1.5 rounded-full px-2.5 py-2 text-[12.5px] ${
                     active ? 'bg-miyeon-ink font-medium text-white' : 'border border-miyeon-line bg-white text-miyeon-main'
                   }`}
                 >
-                  <span className={`h-2 w-2 rounded-full ${active ? 'bg-miyeon-accent' : 'bg-miyeon-line'}`} />
-                  {t(r.tab)}
+                  <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${active ? 'bg-miyeon-accent' : 'bg-miyeon-line'}`} />
+                  <span className="truncate">{t(r.tab)}</span>
                 </button>
               );
             })}
@@ -144,7 +137,7 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
 
           <div ref={scrollerRef} onScroll={onScroll} className="flex snap-x snap-mandatory overflow-x-auto no-scrollbar">
             {routines.map((r) => (
-              <div key={r.id} className="w-full shrink-0 snap-center px-5 pb-1">
+              <div key={r.id} className="w-full shrink-0 snap-center px-5">
                 <RoutineCard routine={r} profile={profile} onOpenStop={openStop} />
                 {r.id === 'rt_skin' && <AftercareProducts />}
               </div>
@@ -153,7 +146,7 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
 
           {routines.length > 1 && (
             <>
-              <div className="mt-3 flex justify-center gap-1.5" aria-hidden>
+              <div className="mt-1 flex justify-center gap-1.5" aria-hidden>
                 {routines.map((r, i) => (
                   <span
                     key={r.id}
@@ -171,24 +164,6 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
         </div>
       )}
 
-      <div className="mt-5 space-y-3 px-5">
-        {plan.leftOut.map((item) => (
-          <LeftOutCard
-            key={item.subtype}
-            label={t(item.label)}
-            reason={
-              item.reasonCode
-                ? t(REASON_KEY[item.reasonCode], { label: lang === 'en' ? item.label.toLowerCase() : t(item.label) })
-                : item.reason
-            }
-            canAdd={item.canAdd}
-            url={item.url}
-            busy={busy}
-            onAdd={() => run(() => addBackCategory(itinerary, item.subtype as GlowUpSubtype))}
-          />
-        ))}
-      </div>
-
       <div className="mt-5">
         <TryAnotherMix
           key={plan.mix ?? 'none'}
@@ -201,45 +176,5 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
 
       <EmailCaptureInline itinerary={itinerary} defaultEmail={userEmail} />
     </div>
-  );
-};
-
-const LeftOutCard: React.FC<{
-  label: string;
-  reason: string;
-  canAdd: boolean;
-  url: string | null;
-  busy: boolean;
-  onAdd: () => void;
-}> = ({ label, reason, canAdd, url, busy, onAdd }) => {
-  const t = useT();
-  return (
-  <div className="flex items-start justify-between gap-3 rounded-[14px] border border-miyeon-line bg-white px-4 py-3.5 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
-    <div className="min-w-0">
-      <p className="text-[14.5px] font-medium text-miyeon-ink">{t('We left out {label}', { label })}</p>
-      <p className="mt-1 text-[12.5px] leading-snug text-miyeon-main/55">{reason}</p>
-    </div>
-    {canAdd ? (
-      <button
-        type="button"
-        disabled={busy}
-        onClick={onAdd}
-        className="shrink-0 pt-0.5 text-[14px] font-medium text-miyeon-accent-dark disabled:opacity-40"
-      >
-        {t('Add →')}
-      </button>
-    ) : (
-      url && (
-        <a
-          href={url}
-          target="_blank"
-          rel="noreferrer"
-          className="shrink-0 pt-0.5 text-[14px] font-medium text-miyeon-accent-dark"
-        >
-          {t('Browse →')}
-        </a>
-      )
-    )}
-  </div>
   );
 };

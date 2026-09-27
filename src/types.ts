@@ -523,24 +523,9 @@ export interface GlowUpRoutine {
   areaLabel: string;
 }
 
-export interface GlowUpLeftOut {
-  subtype: GlowUpSubtype;
-  label: string;
-  reason: string;
-  /** Filtered Creatrip list for the category — null when nothing to link. */
-  url: string | null;
-  /** True when a venue exists but was held back (e.g. trip too short) — the user can add it back. */
-  canAdd: boolean;
-  /** Which message `reason` is, so the UI can show it in the traveller's language. */
-  reasonCode?: 'tight-trip' | 'no-venue' | 'no-venue-budget' | 'crowded';
-}
-
 export interface GlowUpPlanV2 {
   routines: GlowUpRoutine[];
-  leftOut: GlowUpLeftOut[];
   mix: GlowUpMixPreset | null;
-  /** Categories the user added back after we left them out. */
-  forced: GlowUpSubtype[];
   /** What changed after "See another version". */
   changeNote: string | null;
 }

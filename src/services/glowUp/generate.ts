@@ -1,4 +1,4 @@
-import type { GlowUpMixPreset, GlowUpPlanV2, GlowUpProfile, GlowUpSubtype, Itinerary } from '../../types';
+import type { GlowUpMixPreset, GlowUpPlanV2, GlowUpProfile, Itinerary } from '../../types';
 import { guideFor } from '../../data/categoryGuides';
 import { loadGlowUpPlaces } from '../places/glowUpPlaces';
 import { buildRoutines, cityLabel, describeChange } from './routines';
@@ -50,19 +50,8 @@ export async function remixItinerary(itinerary: Itinerary, preset: GlowUpMixPres
   const before = itinerary.glowUpV2;
   if (!profile || !before) return itinerary;
   const places = await loadGlowUpPlaces();
-  const after = buildRoutines(profile, places, { preset, forced: before.forced });
+  const after = buildRoutines(profile, places, { preset });
   return wrap(profile, { ...after, changeNote: describeChange(before, after) }, itinerary);
-}
-
-/** "We left out X … Add": put a held-back category back into the plan. */
-export async function addBackCategory(itinerary: Itinerary, subtype: GlowUpSubtype): Promise<Itinerary> {
-  const profile = itinerary.glowUpSnapshot;
-  const before = itinerary.glowUpV2;
-  if (!profile || !before) return itinerary;
-  const places = await loadGlowUpPlaces();
-  const forced = [...new Set([...before.forced, subtype])];
-  const after = buildRoutines(profile, places, { preset: before.mix, forced });
-  return wrap(profile, after, itinerary);
 }
 
 /** Plans saved before V2 only hold the quiz answers — rebuild them as routines. */
