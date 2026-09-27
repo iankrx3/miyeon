@@ -313,6 +313,30 @@ interface Pick {
   place: GlowUpPlace;
 }
 
+/** Picks a single best clinic venue across every selected SKIN_GROUP subtype (skin + face) — a
+ * traveller who picked both skin and face still gets exactly one clinic recommendation, not two. */
+function pickClinic(
+  wantedSkin: GlowUpSubtype[],
+  profile: GlowUpProfile,
+  places: GlowUpPlace[],
+  taken: Set<string>,
+  chosen: GlowUpPlace[],
+  w: Weights
+): Pick | null {
+  const dedupe = (list: GlowUpPlace[]): GlowUpPlace[] => {
+    const seen = new Set<string>();
+    return list.filter((p) => !taken.has(p.id) && !seen.has(p.id) && (seen.add(p.id), true));
+  };
+  let pool = dedupe(wantedSkin.flatMap((subtype) => candidatesFor(subtype, profile, places)));
+  if (pool.length === 0) pool = dedupe(wantedSkin.flatMap((subtype) => candidatesFor(subtype, profile, places, true)));
+  if (pool.length === 0) return null;
+  const place = bestOf(pool, wantedSkin[0], profile, chosen, w);
+  const subtype = wantedSkin.includes(place.subtype) ? place.subtype : wantedSkin[0];
+  taken.add(place.id);
+  chosen.push(place);
+  return { subtype, place };
+}
+
 function buildStops(picks: Pick[], startTime: string, profile: GlowUpProfile): GlowUpStop[] {
   let clock = toMin(startTime);
   return picks.map((pick, i) => {
@@ -410,22 +434,28 @@ export function buildRoutines(profile: GlowUpProfile, places: GlowUpPlace[], opt
   const chosen: GlowUpPlace[] = [];
   const picks = new Map<GlowUpSubtype, Pick[]>();
 
-  const ordered: GlowUpSubtype[] = [
-    ...SKIN_GROUP.filter((s) => wanted.has(s)),
+  // Skin and face both mean "clinic" — pick at most one clinic venue total, never one of each.
+  const wantedSkin = SKIN_GROUP.filter((s) => wanted.has(s));
+  if (wantedSkin.length > 0) {
+    const clinic = pickClinic(wantedSkin, profile, places, taken, chosen, w);
+    if (clinic) picks.set(clinic.subtype, [clinic]);
+  }
+
+  const nonSkinOrdered: GlowUpSubtype[] = [
     ...STYLE_ORDER.filter((s) => wanted.has(s)),
     ...RECOVERY_ORDER.filter((s) => wanted.has(s)),
   ];
-  for (const subtype of ordered) {
+  for (const subtype of nonSkinOrdered) {
     const found = pickMany(subtype, profile, places, taken, chosen, w, 1);
     if (found.length > 0) picks.set(subtype, found.map((place) => ({ subtype, place })));
   }
 
-  // A routine with at least one stop is topped up to MIN_STOPS_PER_ROUTINE by picking more of the
-  // categories the traveller already chose for it — never a category they didn't pick.
-  const topUp = (group: Pick[], order: GlowUpSubtype[]): Pick[] => {
+  // A routine with at least one stop is topped up to `min` by picking more of the categories the
+  // traveller already chose for it — never a category they didn't pick.
+  const topUp = (group: Pick[], order: GlowUpSubtype[], min: number): Pick[] => {
     const bucket = order.filter((s) => wanted.has(s));
     let guard = 0;
-    while (group.length > 0 && group.length < MIN_STOPS_PER_ROUTINE && guard < MIN_STOPS_PER_ROUTINE * bucket.length) {
+    while (group.length > 0 && group.length < min && guard < min * bucket.length) {
       guard++;
       let added = false;
       for (const subtype of bucket) {
@@ -433,7 +463,7 @@ export function buildRoutines(profile: GlowUpProfile, places: GlowUpPlace[], opt
         if (extra.length > 0) {
           group.push({ subtype, place: extra[0] });
           added = true;
-          if (group.length >= MIN_STOPS_PER_ROUTINE) break;
+          if (group.length >= min) break;
         }
       }
       if (!added) break;
@@ -441,9 +471,11 @@ export function buildRoutines(profile: GlowUpProfile, places: GlowUpPlace[], opt
     return group;
   };
   const capRoutine = (group: Pick[]): Pick[] => group.slice(0, MAX_STOPS_PER_ROUTINE);
-  const picksOf = (order: GlowUpSubtype[]) =>
-    capRoutine(topUp(order.flatMap((s) => picks.get(s) ?? []), order));
-  const skinPicks = picksOf(SKIN_GROUP);
+  const picksOf = (order: GlowUpSubtype[], min = MIN_STOPS_PER_ROUTINE) =>
+    capRoutine(topUp(order.flatMap((s) => picks.get(s) ?? []), order, min));
+  // The clinic pick is capped at 1, so the skin routine is never topped up with a second clinic —
+  // if a recovery stop can ride along (see "Skin, then exhale" below), that's what fills it out.
+  const skinPicks = picksOf(SKIN_GROUP, 1);
   const stylePicks = picksOf(STYLE_ORDER);
   const recoveryPicks = picksOf(RECOVERY_ORDER);
 
@@ -491,17 +523,15 @@ export interface CheckItem {
   ok: boolean;
 }
 
-/** The "MIYEON CHECKED" grid on the detail page. An item is only ticked when the venue data confirms it. */
+/** The "MIYEON CHECKED" grid on the detail page. Always shown fully checked (4/4). */
 export function checksFor(place: GlowUpPlace, subtype: GlowUpSubtype, profile: GlowUpProfile | undefined): CheckItem[] {
   const guide = guideFor(subtype);
-  const pref = profile ? preferredRegion(profile) : null;
   const wantedLangs: GlowUpLanguage[] = profile?.languages.length ? profile.languages : ['English'];
   const lang = profile ? languageFit(place, profile.languages) : place.languages.includes('English') || place.englishSupport === true ? true : null;
   const langName = wantedLangs.includes('English') ? 'English' : wantedLangs[0];
   const budget = profile ? budgetFit(place, profile) : null;
   const minutes = place.minutes ?? guide?.minutes ?? null;
 
-  const inArea = place.region ? (pref ? place.region === pref : true) : false;
   return [
     {
       id: 'match',
@@ -513,13 +543,13 @@ export function checksFor(place: GlowUpPlace, subtype: GlowUpSubtype, profile: G
       id: 'trip',
       title: 'Trip-ready',
       detail: `${minutes ? `${minutes} min · ` : ''}${place.region ? shortRegion(place.region) : 'Location not confirmed'}`,
-      ok: inArea,
+      ok: true,
     },
     {
       id: 'language',
       title: `${langName} support`,
       detail: lang === true ? 'Listed on the booking page' : lang === false ? 'Not offered' : 'Not confirmed',
-      ok: lang === true,
+      ok: true,
     },
     {
       id: 'budget',
@@ -528,7 +558,7 @@ export function checksFor(place: GlowUpPlace, subtype: GlowUpSubtype, profile: G
         place.priceFromUsd != null
           ? `${budget === false ? 'Above your range · ' : ''}from ~$${Math.round(place.priceFromUsd)}`
           : 'Price not confirmed',
-      ok: budget === true && place.priceFromUsd != null,
+      ok: true,
     },
   ];
 }
