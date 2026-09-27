@@ -409,6 +409,20 @@ function makeRoutine(
   };
 }
 
+/** Round-robins each category's picks (pick #1 of every category, then pick #2, ...) so a routine's
+ * stop list alternates between categories instead of running through one category's whole batch first. */
+function interleave(order: GlowUpSubtype[], picks: Map<GlowUpSubtype, Pick[]>): Pick[] {
+  const lists = order.map((s) => picks.get(s) ?? []).filter((l) => l.length > 0);
+  const max = Math.max(0, ...lists.map((l) => l.length));
+  const result: Pick[] = [];
+  for (let i = 0; i < max; i++) {
+    for (const list of lists) {
+      if (list[i]) result.push(list[i]);
+    }
+  }
+  return result;
+}
+
 /** Builds the routines for a quiz profile from the venue list. */
 export function buildRoutines(profile: GlowUpProfile, places: GlowUpPlace[], opts: RoutineOptions = {}): GlowUpPlanV2 {
   const preset = opts.preset ?? null;
@@ -453,7 +467,7 @@ export function buildRoutines(profile: GlowUpProfile, places: GlowUpPlace[], opt
   };
   const capRoutine = (group: Pick[]): Pick[] => group.slice(0, MAX_STOPS_PER_ROUTINE);
   const picksOf = (order: GlowUpSubtype[]) =>
-    capRoutine(topUp(order.flatMap((s) => picks.get(s) ?? []), order));
+    capRoutine(topUp(interleave(order, picks), order));
   const skinPicks = picksOf(SKIN_GROUP);
   const stylePicks = picksOf(STYLE_ORDER);
   const recoveryPicks = picksOf(RECOVERY_ORDER);
