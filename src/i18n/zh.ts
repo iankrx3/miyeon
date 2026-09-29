@@ -211,6 +211,10 @@ export const zh: Record<string, string> = {
   'Email me my plan': '把方案发到我的邮箱',
   'Sending…': '发送中…',
   'Skip for now': '暂时跳过',
+  'Please enter a valid email address.': '请输入有效的邮箱地址。',
+  'Too many requests — please try again later.': '请求过于频繁，请稍后再试。',
+  "Couldn't send the email. Please try again.": '邮件发送失败，请重试。',
+  "Couldn't send the email. Check your connection and try again.": '邮件发送失败，请检查网络后重试。',
   "Saved — we'll send your plan to {email}.": '已保存 — 我们会把方案发送到 {email}。',
   'No problem — your plan stays on this device. Find it again under My.': '没问题 — 方案会保留在此设备上，可随时在“我的”中查看。',
 

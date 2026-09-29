@@ -69,7 +69,7 @@ export const EmailCaptureInline: React.FC<EmailCaptureInlineProps> = ({ itinerar
           />
           {error && (
             <p role="alert" className="mt-2 text-xs text-miyeon-accent-dark">
-              {error}
+              {t(error)}
             </p>
           )}
           <button

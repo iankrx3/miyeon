@@ -9,10 +9,14 @@ import {
   decodeServiceKey,
 } from '../shared/apiProxy.js';
 import { consumePlacesQuota, searchModeToSku } from '../shared/placesQuota.js';
+import { validatePlanPayload } from '../shared/planEmail.js';
+import { consumePlanEmailQuota, sendPlanEmail } from '../shared/sendPlanEmail.js';
 
 export interface MiyeonApiProxyOptions {
   ktoKey?: string;
   googleKey?: string;
+  resendKey?: string;
+  planEmailFrom?: string;
 }
 
 function json(res: ServerResponse, status: number, body: unknown) {
@@ -117,6 +121,31 @@ async function handlePlacesDetails(url: URL, res: ServerResponse, googleKey: str
   res.end(text);
 }
 
+async function handlePlanEmail(req: IncomingMessage, res: ServerResponse, apiKey: string, from: string) {
+  let body: unknown = null;
+  try {
+    body = JSON.parse((await readBody(req)) || 'null');
+  } catch {
+    // falls through to the validation error
+  }
+  const checked = validatePlanPayload(body);
+  if (!checked.ok) {
+    json(res, 400, { error: checked.error });
+    return;
+  }
+  if (!consumePlanEmailQuota(req.socket.remoteAddress || 'local', checked.payload.email)) {
+    json(res, 429, { error: 'rate_limited' });
+    return;
+  }
+  const result = await sendPlanEmail(checked.payload, { apiKey, from });
+  if (!result.ok) {
+    console.error('[plan-email] Resend failed', result.status, result.error);
+    json(res, 502, { error: 'send_failed' });
+    return;
+  }
+  json(res, 200, { ok: true, id: result.id });
+}
+
 function attach(server: ViteDevServer, options: MiyeonApiProxyOptions) {
   server.middlewares.use(async (req, res, next) => {
     const rawUrl = req.url || '';
@@ -132,6 +161,7 @@ function attach(server: ViteDevServer, options: MiyeonApiProxyOptions) {
         json(res, 200, {
           kto: Boolean(options.ktoKey),
           google: Boolean(options.googleKey),
+          resend: Boolean(options.resendKey),
         });
         return;
       }
@@ -165,6 +195,15 @@ function attach(server: ViteDevServer, options: MiyeonApiProxyOptions) {
           return;
         }
         await handlePlacesDetails(url, res, options.googleKey);
+        return;
+      }
+
+      if (url.pathname === '/api/plan-email' && req.method === 'POST') {
+        if (!options.resendKey || !options.planEmailFrom) {
+          json(res, 503, { error: 'not_configured', service: 'resend' });
+          return;
+        }
+        await handlePlanEmail(req, res, options.resendKey, options.planEmailFrom);
         return;
       }
 

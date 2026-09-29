@@ -6,7 +6,7 @@ export interface BeautyCardRequest {
   /** Copy of the plan at request time — what the email will be built from. */
   itinerary: Itinerary;
   createdAt: string;
-  /** 'pending' until an email service is wired up (see services/beautyCard.ts). */
+  /** 'sent' once /api/plan-email accepted it (see services/beautyCard.ts). */
   status: 'pending' | 'sent';
 }
 
@@ -26,5 +26,14 @@ export function saveBeautyCardRequest(request: BeautyCardRequest) {
     localStorage.setItem(KEY, JSON.stringify([request, ...readBeautyCardRequests()]));
   } catch {
     // private mode / quota — the caller still shows the confirmation for this session
+  }
+}
+
+export function markBeautyCardSent(id: string) {
+  try {
+    const next = readBeautyCardRequests().map((r) => (r.id === id ? { ...r, status: 'sent' as const } : r));
+    localStorage.setItem(KEY, JSON.stringify(next));
+  } catch {
+    // same as above — the email already went out
   }
 }

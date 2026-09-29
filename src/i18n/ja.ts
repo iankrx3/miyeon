@@ -217,6 +217,10 @@ export const ja: Record<string, string> = {
   'Email me my plan': 'プランをメールで受け取る',
   'Sending…': '送信中…',
   'Skip for now': '今はスキップ',
+  'Please enter a valid email address.': '有効なメールアドレスを入力してください。',
+  'Too many requests — please try again later.': 'リクエストが多すぎます。しばらくしてからもう一度お試しください。',
+  "Couldn't send the email. Please try again.": 'メールを送信できませんでした。もう一度お試しください。',
+  "Couldn't send the email. Check your connection and try again.": 'メールを送信できませんでした。接続を確認してもう一度お試しください。',
   "Saved — we'll send your plan to {email}.": '保存しました — {email} にプランをお送りします。',
   'No problem — your plan stays on this device. Find it again under My.': '大丈夫です — プランはこの端末に残ります。「マイ」からいつでも確認できます。',
 

@@ -210,6 +210,10 @@ export const vi: Record<string, string> = {
   'Email me my plan': 'Gửi kế hoạch qua email',
   'Sending…': 'Đang gửi…',
   'Skip for now': 'Bỏ qua lúc này',
+  'Please enter a valid email address.': 'Vui lòng nhập địa chỉ email hợp lệ.',
+  'Too many requests — please try again later.': 'Quá nhiều yêu cầu — vui lòng thử lại sau.',
+  "Couldn't send the email. Please try again.": 'Không gửi được email. Vui lòng thử lại.',
+  "Couldn't send the email. Check your connection and try again.": 'Không gửi được email. Kiểm tra kết nối và thử lại.',
   "Saved — we'll send your plan to {email}.": 'Đã lưu — chúng tôi sẽ gửi kế hoạch đến {email}.',
   'No problem — your plan stays on this device. Find it again under My.': 'Không sao — kế hoạch vẫn nằm trên thiết bị này. Bạn có thể xem lại trong mục Tôi.',
 

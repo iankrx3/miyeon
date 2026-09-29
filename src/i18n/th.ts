@@ -210,6 +210,10 @@ export const th: Record<string, string> = {
   'Email me my plan': 'ส่งแผนให้ฉันทางอีเมล',
   'Sending…': 'กำลังส่ง…',
   'Skip for now': 'ข้ามไปก่อน',
+  'Please enter a valid email address.': 'กรุณากรอกอีเมลที่ถูกต้อง',
+  'Too many requests — please try again later.': 'มีคำขอมากเกินไป กรุณาลองใหม่ภายหลัง',
+  "Couldn't send the email. Please try again.": 'ส่งอีเมลไม่สำเร็จ กรุณาลองอีกครั้ง',
+  "Couldn't send the email. Check your connection and try again.": 'ส่งอีเมลไม่สำเร็จ กรุณาตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง',
   "Saved — we'll send your plan to {email}.": 'บันทึกแล้ว — เราจะส่งแผนไปที่ {email}',
   'No problem — your plan stays on this device. Find it again under My.': 'ไม่เป็นไร — แผนของคุณยังอยู่ในอุปกรณ์นี้ ดูอีกครั้งได้ที่ "ของฉัน"',
 
