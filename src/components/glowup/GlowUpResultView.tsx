@@ -106,7 +106,7 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
   const city = t(cityLabel(profile));
 
   return (
-    <div className="mx-auto max-w-xl pb-6">
+    <div className="mx-auto max-w-xl pb-[calc(var(--bottom-nav-h)+24px)] sm:pb-6">
       <header className="bg-gradient-to-b from-[#f9dde4] to-[#fef6f8] px-5 pb-5 pt-5">
         <p className="text-[11px] font-medium tracking-[0.18em] text-miyeon-accent-dark">✦ {t('YOUR GLOW UP PLAN')}</p>
         <h1 className="mt-2 font-display text-[28px] font-bold leading-[1.2] text-miyeon-ink">
@@ -165,7 +165,7 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
           <div
             ref={scrollerRef}
             onScroll={onScroll}
-            className="flex items-start snap-x snap-mandatory overflow-x-auto no-scrollbar"
+            className="flex items-start snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain no-scrollbar"
             style={panelHeight ? { height: panelHeight } : undefined}
           >
             {groups.map((g) => (
