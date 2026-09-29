@@ -16,10 +16,11 @@ Figma "MIYEON V2 UX"를 구현한 흐름. §4의 옛 `BeautyTripProfile` 온보�
 
 ### 12.2 장소 DB
 
-- 원본: `creatrip_place_DB/{dermatology,hair_salon,k-beauty}/{creatrip spot id}.txt` (Creatrip 페이지 텍스트 덤프, 4개는 빈 파일). 파일명이 Creatrip spot id이고 예약 URL은 `https://creatrip.com/en/spot/{id}` + 제휴 파라미터(`services/places/glowUpPlaces.ts#creatripSpotUrl`).
-- 정리: 폴더별로 `creatrip_place_DB/curated/*.json`(덤프에서 사실만 추출, 없으면 `null`) → `node scripts/build-places.mjs`가 id로 병합, 주소·이름으로 지오코딩(Google Places Text Search, `.env.local`의 `GOOGLE_PLACES_API_KEY`), 이름만으로 잡힌 좌표는 `coordApprox`로 표시 → `src/data/glowUpPlaces.json` + `supabase/seed_places.sql` + `creatrip_place_DB/build-report.md`.
-- Supabase: `supabase/places_schema.sql`(places/place_products, RLS는 select만) 실행 후 `seed_places.sql`. 앱은 Supabase에 행이 있으면 그것을, 없거나 미설정이면 번들 JSON을 쓴다(`loadGlowUpPlaces`).
-- 가격은 덤프가 KRW만 보여준 곳은 1,400원/USD로 환산한 근사값. 덤프 시점 스냅샷이므로 가격·영업시간·예약 가능 여부를 단정하지 않는다.
+- 원본: 루트의 `places.csv` (creatrip_place_DB 스크래퍼 출력, 188곳). `id`가 Creatrip spot id이고 예약 URL은 `https://creatrip.com/en/spot/{id}` + 제휴 파라미터(`services/places/glowUpPlaces.ts#creatripSpotUrl`).
+- 빌드: `node scripts/build-places.mjs [csv 경로]` → CSV 컬럼을 그대로 타입만 바꿔 `supabase/seed_places.sql` + `src/data/glowUpPlaces.json`(같은 행 모양).
+- Supabase: `supabase/places_schema.sql`(`places` 한 테이블, CSV 컬럼 1:1, RLS는 select만) 실행 후 `seed_places.sql`. 앱은 Supabase에 행이 있으면 그것을, 없거나 미설정이면 번들 JSON을 쓴다(`loadGlowUpPlaces`).
+- 행 → `GlowUpPlace` 변환은 `glowUpPlaces.ts#fromRow`: subtype 매핑(dermatology는 `fix_targets`로 skin/face), 지역명 → 앱 지역 8곳(그 외 `null`), Seoul/Busan 이외 도시와 `active = false`는 제외, `languages`는 `listed`만. 옵션별 상품(products)은 CSV에 없어 빈 배열.
+- 스크랩 시점 스냅샷이므로 가격·영업시간·예약 가능 여부를 단정하지 않는다.
 
 ### 12.3 추천 규칙 (`routines.ts`)
 
