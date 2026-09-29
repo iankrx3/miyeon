@@ -84,6 +84,9 @@ const rows = body
     active: r.active.toLowerCase() === 'true',
     missing_fields: list(r.missing_fields),
     url: r.url,
+    // Optional scraper columns (Creatrip "More than N global travelers have booked" + snapshot date).
+    booked_count: int(r.booked_count ?? ''),
+    captured_at: r.captured_at || null,
   }))
   .sort((a, b) => Number(a.id) - Number(b.id));
 

@@ -6,7 +6,8 @@ import { useT } from '../../i18n';
 
 interface RoutineMapProps {
   routines: GlowUpRoutine[];
-  activeId: string;
+  /** Routines of the selected timing chip — drawn on top with their routes. */
+  activeIds: string[];
   onSelectRoutine: (routineId: string) => void;
   onOpenStop?: (routineId: string, stopId: string) => void;
 }
@@ -26,9 +27,9 @@ function pinIcon(label: string, active: boolean): L.DivIcon {
   });
 }
 
-/** Result-page map: one pin per recommended venue, the selected routine highlighted with its
- * route; tapping another routine's pin selects that routine. */
-export const RoutineMap: React.FC<RoutineMapProps> = ({ routines, activeId, onSelectRoutine, onOpenStop }) => {
+/** Result-page map: one pin per recommended venue, the selected timing's routines highlighted with
+ * their routes; tapping another routine's pin selects its timing. */
+export const RoutineMap: React.FC<RoutineMapProps> = ({ routines, activeIds, onSelectRoutine, onOpenStop }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
@@ -58,9 +59,10 @@ export const RoutineMap: React.FC<RoutineMapProps> = ({ routines, activeId, onSe
     const latlng = (s: GlowUpRoutine['stops'][number]) => [s.place.lat as number, s.place.lng as number] as [number, number];
 
     // Inactive routines first so the active one draws on top.
-    const ordered = [...routines].sort((a, b) => Number(a.id === activeId) - Number(b.id === activeId));
+    const isActive = (r: GlowUpRoutine) => activeIds.includes(r.id);
+    const ordered = [...routines].sort((a, b) => Number(isActive(a)) - Number(isActive(b)));
     for (const routine of ordered) {
-      const active = routine.id === activeId;
+      const active = isActive(routine);
       const stops = withCoords(routine);
       if (stops.length > 1 && active) {
         L.polyline(stops.map(latlng), { color: ACTIVE, weight: 3, opacity: 0.85, dashArray: '2 7', lineCap: 'round' }).addTo(layer);
@@ -78,12 +80,12 @@ export const RoutineMap: React.FC<RoutineMapProps> = ({ routines, activeId, onSe
       });
     }
 
-    const active = routines.find((r) => r.id === activeId);
-    const pts = (active ? withCoords(active) : routines.flatMap(withCoords)).map(latlng);
+    const shown = routines.filter(isActive);
+    const pts = (shown.length ? shown : routines).flatMap(withCoords).map(latlng);
     if (pts.length === 1) map.setView(pts[0], 15);
     else if (pts.length > 1) map.fitBounds(L.latLngBounds(pts), { padding: [48, 48], maxZoom: 16 });
     requestAnimationFrame(() => map.invalidateSize());
-  }, [routines, activeId]);
+  }, [routines, activeIds]);
 
   const places = new Set(routines.flatMap((r) => r.stops.map((s) => s.place.id))).size;
 

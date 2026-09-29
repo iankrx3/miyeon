@@ -48,7 +48,9 @@
     "missing_fields": [
       "price_min_usd"
     ],
-    "url": "https://creatrip.com/en/spot/11093"
+    "url": "https://creatrip.com/en/spot/11093",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "11101",
@@ -100,7 +102,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/11101"
+    "url": "https://creatrip.com/en/spot/11101",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "11138",
@@ -172,7 +176,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/11138"
+    "url": "https://creatrip.com/en/spot/11138",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "11281",
@@ -225,7 +231,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/11281"
+    "url": "https://creatrip.com/en/spot/11281",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "11318",
@@ -295,7 +303,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/11318"
+    "url": "https://creatrip.com/en/spot/11318",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "11331",
@@ -340,7 +350,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/11331"
+    "url": "https://creatrip.com/en/spot/11331",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "11352",
@@ -402,7 +414,9 @@
     "review_count": 236,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/11352"
+    "url": "https://creatrip.com/en/spot/11352",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "11446",
@@ -487,7 +501,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/11446"
+    "url": "https://creatrip.com/en/spot/11446",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "11460",
@@ -541,7 +557,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/11460"
+    "url": "https://creatrip.com/en/spot/11460",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "11550",
@@ -589,7 +607,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/11550"
+    "url": "https://creatrip.com/en/spot/11550",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "11721",
@@ -639,7 +659,9 @@
     "review_count": 4,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/11721"
+    "url": "https://creatrip.com/en/spot/11721",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "12899",
@@ -711,7 +733,9 @@
     "review_count": 163,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/12899"
+    "url": "https://creatrip.com/en/spot/12899",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "12944",
@@ -763,7 +787,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/12944"
+    "url": "https://creatrip.com/en/spot/12944",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13071",
@@ -839,7 +865,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13071"
+    "url": "https://creatrip.com/en/spot/13071",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13106",
@@ -889,7 +917,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13106"
+    "url": "https://creatrip.com/en/spot/13106",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13165",
@@ -974,7 +1004,9 @@
     "review_count": 810,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13165"
+    "url": "https://creatrip.com/en/spot/13165",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13200",
@@ -1032,7 +1064,9 @@
     "review_count": 26,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13200"
+    "url": "https://creatrip.com/en/spot/13200",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13214",
@@ -1145,7 +1179,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13214"
+    "url": "https://creatrip.com/en/spot/13214",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13233",
@@ -1194,7 +1230,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13233"
+    "url": "https://creatrip.com/en/spot/13233",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13261",
@@ -1252,7 +1290,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13261"
+    "url": "https://creatrip.com/en/spot/13261",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13315",
@@ -1306,7 +1346,9 @@
     "review_count": 397,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13315"
+    "url": "https://creatrip.com/en/spot/13315",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13319",
@@ -1383,7 +1425,9 @@
     "review_count": 1788,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13319"
+    "url": "https://creatrip.com/en/spot/13319",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13335",
@@ -1501,7 +1545,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13335"
+    "url": "https://creatrip.com/en/spot/13335",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13336",
@@ -1573,7 +1619,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13336"
+    "url": "https://creatrip.com/en/spot/13336",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13374",
@@ -1629,7 +1677,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13374"
+    "url": "https://creatrip.com/en/spot/13374",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13387",
@@ -1685,7 +1735,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13387"
+    "url": "https://creatrip.com/en/spot/13387",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13442",
@@ -1743,7 +1795,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13442"
+    "url": "https://creatrip.com/en/spot/13442",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13444",
@@ -1797,7 +1851,9 @@
     "review_count": 10,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13444"
+    "url": "https://creatrip.com/en/spot/13444",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13466",
@@ -1849,7 +1905,9 @@
     "missing_fields": [
       "price_min_usd"
     ],
-    "url": "https://creatrip.com/en/spot/13466"
+    "url": "https://creatrip.com/en/spot/13466",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13482",
@@ -1913,7 +1971,9 @@
     "review_count": 103,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13482"
+    "url": "https://creatrip.com/en/spot/13482",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13484",
@@ -1971,7 +2031,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13484"
+    "url": "https://creatrip.com/en/spot/13484",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13489",
@@ -2028,7 +2090,9 @@
     "review_count": 43,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13489"
+    "url": "https://creatrip.com/en/spot/13489",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13493",
@@ -2098,7 +2162,9 @@
     "review_count": 3271,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13493"
+    "url": "https://creatrip.com/en/spot/13493",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13512",
@@ -2150,7 +2216,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13512"
+    "url": "https://creatrip.com/en/spot/13512",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13539",
@@ -2204,7 +2272,9 @@
     "review_count": 11,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13539"
+    "url": "https://creatrip.com/en/spot/13539",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13558",
@@ -2254,7 +2324,9 @@
     "review_count": 440,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13558"
+    "url": "https://creatrip.com/en/spot/13558",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13570",
@@ -2310,7 +2382,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13570"
+    "url": "https://creatrip.com/en/spot/13570",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13573",
@@ -2367,7 +2441,9 @@
       "duration_min",
       "procedures"
     ],
-    "url": "https://creatrip.com/en/spot/13573"
+    "url": "https://creatrip.com/en/spot/13573",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13574",
@@ -2423,7 +2499,9 @@
     "review_count": 249,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13574"
+    "url": "https://creatrip.com/en/spot/13574",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13581",
@@ -2477,7 +2555,9 @@
     "review_count": 164,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13581"
+    "url": "https://creatrip.com/en/spot/13581",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13597",
@@ -2544,7 +2624,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13597"
+    "url": "https://creatrip.com/en/spot/13597",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13632",
@@ -2607,7 +2689,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13632"
+    "url": "https://creatrip.com/en/spot/13632",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13636",
@@ -2663,7 +2747,9 @@
     "review_count": 98,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13636"
+    "url": "https://creatrip.com/en/spot/13636",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13643",
@@ -2711,7 +2797,9 @@
     "review_count": 80,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13643"
+    "url": "https://creatrip.com/en/spot/13643",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13645",
@@ -2780,7 +2868,9 @@
     "review_count": 166,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13645"
+    "url": "https://creatrip.com/en/spot/13645",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13648",
@@ -2829,7 +2919,9 @@
       "region",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13648"
+    "url": "https://creatrip.com/en/spot/13648",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13654",
@@ -2889,7 +2981,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13654"
+    "url": "https://creatrip.com/en/spot/13654",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13657",
@@ -2953,7 +3047,9 @@
     "review_count": 33,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13657"
+    "url": "https://creatrip.com/en/spot/13657",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13681",
@@ -3023,7 +3119,9 @@
     "review_count": 428,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13681"
+    "url": "https://creatrip.com/en/spot/13681",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13767",
@@ -3090,7 +3188,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13767"
+    "url": "https://creatrip.com/en/spot/13767",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13772",
@@ -3139,7 +3239,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13772"
+    "url": "https://creatrip.com/en/spot/13772",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13789",
@@ -3214,7 +3316,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13789"
+    "url": "https://creatrip.com/en/spot/13789",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13790",
@@ -3285,7 +3389,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13790"
+    "url": "https://creatrip.com/en/spot/13790",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13806",
@@ -3335,7 +3441,9 @@
     "review_count": 90,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13806"
+    "url": "https://creatrip.com/en/spot/13806",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13808",
@@ -3387,7 +3495,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/13808"
+    "url": "https://creatrip.com/en/spot/13808",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13814",
@@ -3476,7 +3586,9 @@
     "review_count": 283,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13814"
+    "url": "https://creatrip.com/en/spot/13814",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13856",
@@ -3552,7 +3664,9 @@
     "review_count": 27,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13856"
+    "url": "https://creatrip.com/en/spot/13856",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13918",
@@ -3608,7 +3722,9 @@
     "review_count": 338,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13918"
+    "url": "https://creatrip.com/en/spot/13918",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13940",
@@ -3658,7 +3774,9 @@
     "missing_fields": [
       "price_min_usd"
     ],
-    "url": "https://creatrip.com/en/spot/13940"
+    "url": "https://creatrip.com/en/spot/13940",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13947",
@@ -3708,7 +3826,9 @@
     "missing_fields": [
       "price_min_usd"
     ],
-    "url": "https://creatrip.com/en/spot/13947"
+    "url": "https://creatrip.com/en/spot/13947",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "13957",
@@ -3758,7 +3878,9 @@
     "review_count": 45,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/13957"
+    "url": "https://creatrip.com/en/spot/13957",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14146",
@@ -3830,7 +3952,9 @@
     "review_count": 11,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14146"
+    "url": "https://creatrip.com/en/spot/14146",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14147",
@@ -3896,7 +4020,9 @@
     "review_count": 220,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14147"
+    "url": "https://creatrip.com/en/spot/14147",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14157",
@@ -3944,7 +4070,9 @@
     "review_count": 236,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14157"
+    "url": "https://creatrip.com/en/spot/14157",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14164",
@@ -4002,7 +4130,9 @@
     "review_count": 107,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14164"
+    "url": "https://creatrip.com/en/spot/14164",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14178",
@@ -4057,7 +4187,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14178"
+    "url": "https://creatrip.com/en/spot/14178",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14181",
@@ -4118,7 +4250,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14181"
+    "url": "https://creatrip.com/en/spot/14181",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14188",
@@ -4168,7 +4302,9 @@
     "review_count": 21,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14188"
+    "url": "https://creatrip.com/en/spot/14188",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14201",
@@ -4280,7 +4416,9 @@
     "review_count": 1152,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14201"
+    "url": "https://creatrip.com/en/spot/14201",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14246",
@@ -4334,7 +4472,9 @@
     "review_count": 989,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14246"
+    "url": "https://creatrip.com/en/spot/14246",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14272",
@@ -4382,7 +4522,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14272"
+    "url": "https://creatrip.com/en/spot/14272",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14275",
@@ -4505,7 +4647,9 @@
     "review_count": 419,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14275"
+    "url": "https://creatrip.com/en/spot/14275",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14276",
@@ -4572,7 +4716,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14276"
+    "url": "https://creatrip.com/en/spot/14276",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14280",
@@ -4679,7 +4825,9 @@
     "review_count": 11,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14280"
+    "url": "https://creatrip.com/en/spot/14280",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14282",
@@ -4737,7 +4885,9 @@
     "review_count": 41,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14282"
+    "url": "https://creatrip.com/en/spot/14282",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14310",
@@ -4797,7 +4947,9 @@
     "review_count": 29,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14310"
+    "url": "https://creatrip.com/en/spot/14310",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14385",
@@ -4857,7 +5009,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14385"
+    "url": "https://creatrip.com/en/spot/14385",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14408",
@@ -4915,7 +5069,9 @@
     "review_count": 27,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14408"
+    "url": "https://creatrip.com/en/spot/14408",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14409",
@@ -4981,7 +5137,9 @@
     "review_count": 47,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14409"
+    "url": "https://creatrip.com/en/spot/14409",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14413",
@@ -5039,7 +5197,9 @@
     "review_count": 106,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14413"
+    "url": "https://creatrip.com/en/spot/14413",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14426",
@@ -5088,7 +5248,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14426"
+    "url": "https://creatrip.com/en/spot/14426",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14475",
@@ -5144,7 +5306,9 @@
     "review_count": 34,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14475"
+    "url": "https://creatrip.com/en/spot/14475",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14481",
@@ -5198,7 +5362,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14481"
+    "url": "https://creatrip.com/en/spot/14481",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14511",
@@ -5260,7 +5426,9 @@
     "review_count": 258,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14511"
+    "url": "https://creatrip.com/en/spot/14511",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14515",
@@ -5322,7 +5490,9 @@
     "review_count": 51,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14515"
+    "url": "https://creatrip.com/en/spot/14515",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14538",
@@ -5388,7 +5558,9 @@
     "review_count": 159,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14538"
+    "url": "https://creatrip.com/en/spot/14538",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14557",
@@ -5442,7 +5614,9 @@
     "review_count": 37,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14557"
+    "url": "https://creatrip.com/en/spot/14557",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14561",
@@ -5511,7 +5685,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14561"
+    "url": "https://creatrip.com/en/spot/14561",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14589",
@@ -5574,7 +5750,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14589"
+    "url": "https://creatrip.com/en/spot/14589",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14592",
@@ -5742,7 +5920,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14592"
+    "url": "https://creatrip.com/en/spot/14592",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14593",
@@ -5898,7 +6078,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14593"
+    "url": "https://creatrip.com/en/spot/14593",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14621",
@@ -5946,7 +6128,9 @@
     "review_count": 7,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14621"
+    "url": "https://creatrip.com/en/spot/14621",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14622",
@@ -6037,7 +6221,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14622"
+    "url": "https://creatrip.com/en/spot/14622",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14639",
@@ -6115,7 +6301,9 @@
     "review_count": 108,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14639"
+    "url": "https://creatrip.com/en/spot/14639",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14674",
@@ -6177,7 +6365,9 @@
     "review_count": 105,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14674"
+    "url": "https://creatrip.com/en/spot/14674",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14675",
@@ -6223,7 +6413,9 @@
     "review_count": 12,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14675"
+    "url": "https://creatrip.com/en/spot/14675",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14683",
@@ -6279,7 +6471,9 @@
     "review_count": 15,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14683"
+    "url": "https://creatrip.com/en/spot/14683",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14686",
@@ -6331,7 +6525,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14686"
+    "url": "https://creatrip.com/en/spot/14686",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14687",
@@ -6387,7 +6583,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14687"
+    "url": "https://creatrip.com/en/spot/14687",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14695",
@@ -6447,7 +6645,9 @@
     "review_count": 11,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14695"
+    "url": "https://creatrip.com/en/spot/14695",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14696",
@@ -6513,7 +6713,9 @@
     "review_count": 26,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14696"
+    "url": "https://creatrip.com/en/spot/14696",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14710",
@@ -6561,7 +6763,9 @@
     "review_count": 9,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14710"
+    "url": "https://creatrip.com/en/spot/14710",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14715",
@@ -6617,7 +6821,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14715"
+    "url": "https://creatrip.com/en/spot/14715",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14720",
@@ -6674,7 +6880,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14720"
+    "url": "https://creatrip.com/en/spot/14720",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14725",
@@ -6836,7 +7044,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14725"
+    "url": "https://creatrip.com/en/spot/14725",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14739",
@@ -6886,7 +7096,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14739"
+    "url": "https://creatrip.com/en/spot/14739",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14744",
@@ -6938,7 +7150,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14744"
+    "url": "https://creatrip.com/en/spot/14744",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14746",
@@ -6986,7 +7200,9 @@
     "review_count": 12,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14746"
+    "url": "https://creatrip.com/en/spot/14746",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14751",
@@ -7066,7 +7282,9 @@
     "review_count": 120,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14751"
+    "url": "https://creatrip.com/en/spot/14751",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14797",
@@ -7118,7 +7336,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14797"
+    "url": "https://creatrip.com/en/spot/14797",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14798",
@@ -7170,7 +7390,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14798"
+    "url": "https://creatrip.com/en/spot/14798",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14805",
@@ -7222,7 +7444,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14805"
+    "url": "https://creatrip.com/en/spot/14805",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14812",
@@ -7270,7 +7494,9 @@
     "review_count": 15,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14812"
+    "url": "https://creatrip.com/en/spot/14812",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14814",
@@ -7322,7 +7548,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14814"
+    "url": "https://creatrip.com/en/spot/14814",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14817",
@@ -7376,7 +7604,9 @@
     "review_count": 9,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14817"
+    "url": "https://creatrip.com/en/spot/14817",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14819",
@@ -7487,7 +7717,9 @@
     "review_count": 1251,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14819"
+    "url": "https://creatrip.com/en/spot/14819",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14821",
@@ -7549,7 +7781,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14821"
+    "url": "https://creatrip.com/en/spot/14821",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14822",
@@ -7615,7 +7849,9 @@
     "review_count": 36,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14822"
+    "url": "https://creatrip.com/en/spot/14822",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14823",
@@ -7667,7 +7903,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14823"
+    "url": "https://creatrip.com/en/spot/14823",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14830",
@@ -7729,7 +7967,9 @@
     "review_count": 120,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14830"
+    "url": "https://creatrip.com/en/spot/14830",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14835",
@@ -7781,7 +8021,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14835"
+    "url": "https://creatrip.com/en/spot/14835",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14841",
@@ -7827,7 +8069,9 @@
     "review_count": 16,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14841"
+    "url": "https://creatrip.com/en/spot/14841",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14844",
@@ -7885,7 +8129,9 @@
     "missing_fields": [
       "price_min_usd"
     ],
-    "url": "https://creatrip.com/en/spot/14844"
+    "url": "https://creatrip.com/en/spot/14844",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14852",
@@ -7939,7 +8185,9 @@
     "review_count": 764,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14852"
+    "url": "https://creatrip.com/en/spot/14852",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14869",
@@ -7997,7 +8245,9 @@
     "review_count": 50,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14869"
+    "url": "https://creatrip.com/en/spot/14869",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14874",
@@ -8061,7 +8311,9 @@
     "review_count": 136,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14874"
+    "url": "https://creatrip.com/en/spot/14874",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14876",
@@ -8134,7 +8386,9 @@
     "review_count": 114,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14876"
+    "url": "https://creatrip.com/en/spot/14876",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14884",
@@ -8209,7 +8463,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14884"
+    "url": "https://creatrip.com/en/spot/14884",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14910",
@@ -8273,7 +8529,9 @@
     "review_count": 45,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14910"
+    "url": "https://creatrip.com/en/spot/14910",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14914",
@@ -8327,7 +8585,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14914"
+    "url": "https://creatrip.com/en/spot/14914",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14915",
@@ -8417,7 +8677,9 @@
     "review_count": 10,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14915"
+    "url": "https://creatrip.com/en/spot/14915",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14926",
@@ -8491,7 +8753,9 @@
     "review_count": 56,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14926"
+    "url": "https://creatrip.com/en/spot/14926",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14927",
@@ -8564,7 +8828,9 @@
     "review_count": 10,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14927"
+    "url": "https://creatrip.com/en/spot/14927",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14955",
@@ -8638,7 +8904,9 @@
     "review_count": 640,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14955"
+    "url": "https://creatrip.com/en/spot/14955",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14961",
@@ -8706,7 +8974,9 @@
     "review_count": 903,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14961"
+    "url": "https://creatrip.com/en/spot/14961",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14968",
@@ -8752,7 +9022,9 @@
     "review_count": 366,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/14968"
+    "url": "https://creatrip.com/en/spot/14968",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14969",
@@ -8818,7 +9090,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14969"
+    "url": "https://creatrip.com/en/spot/14969",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "14983",
@@ -8866,7 +9140,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/14983"
+    "url": "https://creatrip.com/en/spot/14983",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15003",
@@ -8955,7 +9231,9 @@
     "review_count": 536,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15003"
+    "url": "https://creatrip.com/en/spot/15003",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15009",
@@ -9017,7 +9295,9 @@
     "review_count": 201,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15009"
+    "url": "https://creatrip.com/en/spot/15009",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15023",
@@ -9069,7 +9349,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15023"
+    "url": "https://creatrip.com/en/spot/15023",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15035",
@@ -9131,7 +9413,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15035"
+    "url": "https://creatrip.com/en/spot/15035",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15053",
@@ -9185,7 +9469,9 @@
     "review_count": 333,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15053"
+    "url": "https://creatrip.com/en/spot/15053",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15076",
@@ -9279,7 +9565,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15076"
+    "url": "https://creatrip.com/en/spot/15076",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15112",
@@ -9366,7 +9654,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15112"
+    "url": "https://creatrip.com/en/spot/15112",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15130",
@@ -9448,7 +9738,9 @@
     "review_count": 187,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15130"
+    "url": "https://creatrip.com/en/spot/15130",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15135",
@@ -9496,7 +9788,9 @@
     "review_count": 18,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15135"
+    "url": "https://creatrip.com/en/spot/15135",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15170",
@@ -9544,7 +9838,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15170"
+    "url": "https://creatrip.com/en/spot/15170",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15186",
@@ -9598,7 +9894,9 @@
     "review_count": 140,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15186"
+    "url": "https://creatrip.com/en/spot/15186",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15196",
@@ -9710,7 +10008,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15196"
+    "url": "https://creatrip.com/en/spot/15196",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15197",
@@ -9816,7 +10116,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15197"
+    "url": "https://creatrip.com/en/spot/15197",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15220",
@@ -9870,7 +10172,9 @@
     "review_count": 19,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15220"
+    "url": "https://creatrip.com/en/spot/15220",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15224",
@@ -9934,7 +10238,9 @@
     "review_count": 126,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15224"
+    "url": "https://creatrip.com/en/spot/15224",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15239",
@@ -9986,7 +10292,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15239"
+    "url": "https://creatrip.com/en/spot/15239",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15245",
@@ -10036,7 +10344,9 @@
     "missing_fields": [
       "price_min_usd"
     ],
-    "url": "https://creatrip.com/en/spot/15245"
+    "url": "https://creatrip.com/en/spot/15245",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15274",
@@ -10136,7 +10446,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15274"
+    "url": "https://creatrip.com/en/spot/15274",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15300",
@@ -10202,7 +10514,9 @@
     "review_count": 6,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15300"
+    "url": "https://creatrip.com/en/spot/15300",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15314",
@@ -10259,7 +10573,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15314"
+    "url": "https://creatrip.com/en/spot/15314",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15357",
@@ -10375,7 +10691,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15357"
+    "url": "https://creatrip.com/en/spot/15357",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15376",
@@ -10453,7 +10771,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15376"
+    "url": "https://creatrip.com/en/spot/15376",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15377",
@@ -10515,7 +10835,9 @@
     "review_count": 306,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15377"
+    "url": "https://creatrip.com/en/spot/15377",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15383",
@@ -10598,7 +10920,9 @@
     "review_count": 49,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15383"
+    "url": "https://creatrip.com/en/spot/15383",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15413",
@@ -10658,7 +10982,9 @@
     "review_count": 194,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15413"
+    "url": "https://creatrip.com/en/spot/15413",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15420",
@@ -10714,7 +11040,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15420"
+    "url": "https://creatrip.com/en/spot/15420",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15465",
@@ -10772,7 +11100,9 @@
     "review_count": 14,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15465"
+    "url": "https://creatrip.com/en/spot/15465",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15473",
@@ -10826,7 +11156,9 @@
     "review_count": 3,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15473"
+    "url": "https://creatrip.com/en/spot/15473",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15479",
@@ -10894,7 +11226,9 @@
     "missing_fields": [
       "price_min_usd"
     ],
-    "url": "https://creatrip.com/en/spot/15479"
+    "url": "https://creatrip.com/en/spot/15479",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15480",
@@ -10940,7 +11274,9 @@
     "review_count": 15,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15480"
+    "url": "https://creatrip.com/en/spot/15480",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15483",
@@ -10986,7 +11322,9 @@
     "review_count": 18,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15483"
+    "url": "https://creatrip.com/en/spot/15483",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15501",
@@ -11035,7 +11373,9 @@
       "duration_min",
       "rating"
     ],
-    "url": "https://creatrip.com/en/spot/15501"
+    "url": "https://creatrip.com/en/spot/15501",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15502",
@@ -11124,7 +11464,9 @@
     "review_count": 62,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15502"
+    "url": "https://creatrip.com/en/spot/15502",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15529",
@@ -11186,7 +11528,9 @@
     "review_count": 162,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15529"
+    "url": "https://creatrip.com/en/spot/15529",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15539",
@@ -11235,7 +11579,9 @@
       "duration_min",
       "rating"
     ],
-    "url": "https://creatrip.com/en/spot/15539"
+    "url": "https://creatrip.com/en/spot/15539",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15542",
@@ -11303,7 +11649,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15542"
+    "url": "https://creatrip.com/en/spot/15542",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15554",
@@ -11351,7 +11699,9 @@
     "missing_fields": [
       "rating"
     ],
-    "url": "https://creatrip.com/en/spot/15554"
+    "url": "https://creatrip.com/en/spot/15554",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15557",
@@ -11400,7 +11750,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15557"
+    "url": "https://creatrip.com/en/spot/15557",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15558",
@@ -11452,7 +11804,9 @@
     "review_count": 15,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15558"
+    "url": "https://creatrip.com/en/spot/15558",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15615",
@@ -11521,7 +11875,9 @@
       "price_min_usd",
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15615"
+    "url": "https://creatrip.com/en/spot/15615",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15617",
@@ -11573,7 +11929,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15617"
+    "url": "https://creatrip.com/en/spot/15617",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15618",
@@ -11682,7 +12040,9 @@
     "missing_fields": [
       "duration_min"
     ],
-    "url": "https://creatrip.com/en/spot/15618"
+    "url": "https://creatrip.com/en/spot/15618",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15657",
@@ -11740,7 +12100,9 @@
     "review_count": 50,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15657"
+    "url": "https://creatrip.com/en/spot/15657",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15724",
@@ -11786,7 +12148,9 @@
     "review_count": 5,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15724"
+    "url": "https://creatrip.com/en/spot/15724",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15729",
@@ -11860,7 +12224,9 @@
     "review_count": 260,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15729"
+    "url": "https://creatrip.com/en/spot/15729",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15750",
@@ -11916,7 +12282,9 @@
     "review_count": 46,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15750"
+    "url": "https://creatrip.com/en/spot/15750",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15761",
@@ -11988,7 +12356,9 @@
     "review_count": 1,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15761"
+    "url": "https://creatrip.com/en/spot/15761",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15781",
@@ -12044,7 +12414,9 @@
     "review_count": 1,
     "active": true,
     "missing_fields": [],
-    "url": "https://creatrip.com/en/spot/15781"
+    "url": "https://creatrip.com/en/spot/15781",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15793",
@@ -12096,7 +12468,9 @@
     "missing_fields": [
       "rating"
     ],
-    "url": "https://creatrip.com/en/spot/15793"
+    "url": "https://creatrip.com/en/spot/15793",
+    "booked_count": null,
+    "captured_at": null
   },
   {
     "id": "15816",
@@ -12147,6 +12521,8 @@
       "duration_min",
       "rating"
     ],
-    "url": "https://creatrip.com/en/spot/15816"
+    "url": "https://creatrip.com/en/spot/15816",
+    "booked_count": null,
+    "captured_at": null
   }
 ]

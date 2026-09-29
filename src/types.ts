@@ -489,6 +489,14 @@ export interface GlowUpPlace {
   highlights: string[];
   /** Direct Creatrip product page (with affiliate params). */
   bookingUrl: string;
+  /** How booking works on Creatrip: free reservation, a deposit, or paid in full. */
+  priceType: 'free' | 'deposit' | 'full';
+  /** "More than N Global travelers have booked this place" — a snapshot, see capturedAt. */
+  bookedCount: number | null;
+  /** ISO date the rating / reviews / booked count were captured; null = unknown. */
+  capturedAt: string | null;
+  /** Fields the scraper couldn't fill for this venue. */
+  missingFields: string[];
 }
 
 export type GlowUpMixPreset = 'less-downtime' | 'closer' | 'lower-budget' | 'iconic';
@@ -499,32 +507,51 @@ export interface GlowUpStop {
   place: GlowUpPlace;
   subtype: GlowUpSubtype;
   startTime: string;
-  /** One line under the stop: a caution, or why it was picked ("Includes styling, not just drapin"). */
+  /** One line under the stop: the routine's ordering tip ("Bare face — this goes first"), or a caution. */
   hint: string | null;
   hintTone: 'info' | 'warn';
+  /** The routine's top-scoring venue (shown as "BEST"). */
+  best: boolean;
   /** Getting here from the previous stop in the routine. */
   travel: { mode: TravelMode; minutes: number } | null;
   /** Why this venue was picked over the other candidates (shown on the detail page). */
   reasons: string[];
 }
 
+/** The glow-up order every routine belongs to: base → what suits you → finish → recover. */
+export type GlowUpStage = 'foundation' | 'identity' | 'finish' | 'recover';
+
+/** When in the trip a routine fits — the result page's selector chips. */
+export type GlowUpTiming = 'first' | 'mid' | 'last' | 'night';
+
 export interface GlowUpRoutine {
   id: string;
-  /** Tab label: "Skin Reset". */
-  tab: string;
-  /** Card headline: "Skin, Then Exhale". */
+  /** Routine template id (data/glowUpRoutines.ts). */
+  templateId: string;
+  stage: GlowUpStage;
+  timing: GlowUpTiming;
+  /** Card headline: "Holy Grail Base". */
   title: string;
+  /** One-line promise: "The K-idol secret? Your colors come first." */
+  promise: string;
   subtypes: GlowUpSubtype[];
   stops: GlowUpStop[];
   totalMinutes: number;
-  /** "Best early in your trip". */
-  bestTiming: string;
-  downtimeNote: string;
+  /** "Morning" / "Afternoon" / "Evening". */
+  timeOfDay: string;
+  /** Short context line: "No makeup needed". */
+  note: string;
+  /** Why this routine sits where it does, when that isn't obvious ("Last on purpose — …"). */
+  timingNote: string | null;
   areaLabel: string;
 }
 
 export interface GlowUpPlanV2 {
+  /** 3 = stage/template routines. Older saved plans are rebuilt when opened. */
+  version?: number;
   routines: GlowUpRoutine[];
+  /** No area picked: the area the plan was based in ("We based you in Gangnam — …"). */
+  anchorRegion?: GlowUpRegion | null;
   mix: GlowUpMixPreset | null;
   /** What changed after "See another version". */
   changeNote: string | null;

@@ -37,6 +37,8 @@ create table public.places (
   active boolean not null default true,
   missing_fields text[] not null default '{}',
   url text not null,
+  booked_count integer,                        -- "More than N Global travelers have booked" (snapshot)
+  captured_at date,                            -- when rating / reviews / booked_count were captured
   imported_at timestamptz not null default now()
 );
 

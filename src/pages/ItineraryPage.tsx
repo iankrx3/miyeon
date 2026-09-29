@@ -8,6 +8,7 @@ import { ItineraryRouteMap } from '../components/itinerary/ItineraryRouteMap';
 import { ItineraryTimeline } from '../components/itinerary/ItineraryTimeline';
 import { GlowUpResultView } from '../components/glowup/GlowUpResultView';
 import { upgradeLegacyItinerary } from '../services/glowUp/generate';
+import { PLAN_VERSION } from '../services/glowUp/routines';
 import { useSavedItineraries } from '../hooks/useSavedItineraries';
 import { useSpotsCatalog } from '../hooks/useSpotsCatalog';
 import { getStoredItinerary, isCategoryPlan, upsertItinerary } from '../lib/localItineraryStore';
@@ -38,8 +39,13 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
 
   const day = itinerary?.days.find((d) => d.dayIndex === dayIndex) ?? itinerary?.days[0];
 
-  // Glow Up plans saved before V2 only hold the quiz answers: rebuild them as routines once.
-  const needsUpgrade = Boolean(itinerary && !itinerary.glowUpV2 && isCategoryPlan(itinerary));
+  // Glow Up plans saved before V2 only hold the quiz answers, and V2 plans saved before the stage
+  // templates (PLAN_VERSION) have the old routine shape: rebuild either once from the quiz answers.
+  const needsUpgrade = Boolean(
+    itinerary &&
+      itinerary.glowUpSnapshot &&
+      (itinerary.glowUpV2 ? itinerary.glowUpV2.version !== PLAN_VERSION : isCategoryPlan(itinerary))
+  );
   useEffect(() => {
     if (!itinerary || !needsUpgrade) return;
     let cancelled = false;
@@ -69,7 +75,7 @@ export default function ItineraryPage({ session, onSignIn }: ItineraryPageProps)
     return day.blocks.map((b) => (b.spotId ? getSpot(b.spotId) : undefined)).filter((s): s is Spot => Boolean(s));
   }, [day, spotsReady]);
 
-  if (itinerary?.glowUpV2) {
+  if (itinerary?.glowUpV2 && !needsUpgrade) {
     return (
       <GlowUpResultView
         itinerary={itinerary}

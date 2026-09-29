@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { GlowUpMixPreset, GlowUpStop, Itinerary } from '../../types';
+import type { GlowUpMixPreset, GlowUpStop, GlowUpTiming, Itinerary } from '../../types';
 import { budgetChipLabel, tripDaysLabel } from '../../data/glowUpQuiz';
 import { remixItinerary } from '../../services/glowUp/generate';
-import { cityLabel } from '../../services/glowUp/routines';
+import { TIMING_LABEL } from '../../data/glowUpRoutines';
+import { cityLabel, groupByTiming, isClinicSubtype, shortRegion } from '../../services/glowUp/routines';
 import { useLang } from '../../i18n';
 import { RoutineMap } from './RoutineMap';
 import { AftercareProducts } from './AftercareProducts';
@@ -21,7 +22,7 @@ interface GlowUpResultViewProps {
 
 const DOWNTIME_CHIP: Record<string, string> = {
   'no-daily-photos': 'No downtime',
-  'day-or-two-ok': 'A day or two of downtime',
+  'day-or-two-ok': '1–2 days OK',
 };
 
 const chipClass = 'rounded-full bg-white/85 px-3 py-1.5 text-[12px] font-medium text-miyeon-main';
@@ -33,51 +34,59 @@ function pickLine(count: number): string {
   return "Pick what fits — it's your trip.";
 }
 
-/** Figma "RESULT v2": map on top, then the Glow-up routines as tabs + swipeable cards. */
+/** Figma "V2.2 RESULT": map on top, then "when" chips (First days / Mid-trip / Last days / Any night);
+ * each chip's panel stacks that timing's routine cards, and the panels swipe sideways. */
 export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, onUpdate, userEmail }) => {
   const navigate = useNavigate();
   const { t } = useLang();
   const plan = itinerary.glowUpV2;
   const profile = itinerary.glowUpSnapshot;
   const routines = plan?.routines ?? [];
-  const [activeId, setActiveId] = useState(routines[0]?.id ?? '');
+  const groups = useMemo(() => groupByTiming(routines), [routines]);
+  const [active, setActive] = useState<GlowUpTiming | undefined>(groups[0]?.timing);
   const [busy, setBusy] = useState(false);
   const [panelHeight, setPanelHeight] = useState<number>();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const panelRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  // A rebuilt plan may no longer have the routine that was selected.
+  // A rebuilt plan may no longer have the timing that was selected.
   useEffect(() => {
-    if (!routines.some((r) => r.id === activeId)) setActiveId(routines[0]?.id ?? '');
-  }, [routines, activeId]);
+    if (!groups.some((g) => g.timing === active)) setActive(groups[0]?.timing);
+  }, [groups, active]);
 
   // The routine panels sit side by side in one flex row so they can swipe horizontally; without
   // this, the row's height (and the gap before the caption below it) would default to the
-  // tallest panel (Skin Reset + the Amazon shelf) even while a shorter routine is showing.
+  // tallest panel (several routines + the Amazon shelf) even while a shorter one is showing.
   useEffect(() => {
-    const el = panelRefs.current[activeId];
+    const el = active ? panelRefs.current[active] : null;
     if (!el) return;
     const ro = new ResizeObserver(([entry]) => setPanelHeight(entry.contentRect.height));
     ro.observe(el);
     return () => ro.disconnect();
-  }, [activeId]);
+  }, [active]);
+
+  const activeIds = useMemo(() => groups.find((g) => g.timing === active)?.routines.map((r) => r.id) ?? [], [groups, active]);
 
   if (!plan || !profile) return null;
 
-  const activeIndex = Math.max(0, routines.findIndex((r) => r.id === activeId));
+  const activeIndex = Math.max(0, groups.findIndex((g) => g.timing === active));
 
-  const selectRoutine = (id: string) => {
-    setActiveId(id);
-    const i = routines.findIndex((r) => r.id === id);
+  const selectTiming = (timing: GlowUpTiming) => {
+    setActive(timing);
+    const i = groups.findIndex((g) => g.timing === timing);
     const el = scrollerRef.current;
     if (el && i >= 0) el.scrollTo({ left: i * el.clientWidth, behavior: 'smooth' });
+  };
+  const selectRoutine = (id: string) => {
+    const timing = routines.find((r) => r.id === id)?.timing;
+    if (timing) selectTiming(timing);
   };
 
   const onScroll: React.UIEventHandler<HTMLDivElement> = (e) => {
     const el = e.currentTarget;
     const i = Math.round(el.scrollLeft / Math.max(1, el.clientWidth));
-    const next = routines[i];
-    if (next && next.id !== activeId) setActiveId(next.id);
+    const next = groups[i];
+    if (next && next.timing !== active) setActive(next.timing);
   };
 
   const openStop = (stop: GlowUpStop) =>
@@ -111,15 +120,20 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
             {t('{city} · {days}', { city, days: t(tripDaysLabel(profile.tripDays)) })}
           </span>
           {budgetChip && <span className={chipClass}>{budgetChip}</span>}
-          {downtimeChip && <span className={chipClass}>{downtimeChip}</span>}
+          {downtimeChip && <span className={chipClass}>{t(downtimeChip)}</span>}
         </div>
+        {plan.anchorRegion && (
+          <p className="mt-3 text-[12.5px] leading-snug text-miyeon-main/60">
+            {t('We based you in {area} — most options for what you picked.', { area: t(shortRegion(plan.anchorRegion)) })}
+          </p>
+        )}
       </header>
 
       {routines.length > 0 ? (
         <>
           <RoutineMap
             routines={routines}
-            activeId={activeId}
+            activeIds={activeIds}
             onSelectRoutine={selectRoutine}
             onOpenStop={(rid, sid) => {
               const stop = routines.find((r) => r.id === rid)?.stops.find((s) => s.id === sid);
@@ -127,22 +141,22 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
             }}
           />
 
-          <div className="flex gap-1.5 px-5 py-4" role="tablist" aria-label={t('Routines')}>
-            {routines.map((r) => {
-              const active = r.id === activeId;
+          <div className="flex gap-2 overflow-x-auto px-5 py-4 no-scrollbar" role="tablist" aria-label={t('When in your trip')}>
+            {groups.map((g) => {
+              const on = g.timing === active;
               return (
                 <button
-                  key={r.id}
+                  key={g.timing}
                   type="button"
                   role="tab"
-                  aria-selected={active}
-                  onClick={() => selectRoutine(r.id)}
-                  className={`flex flex-1 min-w-0 items-center justify-center gap-1.5 rounded-full px-2.5 py-2 text-[12.5px] ${
-                    active ? 'bg-miyeon-ink font-medium text-white' : 'border border-miyeon-line bg-white text-miyeon-main'
+                  aria-selected={on}
+                  onClick={() => selectTiming(g.timing)}
+                  className={`flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-[13.5px] ${
+                    on ? 'bg-miyeon-ink font-medium text-white' : 'border border-miyeon-line bg-white text-miyeon-main'
                   }`}
                 >
-                  <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${active ? 'bg-miyeon-accent' : 'bg-miyeon-line'}`} />
-                  <span className="truncate">{t(r.tab)}</span>
+                  <span className={`h-2 w-2 shrink-0 rounded-full ${on ? 'bg-miyeon-accent' : 'bg-miyeon-line'}`} />
+                  {t(TIMING_LABEL[g.timing])}
                 </button>
               );
             })}
@@ -154,26 +168,30 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
             className="flex items-start snap-x snap-mandatory overflow-x-auto no-scrollbar"
             style={panelHeight ? { height: panelHeight } : undefined}
           >
-            {routines.map((r) => (
+            {groups.map((g) => (
               <div
-                key={r.id}
+                key={g.timing}
                 ref={(el) => {
-                  panelRefs.current[r.id] = el;
+                  panelRefs.current[g.timing] = el;
                 }}
-                className="w-full shrink-0 snap-center px-5"
+                className="w-full shrink-0 snap-center space-y-4 px-5"
               >
-                <RoutineCard routine={r} profile={profile} onOpenStop={openStop} />
-                {r.id === 'rt_skin' && <AftercareProducts />}
+                {g.routines.map((r) => (
+                  <div key={r.id}>
+                    <RoutineCard routine={r} onOpenStop={openStop} />
+                    {r.stops.some((s) => isClinicSubtype(s.subtype)) && <AftercareProducts />}
+                  </div>
+                ))}
               </div>
             ))}
           </div>
 
-          {routines.length > 1 && (
+          {groups.length > 1 && (
             <>
-              <div className="mt-1 flex justify-center gap-1.5" aria-hidden>
-                {routines.map((r, i) => (
+              <div className="mt-3 flex justify-center gap-1.5" aria-hidden>
+                {groups.map((g, i) => (
                   <span
-                    key={r.id}
+                    key={g.timing}
                     className={`h-1.5 rounded-full transition-all ${i === activeIndex ? 'w-[18px] bg-miyeon-accent' : 'w-1.5 bg-miyeon-line'}`}
                   />
                 ))}

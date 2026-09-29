@@ -39,6 +39,9 @@ interface PlaceRow {
   rating: number | string | null;
   review_count: number | null;
   active: boolean;
+  missing_fields: string[] | null;
+  booked_count?: number | null;
+  captured_at?: string | null;
 }
 
 const SUBTYPES: Record<string, GlowUpSubtype> = {
@@ -86,6 +89,8 @@ const LANGUAGES: Record<string, GlowUpLanguage> = {
 };
 
 const DOWNTIME: Record<string, GlowUpDowntime> = { none: 'none', low: 'mild', high: 'days' };
+
+const PRICE_TYPE: Record<string, GlowUpPlace['priceType']> = { free_reservation: 'free', deposit: 'deposit', paid: 'full' };
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const cap = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
@@ -173,6 +178,10 @@ function fromRow(row: PlaceRow): GlowUpPlace | null {
     reservationConfirm: null,
     highlights: [],
     bookingUrl: creatripSpotUrl(row.id),
+    priceType: PRICE_TYPE[row.price_type] ?? 'full',
+    bookedCount: row.booked_count ?? null,
+    capturedAt: row.captured_at ?? null,
+    missingFields: row.missing_fields ?? [],
   };
 }
 

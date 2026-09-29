@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { guideFor } from '../../data/categoryGuides';
+import { TIMING_LABEL } from '../../data/glowUpRoutines';
 import { latestGlowUpPlan } from '../../lib/localItineraryStore';
 import { readBookedStops, toggleBookedStop } from '../../lib/localBookedStops';
 
@@ -18,7 +19,7 @@ export const MyGlowUpPlan: React.FC = () => {
       routines.flatMap((routine) =>
         routine.stops.map((s) => ({
           id: s.id,
-          tag: routine.tab,
+          tag: TIMING_LABEL[routine.timing] ?? '',
           name: s.place.name,
           sub: guideFor(s.subtype)?.name,
         }))

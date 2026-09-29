@@ -1,65 +1,66 @@
 import React from 'react';
-import { Info, MapPin, TriangleAlert } from 'lucide-react';
-import type { GlowUpProfile, GlowUpRoutine, GlowUpStop } from '../../types';
+import type { GlowUpRoutine, GlowUpStop } from '../../types';
 import { guideFor } from '../../data/categoryGuides';
 import { labelForSubtype } from '../../data/glowUpQuiz';
-import { checksFor, formatDuration, isClinicSubtype, translateHint } from '../../services/glowUp/routines';
+import { STAGE_LABEL } from '../../data/glowUpRoutines';
+import { formatDuration, isClinicSubtype, translateHint } from '../../services/glowUp/routines';
 import { useT } from '../../i18n';
 
 interface RoutineCardProps {
   routine: GlowUpRoutine;
-  profile: GlowUpProfile | undefined;
   onOpenStop: (stop: GlowUpStop) => void;
 }
 
-/** Figma "루틴 카드": title, the categories in order, time/timing, downtime + area, numbered stops. */
-export const RoutineCard: React.FC<RoutineCardProps> = ({ routine, profile, onOpenStop }) => {
+/** Figma V2.2 "routine card": stage badge → name → one-line promise → categories in order → time,
+ * context line + area → numbered stops. */
+export const RoutineCard: React.FC<RoutineCardProps> = ({ routine, onOpenStop }) => {
   const t = useT();
   return (
-  <div className="rounded-[18px] border-[1.5px] border-miyeon-accent bg-white p-4">
-    <h3 className="flex items-center gap-2 font-display text-[21px] font-medium leading-tight text-miyeon-ink">
-      <span aria-hidden className="text-[9px] text-miyeon-accent">
-        ✦
+    <div className="rounded-[18px] border-[1.5px] border-miyeon-accent bg-white p-4">
+      <span className="inline-block rounded-full bg-miyeon-ink px-3 py-1 text-[10.5px] font-bold tracking-[0.16em] text-white">
+        {t(STAGE_LABEL[routine.stage])}
       </span>
-      {t(routine.title)}
-    </h3>
-    <p className="mt-1.5 text-[14px] text-miyeon-accent-dark">
-      {routine.subtypes.map((s) => t(guideFor(s)?.name ?? labelForSubtype(s))).join(' → ')}
-    </p>
-    <p className="mt-2.5 text-[14px] text-miyeon-ink">
-      <span className="font-medium">{formatDuration(routine.totalMinutes, t)}</span> · {t(routine.bestTiming)}
-    </p>
-    <p className="mt-1 flex flex-wrap items-center gap-x-3 text-[12.5px] text-miyeon-main/55">
-      <span>{t(routine.downtimeNote)}</span>
-      <span className="flex items-center gap-1">
-        <MapPin className="h-3 w-3 text-miyeon-accent" aria-hidden />
-        {routine.areaLabel}
-      </span>
-    </p>
+      <h3 className="mt-3 flex items-center gap-2 font-display text-[21px] font-medium leading-tight text-miyeon-ink">
+        <span aria-hidden className="text-[9px] text-miyeon-accent">
+          ✦
+        </span>
+        {t(routine.title)}
+      </h3>
+      <p className="mt-2.5 rounded-[8px] border-l-[3px] border-miyeon-accent bg-miyeon-accent-soft px-3 py-2 text-[14.5px] leading-snug text-miyeon-ink">
+        {t(routine.promise)}
+      </p>
+      <p className="mt-3 text-[14px] text-miyeon-accent-dark">
+        {routine.subtypes.map((s) => t(guideFor(s)?.name ?? labelForSubtype(s))).join(' → ')}
+      </p>
+      <p className="mt-2 text-[14px] text-miyeon-ink">
+        <span className="font-medium">{formatDuration(routine.totalMinutes, t)}</span> · {t(routine.timeOfDay)}
+      </p>
+      <p className="mt-0.5 flex flex-wrap gap-x-3 text-[12.5px] text-miyeon-main/55">
+        {routine.note && <span>{t(routine.note)}</span>}
+        <span>{routine.areaLabel}</span>
+      </p>
+      {routine.timingNote && <p className="mt-1.5 text-[12px] leading-snug text-miyeon-accent-dark">{t(routine.timingNote)}</p>}
 
-    <ol className="mt-4 space-y-2.5">
-      {routine.stops.map((stop, i) => (
-        <StopRow key={stop.id} stop={stop} index={i} profile={profile} onOpen={() => onOpenStop(stop)} />
-      ))}
-    </ol>
-  </div>
+      <ol className="mt-4 space-y-2.5">
+        {routine.stops.map((stop, i) => (
+          <StopRow key={stop.id} stop={stop} index={i} onOpen={() => onOpenStop(stop)} />
+        ))}
+      </ol>
+    </div>
   );
 };
 
-const StopRow: React.FC<{ stop: GlowUpStop; index: number; profile: GlowUpProfile | undefined; onOpen: () => void }> = ({
-  stop,
-  index,
-  profile,
-  onOpen,
-}) => {
+const StopRow: React.FC<{ stop: GlowUpStop; index: number; onOpen: () => void }> = ({ stop, index, onOpen }) => {
   const guide = guideFor(stop.subtype);
   const t = useT();
   const { place } = stop;
-  // "BEST" only when the venue data confirms (almost) everything we filter on.
-  const best = checksFor(place, stop.subtype, profile).filter((c) => c.ok).length >= 3;
-  const HintIcon = stop.hintTone === 'warn' ? TriangleAlert : Info;
-  const product = place.products.find((p) => p.priceUsd)?.name ?? t(guide?.summary ?? labelForSubtype(stop.subtype));
   const name = place.branch && !place.name.toLowerCase().includes(place.branch.toLowerCase()) ? `${place.name} ${place.branch}` : place.name;
+  const price =
+    isClinicSubtype(stop.subtype) || place.priceType === 'free'
+      ? t('Free reservation')
+      : place.priceFromUsd != null
+        ? `~$${Math.round(place.priceFromUsd)}`
+        : null;
 
   return (
     <li className="flex items-start gap-3">
@@ -86,24 +87,23 @@ const StopRow: React.FC<{ stop: GlowUpStop; index: number; profile: GlowUpProfil
               {stop.startTime}
             </span>
             <span className="truncate text-[15px] font-medium text-miyeon-ink">{name}</span>
-            {best && (
+            {stop.best && (
               <span className="shrink-0 rounded bg-miyeon-accent px-1 py-0.5 text-[8.5px] font-bold tracking-wide text-white">
                 {t('BEST')}
               </span>
             )}
           </span>
           <span className="mt-0.5 block truncate text-[12.5px] text-miyeon-main/60">
-            {product}
-            {isClinicSubtype(stop.subtype)
-              ? ` · ${t('Free booking')}`
-              : place.priceFromUsd != null
-                ? ` · ~$${Math.round(place.priceFromUsd)}`
-                : ''}
+            {t(guide?.name ?? labelForSubtype(stop.subtype))}
+            {price ? ` · ${price}` : ''}
           </span>
           {stop.hint && (
-            <span className="mt-0.5 flex items-center gap-1 text-[11.5px] text-miyeon-accent-dark">
-              <HintIcon className="h-3 w-3 shrink-0" strokeWidth={1.75} aria-hidden />
-              <span className="truncate">{translateHint(stop.hint, t)}</span>
+            <span
+              className={`mt-0.5 block text-[11.5px] leading-snug ${
+                stop.hintTone === 'warn' ? 'text-miyeon-accent-dark' : 'text-miyeon-accent'
+              }`}
+            >
+              {translateHint(stop.hint, t)}
             </span>
           )}
         </span>

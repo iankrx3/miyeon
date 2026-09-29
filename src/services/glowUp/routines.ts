@@ -4,19 +4,51 @@ import type {
   GlowUpPlace,
   GlowUpPlanV2,
   GlowUpProfile,
-  GlowUpRegion,
   GlowUpRoutine,
   GlowUpStop,
   GlowUpSubtype,
+  GlowUpTiming,
 } from '../../types';
 import { guideFor } from '../../data/categoryGuides';
 import { budgetMaxUsdOf, labelForSubtype } from '../../data/glowUpQuiz';
+import {
+  ATTACH_ORDER,
+  EITHER_OF,
+  ROUTINE_TEMPLATES,
+  SOLO_FALLBACK,
+  STAGE_ORDER,
+  STAGE_TIMING,
+  TIMING_ORDER,
+  conflicts,
+  type RoutineSlot,
+  type RoutineTemplate,
+  type SlotKind,
+} from '../../data/glowUpRoutines';
 import type { TFunction } from '../../i18n';
-import { haversineKm, travelForDistance } from '../itinerary/travel';
+import { travelForDistance } from '../itinerary/travel';
+import {
+  COMBO_TOP_N,
+  SKIN_GROUP,
+  anchorRegion,
+  bestCombination,
+  budgetFit,
+  eligible,
+  kmBetween,
+  languageFit,
+  point,
+  topFor,
+  type AppRegion,
+  type Scored,
+  type ScoreInput,
+} from './scoring';
 
-// V2 result: instead of a Day 1/2/3 grid of categories, pick a real, bookable venue per
-// selected category and group them into a few Glow-up routines. The number of routines follows
-// what was picked and what can be booked — never the trip length. Deterministic, no LLM.
+export { budgetFit, languageFit } from './scoring';
+
+// V2 result: the traveller's picks become Glow-up routines — each one a template from
+// data/glowUpRoutines.ts (FOUNDATION → IDENTITY → FINISH → RECOVER) — and every routine gets real,
+// bookable venues chosen together (scoring.ts). Deterministic, no LLM.
+
+export const PLAN_VERSION = 3;
 
 export const MIX_LABEL: Record<GlowUpMixPreset, string> = {
   'less-downtime': 'Less Downtime',
@@ -28,17 +60,6 @@ export const MIX_LABEL: Record<GlowUpMixPreset, string> = {
 export interface RoutineOptions {
   preset?: GlowUpMixPreset | null;
 }
-
-const REGION_CENTRE: Record<Exclude<GlowUpRegion, 'auto'>, [number, number]> = {
-  gangnam: [37.5172, 127.0473],
-  'hongdae-mapo': [37.5563, 126.9236],
-  myeongdong: [37.5636, 126.9822],
-  seongsu: [37.5446, 127.0557],
-  seomyeon: [35.1579, 129.0595],
-  haeundae: [35.1631, 129.1635],
-  gwangalli: [35.1532, 129.1186],
-  nampo: [35.098, 129.0324],
-};
 
 const BUSAN_REGIONS = new Set<string>(['seomyeon', 'haeundae', 'gwangalli', 'nampo']);
 
@@ -54,23 +75,14 @@ const SHORT_REGION: Record<string, string> = {
 };
 export const shortRegion = (r: string | null | undefined): string => (r && SHORT_REGION[r]) || 'Seoul';
 
-const SKIN_GROUP: GlowUpSubtype[] = ['skin', 'face'];
-
 /** Skin/face work is clinic work, and booking a clinic on Creatrip is free (the treatment is paid at the clinic). */
 export function isClinicSubtype(subtype: GlowUpSubtype): boolean {
   return SKIN_GROUP.includes(subtype);
 }
-const STYLE_ORDER: GlowUpSubtype[] = ['personal-color', 'hair', 'makeup', 'permanent-makeup', 'nail', 'photo'];
-const RECOVERY_ORDER: GlowUpSubtype[] = ['sauna', 'scrub', 'massage', 'yoga'];
 
-/** Every routine that has at least one stop gets topped up to at least this many. */
-const MIN_STOPS_PER_ROUTINE = 2;
-
-/** A routine with more places than this is too much for one outing. */
-const MAX_STOPS_PER_ROUTINE = 8;
-
-/** How far a recovery stop can be from the last skin stop and still ride along in the same routine. */
-const ATTACH_MAX_KM = 6;
+/** A routine never grows past this many stops when leftovers are attached to it (evenings: fewer). */
+const MAX_STOPS_PER_ROUTINE = 4;
+const MAX_STOPS_EVENING = 3;
 
 const CITY_LABEL = { seoul: 'Seoul', busan: 'Busan' } as const;
 
@@ -82,139 +94,23 @@ export function profileCity(profile: GlowUpProfile): 'seoul' | 'busan' {
 
 export const cityLabel = (profile: GlowUpProfile): string => CITY_LABEL[profileCity(profile)];
 
-const preferredRegion = (p: GlowUpProfile): Exclude<GlowUpRegion, 'auto'> | null =>
-  p.region && p.region !== 'auto' ? p.region : null;
+const preferredRegion = (p: GlowUpProfile): AppRegion | null => (p.region && p.region !== 'auto' ? p.region : null);
 
+const noDowntime = (p: GlowUpProfile): boolean => p.fix.downtime === 'no-daily-photos';
 
-const point = (pl: GlowUpPlace): [number, number] => [pl.lat ?? 0, pl.lng ?? 0];
-const kmBetween = (a: [number, number], b: [number, number]): number =>
-  haversineKm({ latitude: a[0], longitude: a[1] }, { latitude: b[0], longitude: b[1] });
-
-/** Does this venue confirm one of the wanted languages? true / false = confirmed no / null = not stated. */
-export function languageFit(place: GlowUpPlace, wanted: GlowUpProfile['languages']): boolean | null {
-  const langs: GlowUpLanguage[] = wanted.length > 0 ? wanted : ['English'];
-  if (place.languages.some((l) => langs.includes(l))) return true;
-  if (langs.includes('English') && place.englishSupport === true) return true;
-  if (place.koreanOnlyStaff) return false;
-  if (place.languages.length > 0) return false;
-  if (langs.includes('English') && place.englishSupport === false) return false;
-  return null;
+/** How many routines to aim for: 1 day → 2, 2–3 days → 3, 4+ days → 4 (never more than the picks). */
+function targetCount(profile: GlowUpProfile, picks: number): number {
+  const byTrip = profile.tripDays === '1' ? 2 : profile.tripDays === '2-3' || profile.tripDays == null ? 3 : 4;
+  return Math.min(byTrip, picks);
 }
 
-/** true = fits, false = known to be over budget, null = price not stated. */
-export function budgetFit(place: GlowUpPlace, profile: GlowUpProfile): boolean | null {
-  const max = budgetMaxUsdOf(profile);
-  if (max == null) return true;
-  if (place.priceFromUsd == null) return null;
-  return place.priceFromUsd <= max;
-}
-
-interface Weights {
-  quality: number;
-  popularity: number;
-  region: number;
-  proximity: number;
-  language: number;
-  price: number;
-  downtime: number;
-  primary: number;
-}
-
-const BASE_WEIGHTS: Weights = {
-  quality: 0.22,
-  popularity: 0.12,
-  region: 0.16,
-  proximity: 0.14,
-  language: 0.12,
-  price: 0.08,
-  downtime: 0.06,
-  primary: 0.1,
-};
-
-function weightsFor(preset: GlowUpMixPreset | null | undefined): Weights {
-  switch (preset) {
-    case 'less-downtime':
-      return { ...BASE_WEIGHTS, downtime: 0.5, quality: 0.12, popularity: 0.06 };
-    case 'closer':
-      return { ...BASE_WEIGHTS, proximity: 0.45, region: 0.2, quality: 0.1, popularity: 0.05 };
-    case 'lower-budget':
-      return { ...BASE_WEIGHTS, price: 0.5, quality: 0.12, popularity: 0.05 };
-    case 'iconic':
-      return { ...BASE_WEIGHTS, popularity: 0.36, quality: 0.24, price: 0.02, proximity: 0.06 };
-    default:
-      return BASE_WEIGHTS;
-  }
-}
-
-const DOWNTIME_SCORE = { none: 1, mild: 0.2, days: 0 } as const;
-
-function scorePlace(
-  place: GlowUpPlace,
-  subtype: GlowUpSubtype,
-  profile: GlowUpProfile,
-  anchor: [number, number] | null,
-  w: Weights
-): number {
-  const quality = place.rating == null ? 0.3 : Math.min(1, Math.max(0, place.rating - 4));
-  const popularity = Math.min(1, Math.log10((place.reviewCount ?? 0) + 1) / 3.5);
-  const pref = preferredRegion(profile);
-  const region = pref ? (place.region === pref ? 1 : 0) : 0.5;
-  const proximity = anchor ? Math.max(0, 1 - kmBetween(point(place), anchor) / 6) : 0.5;
-  const lang = languageFit(place, profile.languages);
-  const language = lang === true ? 1 : lang === null ? 0.4 : 0;
-  const max = budgetMaxUsdOf(profile);
-  const price =
-    place.priceFromUsd == null
-      ? 0.4
-      : max == null
-        ? Math.max(0, 1 - place.priceFromUsd / 250)
-        : Math.max(0, 1 - (place.priceFromUsd / max) * 0.6);
-  const downtime = place.downtime ? DOWNTIME_SCORE[place.downtime] : 0.5;
-  const primary = place.subtype === subtype ? 1 : 0.6;
-  return (
-    quality * w.quality +
-    popularity * w.popularity +
-    region * w.region +
-    proximity * w.proximity +
-    language * w.language +
-    price * w.price +
-    downtime * w.downtime +
-    primary * w.primary
-  );
-}
-
-/** The venues that can serve `subtype` for this traveller — known conflicts (wrong city, over budget,
- * no wanted language, lasting downtime when they need photo-ready skin) are excluded; unknowns pass. */
-function candidatesFor(
-  subtype: GlowUpSubtype,
-  profile: GlowUpProfile,
-  places: GlowUpPlace[],
-  relaxed = false
-): GlowUpPlace[] {
-  const city = profileCity(profile);
-  return places.filter((p) => {
-    if (p.subtype !== subtype && !p.extraSubtypes.includes(subtype)) return false;
-    // Skin/face work is clinic work: a hair or makeup studio that lists skin care on the side doesn't count.
-    if (SKIN_GROUP.includes(subtype) && !SKIN_GROUP.includes(p.subtype)) return false;
-    if (p.city !== city) return false;
-    if (p.lat == null || p.lng == null) return false;
-    // Relaxed pass (nothing fit): language and budget become soft so a pick isn't dropped for them.
-    if (!relaxed && languageFit(p, profile.languages) === false) return false;
-    if (!relaxed && budgetFit(p, profile) === false) return false;
-    if (SKIN_GROUP.includes(subtype) && profile.fix.downtime === 'no-daily-photos') {
-      if (p.downtime === 'days' || p.downtime === 'mild') return false;
-    }
-    return true;
-  });
-}
+// ---- time + text helpers ----
 
 const HHMM = (min: number): string =>
   `${String(Math.floor(min / 60) % 24).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`;
-const toMin = (hhmm: string): number => {
-  const [h, m] = hhmm.split(':').map(Number);
-  return h * 60 + m;
-};
 const roundUp15 = (min: number): number => Math.ceil(min / 15) * 15;
+
+const START_MIN: Record<RoutineTemplate['timeOfDay'], number> = { Morning: 10 * 60, Afternoon: 14 * 60, Evening: 19 * 60 };
 
 export function formatDuration(minutes: number, t?: TFunction): string {
   const tt: TFunction = t ?? ((key, vars) => key.replace(/\{(\w+)\}/g, (m, n) => String(vars?.[n] ?? m)));
@@ -234,7 +130,7 @@ export function translateHint(hint: string, t: TFunction): string {
 }
 
 /** What to tell the traveller about aftercare for this venue. Venue-stated facts win; otherwise the
- * category's typical note. Returns null-tone 'none' when there is nothing to warn about. */
+ * category's typical note. */
 export function downtimeText(place: GlowUpPlace, subtype: GlowUpSubtype): { text: string; warn: boolean } {
   if (place.downtimeNote) return { text: place.downtimeNote, warn: place.downtime !== 'none' };
   if (place.downtime === 'none') return { text: 'No downtime', warn: false };
@@ -265,101 +161,240 @@ function reasonsFor(place: GlowUpPlace, subtype: GlowUpSubtype, profile: GlowUpP
   return out;
 }
 
-function bestOf(
-  pool: GlowUpPlace[],
-  subtype: GlowUpSubtype,
-  profile: GlowUpProfile,
-  chosen: GlowUpPlace[],
-  w: Weights
-): GlowUpPlace {
-  const pref = preferredRegion(profile);
-  const anchor: [number, number] | null = chosen.length
-    ? [chosen.reduce((s, p) => s + (p.lat ?? 0), 0) / chosen.length, chosen.reduce((s, p) => s + (p.lng ?? 0), 0) / chosen.length]
-    : pref
-      ? REGION_CENTRE[pref]
-      : null;
-  return [...pool]
-    .map((p) => ({ p, s: scorePlace(p, subtype, profile, anchor, w) }))
-    .sort((a, b) => b.s - a.s || a.p.id.localeCompare(b.p.id))[0].p;
+// ---- ① picks → template assignments ----
+
+/** A picked experience. Skin and face together are one clinic visit ('clinic'). */
+type Unit = Exclude<SlotKind, 'skin' | 'face'>;
+
+interface Assignment {
+  template: RoutineTemplate;
+  /** Units in template slot order, then attached extras. */
+  units: Unit[];
+  /** The slot each unit fills (attached extras get a synthetic slot). */
+  slots: RoutineSlot[];
 }
 
-/** Picks up to `count` distinct venues for `subtype`, best-scoring first. Each pick is added to
- * `taken`/`chosen` immediately so later picks in the same call never collide and proximity scoring
- * keeps updating as stops accumulate. */
-function pickMany(
-  subtype: GlowUpSubtype,
-  profile: GlowUpProfile,
-  places: GlowUpPlace[],
-  taken: Set<string>,
-  chosen: GlowUpPlace[],
-  w: Weights,
-  count: number
-): GlowUpPlace[] {
-  const picked: GlowUpPlace[] = [];
-  for (let i = 0; i < count; i++) {
-    let pool = candidatesFor(subtype, profile, places).filter((p) => !taken.has(p.id));
-    if (pool.length === 0) pool = candidatesFor(subtype, profile, places, true).filter((p) => !taken.has(p.id));
-    if (pool.length === 0) break;
-    const place = bestOf(pool, subtype, profile, chosen, w);
-    taken.add(place.id);
-    chosen.push(place);
-    picked.push(place);
+function slotFits(slot: RoutineSlot, unit: Unit, wantedSkin: GlowUpSubtype[]): boolean {
+  if (slot.kind === 'skin' || slot.kind === 'face') return unit === 'clinic' && wantedSkin.includes(slot.kind);
+  return slot.kind === unit;
+}
+
+/** Which of `pool` this template would take, or null when a required slot can't be filled. */
+function coverage(template: RoutineTemplate, pool: Unit[], wantedSkin: GlowUpSubtype[]): { units: Unit[]; slots: RoutineSlot[] } | null {
+  const either = EITHER_OF[template.id];
+  const units: Unit[] = [];
+  const slots: RoutineSlot[] = [];
+  for (const slot of template.slots) {
+    const unit = pool.find((u) => !units.includes(u) && slotFits(slot, u, wantedSkin));
+    if (unit) {
+      units.push(unit);
+      slots.push(slot);
+    } else if (!slot.optional && !either?.includes(slot.kind)) {
+      return null;
+    }
   }
-  return picked;
+  if (units.length === 0) return null;
+  if (either && !units.some((u) => either.includes(u))) return null;
+  return { units, slots };
 }
 
-interface Pick {
-  subtype: GlowUpSubtype;
-  place: GlowUpPlace;
+const isMixed = (t: RoutineTemplate): boolean => t.slots.filter((s) => !s.optional).length >= 2;
+
+function soloTemplate(unit: Unit): RoutineTemplate {
+  const subtype: GlowUpSubtype = unit === 'clinic' ? 'skin' : unit;
+  const fb = SOLO_FALLBACK[subtype];
+  const guide = guideFor(subtype);
+  return {
+    id: `solo-${unit}`,
+    stage: fb?.stage ?? 'identity',
+    name: guide?.name ?? labelForSubtype(subtype),
+    promise: guide?.headline ?? labelForSubtype(subtype),
+    slots: [{ kind: unit, hint: fb?.hint ?? '' }],
+    note: fb?.note ?? '',
+    timeOfDay: fb?.timeOfDay ?? 'Afternoon',
+  };
 }
 
-/** Picks a single best clinic venue across every selected SKIN_GROUP subtype (skin + face) — a
- * traveller who picked both skin and face still gets exactly one clinic recommendation, not two. */
-function pickClinic(
+/**
+ * Greedy template matching: among templates whose required slots are all picked, take the one that
+ * covers the most still-unplaced picks; ties go to mixed templates (the ordering knowledge is the
+ * point), then template order. Anything no template covers gets a one-stop routine.
+ */
+function matchTemplates(pool: Unit[], templates: RoutineTemplate[], wantedSkin: GlowUpSubtype[]): Assignment[] {
+  const left = [...pool];
+  const out: Assignment[] = [];
+  while (left.length > 0) {
+    let best: Assignment | null = null;
+    for (const template of templates) {
+      if (out.some((a) => a.template.id === template.id)) continue;
+      const cov = coverage(template, left, wantedSkin);
+      if (!cov) continue;
+      const better =
+        !best ||
+        cov.units.length > best.units.length ||
+        (cov.units.length === best.units.length && isMixed(template) && !isMixed(best.template));
+      if (better) best = { template, units: cov.units, slots: cov.slots };
+    }
+    if (!best) break;
+    out.push(best);
+    for (const u of best.units) left.splice(left.indexOf(u), 1);
+  }
+  for (const unit of left) {
+    const template = soloTemplate(unit);
+    out.push({ template, units: [unit], slots: template.slots });
+  }
+  return out;
+}
+
+const maxStops = (a: Assignment): number => (a.template.timeOfDay === 'Evening' ? MAX_STOPS_EVENING : MAX_STOPS_PER_ROUTINE);
+
+const RECOVER_UNITS: Unit[] = ['sauna', 'scrub', 'massage', 'yoga'];
+
+/** Recovery picks only fold into recovery routines, and beauty picks only into beauty routines. */
+const canJoin = (a: Assignment, unit: Unit): boolean =>
+  a.units.length < maxStops(a) &&
+  RECOVER_UNITS.includes(unit) === (a.template.stage === 'recover') &&
+  a.units.every((u) => !conflicts(u, unit));
+
+function attach(a: Assignment, unit: Unit): Assignment {
+  const units = [...a.units, unit];
+  const extraSlot: RoutineSlot = { kind: unit, hint: '' };
+  const slots = [...a.slots, extraSlot];
+  // Template slots keep their order; attached extras slot in by the general ordering rules.
+  const order = units.map((u, i) => ({ u, s: slots[i], i }));
+  order.sort((x, y) => {
+    const xt = x.i < a.units.length;
+    const yt = y.i < a.units.length;
+    if (xt && yt) return x.i - y.i;
+    return ATTACH_ORDER.indexOf(x.u) - ATTACH_ORDER.indexOf(y.u);
+  });
+  return { template: a.template, units: order.map((o) => o.u), slots: order.map((o) => o.s) };
+}
+
+/**
+ * Matches the picks to templates, then evens out the count toward the trip-length target: too few →
+ * split the biggest mixed routine; too many → fold a routine into a compatible one. A pick is never
+ * dropped either way.
+ */
+function assign(pool: Unit[], profile: GlowUpProfile, wantedSkin: GlowUpSubtype[]): Assignment[] {
+  const nd = noDowntime(profile);
+  const templates = ROUTINE_TEMPLATES.filter((t) => (nd ? !t.skipNoDowntime : !t.onlyNoDowntime));
+  let list = matchTemplates(pool, templates, wantedSkin);
+  const target = targetCount(profile, pool.length);
+
+  // Too few: split one pick off the biggest routine and give it its own.
+  for (let guard = 0; list.length < target && guard < 12; guard++) {
+    const i = list.reduce((bi, a, idx) => (a.units.length > list[bi].units.length ? idx : bi), 0);
+    const big = list[i];
+    if (big.units.length < 2) break;
+    const moved = big.units[big.units.length - 1];
+    const rest = big.units.slice(0, -1);
+    const others = list.filter((_, idx) => idx !== i);
+    const used = new Set(others.map((a) => a.template.id));
+    const avail = templates.filter((t) => !used.has(t.id));
+    const restMatched = matchTemplates(rest, avail, wantedSkin);
+    const restUsed = new Set(restMatched.map((a) => a.template.id));
+    const movedMatched = matchTemplates([moved], avail.filter((t) => !restUsed.has(t.id)), wantedSkin);
+    list = [...others.slice(0, i), ...restMatched, ...movedMatched, ...others.slice(i)];
+  }
+
+  // Too many: fold the smallest routine into one it can share a day with.
+  for (let guard = 0; list.length > target && guard < 12; guard++) {
+    let merged = false;
+    const bySize = list.map((a, idx) => ({ a, idx })).sort((x, y) => x.a.units.length - y.a.units.length || y.idx - x.idx);
+    for (const { a: small, idx: si } of bySize) {
+      // Prefer a routine in the same stage, then any other.
+      const hosts = list
+        .map((h, hi) => ({ h, hi }))
+        .filter(({ hi }) => hi !== si)
+        .sort((x, y) => Number(y.h.template.stage === small.template.stage) - Number(x.h.template.stage === small.template.stage) || x.hi - y.hi);
+      const host = hosts.find(({ h }) => small.units.every((u) => canJoin(h, u)) && h.units.length + small.units.length <= maxStops(h));
+      if (!host) continue;
+      let joined = host.h;
+      for (const u of small.units) joined = attach(joined, u);
+      list = list.map((x, idx) => (idx === host.hi ? joined : x)).filter((_, idx) => idx !== si);
+      merged = true;
+      break;
+    }
+    if (!merged) break;
+  }
+  return list;
+}
+
+// ---- ② assignments → routines with venues ----
+
+function timingOf(template: RoutineTemplate, units: Unit[], profile: GlowUpProfile): { timing: GlowUpTiming; note: string | null } {
+  // Photos every day: clinic work moves to the end — any redness happens on the way home.
+  if (template.stage === 'foundation' && units.includes('clinic') && noDowntime(profile)) {
+    return { timing: 'last', note: 'Last on purpose — any redness happens on your way home.' };
+  }
+  return { timing: STAGE_TIMING[template.stage], note: null };
+}
+
+/** The card's context line — a few templates say something more specific when other picks exist. */
+function noteFor(template: RoutineTemplate, pool: Unit[], units: Unit[]): string {
+  const clinicElsewhere = pool.includes('clinic') && !units.includes('clinic');
+  if (template.stage === 'recover' && clinicElsewhere) return 'Not on your clinic day';
+  if (template.id === 'k-salon-souvenir' && pool.includes('personal-color') && !units.includes('personal-color')) return 'Uses your palette result';
+  return template.note;
+}
+
+function hintFor(template: RoutineTemplate, slot: RoutineSlot, pool: Unit[], units: Unit[]): string {
+  if (template.id === 'k-salon-souvenir' && slot.kind === 'hair' && pool.includes('personal-color') && !units.includes('personal-color')) {
+    return 'Bring your palette card';
+  }
+  return slot.hint;
+}
+
+function areaLabel(stops: GlowUpStop[]): string {
+  return [...new Set(stops.map((s) => shortRegion(s.place.region)))].join(' · ');
+}
+
+function buildRoutine(
+  a: Assignment,
+  pool: Unit[],
   wantedSkin: GlowUpSubtype[],
   profile: GlowUpProfile,
-  places: GlowUpPlace[],
-  taken: Set<string>,
-  chosen: GlowUpPlace[],
-  w: Weights
-): Pick | null {
-  const dedupe = (list: GlowUpPlace[]): GlowUpPlace[] => {
-    const seen = new Set<string>();
-    return list.filter((p) => !taken.has(p.id) && !seen.has(p.id) && (seen.add(p.id), true));
-  };
-  let pool = dedupe(wantedSkin.flatMap((subtype) => candidatesFor(subtype, profile, places)));
-  if (pool.length === 0) pool = dedupe(wantedSkin.flatMap((subtype) => candidatesFor(subtype, profile, places, true)));
-  if (pool.length === 0) return null;
-  const place = bestOf(pool, wantedSkin[0], profile, chosen, w);
-  const subtype = wantedSkin.includes(place.subtype) ? place.subtype : wantedSkin[0];
-  taken.add(place.id);
-  chosen.push(place);
-  return { subtype, place };
-}
+  input: ScoreInput,
+  city: 'seoul' | 'busan'
+): GlowUpRoutine | null {
+  // Candidates per slot; a slot with no venue at all is left out rather than failing the routine.
+  const filled = a.units
+    .map((unit, i) => {
+      const slot = a.slots[i];
+      const subtypes: GlowUpSubtype[] =
+        unit === 'clinic'
+          ? slot.kind === 'skin' || slot.kind === 'face'
+            ? [slot.kind, ...wantedSkin.filter((s) => s !== slot.kind)]
+            : wantedSkin
+          : [unit];
+      return { unit, slot, cands: topFor(subtypes, input, city, COMBO_TOP_N) };
+    })
+    .filter((x) => x.cands.length > 0);
+  if (filled.length === 0) return null;
 
-function buildStops(picks: Pick[], startTime: string, profile: GlowUpProfile): GlowUpStop[] {
-  let clock = toMin(startTime);
-  return picks.map((pick, i) => {
-    const prev = picks[i - 1];
-    const travel = prev ? travelForDistance(kmBetween(point(prev.place), point(pick.place))) : null;
-    if (prev && travel) clock = roundUp15(clock + stopMinutes(prev.place, prev.subtype) + travel.minutes + 15);
+  const combo = bestCombination(filled.map((f) => f.cands)) as Scored[];
+  const units = filled.map((f) => f.unit);
+  const bestIdx = combo.reduce((bi, s, i) => (s.score > combo[bi].score ? i : bi), 0);
+
+  let clock = START_MIN[a.template.timeOfDay];
+  const stops: GlowUpStop[] = combo.map((pick, i) => {
+    const prev = combo[i - 1];
+    const samePlace = prev && prev.place.id === pick.place.id;
+    const travel = prev && !samePlace ? travelForDistance(kmBetween(point(prev.place), point(pick.place))) : null;
+    if (prev) clock = roundUp15(clock + stopMinutes(prev.place, prev.subtype) + (travel?.minutes ?? 0) + (travel ? 15 : 0));
+    const slotHint = hintFor(a.template, filled[i].slot, pool, units);
     const dt = downtimeText(pick.place, pick.subtype);
-    const guide = guideFor(pick.subtype);
-    let hint: string | null = null;
+    let hint: string | null = slotHint || null;
     let hintTone: GlowUpStop['hintTone'] = 'info';
-    if (dt.warn) {
+    if (!hint && dt.warn) {
       hint = dt.text;
       hintTone = 'warn';
-    } else if (prev && travel) {
-      const from = prev.place.name;
+    } else if (!hint && prev && travel) {
       hint =
         travel.mode === 'walk'
-          ? `${travel.minutes} min walk from ${from}`
-          : `${travel.minutes} min by ${travel.mode} from ${from}`;
-    } else if (pick.place.highlights[0]) {
-      hint = pick.place.highlights[0];
-    } else if (guide?.resultNote?.tone === 'info') {
-      hint = guide.resultNote.text;
+          ? `${travel.minutes} min walk from ${prev.place.name}`
+          : `${travel.minutes} min by ${travel.mode} from ${prev.place.name}`;
     }
     return {
       id: `stop_${pick.subtype}_${pick.place.id}`,
@@ -368,57 +403,26 @@ function buildStops(picks: Pick[], startTime: string, profile: GlowUpProfile): G
       startTime: HHMM(clock),
       hint,
       hintTone,
+      best: i === bestIdx,
       travel,
       reasons: reasonsFor(pick.place, pick.subtype, profile),
     };
   });
-}
 
-function totalMinutes(stops: GlowUpStop[]): number {
-  return stops.reduce((sum, s) => sum + stopMinutes(s.place, s.subtype) + (s.travel?.minutes ?? 0), 0);
-}
-
-function areaLabel(stops: GlowUpStop[]): string {
-  const areas = [...new Set(stops.map((s) => shortRegion(s.place.region)))];
-  return areas.join(' / ');
-}
-
-function timingFor(kind: 'skin' | 'style' | 'recovery', hasPhoto: boolean, tripDays: GlowUpProfile['tripDays']): string {
-  if (tripDays === '1') return kind === 'skin' ? 'Best first thing in the morning' : kind === 'style' ? 'Best around midday' : 'Best in the evening';
-  if (kind === 'skin') return 'Best early in your trip';
-  if (kind === 'style') return hasPhoto ? 'Best late in your trip, after your styling' : 'Best mid-trip';
-  return 'Best in the evening';
-}
-
-function makeRoutine(
-  key: 'skin' | 'style' | 'recovery',
-  picks: Pick[],
-  profile: GlowUpProfile,
-  opts: { attachedRecovery?: boolean } = {}
-): GlowUpRoutine {
-  const start = key === 'skin' ? '10:00' : key === 'style' ? '11:00' : '19:00';
-  const stops = buildStops(picks, start, profile);
-  const subtypes = picks.map((p) => p.subtype);
-  const warn = stops.map((s) => downtimeText(s.place, s.subtype)).find((d) => d.warn);
-  const title =
-    key === 'skin'
-      ? opts.attachedRecovery
-        ? 'Skin, Then Exhale'
-        : 'Your Skin Reset'
-      : key === 'style'
-        ? 'Your K-Idol Era'
-        : subtypes.some((s) => s === 'sauna' || s === 'scrub')
-          ? 'Stress? Scrubbed'
-          : 'Slow Down, Reset';
+  const { timing, note: timingNote } = timingOf(a.template, units, profile);
   return {
-    id: `rt_${key}`,
-    tab: key === 'skin' ? 'Skin Reset' : key === 'style' ? 'Style Session' : 'Recovery',
-    title,
-    subtypes,
+    id: `rt_${a.template.id}`,
+    templateId: a.template.id,
+    stage: a.template.stage,
+    timing,
+    title: a.template.name,
+    promise: a.template.promise,
+    subtypes: stops.map((s) => s.subtype),
     stops,
-    totalMinutes: totalMinutes(stops),
-    bestTiming: timingFor(key, subtypes.includes('photo'), profile.tripDays),
-    downtimeNote: warn?.text ?? 'No downtime',
+    totalMinutes: stops.reduce((sum, s) => sum + stopMinutes(s.place, s.subtype) + (s.travel?.minutes ?? 0), 0),
+    timeOfDay: a.template.timeOfDay,
+    note: noteFor(a.template, pool, units),
+    timingNote,
     areaLabel: areaLabel(stops),
   };
 }
@@ -426,77 +430,37 @@ function makeRoutine(
 /** Builds the routines for a quiz profile from the venue list. */
 export function buildRoutines(profile: GlowUpProfile, places: GlowUpPlace[], opts: RoutineOptions = {}): GlowUpPlanV2 {
   const preset = opts.preset ?? null;
-  const w = weightsFor(preset);
-
-  const wanted = new Set<GlowUpSubtype>([...profile.fix.items, ...profile.change, ...profile.restore]);
-
-  const taken = new Set<string>();
-  const chosen: GlowUpPlace[] = [];
-  const picks = new Map<GlowUpSubtype, Pick[]>();
-
-  // Skin and face both mean "clinic" — pick at most one clinic venue total, never one of each.
-  const wantedSkin = SKIN_GROUP.filter((s) => wanted.has(s));
-  if (wantedSkin.length > 0) {
-    const clinic = pickClinic(wantedSkin, profile, places, taken, chosen, w);
-    if (clinic) picks.set(clinic.subtype, [clinic]);
-  }
-
-  const nonSkinOrdered: GlowUpSubtype[] = [
-    ...STYLE_ORDER.filter((s) => wanted.has(s)),
-    ...RECOVERY_ORDER.filter((s) => wanted.has(s)),
+  const city = profileCity(profile);
+  const wantedSkin = SKIN_GROUP.filter((s) => profile.fix.items.includes(s as never));
+  const pool: Unit[] = [
+    ...(wantedSkin.length > 0 ? (['clinic'] as Unit[]) : []),
+    ...(profile.change as Unit[]),
+    ...(profile.restore as Unit[]).filter((u) => RECOVER_UNITS.includes(u)),
   ];
-  for (const subtype of nonSkinOrdered) {
-    const found = pickMany(subtype, profile, places, taken, chosen, w, 1);
-    if (found.length > 0) picks.set(subtype, found.map((place) => ({ subtype, place })));
-  }
 
-  // A routine with at least one stop is topped up to `min` by picking more of the categories the
-  // traveller already chose for it — never a category they didn't pick.
-  const topUp = (group: Pick[], order: GlowUpSubtype[], min: number): Pick[] => {
-    const bucket = order.filter((s) => wanted.has(s));
-    let guard = 0;
-    while (group.length > 0 && group.length < min && guard < min * bucket.length) {
-      guard++;
-      let added = false;
-      for (const subtype of bucket) {
-        const extra = pickMany(subtype, profile, places, taken, chosen, w, 1);
-        if (extra.length > 0) {
-          group.push({ subtype, place: extra[0] });
-          added = true;
-          if (group.length >= min) break;
-        }
-      }
-      if (!added) break;
-    }
-    return group;
-  };
-  const capRoutine = (group: Pick[]): Pick[] => group.slice(0, MAX_STOPS_PER_ROUTINE);
-  const picksOf = (order: GlowUpSubtype[], min = MIN_STOPS_PER_ROUTINE) =>
-    capRoutine(topUp(order.flatMap((s) => picks.get(s) ?? []), order, min));
-  // The clinic pick is capped at 1, so the skin routine is never topped up with a second clinic —
-  // if a recovery stop can ride along (see "Skin, then exhale" below), that's what fills it out.
-  const skinPicks = picksOf(SKIN_GROUP, 1);
-  const stylePicks = picksOf(STYLE_ORDER);
-  const recoveryPicks = picksOf(RECOVERY_ORDER);
+  const pref = preferredRegion(profile);
+  const pickedSubtypes: GlowUpSubtype[] = [...wantedSkin, ...(profile.change as GlowUpSubtype[]), ...(profile.restore as GlowUpSubtype[])];
+  const region = pref ?? (pickedSubtypes.length > 0 ? anchorRegion(pickedSubtypes, profile, places, city, preset) : null);
+  const input: ScoreInput = { profile, places, region, preset };
 
-  // "Skin, then exhale": the recovery stop nearest the last skin stop rides along with it, so a clinic visit
-  // isn't a one-stop routine.
-  let attached: Pick | null = null;
-  if (skinPicks.length > 0 && recoveryPicks.length > 0) {
-    const last = point(skinPicks[skinPicks.length - 1].place);
-    const [nearest] = [...recoveryPicks].sort((x, y) => kmBetween(last, point(x.place)) - kmBetween(last, point(y.place)));
-    if (kmBetween(last, point(nearest.place)) <= ATTACH_MAX_KM) attached = nearest;
-  }
+  const routines = assign(pool, profile, wantedSkin)
+    .map((a) => buildRoutine(a, pool, wantedSkin, profile, input, city))
+    .filter((r): r is GlowUpRoutine => r !== null)
+    .map((r, i) => ({ r, i }))
+    .sort(
+      (x, y) =>
+        TIMING_ORDER.indexOf(x.r.timing) - TIMING_ORDER.indexOf(y.r.timing) ||
+        STAGE_ORDER.indexOf(x.r.stage) - STAGE_ORDER.indexOf(y.r.stage) ||
+        x.i - y.i
+    )
+    .map(({ r }) => r);
 
-  const routines: GlowUpRoutine[] = [];
-  if (skinPicks.length > 0) {
-    routines.push(makeRoutine('skin', attached ? [...skinPicks, attached] : skinPicks, profile, { attachedRecovery: Boolean(attached) }));
-  }
-  if (stylePicks.length > 0) routines.push(makeRoutine('style', stylePicks, profile));
-  const restPicks = recoveryPicks.filter((p) => p !== attached);
-  if (restPicks.length > 0) routines.push(makeRoutine('recovery', restPicks, profile));
+  return { version: PLAN_VERSION, routines, mix: preset, changeNote: null, anchorRegion: pref ? null : region };
+}
 
-  return { routines, mix: preset, changeNote: null };
+/** Routines grouped by when in the trip they fit, in trip order — the result page's chips. */
+export function groupByTiming(routines: GlowUpRoutine[]): { timing: GlowUpTiming; routines: GlowUpRoutine[] }[] {
+  return TIMING_ORDER.map((timing) => ({ timing, routines: routines.filter((r) => r.timing === timing) })).filter((g) => g.routines.length > 0);
 }
 
 /** One line on what a "See another version" changed, comparing venue picks per category. */
@@ -516,49 +480,75 @@ export function describeChange(before: GlowUpPlanV2, after: GlowUpPlanV2): strin
   return `Rebuilt for “${label}”. ${shown}${more}`;
 }
 
+/** How many other venues on Creatrip also fit this pick — "See N+ More Options". */
+export function otherOptionsCount(place: GlowUpPlace, subtype: GlowUpSubtype, profile: GlowUpProfile | undefined, places: GlowUpPlace[]): number {
+  const city = profile ? profileCity(profile) : place.city;
+  const pool = profile
+    ? eligible(subtype, profile, places, city)
+    : places.filter((p) => p.city === city && (p.subtype === subtype || p.extraSubtypes.includes(subtype)));
+  return pool.filter((p) => p.id !== place.id).length;
+}
+
 export interface CheckItem {
   id: 'match' | 'trip' | 'language' | 'budget';
   title: string;
   detail: string;
-  ok: boolean;
 }
 
-/** The "MIYEON CHECKED" grid on the detail page. Always shown fully checked (4/4). */
+/** "Your match" detail: what was picked + what the venue's session covers. */
+const MATCH_DETAIL: Record<GlowUpSubtype, string> = {
+  skin: 'Skin + glow boost',
+  face: 'Face + contour',
+  'personal-color': 'Color + styling',
+  hair: 'Hair + styling',
+  makeup: 'Makeup + styling',
+  'permanent-makeup': 'Brows, lips or liner',
+  photo: 'Shoot + retouch',
+  nail: 'Nails + design',
+  sauna: 'Sauna + bathhouse',
+  scrub: 'Full-body scrub',
+  massage: 'Body massage',
+  yoga: 'Yoga + wellness',
+};
+
+/**
+ * The "MIYEON CHECKED" grid on the detail page. Every check is shown by default; "On budget" is
+ * left out only when the listed price is clearly over the traveller's max (→ 3/3).
+ */
 export function checksFor(place: GlowUpPlace, subtype: GlowUpSubtype, profile: GlowUpProfile | undefined): CheckItem[] {
   const guide = guideFor(subtype);
   const wantedLangs: GlowUpLanguage[] = profile?.languages.length ? profile.languages : ['English'];
-  const lang = profile ? languageFit(place, profile.languages) : place.languages.includes('English') || place.englishSupport === true ? true : null;
   const langName = wantedLangs.includes('English') ? 'English' : wantedLangs[0];
-  const budget = profile ? budgetFit(place, profile) : null;
   const minutes = place.minutes ?? guide?.minutes ?? null;
+  const max = profile ? budgetMaxUsdOf(profile) : null;
+  const overBudget = profile ? budgetFit(place, profile) === false : false;
 
-  return [
-    {
-      id: 'match',
-      title: 'Your match',
-      detail: place.tagline ?? guide?.name ?? labelForSubtype(subtype),
-      ok: true,
-    },
+  const items: CheckItem[] = [
+    { id: 'match', title: 'Your match', detail: MATCH_DETAIL[subtype] ?? guide?.summary ?? labelForSubtype(subtype) },
     {
       id: 'trip',
       title: 'Trip-ready',
-      detail: `${minutes ? `${minutes} min · ` : ''}${place.region ? shortRegion(place.region) : 'Location not confirmed'}`,
-      ok: true,
+      detail: `${minutes ? `${minutes} min · ` : ''}${shortRegion(place.region)}`,
     },
     {
       id: 'language',
       title: `${langName} support`,
-      detail: lang === true ? 'Listed on the booking page' : lang === false ? 'Not offered' : 'Not confirmed',
-      ok: true,
+      detail: langName === 'English' ? 'No translation app' : `${langName} listed`,
     },
-    {
+  ];
+  if (!overBudget) {
+    items.push({
       id: 'budget',
       title: 'On budget',
       detail:
-        place.priceFromUsd != null
-          ? `${budget === false ? 'Above your range · ' : ''}from ~$${Math.round(place.priceFromUsd)}`
-          : 'Price not confirmed',
-      ok: true,
-    },
-  ];
+        place.priceType === 'free' && isClinicSubtype(subtype)
+          ? 'Free to book'
+          : place.priceFromUsd != null
+            ? max != null
+              ? `$${Math.round(place.priceFromUsd)} in your range`
+              : `From $${Math.round(place.priceFromUsd)}`
+            : 'Priced at the venue',
+    });
+  }
+  return items;
 }

@@ -7,8 +7,8 @@ import { getStoredItinerary } from '../lib/localItineraryStore';
 import { buildGlowUpCreatripUrl, CREATRIP_DISCLOSURE } from '../lib/creatrip';
 import { SwipeRow } from '../components/common/SwipeRow';
 import { BeautyCardSheet } from '../components/glowup/BeautyCardSheet';
-import { getGlowUpPlace } from '../services/places/glowUpPlaces';
-import { checksFor, isClinicSubtype, type CheckItem, shortRegion } from '../services/glowUp/routines';
+import { getGlowUpPlace, loadGlowUpPlaces } from '../services/places/glowUpPlaces';
+import { checksFor, isClinicSubtype, otherOptionsCount, type CheckItem, shortRegion } from '../services/glowUp/routines';
 
 /** Figma "DETAIL — Personal Color": explains a Plan category before sending the
  * user to Creatrip for real options. */
@@ -43,6 +43,19 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
     };
   }, [placeId, place?.id]);
   const profile = plan?.glowUpSnapshot;
+
+  // "See N+ More Options": other venues that pass the same filters for this pick.
+  const [moreCount, setMoreCount] = useState<number | null>(null);
+  useEffect(() => {
+    if (!place || !guide) return;
+    let cancelled = false;
+    void loadGlowUpPlaces().then((all) => {
+      if (!cancelled) setMoreCount(otherOptionsCount(place, guide.subtype as GlowUpSubtype, profile, all));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [place, guide, profile]);
 
   // Route changes keep the previous page's scroll offset; open on the hero, not mid-page.
   useEffect(() => {
@@ -96,7 +109,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
           onClick={() => navigate(-1)}
           className="absolute left-5 top-4 flex items-center gap-1 rounded-full bg-white/90 px-3 py-[7px] text-[11.5px] font-medium text-miyeon-ink"
         >
-          <ChevronLeft className="h-3.5 w-3.5" /> Back
+          <ChevronLeft className="h-3.5 w-3.5" /> {fromItinerary ? 'Back to my plan' : 'Back'}
         </button>
         <div className="absolute bottom-5 left-5 right-5">
           {place ? (
@@ -109,7 +122,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
           <h1 className="mt-1.5 font-display text-[28px] font-bold leading-[1.15] text-white">{guide.headline}</h1>
           {place && (
             <p className="mt-1.5 text-[13px] text-white/85">
-              {guide.name} · {shortRegion(place.region)}
+              {place.name} · {shortRegion(place.region)}
             </p>
           )}
         </div>
@@ -119,20 +132,23 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
         <div className="flex items-start px-5 py-5">
           <Stat value={`${place.minutes ?? guide.minutes}`} label="minutes" />
           {freeBooking ? (
-            <Stat
-              value="Free"
-              label={place.priceFromUsd != null ? `booking · treatment from $${Math.round(place.priceFromUsd)}` : 'booking on Creatrip'}
-            />
+            <Stat value="Free" label="booking" />
           ) : (
             <Stat
               value={place.priceFromUsd != null ? `$${Math.round(place.priceFromUsd)}` : '—'}
-              label={place.priceFromUsd != null ? 'from' : 'price on Creatrip'}
+              label={place.priceFromUsd != null ? 'approx.' : 'price on Creatrip'}
             />
           )}
-          <Stat
-            value={place.downtime === 'none' ? 'None' : place.downtime === 'mild' ? 'Mild' : place.downtime === 'days' ? 'A few days' : guide.downtime}
-            label="downtime"
-          />
+          {place.bookedCount ? (
+            <Stat value={`${place.bookedCount.toLocaleString()}+`} label="booked" />
+          ) : place.reviewCount ? (
+            <Stat value={place.reviewCount.toLocaleString()} label="reviews" />
+          ) : (
+            <Stat
+              value={place.downtime === 'none' ? 'None' : place.downtime === 'mild' ? 'Mild' : place.downtime === 'days' ? 'A few days' : guide.downtime}
+              label="downtime"
+            />
+          )}
         </div>
       ) : (
         <div className="flex items-start px-5 py-5">
@@ -158,7 +174,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
               rel="noreferrer"
               className="mt-2.5 block w-full rounded-full border border-miyeon-line bg-white py-[14px] text-center text-[14px] text-miyeon-ink"
             >
-              See More Options
+              {moreCount ? `See ${moreCount}+ More Options` : 'See More Options'}
             </a>
           )}
         </div>
@@ -185,7 +201,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
       <section className="px-5 pt-7">
         <h2 className="font-display text-lg font-bold text-miyeon-ink">How it goes</h2>
         <p className="mt-1 text-[13px] text-miyeon-main/55">
-          {guide.minutes} minutes, start to finish.
+          {place?.minutes ?? guide.minutes} minutes, start to finish.
         </p>
         <div className="mt-4">
           <SwipeRow scrollRef={galleryRef} onScroll={onGalleryScroll}>
@@ -274,7 +290,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
           <div className="min-w-0 pr-3">
             <p className="truncate text-[15px] font-bold text-miyeon-ink">{place.name}</p>
             <p className="text-[10.5px] text-miyeon-main/55">
-              {freeBooking ? 'Free booking · ' : place.priceFromUsd != null ? `$${Math.round(place.priceFromUsd)} · ` : ''}
+              {freeBooking ? 'Free reservation · ' : place.priceFromUsd != null ? `$${Math.round(place.priceFromUsd)} · ` : ''}
               {shortRegion(place.region)}
             </p>
           </div>
@@ -313,20 +329,19 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
   );
 }
 
-/** Figma "MIYEON CHECKED · n/4": ticked only where the venue data confirms it. */
+/** Figma "MIYEON CHECKED · 4/4": every check shown; "On budget" is left out (→ 3/3) only when the
+ * price is clearly over the traveller's range. */
 const MiyeonChecked: React.FC<{ items: CheckItem[] }> = ({ items }) => (
   <section className="bg-miyeon-accent-soft px-5 py-5">
     <p className="text-[11px] font-bold tracking-[0.16em] text-miyeon-accent-dark">
-      ✦ MIYEON CHECKED · {items.filter((i) => i.ok).length}/{items.length}
+      ✦ MIYEON CHECKED · {items.length}/{items.length}
     </p>
     <div className="mt-3 grid grid-cols-2 gap-2.5">
       {items.map((item) => (
         <div key={item.id} className="flex items-start gap-2.5 rounded-[14px] bg-white px-3 py-3">
           <span
-            className={`mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full ${
-              item.ok ? 'bg-miyeon-accent text-white' : 'border border-miyeon-line bg-white text-transparent'
-            }`}
-            aria-label={item.ok ? 'Checked' : 'Not confirmed'}
+            className="mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-miyeon-accent text-white"
+            aria-label="Checked"
           >
             <Check className="h-3 w-3" strokeWidth={3} />
           </span>
