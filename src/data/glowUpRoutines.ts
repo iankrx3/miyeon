@@ -232,6 +232,7 @@ export const ROUTINE_TEMPLATES: RoutineTemplate[] = [
     promise: 'Board rested. Land looking brand new.',
     slots: [
       { kind: 'yoga', hint: 'Stretch it out first' },
+      { kind: 'sauna', optional: true, hint: 'Sweat out the rest' },
       { kind: 'massage', optional: true, hint: 'Then let someone else do the work' },
     ],
     note: 'Save it for your last night',
@@ -276,9 +277,9 @@ export const ATTACH_ORDER: SlotKind[] = [
   'personal-color',
   'clinic',
   'permanent-makeup',
+  'yoga',
   'sauna',
   'scrub',
-  'yoga',
   'massage',
   'hair',
   'makeup',
