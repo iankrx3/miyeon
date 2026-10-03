@@ -6,6 +6,8 @@ import type { Place, Treatment } from '../types';
 import { fetchPlaceById, fetchTreatmentById } from '../services/places/places';
 import { hasCreatripListing, withCreatripAffiliate, CREATRIP_DISCLOSURE } from '../lib/creatrip';
 import { TreatmentExplainer } from '../components/treatment/TreatmentExplainer';
+import { getTreatmentExplanation } from '../data/treatmentGlossary';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
 
 export default function TreatmentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -24,6 +26,15 @@ export default function TreatmentDetailPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
+  useDocumentMeta(
+    treatment
+      ? {
+          title: treatment.name,
+          description: getTreatmentExplanation(treatment) ?? treatment.expectedResult,
+        }
+      : null
+  );
+
   if (loading) return <div className="px-5 py-10 text-sm text-miyeon-main/60">Loading…</div>;
   if (!treatment) return <div className="px-5 py-10 text-sm text-miyeon-main/60">Treatment not found.</div>;
 
@@ -36,7 +47,7 @@ export default function TreatmentDetailPage() {
   return (
     <div className="pb-28">
       <div className="relative h-[280px] w-full overflow-hidden bg-miyeon-line">
-        {place?.photoUrl && <img src={place.photoUrl} alt="" className="h-full w-full object-cover" />}
+        {place?.photoUrl && <img src={place.photoUrl} alt={place.name} className="h-full w-full object-cover" />}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-miyeon-ink/75" />
         <Link
           to="/"

@@ -6,6 +6,7 @@ import type { CommunityPost, Place, Treatment, UserSession } from '../types';
 import { fetchPlaceById, fetchTreatments } from '../services/places/places';
 import { fetchCommunityPosts } from '../services/community/community';
 import { useSavedPlaces } from '../hooks/useSavedPlaces';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { MedicalTourismSection, NearbyWellnessSection } from '../components/badges/KtoBadges';
 import { getDirectionsLinks } from '../lib/map/directions';
 import { toEnglishAddress } from '../lib/map/englishAddress';
@@ -58,6 +59,26 @@ export default function PlaceDetailPage({
       cancelled = true;
     };
   }, [id]);
+
+  useDocumentMeta(
+    place
+      ? {
+          title: place.name,
+          description: place.whyPeopleLikeIt?.[0] ?? `${place.name} — Korean beauty spot in ${place.area}, Seoul.`,
+          jsonLd: {
+            // Skin/face places are clinics; everything else is a salon or studio.
+            '@type': place.category === 'skin' || place.category === 'face' ? 'MedicalClinic' : 'BeautySalon',
+            name: place.name,
+            address: place.address,
+            image: place.photoUrl || undefined,
+            geo: { '@type': 'GeoCoordinates', latitude: place.latitude, longitude: place.longitude },
+            ...(place.reviewCount > 0 && {
+              aggregateRating: { '@type': 'AggregateRating', ratingValue: place.rating, reviewCount: place.reviewCount },
+            }),
+          },
+        }
+      : null
+  );
 
   if (loading) return <div className="px-4 py-10 text-sm text-miyeon-main/60">Loading…</div>;
   if (!place) return <div className="px-4 py-10 text-sm text-miyeon-main/60">Place not found.</div>;

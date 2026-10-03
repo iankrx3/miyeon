@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import type { CommunityPost, UserSession } from '../types';
 import { useCommunityPosts } from '../hooks/useCommunityPosts';
 import { useMagazineArticles } from '../hooks/useMagazineArticles';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { PostComposer } from '../components/community/PostComposer';
 import { PostCard } from '../components/community/PostCard';
 import { MagazineGrid } from '../components/community/MagazineGrid';
@@ -29,6 +30,10 @@ const TABS: { id: 'magazine' | 'qna'; label: string }[] = [
 
 export default function CommunityPage({ session, onSignIn }: CommunityPageProps) {
   const [searchParams, setSearchParams] = useSearchParams();
+  useDocumentMeta({
+    title: 'Community',
+    description: 'Real reviews and beauty-trip stories from travelers in Korea, plus guides from Miyeon curators.',
+  });
   // Magazine is the default tab. `community` is the old name for the Q&A tab.
   const tabParam = searchParams.get('tab');
   const activeTab = tabParam === 'qna' || tabParam === 'community' ? 'qna' : 'magazine';

@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft, Trash2 } from 'lucide-react';
 import type { MagazineArticle, UserSession } from '../types';
 import { deleteMagazineArticle, fetchMagazineArticles } from '../services/community/magazine';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
 
 interface MagazineDetailPageProps {
   session: UserSession;
@@ -17,6 +18,22 @@ export default function MagazineDetailPage({ session }: MagazineDetailPageProps)
     if (!id) return;
     fetchMagazineArticles().then((articles) => setArticle(articles.find((a) => a.id === id) ?? null));
   }, [id]);
+
+  useDocumentMeta(
+    article
+      ? {
+          title: article.title,
+          description: article.excerpt || article.body,
+          jsonLd: {
+            '@type': 'Article',
+            headline: article.title,
+            image: article.imageUrl || undefined,
+            datePublished: article.createdAt,
+            author: { '@type': 'Person', name: article.authorName },
+          },
+        }
+      : null
+  );
 
   if (article === undefined) return <div className="px-4 py-10 text-sm text-miyeon-main/60">Loading…</div>;
   if (!article) return <div className="px-4 py-10 text-sm text-miyeon-main/60">Column not found.</div>;

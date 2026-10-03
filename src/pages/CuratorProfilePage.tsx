@@ -7,6 +7,7 @@ import { fetchCreatorPicksByCreatorId } from '../services/places/places';
 import { createCuratorItinerary, fetchCuratorById, fetchCuratorItineraries } from '../services/curator';
 import { firstSpotImage } from '../lib/storage/localItineraryStore';
 import { PlaceCard } from '../components/place/PlaceCard';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
 
 interface CuratorProfilePageProps {
   session: UserSession;
@@ -37,6 +38,15 @@ export default function CuratorProfilePage({ session }: CuratorProfilePageProps)
       })
       .finally(() => setLoading(false));
   }, [id]);
+
+  useDocumentMeta(
+    creator
+      ? {
+          title: creator.display_name,
+          description: creator.bio || `Korean beauty picks and itineraries curated by ${creator.display_name}.`,
+        }
+      : null
+  );
 
   const viewPlace = (place: Place) => navigate(`/place/${place.id}`);
 

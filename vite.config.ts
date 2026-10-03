@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { miyeonApiProxy } from './plugins/miyeon-api-proxy';
+import { seo } from './plugins/seo';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
@@ -13,6 +14,7 @@ export default defineConfig(({ mode }) => {
         resendKey: env.RESEND_API_KEY,
         planEmailFrom: env.PLAN_EMAIL_FROM,
       }),
+      seo({ siteUrl: env.VITE_SITE_URL }),
     ],
   };
 });

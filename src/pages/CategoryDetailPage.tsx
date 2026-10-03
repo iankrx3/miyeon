@@ -6,6 +6,7 @@ import { guideFor } from '../data/categoryGuides';
 import { getStoredItinerary } from '../lib/storage/localItineraryStore';
 import { buildGlowUpCreatripUrl, CREATRIP_DISCLOSURE } from '../lib/creatrip';
 import { SwipeRow } from '../components/common/SwipeRow';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { BeautyCardSheet } from '../components/glowup/BeautyCardSheet';
 import { getGlowUpPlace, loadGlowUpPlaces } from '../services/places/glowUpPlaces';
 import { checksFor, isClinicSubtype, otherOptionsCount, type CheckItem, shortRegion } from '../services/glowUp/routines';
@@ -75,6 +76,8 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
   const bookHref = place?.bookingUrl ?? null;
   const freeBooking = guide ? isClinicSubtype(guide.subtype as GlowUpSubtype) : false;
 
+  useDocumentMeta(guide ? { title: `${guide.name} in Korea`, description: `${guide.headline} ${guide.whyKorea}` } : null);
+
   if (!guide) {
     return (
       <div className="px-5 py-10 text-sm text-miyeon-main/60">
@@ -102,7 +105,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
   return (
     <div className="mx-auto max-w-xl pb-40 sm:pb-28">
       <div className="relative h-[340px] w-full overflow-hidden bg-miyeon-line">
-        <img src={guide.image} alt="" className="h-full w-full object-cover" />
+        <img src={guide.image} alt={guide.name} className="h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-miyeon-ink/75" />
         <button
           type="button"

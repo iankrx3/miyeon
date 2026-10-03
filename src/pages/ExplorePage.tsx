@@ -24,6 +24,7 @@ import {
   tripDaysOptions,
 } from '../data/glowUpQuiz';
 import { HomeLanding } from '../components/home/HomeLanding';
+import { SITE_URL, useDocumentMeta } from '../hooks/useDocumentMeta';
 import { OptionCard } from '../components/onboarding/OptionCard';
 import { Chip } from '../components/onboarding/Chip';
 import { BudgetSlider } from '../components/onboarding/BudgetSlider';
@@ -76,7 +77,20 @@ const freshWizardMemory = () => ({
 });
 let wizardMemory = freshWizardMemory();
 
+const HOME_URL = `${SITE_URL || window.location.origin}/`;
+
+// Home keeps the index.html title/description; it only adds the site-level structured data.
+const HOME_META = {
+  jsonLd: {
+    '@graph': [
+      { '@type': 'WebSite', name: 'Miyeon', url: HOME_URL },
+      { '@type': 'Organization', name: 'Miyeon', url: HOME_URL },
+    ],
+  },
+};
+
 export default function ExplorePage() {
+  useDocumentMeta(HOME_META);
   const navigate = useNavigate();
   const t = useT();
   const generatingRef = useRef(false);

@@ -6,6 +6,7 @@ import { MapView } from '../components/map/MapView';
 import { PlaceListView } from '../components/map/PlaceListView';
 import { useSavedPlaces } from '../hooks/useSavedPlaces';
 import { useSpotsCatalog } from '../hooks/useSpotsCatalog';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { createUserItinerary } from '../services/itinerary/userItinerary';
 import type { Place, UserSession } from '../types';
 
@@ -15,6 +16,10 @@ export default function MapPage({ session, onSignIn }: { session: UserSession; o
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const { isSaved, toggleSave } = useSavedPlaces(session.user?.id);
   const spotsReady = useSpotsCatalog();
+  useDocumentMeta({
+    title: 'Beauty map of Seoul',
+    description: 'Skin clinics, hair salons, nail studios and spas around Seoul, on one map — with foreigner-friendly picks.',
+  });
 
   const handleCreateItinerary = async () => {
     if (!session.isLoggedIn) {
