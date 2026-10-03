@@ -355,6 +355,104 @@
     "captured_at": null
   },
   {
+    "id": "11334",
+    "name": "JUNO HAIR | Gangnam Square Branch",
+    "subtype": "hair_salon",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.498622,
+    "lng": 127.028064,
+    "address": "서울 강남구 테헤란로 101 3F",
+    "nearest_station": "Gangnam (Line 2, 87m)",
+    "price_type": "deposit",
+    "price_min_usd": null,
+    "deposit_usd": 100.43,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 10:00-21:00; tue 10:00-21:00; wed 10:00-21:00; thu 10:00-21:00; fri 10:00-21:00; sat 10:00-21:00; sun 10:00-21:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.2,
+    "review_count": 73,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/11334",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "11338",
+    "name": "JUNO HAIR | Sinnonhyeon",
+    "subtype": "hair_salon",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.502059,
+    "lng": 127.026057,
+    "address": "서울 강남구 강남대로 442 2F",
+    "nearest_station": "Sinnonhyeon (Line 9, 312m)",
+    "price_type": "deposit",
+    "price_min_usd": null,
+    "deposit_usd": 100.43,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 10:00-21:00; tue 10:00-21:00; wed 10:00-21:00; thu 10:00-21:00; fri 10:00-21:00; sat 10:00-21:00; sun 10:00-21:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 77,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/11338",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "11352",
     "name": "Woori Dongnae Photo Studio Hongdae",
     "subtype": "photo_studio",
@@ -415,6 +513,65 @@
     "active": true,
     "missing_fields": [],
     "url": "https://creatrip.com/en/spot/11352",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "11388",
+    "name": "Flowery Way Photo Studio | Daegu",
+    "subtype": "photo_studio",
+    "extra_subtypes": [],
+    "onboarding": "PHOTO",
+    "city": "Daegu",
+    "region": "Banwoldang",
+    "lat": 35.866437,
+    "lng": 128.603017,
+    "address": "대구 중구 공평로8길 55 3F",
+    "nearest_station": null,
+    "price_type": "paid",
+    "price_min_usd": 89.27,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 60,
+    "hours": "mon closed; tue closed; wed 11:00-19:00; thu 11:00-19:00; fri 11:00-19:00; sat 11:00-19:00; sun 11:00-19:00",
+    "closed_days": [
+      "mon",
+      "tue"
+    ],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "photo",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [
+      "dermatology",
+      "hair_salon",
+      "personal_color"
+    ],
+    "rating": 4.5,
+    "review_count": 43,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/11388",
     "booked_count": null,
     "captured_at": null
   },
@@ -562,6 +719,90 @@
     "captured_at": null
   },
   {
+    "id": "11507",
+    "name": "TATOA | Skin Treatments & Laser Hair Removal",
+    "subtype": "dermatology",
+    "extra_subtypes": [],
+    "onboarding": "FIX",
+    "city": "Seoul",
+    "region": "Sinsa",
+    "lat": 37.517488,
+    "lng": 127.019537,
+    "address": "서울 강남구 강남대로 624 2F",
+    "nearest_station": "Sinsa (Line 3, 132m)",
+    "price_type": "free_reservation",
+    "price_min_usd": null,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 10:00-20:00; tue 10:00-20:00; wed 10:00-20:00; thu 10:00-20:00; fri 10:00-20:00; sat 10:00-15:00; sun closed",
+    "closed_days": [
+      "sun"
+    ],
+    "fix_targets": [
+      "face",
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "botox",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "filler",
+        "downtime_grade": "low",
+        "downtime_days_min": 1,
+        "downtime_days_max": 3
+      },
+      {
+        "key": "thread_lift",
+        "downtime_grade": "high",
+        "downtime_days_min": 3,
+        "downtime_days_max": 7
+      },
+      {
+        "key": "soothing",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "waxing",
+        "downtime_grade": "low",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      }
+    ],
+    "downtime_grade": "high",
+    "downtime_days_max": 7,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 14,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/11507",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "11550",
     "name": "Tea Therapy",
     "subtype": "massage",
@@ -664,6 +905,93 @@
     "captured_at": null
   },
   {
+    "id": "12748",
+    "name": "WONJIN PLASTIC SURGERY GLOBAL HUB | Treatments Performed by the Chief Surgeon",
+    "subtype": "dermatology",
+    "extra_subtypes": [],
+    "onboarding": "FIX",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.499816,
+    "lng": 127.026248,
+    "address": "서울 서초구 강남대로 419 12F",
+    "nearest_station": "Gangnam (Line 2, 236m)",
+    "price_type": "free_reservation",
+    "price_min_usd": null,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 30,
+    "hours": "mon 10:00-19:00; tue 10:00-19:00; wed 10:00-19:00; thu 10:00-19:00; fri 10:00-19:00; sat 10:00-17:00; sun closed",
+    "closed_days": [
+      "sun"
+    ],
+    "fix_targets": [
+      "face",
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "botox",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "hifu",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "skin_booster",
+        "downtime_grade": "low",
+        "downtime_days_min": 1,
+        "downtime_days_max": 3
+      },
+      {
+        "key": "rf_lifting",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "volume_booster",
+        "downtime_grade": "low",
+        "downtime_days_min": 1,
+        "downtime_days_max": 3
+      }
+    ],
+    "downtime_grade": "low",
+    "downtime_days_max": 3,
+    "needs_before": [],
+    "rating": 4.5,
+    "review_count": 437,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd"
+    ],
+    "url": "https://creatrip.com/en/spot/12748",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "12899",
     "name": "Ohui & Whoo Spa Myeongdong",
     "subtype": "massage",
@@ -734,6 +1062,73 @@
     "active": true,
     "missing_fields": [],
     "url": "https://creatrip.com/en/spot/12899",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "12918",
+    "name": "Wooa Plastic Surgery & Dermatology",
+    "subtype": "dermatology",
+    "extra_subtypes": [],
+    "onboarding": "FIX",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.506206,
+    "lng": 127.024113,
+    "address": "서울 강남구 강남대로 492 10F",
+    "nearest_station": "Sinnonhyeon (Line 9, 191m)",
+    "price_type": "free_reservation",
+    "price_min_usd": null,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 10:00-20:30; tue 10:00-19:00; wed 10:00-19:00; thu 10:00-19:00; fri 10:00-20:30; sat 10:00-17:00; sun 10:00-17:00",
+    "closed_days": [],
+    "fix_targets": [
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "acne",
+        "downtime_grade": "low",
+        "downtime_days_min": 0,
+        "downtime_days_max": 2
+      },
+      {
+        "key": "soothing",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "low",
+    "downtime_days_max": 2,
+    "needs_before": [],
+    "rating": 4.7,
+    "review_count": 140,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/12918",
     "booked_count": null,
     "captured_at": null
   },
@@ -1069,6 +1464,120 @@
     "captured_at": null
   },
   {
+    "id": "13202",
+    "name": "Shilla Esthetic - Aesthetic Spa to Relieve Full-Body Fatigue",
+    "subtype": "massage",
+    "extra_subtypes": [],
+    "onboarding": "RESTORE",
+    "city": "Seoul",
+    "region": "Myeongdong",
+    "lat": 37.561749,
+    "lng": 126.98796,
+    "address": "서울 중구 명동8가길 52 2F",
+    "nearest_station": "Myeong-dong (Line 4, 82m)",
+    "price_type": "paid",
+    "price_min_usd": 59.52,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 60,
+    "hours": "mon 10:00-22:00; tue 10:00-22:00; wed 10:00-22:00; thu 10:00-22:00; fri 10:00-22:00; sat 10:00-22:00; sun 10:00-22:00",
+    "closed_days": [],
+    "fix_targets": [
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "laser_toning",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "massage",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 1,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 476,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/13202",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "13203",
+    "name": "Janggeum Spa Esthetic | Book a Myeongdong Spa",
+    "subtype": "massage",
+    "extra_subtypes": [],
+    "onboarding": "RESTORE",
+    "city": "Seoul",
+    "region": "Myeongdong",
+    "lat": 37.564914,
+    "lng": 126.984195,
+    "address": "서울 중구 명동7길 25 4F",
+    "nearest_station": "Euljiro 1(il)-ga (Line 2, 187m)",
+    "price_type": "paid",
+    "price_min_usd": 44.64,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 10:00-23:00; tue 10:00-23:00; wed 10:00-23:00; thu 10:00-23:00; fri 10:00-23:00; sat 10:00-23:00; sun 10:00-23:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "massage",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.8,
+    "review_count": 9,
+    "active": true,
+    "missing_fields": [
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/13203",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "13214",
     "name": "Cheongdam Eclat De | 1:1 Premium Dermatology Clinic",
     "subtype": "dermatology",
@@ -1291,6 +1800,143 @@
       "duration_min"
     ],
     "url": "https://creatrip.com/en/spot/13261",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "13269",
+    "name": "CHOP Hair Gangnam Branch | Foreigner-Friendly Hair Salon",
+    "subtype": "hair_salon",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.502086,
+    "lng": 127.027169,
+    "address": "서울 강남구 강남대로102길 16 2F",
+    "nearest_station": "Sinnonhyeon (Line 9, 342m)",
+    "price_type": "deposit",
+    "price_min_usd": null,
+    "deposit_usd": 22.32,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "mentioned"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 10:30-20:00; tue 10:30-20:00; wed 10:30-20:00; thu 10:30-20:00; fri 10:30-20:00; sat 10:30-20:00; sun 10:30-20:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 191,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/13269",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "13307",
+    "name": "JIWOO CLINIC | A Leading Lifting Clinic That Erases the Marks of Time",
+    "subtype": "dermatology",
+    "extra_subtypes": [],
+    "onboarding": "FIX",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.49868,
+    "lng": 127.028747,
+    "address": "서울 강남구 테헤란로 107 14F",
+    "nearest_station": "Gangnam (Line 2, 133m)",
+    "price_type": "free_reservation",
+    "price_min_usd": null,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 10:00-13:30,14:30-19:00; tue 10:00-13:30,14:30-19:00; wed 10:00-13:30,14:30-19:00; thu 10:00-13:30,14:30-19:00; fri 10:00-13:30,14:30-20:00; sat 09:30-16:00; sun closed",
+    "closed_days": [
+      "sun"
+    ],
+    "fix_targets": [
+      "face",
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "hifu",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "rf_lifting",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "skin_booster",
+        "downtime_grade": "low",
+        "downtime_days_min": 1,
+        "downtime_days_max": 3
+      },
+      {
+        "key": "botox",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      }
+    ],
+    "downtime_grade": "low",
+    "downtime_days_max": 3,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 17,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/13307",
     "booked_count": null,
     "captured_at": null
   },
@@ -1736,6 +2382,64 @@
       "duration_min"
     ],
     "url": "https://creatrip.com/en/spot/13387",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "13436",
+    "name": "Building Owen Morgen | Photography Studio",
+    "subtype": "photo_studio",
+    "extra_subtypes": [],
+    "onboarding": "PHOTO",
+    "city": "Busan",
+    "region": "Yeongdo",
+    "lat": 35.077889,
+    "lng": 129.045974,
+    "address": "부산 영도구 절영로 226",
+    "nearest_station": null,
+    "price_type": "paid",
+    "price_min_usd": 11.16,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "mentioned"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 11:00-17:00; tue 11:00-17:00; wed 11:00-17:00; thu 11:00-17:00; fri 11:00-17:00; sat 11:00-17:00; sun 11:00-17:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "photo",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [
+      "dermatology",
+      "hair_salon",
+      "personal_color"
+    ],
+    "rating": 4.9,
+    "review_count": 12,
+    "active": true,
+    "missing_fields": [
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/13436",
     "booked_count": null,
     "captured_at": null
   },
@@ -2277,6 +2981,73 @@
     "captured_at": null
   },
   {
+    "id": "13557",
+    "name": "ACEUMDU by SOONSIKI Hair",
+    "subtype": "hair_salon",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Hongdae",
+    "lat": 37.55397,
+    "lng": 126.92138,
+    "address": "서울 마포구 홍익로5길 19",
+    "nearest_station": "Hongik Univ. (Line 2, 368m)",
+    "price_type": "paid",
+    "price_min_usd": 14.43,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon closed; tue closed; wed 10:00-19:00; thu 10:00-19:00; fri 10:00-19:00; sat 10:00-19:00; sun 10:00-19:00",
+    "closed_days": [
+      "mon",
+      "tue"
+    ],
+    "fix_targets": [
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "soothing",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "photo",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 1428,
+    "active": true,
+    "missing_fields": [
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/13557",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "13558",
     "name": "Korean Celebrity & Influencer's Favorite Personal Color Analysis | Korea Fashion Psychology Institute Cheongdam",
     "subtype": "personal_color",
@@ -2325,6 +3096,70 @@
     "active": true,
     "missing_fields": [],
     "url": "https://creatrip.com/en/spot/13558",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "13559",
+    "name": "VIVID KANG | Personal Color Analysis",
+    "subtype": "personal_color",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Hongdae",
+    "lat": 37.558841,
+    "lng": 126.925876,
+    "address": "서울 마포구 양화로 193 4F",
+    "nearest_station": "Hongik Univ. (Line 2, 305m)",
+    "price_type": "paid",
+    "price_min_usd": 130.19,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 120,
+    "hours": "mon 10:00-22:00; tue 10:00-22:00; wed 10:00-22:00; thu 10:00-22:00; fri 10:00-22:00; sat 10:00-22:00; sun 10:00-22:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "personal_color",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 26,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/13559",
     "booked_count": null,
     "captured_at": null
   },
@@ -2504,6 +3339,72 @@
     "captured_at": null
   },
   {
+    "id": "13575",
+    "name": "CCL Color Image Convergence Lab | Personal Color Analysis",
+    "subtype": "personal_color",
+    "extra_subtypes": [
+      "makeup"
+    ],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Seongsudong",
+    "lat": 37.540678,
+    "lng": 127.05608,
+    "address": "서울 성동구 성수이로 66 7F",
+    "nearest_station": "Seongsu (Line 2, 439m)",
+    "price_type": "paid",
+    "price_min_usd": 89.27,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 40,
+    "hours": "mon 11:00-21:00; tue 11:00-21:00; wed 11:00-21:00; thu 11:00-21:00; fri 11:00-21:00; sat 11:00-21:00; sun 11:00-21:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "personal_color",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 17,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/13575",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "13581",
     "name": "COCORY Color Yeonhui Main Branch | Personal Color Analysis",
     "subtype": "personal_color",
@@ -2556,6 +3457,126 @@
     "active": true,
     "missing_fields": [],
     "url": "https://creatrip.com/en/spot/13581",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "13583",
+    "name": "Hongdae Shin Jiyoon Skincare Salon  - Facial Contouring",
+    "subtype": "massage",
+    "extra_subtypes": [],
+    "onboarding": "RESTORE",
+    "city": "Seoul",
+    "region": "Hongdae",
+    "lat": 37.556114,
+    "lng": 126.923449,
+    "address": "서울 마포구 양화로 156 11F",
+    "nearest_station": "Hongik Univ. (Line 2, 73m)",
+    "price_type": "paid",
+    "price_min_usd": 148.79,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 80,
+    "hours": "mon 11:00-21:00; tue 11:00-21:00; wed 11:00-21:00; thu 11:00-21:00; fri 11:00-21:00; sat 11:00-16:00; sun closed",
+    "closed_days": [
+      "sun"
+    ],
+    "fix_targets": [
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "laser_toning",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "soothing",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "massage",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 1,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 77,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/13583",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "13588",
+    "name": "LediU | Hongdae Makeup Shop",
+    "subtype": "makeup",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Hongdae",
+    "lat": 37.557657,
+    "lng": 126.919809,
+    "address": "서울 마포구 동교로23길 40 6F",
+    "nearest_station": "Hongik Univ. (Line 2, 353m)",
+    "price_type": "paid",
+    "price_min_usd": 48.36,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 90,
+    "hours": "mon 10:00-19:00; tue 10:00-19:00; wed 10:00-19:00; thu 10:00-19:00; fri 10:00-19:00; sat 10:00-19:00; sun 10:00-19:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 71,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/13588",
     "booked_count": null,
     "captured_at": null
   },
@@ -2869,6 +3890,82 @@
     "active": true,
     "missing_fields": [],
     "url": "https://creatrip.com/en/spot/13645",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "13646",
+    "name": "PLAN;S Clinic Gangnam l Diet, Lifting, Fat Reduction, Skin Care",
+    "subtype": "dermatology",
+    "extra_subtypes": [],
+    "onboarding": "FIX",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.499198,
+    "lng": 127.027447,
+    "address": "서울 강남구 강남대로 408 2F",
+    "nearest_station": "Gangnam (Line 2, 236m)",
+    "price_type": "free_reservation",
+    "price_min_usd": null,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 10:30-20:00; tue 10:30-20:00; wed 10:30-20:00; thu 10:30-20:00; fri 10:30-20:00; sat 10:30-16:00; sun closed",
+    "closed_days": [
+      "sun"
+    ],
+    "fix_targets": [
+      "face",
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "rf_lifting",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "skin_booster",
+        "downtime_grade": "low",
+        "downtime_days_min": 1,
+        "downtime_days_max": 3
+      },
+      {
+        "key": "botox",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      }
+    ],
+    "downtime_grade": "low",
+    "downtime_days_max": 3,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 2073,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/13646",
     "booked_count": null,
     "captured_at": null
   },
@@ -3446,6 +4543,58 @@
     "captured_at": null
   },
   {
+    "id": "13807",
+    "name": "[Creatrip Exclusive] Sihyunhada Gangnam",
+    "subtype": "photo_studio",
+    "extra_subtypes": [],
+    "onboarding": "PHOTO",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.503584,
+    "lng": 127.032282,
+    "address": "서울 강남구 테헤란로19길 53-6",
+    "nearest_station": "Eonju (Line 9, 440m)",
+    "price_type": "paid",
+    "price_min_usd": 40.92,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 60,
+    "hours": "mon 10:30-18:00; tue 10:30-18:00; wed 10:30-18:00; thu 10:30-18:00; fri 10:30-18:00; sat 10:30-18:00; sun 10:30-18:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "photo",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [
+      "dermatology",
+      "hair_salon",
+      "personal_color"
+    ],
+    "rating": 4.8,
+    "review_count": 321,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/13807",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "13808",
     "name": "SOONSIKI Hair Hongdae Hanok Branch | Global Customer's Most Booked Hair Salon",
     "subtype": "hair_salon",
@@ -3669,6 +4818,215 @@
     "captured_at": null
   },
   {
+    "id": "13885",
+    "name": "Ocollor Yeouido Branch | Find your colors through personal color analysis",
+    "subtype": "personal_color",
+    "extra_subtypes": [
+      "makeup"
+    ],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Yeouido",
+    "lat": 37.520775,
+    "lng": 126.926915,
+    "address": "서울 영등포구 국제금융로6길 33 1106호",
+    "nearest_station": "Yeouido (Line 5, 246m)",
+    "price_type": "paid",
+    "price_min_usd": 66.96,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 30,
+    "hours": "mon 10:00-20:30; tue 10:00-20:30; wed 10:00-20:30; thu 10:00-20:30; fri 10:00-20:30; sat 10:00-20:30; sun 10:00-20:30",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "personal_color",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.8,
+    "review_count": 10,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/13885",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "13898",
+    "name": "YONSEIRO CLINIC | Petite Skin Procedures",
+    "subtype": "dermatology",
+    "extra_subtypes": [],
+    "onboarding": "FIX",
+    "city": "Seoul",
+    "region": "Jongro",
+    "lat": 37.572578,
+    "lng": 126.980475,
+    "address": "서울 종로구 삼봉로 57 7F",
+    "nearest_station": "Jonggak (Line 1, 352m)",
+    "price_type": "deposit",
+    "price_min_usd": null,
+    "deposit_usd": 36.45,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 10:00-20:00; tue 10:00-20:00; wed 10:00-20:00; thu 10:00-20:00; fri 10:00-20:00; sat 10:00-16:00; sun 10:00-16:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face",
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "botox",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "filler",
+        "downtime_grade": "low",
+        "downtime_days_min": 1,
+        "downtime_days_max": 3
+      },
+      {
+        "key": "soothing",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "low",
+    "downtime_days_max": 3,
+    "needs_before": [],
+    "rating": 4.8,
+    "review_count": 43,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/13898",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "13908",
+    "name": "THE FORET SPA Seoul Forest Branch | Relaxing Spa Experience in Seoul",
+    "subtype": "massage",
+    "extra_subtypes": [],
+    "onboarding": "RESTORE",
+    "city": "Seoul",
+    "region": "Seongsudong",
+    "lat": 37.545791,
+    "lng": 127.042475,
+    "address": "서울 성동구 서울숲2길 32-14 B1 B11호",
+    "nearest_station": "Seoul-forest (Suin·Bundang Line, 308m)",
+    "price_type": "paid",
+    "price_min_usd": 103.06,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 60,
+    "hours": "mon 10:00-22:00; tue 10:00-22:00; wed 10:00-22:00; thu 10:00-22:00; fri 10:00-22:00; sat 10:00-22:00; sun 10:00-22:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face",
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "soothing",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "skin_booster",
+        "downtime_grade": "low",
+        "downtime_days_min": 1,
+        "downtime_days_max": 3
+      },
+      {
+        "key": "hifu",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "massage",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "low",
+    "downtime_days_max": 3,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 12,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/13908",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "13918",
     "name": "🎖️ Creatrip Only - Sihyunhada Photo Studio | Hongdae Space",
     "subtype": "photo_studio",
@@ -3723,6 +5081,83 @@
     "active": true,
     "missing_fields": [],
     "url": "https://creatrip.com/en/spot/13918",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "13921",
+    "name": "Gapi Beauty Salon | Hair & Makeup & Beauty Treatments in Myeongdong",
+    "subtype": "makeup",
+    "extra_subtypes": [
+      "hair_salon"
+    ],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Myeongdong",
+    "lat": 37.560636,
+    "lng": 126.986516,
+    "address": "서울 중구 퇴계로22길 5",
+    "nearest_station": "Myeong-dong (Line 4, 162m)",
+    "price_type": "paid",
+    "price_min_usd": 26.04,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 30,
+    "hours": "mon 10:00-20:00; tue closed; wed 10:00-20:00; thu 10:00-20:00; fri 10:00-20:00; sat 10:00-20:00; sun 10:00-20:00",
+    "closed_days": [
+      "tue"
+    ],
+    "fix_targets": [
+      "face",
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "peel",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "nail",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 1,
+    "needs_before": [],
+    "rating": 4.8,
+    "review_count": 103,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/13921",
     "booked_count": null,
     "captured_at": null
   },
@@ -3831,6 +5266,66 @@
     "captured_at": null
   },
   {
+    "id": "13950",
+    "name": "Wellkin Scalp Clinique Jongno Branch | Professional Hair Loss and Scalp Care",
+    "subtype": "massage",
+    "extra_subtypes": [
+      "hair_salon"
+    ],
+    "onboarding": "RESTORE",
+    "city": "Seoul",
+    "region": "Gyeongbokgung",
+    "lat": 37.568953,
+    "lng": 126.985905,
+    "address": "서울 종로구 종로12길 23 9F",
+    "nearest_station": "Jonggak (Line 1, 282m)",
+    "price_type": "paid",
+    "price_min_usd": 65.52,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 80,
+    "hours": "mon 11:00-21:00; tue 11:00-21:00; wed 11:00-21:00; thu 11:00-21:00; fri 11:00-21:00; sat 10:00-17:00; sun closed",
+    "closed_days": [
+      "sun"
+    ],
+    "fix_targets": [
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "microneedle",
+        "downtime_grade": "low",
+        "downtime_days_min": 2,
+        "downtime_days_max": 4
+      },
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "low",
+    "downtime_days_max": 4,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 178,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/13950",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "13957",
     "name": "GREEN Scalp & Hair Loss care center | 25 years practice of Hair Loss&Scalp",
     "subtype": "massage",
@@ -3879,6 +5374,62 @@
     "active": true,
     "missing_fields": [],
     "url": "https://creatrip.com/en/spot/13957",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "13982",
+    "name": "Discover Your Best Colors with Personal Color Analysis | Color Lume",
+    "subtype": "personal_color",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "City Hall",
+    "lat": 37.563109,
+    "lng": 126.973397,
+    "address": "서울 중구 서소문로 111 5F 501호",
+    "nearest_station": "City Hall (Line 1, 172m)",
+    "price_type": "paid",
+    "price_min_usd": 74.39,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 40,
+    "hours": "mon 11:00-19:00; tue 11:00-19:00; wed 11:00-19:00; thu 11:00-19:00; fri 11:00-19:00; sat 11:00-16:00; sun 11:00-16:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "personal_color",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 20,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/13982",
     "booked_count": null,
     "captured_at": null
   },
@@ -4421,6 +5972,116 @@
     "captured_at": null
   },
   {
+    "id": "14215",
+    "name": "Korea Fashion Psychology Institute Busan | Personal Color Analysis",
+    "subtype": "personal_color",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Busan",
+    "region": "Gwangalli",
+    "lat": 35.149004,
+    "lng": 129.111806,
+    "address": "부산 수영구 남천바다로10번길 19 2F",
+    "nearest_station": null,
+    "price_type": "paid",
+    "price_min_usd": 156.23,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 60,
+    "hours": "mon closed; tue closed; wed 10:00-19:00; thu 10:00-19:00; fri 10:00-19:00; sat 10:00-19:00; sun 10:00-19:00",
+    "closed_days": [
+      "mon",
+      "tue"
+    ],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "personal_color",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 45,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/14215",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "14232",
+    "name": "JUNO HAIR | Gangnam Station Branch 2",
+    "subtype": "hair_salon",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.501733,
+    "lng": 127.025324,
+    "address": "서울 서초구 강남대로 441 3F",
+    "nearest_station": "Sinnonhyeon (Line 9, 342m)",
+    "price_type": "deposit",
+    "price_min_usd": null,
+    "deposit_usd": 85.7,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 10:00-21:00; tue 10:00-21:00; wed 10:00-21:00; thu 10:00-21:00; fri 10:00-21:00; sat 10:00-21:00; sun 10:00-21:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 480,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/14232",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "14246",
     "name": "K-Beauty Style Profile Photos in Sinsa | OCTOBEE STUDIO",
     "subtype": "photo_studio",
@@ -4477,6 +6138,74 @@
     "captured_at": null
   },
   {
+    "id": "14247",
+    "name": "[Discount Event🎁] SHEJAC Hair & Makeup Sinsa | Premium Scalp&Hair Care Salon",
+    "subtype": "makeup",
+    "extra_subtypes": [
+      "hair_salon"
+    ],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Sinsa",
+    "lat": 37.518687,
+    "lng": 127.021194,
+    "address": "서울 강남구 압구정로2길 49",
+    "nearest_station": "Sinsa (Line 3, 269m)",
+    "price_type": "paid",
+    "price_min_usd": 22.32,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "mn",
+        "source": "mentioned"
+      }
+    ],
+    "duration_min": 90,
+    "hours": "mon 10:00-19:00; tue 10:00-19:00; wed 10:00-19:00; thu 10:00-19:00; fri 10:00-19:00; sat 10:00-19:00; sun 10:00-19:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "personal_color",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 757,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/14247",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "14272",
     "name": "Shinsegae Centum City Spaland 4-hour Discount Pass | Busan",
     "subtype": "sauna",
@@ -4523,6 +6252,69 @@
       "duration_min"
     ],
     "url": "https://creatrip.com/en/spot/14272",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "14274",
+    "name": "Personal Color Analysis in Yongsan | SEASON OF YOU",
+    "subtype": "personal_color",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Yongsan",
+    "lat": 37.530453,
+    "lng": 126.970802,
+    "address": "서울 용산구 한강대로40길 19-8 2F",
+    "nearest_station": "Sinyongsan (Line 4, 241m)",
+    "price_type": "paid",
+    "price_min_usd": 55.8,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 60,
+    "hours": "mon 11:00-21:00; tue 11:00-21:00; wed 11:00-21:00; thu 11:00-21:00; fri 11:00-21:00; sat 11:00-21:00; sun 11:00-21:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face",
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "personal_color",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "soothing",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 23,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/14274",
     "booked_count": null,
     "captured_at": null
   },
@@ -4890,6 +6682,66 @@
     "captured_at": null
   },
   {
+    "id": "14285",
+    "name": "Eyelash Extension & Perm Online Course | KoResQ",
+    "subtype": "permanent_makeup",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Daegu",
+    "region": null,
+    "lat": 35.84957,
+    "lng": 128.535726,
+    "address": "대구 달서구 달구벌대로 1542 3F",
+    "nearest_station": null,
+    "price_type": "paid",
+    "price_min_usd": 297.58,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "th",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 240,
+    "hours": "mon 00:00-23:59; tue 00:00-23:59; wed 00:00-23:59; thu 00:00-23:59; fri 00:00-23:59; sat 00:00-23:59; sun closed",
+    "closed_days": [
+      "sun"
+    ],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "lash_lift",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 1,
+    "needs_before": [],
+    "rating": 4.4,
+    "review_count": 5,
+    "active": true,
+    "missing_fields": [
+      "region"
+    ],
+    "url": "https://creatrip.com/en/spot/14285",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "14310",
     "name": "Eins Photo Studio",
     "subtype": "photo_studio",
@@ -4948,6 +6800,76 @@
     "active": true,
     "missing_fields": [],
     "url": "https://creatrip.com/en/spot/14310",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "14381",
+    "name": "Concept Profile Photo Studio | Stick Around",
+    "subtype": "photo_studio",
+    "extra_subtypes": [],
+    "onboarding": "PHOTO",
+    "city": "Seoul",
+    "region": "Seongsudong",
+    "lat": 37.539831,
+    "lng": 127.048831,
+    "address": "서울 성동구 성덕정5길 13-1 B1",
+    "nearest_station": "Seoul-forest (Suin·Bundang Line, 560m)",
+    "price_type": "paid",
+    "price_min_usd": 37.2,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 40,
+    "hours": "mon 11:00-19:00; tue 11:00-19:00; wed 11:00-19:00; thu 11:00-19:00; fri 11:00-19:00; sat 11:00-19:00; sun 11:00-19:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "photo",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [
+      "dermatology",
+      "hair_salon",
+      "personal_color"
+    ],
+    "rating": 5,
+    "review_count": 10,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/14381",
     "booked_count": null,
     "captured_at": null
   },
@@ -5202,6 +7124,62 @@
     "captured_at": null
   },
   {
+    "id": "14425",
+    "name": "Concept Photo Studio | Shihwa Studio",
+    "subtype": "photo_studio",
+    "extra_subtypes": [],
+    "onboarding": "PHOTO",
+    "city": "Seoul",
+    "region": "Hongdae",
+    "lat": 37.562747,
+    "lng": 126.926847,
+    "address": "서울 마포구 성미산로 195 3F",
+    "nearest_station": null,
+    "price_type": "paid",
+    "price_min_usd": 51.33,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 90,
+    "hours": "mon 09:30-20:00; tue 09:30-20:00; wed 09:30-20:00; thu 09:30-20:00; fri 09:30-20:00; sat 09:30-20:00; sun 09:30-20:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "photo",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [
+      "dermatology",
+      "hair_salon",
+      "personal_color"
+    ],
+    "rating": 4.8,
+    "review_count": 9,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/14425",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "14426",
     "name": "#CCONTE Seogyo Branch | English-Speaking Hair Color Specialist | Bleach, Dye & Balayage",
     "subtype": "hair_salon",
@@ -5249,6 +7227,110 @@
       "duration_min"
     ],
     "url": "https://creatrip.com/en/spot/14426",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "14450",
+    "name": "Rave Photo Studio",
+    "subtype": "photo_studio",
+    "extra_subtypes": [],
+    "onboarding": "PHOTO",
+    "city": "Seoul",
+    "region": "Seongsudong",
+    "lat": 37.549149,
+    "lng": 127.054373,
+    "address": "서울 성동구 광나루로4가길 12-7 B1",
+    "nearest_station": "Seongsu (Line 2, 522m)",
+    "price_type": "paid",
+    "price_min_usd": 14.88,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 40,
+    "hours": "mon 09:00-21:00; tue 09:00-21:00; wed 09:00-21:00; thu 09:00-21:00; fri 09:00-21:00; sat 09:00-21:00; sun 09:00-21:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "photo",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [
+      "dermatology",
+      "hair_salon",
+      "personal_color"
+    ],
+    "rating": 5,
+    "review_count": 5,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/14450",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "14466",
+    "name": "Photo Studio | STYLEGRAPHER",
+    "subtype": "photo_studio",
+    "extra_subtypes": [],
+    "onboarding": "PHOTO",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.515242,
+    "lng": 127.041185,
+    "address": "서울 강남구 선릉로127길 5-6 B1",
+    "nearest_station": "Gangnam-gu Office (Suin·Bundang Line, 215m)",
+    "price_type": "paid",
+    "price_min_usd": 1636.68,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 180,
+    "hours": "mon 09:00-18:00; tue 09:00-18:00; wed 09:00-18:00; thu 09:00-18:00; fri 09:00-18:00; sat 09:00-18:00; sun 09:00-18:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "photo",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [
+      "dermatology",
+      "hair_salon",
+      "personal_color"
+    ],
+    "rating": 4.7,
+    "review_count": 7,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/14466",
     "booked_count": null,
     "captured_at": null
   },
@@ -5363,6 +7445,72 @@
       "duration_min"
     ],
     "url": "https://creatrip.com/en/spot/14481",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "14497",
+    "name": "Personal Color Analysis + One-Day Makeup Class | Image Ho",
+    "subtype": "personal_color",
+    "extra_subtypes": [
+      "makeup"
+    ],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Hongdae",
+    "lat": 37.555965,
+    "lng": 126.927297,
+    "address": "서울 마포구 와우산로29길 54 4F",
+    "nearest_station": "Hongik Univ. (Airport Railroad Express, 495m)",
+    "price_type": "paid",
+    "price_min_usd": 185.99,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 100,
+    "hours": "mon 10:00-20:00; tue 10:00-20:00; wed 10:00-20:00; thu 10:00-20:00; fri 10:00-20:00; sat 10:00-20:00; sun 10:00-20:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "personal_color",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 2,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/14497",
     "booked_count": null,
     "captured_at": null
   },
@@ -5495,6 +7643,57 @@
     "captured_at": null
   },
   {
+    "id": "14518",
+    "name": "[Perm Discount Event💇‍♀️] idHair Gangnam Branch | Gangnam K-PERM Hair Salon",
+    "subtype": "hair_salon",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.491292,
+    "lng": 127.030185,
+    "address": "서울 서초구 강남대로51길 1 2F",
+    "nearest_station": "Gangnam (Line 2, 777m)",
+    "price_type": "deposit",
+    "price_min_usd": null,
+    "deposit_usd": 22.32,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 10:00-21:30; tue 10:00-21:30; wed 10:00-21:30; thu 10:00-21:30; fri 10:00-21:30; sat 10:00-19:30; sun 10:00-19:30",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 133,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/14518",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "14538",
     "name": "Beauty Palace Gyeongbokgung | Hanbok + K-Makeup & Hair",
     "subtype": "makeup",
@@ -5615,6 +7814,58 @@
     "active": true,
     "missing_fields": [],
     "url": "https://creatrip.com/en/spot/14557",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "14558",
+    "name": "Photo Studio | KKUMSOK",
+    "subtype": "photo_studio",
+    "extra_subtypes": [],
+    "onboarding": "PHOTO",
+    "city": "Seoul",
+    "region": "Edae",
+    "lat": 37.558251,
+    "lng": 126.945158,
+    "address": "서울 서대문구 이화여대5길 9 B1",
+    "nearest_station": "Ewha Womans Univ. (Line 2, 181m)",
+    "price_type": "paid",
+    "price_min_usd": 111.59,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 60,
+    "hours": "mon 12:00-20:00; tue 12:00-20:00; wed 12:00-20:00; thu 12:00-20:00; fri 12:00-20:00; sat 12:00-20:00; sun 12:00-20:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "photo",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [
+      "dermatology",
+      "hair_salon",
+      "personal_color"
+    ],
+    "rating": 4.5,
+    "review_count": 6,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/14558",
     "booked_count": null,
     "captured_at": null
   },
@@ -6083,6 +8334,58 @@
     "captured_at": null
   },
   {
+    "id": "14604",
+    "name": "Photo Cyan Gangnam Branch | Specialty in ID and Profile Photos",
+    "subtype": "photo_studio",
+    "extra_subtypes": [],
+    "onboarding": "PHOTO",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.51869,
+    "lng": 127.039641,
+    "address": "서울 강남구 선릉로135길 12 3층",
+    "nearest_station": "Gangnam-gu Office (Line 7, 179m)",
+    "price_type": "paid",
+    "price_min_usd": 22.32,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "mentioned"
+      }
+    ],
+    "duration_min": 30,
+    "hours": "mon 11:00-15:30,16:00-20:00; tue 11:00-15:30,16:00-20:00; wed 11:00-15:30,16:00-20:00; thu 11:00-15:30,16:00-20:00; fri 11:00-15:30,16:00-20:00; sat 11:00-15:30,16:00-20:00; sun 11:00-15:30,16:00-20:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "photo",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [
+      "dermatology",
+      "hair_salon",
+      "personal_color"
+    ],
+    "rating": 4.9,
+    "review_count": 22,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/14604",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "14621",
     "name": "here:re Nail",
     "subtype": "nail_art",
@@ -6306,6 +8609,84 @@
     "captured_at": null
   },
   {
+    "id": "14661",
+    "name": "Hair The Beau | Myeongdong Branch",
+    "subtype": "hair_salon",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Myeongdong",
+    "lat": 37.562178,
+    "lng": 126.985543,
+    "address": "서울 중구 명동10길 38 3F",
+    "nearest_station": "Myeong-dong (Line 4, 271m)",
+    "price_type": "deposit",
+    "price_min_usd": null,
+    "deposit_usd": 111.59,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 90,
+    "hours": "mon 10:30-20:30; tue 10:30-20:30; wed 10:30-20:30; thu 10:30-20:30; fri 10:30-20:30; sat 10:30-20:30; sun 10:30-20:30",
+    "closed_days": [],
+    "fix_targets": [
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "peel",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "soothing",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "massage",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 1,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 5116,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd"
+    ],
+    "url": "https://creatrip.com/en/spot/14661",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "14674",
     "name": "SCATTER LOUNGE | Premium Head Spa & Skin Care in Gangnam",
     "subtype": "massage",
@@ -6414,6 +8795,66 @@
     "active": true,
     "missing_fields": [],
     "url": "https://creatrip.com/en/spot/14675",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "14679",
+    "name": "Pastelmood (Pastel Mood)",
+    "subtype": "makeup",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Hongdae",
+    "lat": 37.557158,
+    "lng": 126.921972,
+    "address": "서울 마포구 동교로 187 3F",
+    "nearest_station": "Hongik Univ. (Line 2, 154m)",
+    "price_type": "paid",
+    "price_min_usd": 89.27,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 90,
+    "hours": "mon 08:00-17:30; tue 08:00-17:30; wed 08:00-17:30; thu 08:00-17:30; fri 08:00-17:30; sat 08:00-17:30; sun 08:00-17:30",
+    "closed_days": [],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 111,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/14679",
     "booked_count": null,
     "captured_at": null
   },
@@ -7049,6 +9490,67 @@
     "captured_at": null
   },
   {
+    "id": "14729",
+    "name": "Meet Cute",
+    "subtype": "makeup",
+    "extra_subtypes": [
+      "hair_salon"
+    ],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.525544,
+    "lng": 127.050252,
+    "address": "서울 강남구 압구정로79길 37-1 1,2F",
+    "nearest_station": "Cheongdam (Line 7, 731m)",
+    "price_type": "deposit",
+    "price_min_usd": null,
+    "deposit_usd": 57.28,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 10:00-19:00; tue 10:00-19:00; wed 10:00-19:00; thu 10:00-19:00; fri 10:00-19:00; sat 10:00-19:00; sun 10:00-19:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.6,
+    "review_count": 5,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/14729",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "14739",
     "name": "Jenny Pilates",
     "subtype": "yoga_wellness",
@@ -7283,6 +9785,72 @@
     "active": true,
     "missing_fields": [],
     "url": "https://creatrip.com/en/spot/14751",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "14752",
+    "name": "✨Special Offer✨  Lee Kyung Min Foret Hongdae Branch | Makeup",
+    "subtype": "makeup",
+    "extra_subtypes": [
+      "hair_salon"
+    ],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Hongdae",
+    "lat": 37.55191,
+    "lng": 126.911642,
+    "address": "서울 마포구 월드컵로5길 10",
+    "nearest_station": "Hapjeong (Line 2, 361m)",
+    "price_type": "paid",
+    "price_min_usd": 8.18,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ja",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "mentioned"
+      }
+    ],
+    "duration_min": 10,
+    "hours": "mon 08:00-19:00; tue 08:00-19:00; wed 08:00-19:00; thu 08:00-19:00; fri 08:00-19:00; sat 08:00-19:00; sun 08:00-19:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.8,
+    "review_count": 79,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/14752",
     "booked_count": null,
     "captured_at": null
   },
@@ -7908,6 +10476,109 @@
     "captured_at": null
   },
   {
+    "id": "14827",
+    "name": "Semi-Permanent Makeup | DELUMINA Beauty",
+    "subtype": "permanent_makeup",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Myeongdong",
+    "lat": 37.563844,
+    "lng": 126.990603,
+    "address": "서울 중구 저동2가 47-11 6F",
+    "nearest_station": "Euljiro 3(sam)-ga (Line 2, 326m)",
+    "price_type": "paid",
+    "price_min_usd": 52.08,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 60,
+    "hours": "mon 11:00-20:00; tue 11:00-20:00; wed 11:00-20:00; thu 11:00-20:00; fri 11:00-20:00; sat 11:00-18:00; sun closed",
+    "closed_days": [
+      "sun"
+    ],
+    "fix_targets": [
+      "face",
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "soothing",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "brow_tattoo",
+        "downtime_grade": "high",
+        "downtime_days_min": 5,
+        "downtime_days_max": 7
+      },
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "peel",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "sauna",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "eyeliner_tattoo",
+        "downtime_grade": "low",
+        "downtime_days_min": 2,
+        "downtime_days_max": 4
+      },
+      {
+        "key": "personal_color",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "lip_tattoo",
+        "downtime_grade": "high",
+        "downtime_days_min": 5,
+        "downtime_days_max": 7
+      }
+    ],
+    "downtime_grade": "high",
+    "downtime_days_max": 7,
+    "needs_before": [],
+    "rating": 4.3,
+    "review_count": 27,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/14827",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "14830",
     "name": "Personal Color Analysis | Color Lover",
     "subtype": "personal_color",
@@ -8134,6 +10805,59 @@
     "captured_at": null
   },
   {
+    "id": "14846",
+    "name": "AKNACK Seongsu | Trendy Hair Salon in Seoul for Cut, Color & Styling",
+    "subtype": "hair_salon",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Seongsudong",
+    "lat": 37.541388,
+    "lng": 127.047954,
+    "address": "서울 성동구 성수일로1길 3 1F, 2F",
+    "nearest_station": "Seoul-forest (Suin·Bundang Line, 382m)",
+    "price_type": "deposit",
+    "price_min_usd": null,
+    "deposit_usd": 40.92,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 60,
+    "hours": "mon closed; tue closed; wed 10:00-19:00; thu 10:00-19:00; fri 10:00-19:00; sat 10:00-19:00; sun 10:00-19:00",
+    "closed_days": [
+      "mon",
+      "tue"
+    ],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 157,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd"
+    ],
+    "url": "https://creatrip.com/en/spot/14846",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "14852",
     "name": "Vivid Hue Personal Color & Body Type Analysis",
     "subtype": "personal_color",
@@ -8186,6 +10910,144 @@
     "active": true,
     "missing_fields": [],
     "url": "https://creatrip.com/en/spot/14852",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "14857",
+    "name": "[🎁Discount Event] PROJECT HIN | Seongsu Hair & Makeup",
+    "subtype": "makeup",
+    "extra_subtypes": [
+      "hair_salon"
+    ],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Seongsudong",
+    "lat": 37.542584,
+    "lng": 127.058219,
+    "address": "서울 성동구 연무장13길 9, 2F",
+    "nearest_station": "Seongsu (Line 2, 349m)",
+    "price_type": "paid",
+    "price_min_usd": 45.83,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 180,
+    "hours": "mon closed; tue 10:00-20:00; wed 10:00-20:00; thu 10:00-20:00; fri 10:00-20:00; sat 10:00-20:00; sun 10:00-20:00",
+    "closed_days": [
+      "mon"
+    ],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 40,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/14857",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "14868",
+    "name": "RED | Permanent Makeup",
+    "subtype": "permanent_makeup",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.524751,
+    "lng": 127.026921,
+    "address": "서울 강남구 논현로167길 16 삼구빌딩 301호",
+    "nearest_station": "Apgujeong (Line 3, 210m)",
+    "price_type": "deposit",
+    "price_min_usd": null,
+    "deposit_usd": 52.08,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ja",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "mentioned"
+      }
+    ],
+    "duration_min": 40,
+    "hours": "mon 10:00-21:00; tue 10:00-21:00; wed 10:00-21:00; thu 10:00-21:00; fri 10:00-21:00; sat 10:00-21:00; sun closed",
+    "closed_days": [
+      "sun"
+    ],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "lip_tattoo",
+        "downtime_grade": "high",
+        "downtime_days_min": 5,
+        "downtime_days_max": 7
+      },
+      {
+        "key": "scalp_tattoo",
+        "downtime_grade": "low",
+        "downtime_days_min": 2,
+        "downtime_days_max": 4
+      },
+      {
+        "key": "brow_tattoo",
+        "downtime_grade": "high",
+        "downtime_days_min": 5,
+        "downtime_days_max": 7
+      },
+      {
+        "key": "eyeliner_tattoo",
+        "downtime_grade": "low",
+        "downtime_days_min": 2,
+        "downtime_days_max": 4
+      }
+    ],
+    "downtime_grade": "high",
+    "downtime_days_max": 7,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 55,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd"
+    ],
+    "url": "https://creatrip.com/en/spot/14868",
     "booked_count": null,
     "captured_at": null
   },
@@ -8312,6 +11174,72 @@
     "active": true,
     "missing_fields": [],
     "url": "https://creatrip.com/en/spot/14874",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "14875",
+    "name": "Eyes U Studio | Idol Concept Shoot",
+    "subtype": "photo_studio",
+    "extra_subtypes": [],
+    "onboarding": "PHOTO",
+    "city": "Seoul",
+    "region": "Seongsudong",
+    "lat": 37.542867,
+    "lng": 127.055454,
+    "address": "서울 성동구 연무장7가길 10-1, 2F",
+    "nearest_station": "Seongsu (Line 2, Nonem)",
+    "price_type": "paid",
+    "price_min_usd": 59.52,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 30,
+    "hours": "mon 10:00-21:00; tue 10:00-21:00; wed 10:00-21:00; thu 10:00-21:00; fri 10:00-21:00; sat 10:00-21:00; sun 10:00-21:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "photo",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [
+      "dermatology",
+      "hair_salon",
+      "personal_color"
+    ],
+    "rating": 4.9,
+    "review_count": 62,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/14875",
     "booked_count": null,
     "captured_at": null
   },
@@ -8464,6 +11392,69 @@
       "duration_min"
     ],
     "url": "https://creatrip.com/en/spot/14884",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "14892",
+    "name": "Margaux Beauty | Brightening, Stretch Mark Care",
+    "subtype": "permanent_makeup",
+    "extra_subtypes": [
+      "massage"
+    ],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Hongdae",
+    "lat": 37.554131,
+    "lng": 126.9276,
+    "address": "서울 마포구 와우산로27길 14 2F",
+    "nearest_station": "Hongik Univ. (Line 2, 454m)",
+    "price_type": "deposit",
+    "price_min_usd": null,
+    "deposit_usd": 37.2,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ja",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "mentioned"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 11:00-21:00; tue 11:00-21:00; wed 11:00-21:00; thu 11:00-21:00; fri 11:00-21:00; sat 11:00-21:00; sun 11:00-21:00",
+    "closed_days": [],
+    "fix_targets": [
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "laser_toning",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 1,
+    "needs_before": [],
+    "rating": 4.6,
+    "review_count": 5,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/14892",
     "booked_count": null,
     "captured_at": null
   },
@@ -8829,6 +11820,68 @@
     "active": true,
     "missing_fields": [],
     "url": "https://creatrip.com/en/spot/14927",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "14938",
+    "name": "iimi Hair & Makeup Salon",
+    "subtype": "makeup",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Hongdae",
+    "lat": 37.557206,
+    "lng": 126.920638,
+    "address": "서울 마포구 월드컵북로4길 15 2F",
+    "nearest_station": "Hongik Univ. (Line 2, 270m)",
+    "price_type": "paid",
+    "price_min_usd": 49.1,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "mentioned"
+      }
+    ],
+    "duration_min": 120,
+    "hours": "mon closed; tue 11:00-19:00; wed 11:00-19:00; thu 11:00-19:00; fri 11:00-19:00; sat 11:00-19:00; sun 11:00-19:00",
+    "closed_days": [
+      "mon"
+    ],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "photo",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.3,
+    "review_count": 33,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/14938",
     "booked_count": null,
     "captured_at": null
   },
@@ -9474,6 +12527,74 @@
     "captured_at": null
   },
   {
+    "id": "15060",
+    "name": "DAKYO | Cheongdam Branch",
+    "subtype": "makeup",
+    "extra_subtypes": [
+      "hair_salon"
+    ],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Apgujeong",
+    "lat": 37.526427,
+    "lng": 127.040761,
+    "address": "서울 강남구 선릉로160길 5 MM빌딩 2,3F",
+    "nearest_station": "Apgujeong rodeo (Suin·Bundang Line, 108m)",
+    "price_type": "paid",
+    "price_min_usd": 36.83,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ja",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 60,
+    "hours": "mon 10:00-18:00; tue 10:00-18:00; wed 10:00-18:00; thu 10:00-18:00; fri 10:00-18:00; sat 10:00-18:00; sun 10:00-18:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "massage",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.8,
+    "review_count": 84,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/15060",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "15076",
     "name": "DIORE CLINIC | Lifting Expertise in Gangnam",
     "subtype": "dermatology",
@@ -9570,6 +12691,60 @@
     "captured_at": null
   },
   {
+    "id": "15107",
+    "name": "FLOTIZ | Semi-Permanent Makeup",
+    "subtype": "permanent_makeup",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Hongdae",
+    "lat": 37.560577,
+    "lng": 126.926421,
+    "address": "서울 마포구 연희로 19",
+    "nearest_station": "Hongik Univ. (Line 2, 491m)",
+    "price_type": "paid",
+    "price_min_usd": 185.99,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 120,
+    "hours": "mon 11:00-20:00; tue 11:00-20:00; wed 11:00-20:00; thu 11:00-20:00; fri 11:00-20:00; sat 11:00-20:00; sun 11:00-20:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "brow_tattoo",
+        "downtime_grade": "high",
+        "downtime_days_min": 5,
+        "downtime_days_max": 7
+      },
+      {
+        "key": "eyeliner_tattoo",
+        "downtime_grade": "low",
+        "downtime_days_min": 2,
+        "downtime_days_max": 4
+      }
+    ],
+    "downtime_grade": "high",
+    "downtime_days_max": 7,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 96,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/15107",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "15112",
     "name": "LIJIN Clinic | Private Skin Clinic with Lifting Expertise",
     "subtype": "dermatology",
@@ -9655,6 +12830,97 @@
       "duration_min"
     ],
     "url": "https://creatrip.com/en/spot/15112",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "15113",
+    "name": "Mamaink Tattoo Studio",
+    "subtype": "permanent_makeup",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Yongsan",
+    "lat": 37.539725,
+    "lng": 126.96257,
+    "address": "서울 용산구 효창원로62길 16 4F",
+    "nearest_station": "Hyochang park (Line 6, 119m)",
+    "price_type": "paid",
+    "price_min_usd": 74.39,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 60,
+    "hours": "mon 11:00-22:00; tue 11:00-22:00; wed 11:00-22:00; thu 11:00-22:00; fri 11:00-22:00; sat 11:00-22:00; sun 11:00-22:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "photo",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 585,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/15113",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "15115",
+    "name": "Mamaink Academy | One-Day Tattoo Class",
+    "subtype": "permanent_makeup",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Yongsan",
+    "lat": 37.539725,
+    "lng": 126.96257,
+    "address": "서울 용산구 효창원로62길 16 4F",
+    "nearest_station": "Hyochang park (Line 6, Nonem)",
+    "price_type": "paid",
+    "price_min_usd": 184.04,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 300,
+    "hours": "mon 13:00-18:00; tue 13:00-18:00; wed 13:00-18:00; thu 13:00-18:00; fri 13:00-18:00; sat 13:00-18:00; sun 13:00-18:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [],
+    "downtime_grade": null,
+    "downtime_days_max": null,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 5,
+    "active": true,
+    "missing_fields": [
+      "procedures"
+    ],
+    "url": "https://creatrip.com/en/spot/15115",
     "booked_count": null,
     "captured_at": null
   },
@@ -9793,6 +13059,131 @@
     "captured_at": null
   },
   {
+    "id": "15144",
+    "name": "Hongdae Body & Skin | Skin Care & Aesthetics",
+    "subtype": "massage",
+    "extra_subtypes": [],
+    "onboarding": "RESTORE",
+    "city": "Seoul",
+    "region": "Hongdae",
+    "lat": 37.553245,
+    "lng": 126.922388,
+    "address": "서울 마포구 어울마당로 94-7 5F",
+    "nearest_station": "Hongik Univ. (Line 2, 405m)",
+    "price_type": "paid",
+    "price_min_usd": 37.2,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 70,
+    "hours": "mon 11:00-21:00; tue 11:00-21:00; wed 11:00-21:00; thu 11:00-21:00; fri 11:00-21:00; sat 11:00-21:00; sun closed",
+    "closed_days": [
+      "sun"
+    ],
+    "fix_targets": [
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "soothing",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "laser_toning",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "massage",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 1,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 38,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/15144",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "15166",
+    "name": "#CCONTE Flagship Apgujeong Rodeo  | Foreigner-Friendly Hair Salon in Seoul",
+    "subtype": "hair_salon",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.52705,
+    "lng": 127.039143,
+    "address": "서울 강남구 선릉로161길 15-3 3F",
+    "nearest_station": null,
+    "price_type": "deposit",
+    "price_min_usd": null,
+    "deposit_usd": 25.77,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "mentioned"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 11:00-20:00; tue 11:00-20:00; wed 11:00-20:00; thu 11:00-20:00; fri 11:00-20:00; sat 11:00-20:00; sun 11:00-20:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "personal_color",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 468,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/15166",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "15170",
     "name": "Cassia Thai Massage | Hongdae Main Branch",
     "subtype": "massage",
@@ -9839,6 +13230,64 @@
       "duration_min"
     ],
     "url": "https://creatrip.com/en/spot/15170",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "15184",
+    "name": "COCORY Color Gangnam Branch | Personal Color Analysis",
+    "subtype": "personal_color",
+    "extra_subtypes": [
+      "makeup"
+    ],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.553502,
+    "lng": 126.923282,
+    "address": null,
+    "nearest_station": null,
+    "price_type": "paid",
+    "price_min_usd": 124.98,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 60,
+    "hours": "mon 09:00-18:00; tue 09:00-18:00; wed 09:00-18:00; thu 09:00-18:00; fri 09:00-18:00; sat 09:00-18:00; sun 09:00-18:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "personal_color",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 16,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/15184",
     "booked_count": null,
     "captured_at": null
   },
@@ -10243,6 +13692,74 @@
     "captured_at": null
   },
   {
+    "id": "15233",
+    "name": "Chaeha Beautywith Gangnam Branch | Personal Color & Makeup Consultation",
+    "subtype": "personal_color",
+    "extra_subtypes": [
+      "makeup"
+    ],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.500926,
+    "lng": 127.024559,
+    "address": "서울 서초구 서초대로73길 40, 1005호",
+    "nearest_station": "Gangnam (Line 2, 422m)",
+    "price_type": "paid",
+    "price_min_usd": 111.59,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 120,
+    "hours": "mon 11:00-20:00; tue 11:00-20:00; wed 11:00-20:00; thu 11:00-20:00; fri 11:00-20:00; sat 11:00-20:00; sun closed",
+    "closed_days": [
+      "sun"
+    ],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "personal_color",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 418,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/15233",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "15239",
     "name": "Women-only Private Bath & Body Scrub | ONA 2nd Branch",
     "subtype": "body_scrub",
@@ -10349,6 +13866,158 @@
     "captured_at": null
   },
   {
+    "id": "15248",
+    "name": "SlimM Main Branch (Con2our by JH SlimM) | K-pop Idol Contouring Lifting + Lymphatic Therapy",
+    "subtype": "massage",
+    "extra_subtypes": [],
+    "onboarding": "RESTORE",
+    "city": "Seoul",
+    "region": null,
+    "lat": 37.498494,
+    "lng": 126.997523,
+    "address": "서울 서초구 사평대로22길 24",
+    "nearest_station": null,
+    "price_type": "paid",
+    "price_min_usd": 40.92,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 70,
+    "hours": "mon 10:00-22:00; tue 10:00-22:00; wed 10:00-22:00; thu 10:00-22:00; fri 10:00-22:00; sat closed; sun closed",
+    "closed_days": [
+      "sat",
+      "sun"
+    ],
+    "fix_targets": [
+      "face",
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "soothing",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "photo",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "massage",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "hifu",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "sauna",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 1,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 12,
+    "active": true,
+    "missing_fields": [
+      "region"
+    ],
+    "url": "https://creatrip.com/en/spot/15248",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "15253",
+    "name": "TheiA Clinic | In-house AI Derma:Code",
+    "subtype": "dermatology",
+    "extra_subtypes": [],
+    "onboarding": "FIX",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.499002,
+    "lng": 127.026592,
+    "address": "서울 서초구 강남대로 407 14-15F",
+    "nearest_station": "Gangnam (Line 2, 143m)",
+    "price_type": "free_reservation",
+    "price_min_usd": null,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "id",
+        "source": "mentioned"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 10:00-21:00; tue 10:00-21:00; wed 10:00-21:00; thu 10:00-21:00; fri 10:00-21:00; sat 10:00-21:00; sun 10:00-21:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face",
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "rf_lifting",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "skin_booster",
+        "downtime_grade": "low",
+        "downtime_days_min": 1,
+        "downtime_days_max": 3
+      }
+    ],
+    "downtime_grade": "low",
+    "downtime_days_max": 3,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 1121,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/15253",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "15274",
     "name": "Daybeau Myeongdong Signature Branch | Book and receive 10 free sheet masks",
     "subtype": "dermatology",
@@ -10447,6 +14116,94 @@
       "duration_min"
     ],
     "url": "https://creatrip.com/en/spot/15274",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "15296",
+    "name": "ECOJARDIN COEX Samsung Branch | K-beauty Hair·Makeup & Scalp Treatment",
+    "subtype": "makeup",
+    "extra_subtypes": [
+      "hair_salon"
+    ],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.507426,
+    "lng": 127.059762,
+    "address": "서울 강남구 테헤란로 514 2F",
+    "nearest_station": "Samseong (Line 2, 341m)",
+    "price_type": "deposit",
+    "price_min_usd": null,
+    "deposit_usd": 14.88,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ja",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "mentioned"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 10:00-20:00; tue 10:00-20:00; wed 10:00-20:00; thu 10:00-20:00; fri 10:00-20:00; sat 10:00-20:00; sun 10:00-20:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face",
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "personal_color",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "soothing",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "massage",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 624,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/15296",
     "booked_count": null,
     "captured_at": null
   },
@@ -10578,6 +14335,160 @@
     "captured_at": null
   },
   {
+    "id": "15315",
+    "name": "Gowoonsesang Kim Yang-che & Jang Bong-seok Skin Clinic | Busan Board-certified Dermatologist",
+    "subtype": "dermatology",
+    "extra_subtypes": [],
+    "onboarding": "FIX",
+    "city": "Busan",
+    "region": "Seomyeon",
+    "lat": 35.153931,
+    "lng": 129.059577,
+    "address": "부산 부산진구 중앙대로 686 5F",
+    "nearest_station": null,
+    "price_type": "free_reservation",
+    "price_min_usd": null,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 09:30-13:00,14:30-19:00; tue 09:30-13:00,14:30-19:00; wed 09:30-13:00,14:30-19:00; thu 09:30-13:00,14:30-19:00; fri 09:30-13:00,14:30-19:00; sat 09:30-15:30; sun closed",
+    "closed_days": [
+      "sun"
+    ],
+    "fix_targets": [
+      "face",
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "rf_lifting",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "laser_toning",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "hifu",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "skin_booster",
+        "downtime_grade": "low",
+        "downtime_days_min": 1,
+        "downtime_days_max": 3
+      }
+    ],
+    "downtime_grade": "low",
+    "downtime_days_max": 3,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 924,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/15315",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "15328",
+    "name": "ECOJARDIN COEX Samsung Branch Beauty Center | Semi-permanent Makeup & Hair Salon",
+    "subtype": "permanent_makeup",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.507405,
+    "lng": 127.059761,
+    "address": "서울 강남구 테헤란로 514, 2F",
+    "nearest_station": "Samseong (Line 2, 342m)",
+    "price_type": "paid",
+    "price_min_usd": 163.67,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "mentioned"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 90,
+    "hours": "mon closed; tue closed; wed closed; thu closed; fri 10:00-20:00; sat 10:00-20:00; sun closed",
+    "closed_days": [
+      "mon",
+      "tue",
+      "wed",
+      "thu",
+      "sun"
+    ],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "brow_tattoo",
+        "downtime_grade": "high",
+        "downtime_days_min": 5,
+        "downtime_days_max": 7
+      },
+      {
+        "key": "personal_color",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "eyeliner_tattoo",
+        "downtime_grade": "low",
+        "downtime_days_min": 2,
+        "downtime_days_max": 4
+      },
+      {
+        "key": "lip_tattoo",
+        "downtime_grade": "high",
+        "downtime_days_min": 5,
+        "downtime_days_max": 7
+      }
+    ],
+    "downtime_grade": "high",
+    "downtime_days_max": 7,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 619,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/15328",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "15357",
     "name": "OTENA CLINIC | Affordable Clinic with Guaranteed Privacy",
     "subtype": "dermatology",
@@ -10692,6 +14603,122 @@
       "duration_min"
     ],
     "url": "https://creatrip.com/en/spot/15357",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "15362",
+    "name": "RE:BERRY Clinic Myeongdong Branch | Anti-Aging Experience with Filler and Collagen",
+    "subtype": "dermatology",
+    "extra_subtypes": [],
+    "onboarding": "FIX",
+    "city": "Seoul",
+    "region": "Myeongdong",
+    "lat": 37.561289,
+    "lng": 126.985733,
+    "address": "서울 중구 명동10길 58 2F",
+    "nearest_station": "Myeong-dong (Line 4, 225m)",
+    "price_type": "free_reservation",
+    "price_min_usd": null,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "es",
+        "source": "mentioned"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "mn",
+        "source": "mentioned"
+      },
+      {
+        "code": "th",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 10:30-19:00; tue 10:30-19:00; wed 10:30-19:00; thu 10:30-19:00; fri 10:30-19:00; sat 10:30-19:00; sun 10:30-19:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face",
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "botox",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "filler",
+        "downtime_grade": "low",
+        "downtime_days_min": 1,
+        "downtime_days_max": 3
+      },
+      {
+        "key": "hifu",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "rf_lifting",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "skin_booster",
+        "downtime_grade": "low",
+        "downtime_days_min": 1,
+        "downtime_days_max": 3
+      },
+      {
+        "key": "soothing",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "sauna",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "massage",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "low",
+    "downtime_days_max": 3,
+    "needs_before": [],
+    "rating": 4.8,
+    "review_count": 218,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/15362",
     "booked_count": null,
     "captured_at": null
   },
@@ -10925,6 +14952,74 @@
     "captured_at": null
   },
   {
+    "id": "15412",
+    "name": "Ohn Studio | Precise and Systematic Personal Color Analysis",
+    "subtype": "personal_color",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Junggu",
+    "lat": 37.561155,
+    "lng": 126.985849,
+    "address": "서울 중구 퇴계로 127",
+    "nearest_station": "Myeong-dong (Line 4, 214m)",
+    "price_type": "paid",
+    "price_min_usd": 66.21,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 30,
+    "hours": "mon 10:30-18:00; tue 10:30-14:00; wed closed; thu 10:30-18:00; fri 10:30-18:00; sat 10:30-18:00; sun 10:30-18:00",
+    "closed_days": [
+      "wed"
+    ],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "personal_color",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 197,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/15412",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "15413",
     "name": "Ohn Studio | Personalized Photo Shoot Based on Personal Color",
     "subtype": "photo_studio",
@@ -11041,6 +15136,152 @@
       "duration_min"
     ],
     "url": "https://creatrip.com/en/spot/15420",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "15429",
+    "name": "#CCONTE Hongdae Yeonam Branch | Color Specialist Hair Salon Tailored for Foreigners",
+    "subtype": "hair_salon",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Hongdae",
+    "lat": 37.562832,
+    "lng": 126.924524,
+    "address": "서울 마포구 동교로 255-1 2-3F",
+    "nearest_station": "Hongik Univ. (Line 2, Nonem)",
+    "price_type": "deposit",
+    "price_min_usd": null,
+    "deposit_usd": 26.04,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon 11:00-20:00; tue 11:00-20:00; wed 11:00-20:00; thu 11:00-20:00; fri 11:00-20:00; sat 11:00-20:00; sun 11:00-20:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 141,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/15429",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "15440",
+    "name": "✨Opening Event✨Doctor Petit Clinic Hongdae | Premium Medical Aesthetics",
+    "subtype": "dermatology",
+    "extra_subtypes": [],
+    "onboarding": "FIX",
+    "city": "Seoul",
+    "region": "Hongdae",
+    "lat": 37.556272,
+    "lng": 126.922375,
+    "address": "서울 마포구 양화로 151, 8F",
+    "nearest_station": "Hongik Univ. (Line 2, 124m)",
+    "price_type": "free_reservation",
+    "price_min_usd": 64.65,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ja",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      },
+      {
+        "code": "zh",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 30,
+    "hours": "mon 10:30-14:00,15:00-20:30; tue 10:30-14:00,15:00-20:30; wed 10:30-14:00,15:00-20:30; thu 10:30-14:00,15:00-20:30; fri 10:30-14:00,15:00-20:30; sat 10:30-13:00,14:00-17:00; sun 10:30-13:00,14:00-17:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face",
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "skin_booster",
+        "downtime_grade": "low",
+        "downtime_days_min": 1,
+        "downtime_days_max": 3
+      },
+      {
+        "key": "soothing",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "hifu",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "botox",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "filler",
+        "downtime_grade": "low",
+        "downtime_days_min": 1,
+        "downtime_days_max": 3
+      },
+      {
+        "key": "rf_lifting",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      },
+      {
+        "key": "acne",
+        "downtime_grade": "low",
+        "downtime_days_min": 0,
+        "downtime_days_max": 2
+      }
+    ],
+    "downtime_grade": "low",
+    "downtime_days_max": 3,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 205,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/15440",
     "booked_count": null,
     "captured_at": null
   },
@@ -11279,6 +15520,54 @@
     "captured_at": null
   },
   {
+    "id": "15482",
+    "name": "CCLIME Sinsa Branch | Premium Face Contouring Care",
+    "subtype": "massage",
+    "extra_subtypes": [],
+    "onboarding": "RESTORE",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.516114,
+    "lng": 127.021854,
+    "address": "서울 강남구 도산대로6길 9",
+    "nearest_station": "Sinsa (Line 3, 1900m)",
+    "price_type": "paid",
+    "price_min_usd": 148.79,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 70,
+    "hours": "mon 10:00-21:00; tue 10:00-21:00; wed 10:00-21:00; thu 10:00-21:00; fri 10:00-21:00; sat 10:00-21:00; sun 10:00-21:00",
+    "closed_days": [],
+    "fix_targets": [],
+    "procedures": [
+      {
+        "key": "massage",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 4.9,
+    "review_count": 66,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/15482",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
     "id": "15483",
     "name": "CCLIME Hongdae Branch | Premium Face Contouring Care",
     "subtype": "massage",
@@ -11465,6 +15754,69 @@
     "active": true,
     "missing_fields": [],
     "url": "https://creatrip.com/en/spot/15502",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "15528",
+    "name": "[30% OFF] Ahead Head Spa | Premium Hand-Performed Scalp Care",
+    "subtype": "massage",
+    "extra_subtypes": [
+      "hair_salon"
+    ],
+    "onboarding": "RESTORE",
+    "city": "Seoul",
+    "region": "Sinsa",
+    "lat": 37.521634,
+    "lng": 127.021789,
+    "address": "서울특별시 강남구 신사동 524-18 2F",
+    "nearest_station": "Sinsa (Line 3, 594m)",
+    "price_type": "deposit",
+    "price_min_usd": null,
+    "deposit_usd": 98.94,
+    "languages": [
+      {
+        "code": "en",
+        "source": "listed"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": null,
+    "hours": "mon closed; tue 10:00-20:00; wed 10:00-20:00; thu 10:00-20:00; fri 10:00-20:00; sat 10:00-20:00; sun 10:00-20:00",
+    "closed_days": [
+      "mon"
+    ],
+    "fix_targets": [
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "soothing",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 126,
+    "active": true,
+    "missing_fields": [
+      "price_min_usd",
+      "duration_min"
+    ],
+    "url": "https://creatrip.com/en/spot/15528",
     "booked_count": null,
     "captured_at": null
   },
@@ -11700,6 +16052,72 @@
       "rating"
     ],
     "url": "https://creatrip.com/en/spot/15554",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "15555",
+    "name": "Shine Soo Hairline Gangnam | 1:1 Design Tailored to Your Face Shape",
+    "subtype": "permanent_makeup",
+    "extra_subtypes": [],
+    "onboarding": "CHANGE",
+    "city": "Seoul",
+    "region": "Gangnam",
+    "lat": 37.503726,
+    "lng": 127.026464,
+    "address": "서울특별시 강남구 봉은사로4길 17, 2F",
+    "nearest_station": "Sinnonhyeon (Line 9, Nonem)",
+    "price_type": "paid",
+    "price_min_usd": 260.38,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ja",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 120,
+    "hours": "mon 09:00-19:00; tue 09:00-19:00; wed 09:00-19:00; thu 09:00-19:00; fri 09:00-19:00; sat 09:00-19:00; sun 09:00-19:00",
+    "closed_days": [],
+    "fix_targets": [
+      "face"
+    ],
+    "procedures": [
+      {
+        "key": "makeup",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "personal_color",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "photo",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 0,
+    "needs_before": [],
+    "rating": 5,
+    "review_count": 6,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/15555",
     "booked_count": null,
     "captured_at": null
   },
@@ -12469,6 +16887,74 @@
       "rating"
     ],
     "url": "https://creatrip.com/en/spot/15793",
+    "booked_count": null,
+    "captured_at": null
+  },
+  {
+    "id": "15799",
+    "name": "Seoul TBC | Premium K-Beauty Head Spa, Facial and Body Massage",
+    "subtype": "massage",
+    "extra_subtypes": [],
+    "onboarding": "RESTORE",
+    "city": "Seoul",
+    "region": "Myeongdong",
+    "lat": 37.562751,
+    "lng": 126.983905,
+    "address": "서울 중구 명동4길 21 4F",
+    "nearest_station": "Euljiro 1(il)-ga (Line 2, Nonem)",
+    "price_type": "paid",
+    "price_min_usd": 52.08,
+    "deposit_usd": null,
+    "languages": [
+      {
+        "code": "en",
+        "source": "mentioned"
+      },
+      {
+        "code": "ko",
+        "source": "listed"
+      }
+    ],
+    "duration_min": 80,
+    "hours": "mon 10:00-21:00; tue 10:00-21:00; wed 10:00-21:00; thu 10:00-21:00; fri 10:00-21:00; sat 10:00-21:00; sun 10:00-21:00",
+    "closed_days": [],
+    "fix_targets": [
+      "skin"
+    ],
+    "procedures": [
+      {
+        "key": "massage",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "hair_cut_style",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "soothing",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 0
+      },
+      {
+        "key": "peel",
+        "downtime_grade": "none",
+        "downtime_days_min": 0,
+        "downtime_days_max": 1
+      }
+    ],
+    "downtime_grade": "none",
+    "downtime_days_max": 1,
+    "needs_before": [],
+    "rating": 4.8,
+    "review_count": 211,
+    "active": true,
+    "missing_fields": [],
+    "url": "https://creatrip.com/en/spot/15799",
     "booked_count": null,
     "captured_at": null
   },
