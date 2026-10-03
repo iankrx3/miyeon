@@ -8,7 +8,7 @@ Explore 탭(`/`)은 더 이상 "카테고리 → 퀴즈 → Top 3 장소" 매칭
 |---|---|---|
 | UI | `pages/ExplorePage.tsx` | Home landing → Purpose → Goals → (조건부 Skin/Needles/바이브 스텝들) → Restrictions → Languages → Budget → Time → Days → Downtime → Profile 요약 → AI transition |
 | 위젯 | `components/onboarding/WizardShell.tsx`, `OptionCard.tsx`, `components/quiz/AITransition.tsx` | 진행률 있는 1문항 화면, 선택 카드, 로딩 전환 |
-| 온보딩 카피/옵션 | `data/quiz.ts` | purpose/goal/restriction/budget/time/downtime 옵션과 라벨, goal별 바이브 옵션(`hairVibeOptions` 등), `languageOptions`, replace/regenerate 옵션 |
+| 일정 편집 옵션 | `data/quiz.ts` | replace/regenerate 옵션, AI transition 문구. (옛 온보딩 옵션·라벨은 Glow Up 퀴즈로 대체되며 삭제됨 — [§12](12-glowup-v2.md)) |
 | 도메인 타입 | `types.ts`의 `BeautyTripProfile`, `Itinerary`, `ItineraryDay`, `ItineraryBlock` | §4의 UX 스펙(§8~§12)을 그대로 반영 |
 | 일정 생성 엔진 | `services/itinerary/generate.ts` | 하드 필터 → 스코어링 → 지역 클러스터링 → 도보순서 → 타임라인 조립 |
 | 이동시간 | `services/itinerary/travel.ts` | 두 spot 사이 이동수단/시간 추정(도보 우선, 거리 기반) |
@@ -25,7 +25,7 @@ purpose → goals → (goals에 skin 포함 시) skin → (skin === 'medical' �
         → restrictions → languages → budget → time → days → downtime → profile
 ```
 
-`hairVibe`/`faceVibe`/`makeupStyleVibe`/`detailsVibe`는 "Color & Perm vs Head Spa 중 골라주세요" 같은 직접적인 서비스 목록이 아니라 `data/quiz.ts`의 감성적인 문구(예: "Deep-conditioning head spa") 선택지로 물어서 `profile.subcategoryVibe[goal]`에 실제 `SpotSubcategory`를 저장한다 — Creatrip 버튼(§4.2 하단)이 어떤 세부 카테고리를 가리킬지 정하는 데만 쓰이고, spot 후보 필터링에는 안 쓰인다. `skin` 목표는 이미 있는 `skinExperience` 답변을 재사용해 파생하므로 별도 스텝이 없다. `languages` 스텝은 Creatrip이 지원하는 4개 언어(중국어/일본어/태국어/베트남어) 중 필요한 걸 골라 `profile.languageNeeds`에 저장 — Creatrip `theme` 필터로 연결된다.
+`hairVibe`/`faceVibe`/`makeupStyleVibe`/`detailsVibe`는 "Color & Perm vs Head Spa 중 골라주세요" 같은 직접적인 서비스 목록이 아니라 감성적인 문구(예: "Deep-conditioning head spa") 선택지로 물어서 `profile.subcategoryVibe[goal]`에 실제 `SpotSubcategory`를 저장한다 — Creatrip 버튼(§4.2 하단)이 어떤 세부 카테고리를 가리킬지 정하는 데만 쓰이고, spot 후보 필터링에는 안 쓰인다. `skin` 목표는 이미 있는 `skinExperience` 답변을 재사용해 파생하므로 별도 스텝이 없다. `languages` 스텝은 Creatrip이 지원하는 4개 언어(중국어/일본어/태국어/베트남어) 중 필요한 걸 골라 `profile.languageNeeds`에 저장 — Creatrip `theme` 필터로 연결된다.
 
 `profile` 스텝에서 "Build my itinerary →"를 누르면 `AITransition` 로딩 화면을 거쳐 `generateItinerary(profile)`을 호출하고, 결과를 `upsertItinerary()`로 `localStorage`에 저장한 뒤 `/itinerary/:id`로 이동한다.
 
@@ -56,13 +56,6 @@ purpose → goals → (goals에 skin 포함 시) skin → (skin === 'medical' �
 
 Save 버튼은 **curator 일정(`source === 'curator'`)에만** 노출된다(`isSavableItinerary`). 플랜 생성으로 만든 일정(Glow Up 등)과 유저가 직접 만든 일정은 저장 대상이 아니며(각각 프로필의 "My Glow Up Plan"·"My itineraries"에 있다), 예전에 저장된 비-curator 항목도 훅이 목록에서 걸러낸다. 버튼은 로그인 없이도 누를 수 있게 UI엔 노출되지만 실제로는 로그인을 요구한다(`onSignIn()` 폴백). 저장된 항목은 `/profile`(ProfilePage, "Saved itineraries")에서 다시 열 수 있고, 로그인 사용자는 Supabase `saved_itineraries`(스냅샷 JSON 컬럼)에도 동기화된다 — 자세한 저장 계층은 [§11](11-curator-tools.md#4-저장된-일정-servicesitinerarysaveditinerariests) 참고.
 
-### 4.5 지금은 죽은 코드 — 예전 매칭 엔진
+### 4.5 삭제된 예전 매칭 엔진
 
-아래 파일들은 이전 "카테고리 → 퀴즈 → Top 3 매칭" Explore 화면의 잔재로, 지금은 **어떤 라우트에서도 import되지 않는다**(자기 자신의 정의 파일 밖에서 참조가 없음):
-
-- `services/match.ts` (`getMatches`, Concern/Result/Downtime/Budget/Timing/Location/Foreigner/Vibe 가중합 스코어러)
-- `components/explore/ResultCard.tsx`, `ProductCommerce.tsx`, `EmailCaptureCard.tsx`
-- `components/quiz/CategoryRadial.tsx`, `PairChoice.tsx`
-- `components/place/PlaceSearchPicker.tsx`
-
-지우거나 되살리는 결정은 아직 안 내려졌다 — [§10](10-known-gaps.md) 참고.
+이전 "카테고리 → 퀴즈 → Top 3 매칭" Explore 화면(`services/match.ts`, `components/explore/*`, `components/quiz/CategoryRadial.tsx`·`PairChoice.tsx`, `components/place/PlaceSearchPicker.tsx`)은 어떤 라우트에서도 쓰이지 않아 삭제됐다. 필요하면 git 히스토리에서 복구할 수 있다.

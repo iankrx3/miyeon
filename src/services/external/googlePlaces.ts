@@ -68,10 +68,6 @@ interface PlacePayload {
   error?: { message?: string; status?: string };
 }
 
-export function placesPhotoUrl(photoName: string): string {
-  return `/api/places/photo?name=${encodeURIComponent(photoName)}&maxHeightPx=800`;
-}
-
 function mapHit(place: PlacePayload): GooglePlaceHit | null {
   if (!place.id || !place.displayName?.text) return null;
   const lat = place.location?.latitude;

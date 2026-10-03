@@ -58,21 +58,6 @@ export function saveLocalList(list: CuratorList) {
   writeJson(LISTS_KEY, all);
 }
 
-export function updateLocalList(curatorId: string, listId: string, patch: { title?: string; description?: string }) {
-  const all = readJson<Record<string, CuratorList[]>>(LISTS_KEY, {});
-  all[curatorId] = (all[curatorId] ?? []).map((l) => (l.id === listId ? { ...l, ...patch } : l));
-  writeJson(LISTS_KEY, all);
-}
-
-export function removeLocalList(curatorId: string, listId: string) {
-  const all = readJson<Record<string, CuratorList[]>>(LISTS_KEY, {});
-  all[curatorId] = (all[curatorId] ?? []).filter((l) => l.id !== listId);
-  writeJson(LISTS_KEY, all);
-  const spots = readJson<Record<string, ListSpot[]>>(SPOTS_KEY, {});
-  delete spots[listId];
-  writeJson(SPOTS_KEY, spots);
-}
-
 export function findLocalListById(listId: string): CuratorList | null {
   const all = readJson<Record<string, CuratorList[]>>(LISTS_KEY, {});
   for (const lists of Object.values(all)) {
@@ -102,11 +87,4 @@ export function saveLocalSpot(spot: ListSpot) {
   all[spot.list_id] = [...(all[spot.list_id] ?? []), spot];
   writeJson(SPOTS_KEY, all);
   bumpLocalListSpotCount(spot.list_id, 1);
-}
-
-export function removeLocalSpot(listId: string, spotId: string) {
-  const all = readJson<Record<string, ListSpot[]>>(SPOTS_KEY, {});
-  all[listId] = (all[listId] ?? []).filter((s) => s.id !== spotId);
-  writeJson(SPOTS_KEY, all);
-  bumpLocalListSpotCount(listId, -1);
 }

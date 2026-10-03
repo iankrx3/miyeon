@@ -5,7 +5,6 @@
 | 타입 | 의미 |
 |---|---|
 | `BeautyCategory` | skin, face, hair, nails, makeup |
-| `QuizAnswers` | 예전 매칭 퀴즈용 타입 — [§4.5](04-matching.md#45-지금은-죽은-코드--예전-매칭-엔진)에서만 쓰이는 죽은 타입 |
 | `BeautyTripProfile` | 지금의 Explore 온보딩 결과물 — purpose/goals/restrictions/budget/beautyTime/tripDays/downtime. `Itinerary.profileSnapshot`에 그대로 저장돼 replace/regenerate가 원래 제약을 유지하게 해준다 |
 | `Spot` | 일정 엔진이 쓰는 큐레이션 장소(`src/data/spots.ts`). `parentCategory`/`subcategory`가 PRD §7의 taxonomy 그대로, `area`로 지역 클러스터링 |
 | `Itinerary` / `ItineraryDay` / `ItineraryBlock` | 생성된 일정. day마다 `spot`/`travel`/`break` 블록의 시퀀스, `source: 'miyeon' \| 'curator'`로 MIYEON 생성 vs. 큐레이터 제작 구분 |
@@ -13,7 +12,6 @@
 | `ReplacePreference` / `RegeneratePreference` | 일정 편집 시트의 옵션 id ([§4.3](04-matching.md#43-일정-편집)) |
 | `Place` | 지도/상세 장소. `Spot`(큐레이션) 또는 Google/KTO 디스커버리 결과 어느 쪽에서 와도 같은 모양 — `medicalTourismMatch`, `nearbyWellness`, `source: 'google' \| 'kto' \| 'merged' \| 'mock'` |
 | `Treatment` | 시술. `placeId`로 Place에 붙음 |
-| `MatchResult` | 시술 + 장소 + 점수 + reasons — 예전 매칭 엔진(`services/match.ts`) 전용, 죽은 코드 |
 | `UserSession` | 로그인 여부, user, optional creator |
 | `MedicalTourismMatch` | KTO 인증 기관 배지용 |
 | `WellnessSpot` | 근처 웰니스 핀 (현재 mock) |

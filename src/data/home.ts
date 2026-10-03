@@ -25,28 +25,6 @@ export interface Testimonial {
   quote: string;
 }
 
-export const browseItems: BrowseItem[] = [
-  {
-    id: 'treatments',
-    caption: 'Skin · Hair · Makeup',
-    title: 'Plan a trip',
-    description: 'Tell us what you want.\nGet a day-by-day itinerary.',
-    highlighted: true,
-  },
-  {
-    id: 'salon',
-    caption: 'Hair · Nails · Makeup',
-    title: 'Salon',
-    description: 'Book a chair with\nEnglish-speaking staff.',
-  },
-  {
-    id: 'products',
-    caption: 'Skincare · Makeup',
-    title: 'Products',
-    description: 'What to actually buy\nat Olive Young.',
-  },
-];
-
 // ids match entries in data/magazine.ts 1:1, so each card deep-links straight to its column.
 export const trendingItems: TrendingItem[] = [
   {
@@ -75,8 +53,6 @@ export const trendingItems: TrendingItem[] = [
     imageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1200',
   },
 ];
-
-export const partnerNames = ['Creatrip', 'OLIVE YOUNG', 'amazon', 'Coupang', 'NAVER', 'o3c'] as const;
 
 export interface MostBookedItem {
   id: string;

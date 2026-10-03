@@ -19,7 +19,7 @@ Vite + React SPA. 서버는 Vite 개발/프리뷰 프록시(및 Vercel 배포용
 
 실패 시 항상 mock/로컬 데이터로 연다. 키가 없어도 Plan 온보딩 → 일정 생성, Map, 데모 로그인은 동작한다.
 
-Explore 탭은 더 이상 "퀴즈 → Top 3 장소 매칭" 화면이 아니다. `MIYEON_planner.md`의 온보딩 플로우 그대로 뷰티 트립 프로필을 받아 `services/itinerary/generate.ts`로 day-by-day 일정을 만들고 `/itinerary/:id`로 보낸다 — 자세한 내용은 [§4](04-matching.md). 이전 매칭 엔진(`services/match.ts`, `ResultCard`, `ProductCommerce`, `CategoryRadial`, `PairChoice`, `EmailCaptureCard`)은 코드에 남아 있지만 어떤 라우트에서도 더 이상 참조되지 않는 죽은 코드다.
+Explore 탭은 더 이상 "퀴즈 → Top 3 장소 매칭" 화면이 아니다. `MIYEON_planner.md`의 온보딩 플로우 그대로 뷰티 트립 프로필을 받아 `services/itinerary/generate.ts`로 day-by-day 일정을 만들고 `/itinerary/:id`로 보낸다 — 자세한 내용은 [§4](04-matching.md). 이전 매칭 엔진(`services/match.ts`, `ResultCard` 등)은 쓰는 곳이 없어 삭제됐다.
 
 ## 목차
 

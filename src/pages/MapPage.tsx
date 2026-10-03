@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import { Bookmark, List, ListPlus, Loader2, Map as MapIcon, Star, X } from 'lucide-react';

@@ -193,18 +193,6 @@ async function fetchListSpotCreatorPicks(): Promise<CreatorPick[]> {
   }
 }
 
-/** Keeps one pick per creator (the most recent) for the "Curated by Creators" strip. */
-export function dedupeCreatorPicksByCreator(picks: CreatorPick[]): CreatorPick[] {
-  const byCreator = new Map<string, CreatorPick>();
-  for (const pick of picks) {
-    const existing = byCreator.get(pick.creator_id);
-    if (!existing || new Date(pick.created_at).getTime() > new Date(existing.created_at).getTime()) {
-      byCreator.set(pick.creator_id, pick);
-    }
-  }
-  return Array.from(byCreator.values());
-}
-
 /** Every place any curator has picked (legacy `creator_picks` + `list_spots`), one entry
  * per pick — not deduped by creator. Used to derive the Map tab's "curator-added places
  * only" data set. Falls back to `mockCreatorPicks`. */
@@ -234,9 +222,4 @@ export async function fetchAllCreatorPicks(): Promise<CreatorPick[]> {
     console.warn('fetchAllCreatorPicks: Supabase query failed, falling back to mock picks', err);
     return mockCreatorPicks;
   }
-}
-
-/** Keeps one pick per creator (the most recent) — used for the "Curated by Creators" strip. */
-export async function fetchCreatorPicks(): Promise<CreatorPick[]> {
-  return dedupeCreatorPicksByCreator(await fetchAllCreatorPicks());
 }

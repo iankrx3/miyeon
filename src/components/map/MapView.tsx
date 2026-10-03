@@ -3,7 +3,6 @@ import L from 'leaflet';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Locate, Loader2, Search, X, ChevronRight, ChevronDown, Plus, Minus } from 'lucide-react';
 import type { BeautyCategory, Creator, CreatorPick, Place, UserSession } from '../../types';
-import { categoryMeta } from '../../data/mock/mock';
 import { ENABLED_MAP_CATEGORIES } from '../../data/mapCategories';
 import {
   catalogPlace,

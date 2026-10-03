@@ -22,7 +22,7 @@
 
 ### 2.1 레거시 인프라 — `CuratorList`/`ListSpot`, `creator_picks`
 
-`creator_lists`/`list_spots` 테이블과 `lib/storage/localCuratorStore.ts`의 리스트 함수(`fetchCuratorLists`, `createList`, `addSpotToList` 등), `components/place/SpotSearchPicker.tsx`가 쓰는 다른 짝 `PlaceSearchPicker.tsx`(이건 죽은 코드, [§4.5](04-matching.md#45-지금은-죽은-코드--예전-매칭-엔진))는 여전히 코드에 있다. 지금 UI(`CuratorProfilePage`)는 이 리스트들을 직접 만들지 않고, 목 데이터(`mockCreatorPicks`)를 보여줄 때만 "All Picks"라는 이름의 합성 리스트 하나로 감싸서 재사용한다(`fetchCuratorLists`의 mock 분기). 더 오래된 `creator_picks` 테이블은 어떤 화면도 더 이상 쓰지 않아 `fetchAllCreatorPicks()`가 그 테이블과 `list_spots`를 나란히 조회해 합치는 코드만 남아 있다(`services/places/places.ts`).
+`creator_lists`/`list_spots` 테이블과 `services/curator.ts`의 리스트 함수(`fetchCuratorLists`, `createList`, `addSpotToList` 등)와 `components/place/SpotSearchPicker.tsx`는 여전히 코드에 있다. (리스트 수정·삭제·spot 제거 함수는 쓰는 곳이 없어 삭제됐다.) 지금 UI(`CuratorProfilePage`)는 이 리스트들을 직접 만들지 않고, 목 데이터(`mockCreatorPicks`)를 보여줄 때만 "All Picks"라는 이름의 합성 리스트 하나로 감싸서 재사용한다(`fetchCuratorLists`의 mock 분기). 더 오래된 `creator_picks` 테이블은 어떤 화면도 더 이상 쓰지 않아 `fetchAllCreatorPicks()`가 그 테이블과 `list_spots`를 나란히 조회해 합치는 코드만 남아 있다(`services/places/places.ts`).
 
 ### 3. 매거진 (`services/community/magazine.ts`)
 

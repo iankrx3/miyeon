@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft, Trash2 } from 'lucide-react';
 import type { MagazineArticle, UserSession } from '../types';

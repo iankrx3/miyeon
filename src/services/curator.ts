@@ -2,20 +2,16 @@ import type { Creator, CreatorPick, CuratorList, Itinerary, ListSpot, Place, Use
 import { supabase } from '../lib/supabase/client';
 import { mapCreator, mapCuratorList, mapListSpot } from '../lib/mappers';
 import { mockCreatorPicks } from '../data/mock/mock';
-import { ENABLED_MAP_CATEGORIES } from '../data/mapCategories';
-import { dedupeCreatorPicksByCreator, fetchAllCreatorPicks, fetchCreatorById as fetchRemoteCreatorById } from './places/places';
+import { fetchAllCreatorPicks, fetchCreatorById as fetchRemoteCreatorById } from './places/places';
 import { DEMO_USER } from './auth';
 import {
   findLocalListById,
   readLocalCuratorById,
   readLocalLists,
   readLocalSpots,
-  removeLocalList,
-  removeLocalSpot,
   saveLocalCurator,
   saveLocalList,
   saveLocalSpot,
-  updateLocalList,
 } from '../lib/storage/localCuratorStore';
 import {
   getStoredItinerary,
@@ -227,36 +223,6 @@ export async function createList(
   return list;
 }
 
-export async function updateList(
-  session: UserSession,
-  listId: string,
-  patch: { title?: string; description?: string }
-): Promise<void> {
-  if (!session.isLoggedIn || !session.creator) throw new Error('Must be a curator to edit a list.');
-  if (isLocalListId(listId)) {
-    updateLocalList(session.creator.id, listId, patch);
-    return;
-  }
-  if (!supabase) throw new Error('Unable to update list.');
-  const { error } = await supabase
-    .from('creator_lists')
-    .update(patch)
-    .eq('id', listId)
-    .eq('curator_id', session.creator.id);
-  if (error) throw error;
-}
-
-export async function deleteList(session: UserSession, listId: string): Promise<void> {
-  if (!session.isLoggedIn || !session.creator) throw new Error('Must be a curator to delete a list.');
-  if (isLocalListId(listId)) {
-    removeLocalList(session.creator.id, listId);
-    return;
-  }
-  if (!supabase) throw new Error('Unable to delete list.');
-  const { error } = await supabase.from('creator_lists').delete().eq('id', listId).eq('curator_id', session.creator.id);
-  if (error) throw error;
-}
-
 export async function fetchListSpots(listId: string): Promise<ListSpot[]> {
   if (listId.startsWith('local-list-')) return readLocalSpots(listId);
   if (isMockListId(listId)) {
@@ -330,23 +296,6 @@ export async function addSpotToList(
   };
   saveLocalSpot(spot);
   return spot;
-}
-
-/** Surfaces a curator's local-only lists (demo session, or an offline write fallback)
- * in the map's "Curated by Creators" strip — those spots never reach Supabase's
- * `list_spots`/`creator_picks`, so the strip can't see them any other way. */
-export function deriveLocalCreatorPicks(creator: Creator): CreatorPick[] {
-  return readLocalLists(creator.id).flatMap((list) =>
-    readLocalSpots(list.id).map((spot) => ({
-      id: `local-pick-${spot.id}`,
-      creator_id: creator.id,
-      creator,
-      place_id: spot.place_id,
-      place: spot.place,
-      personal_note: spot.note || '',
-      created_at: spot.created_at,
-    }))
-  );
 }
 
 /** Places shown on the Map tab (map + list toggle): only places some curator has
@@ -441,17 +390,6 @@ export async function fetchCuratedMapData(session: UserSession): Promise<{ place
   }
 
   return { places, picks };
-}
-
-export async function removeSpotFromList(session: UserSession, listId: string, spotId: string): Promise<void> {
-  if (!session.isLoggedIn || !session.creator) throw new Error('Must be a curator to remove a spot.');
-  if (isLocalListId(listId) || spotId.startsWith('local-spot-')) {
-    removeLocalSpot(listId, spotId);
-    return;
-  }
-  if (!supabase) throw new Error('Unable to remove spot.');
-  const { error } = await supabase.from('list_spots').delete().eq('id', spotId).eq('list_id', listId);
-  if (error) throw error;
 }
 
 export async function fetchItineraryById(id: string): Promise<Itinerary | null> {

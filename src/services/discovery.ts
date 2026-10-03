@@ -58,14 +58,6 @@ export function catalogTreatment(id: string): Treatment | undefined {
   return catalog.treatments.get(id);
 }
 
-export function catalogPlaces(): Place[] {
-  return [...catalog.places.values()];
-}
-
-export function catalogTreatments(): Treatment[] {
-  return [...catalog.treatments.values()];
-}
-
 function cacheKey(query: DiscoverQuery, origin: { lat: number; lng: number }): string {
   const hints = (query.keywordHints ?? []).slice().sort().join(',');
   return [query.category, origin.lat.toFixed(3), origin.lng.toFixed(3), query.radiusM ?? 5000, hints].join('|');
@@ -234,8 +226,6 @@ function inferGoogleCategory(hit: GooglePlaceHit, categories: BeautyCategory[]):
 
 export const GOOGLE_ON_DEMAND_CATEGORIES: BeautyCategory[] = ['hair', 'nails', 'makeup'];
 const GOOGLE_NEARBY_TTL_MS = 24 * 60 * 60 * 1000;
-/** Hard cap for one Glow Up generate so a quiz cannot fan out past the free Pro SKU. */
-export const GLOWUP_NEARBY_MAX = 4;
 const googleNearbyCache = new Map<string, { expires: number; places: Place[] }>();
 
 function nearbyCacheKey(tag: string, origin: { lat: number; lng: number }): string {
@@ -295,53 +285,6 @@ export async function discoverGoogleCategory(
 export interface GlowUpVenuePools {
   byCategory: Partial<Record<BeautyCategory, Place[]>>;
   spa: Place[];
-}
-
-/** Targeted KTO + Nearby Pro for Glow Up itinerary pins. Does not enable the
- * global USE_GOOGLE_PLACES fan-out. Nearby at most GLOWUP_NEARBY_MAX live calls. */
-export async function discoverVenuesForGlowUp(
-  categories: BeautyCategory[],
-  origin?: { lat: number; lng: number },
-  opts?: { includeSpa?: boolean }
-): Promise<GlowUpVenuePools> {
-  const resolved = resolveOrigin(origin);
-  const budget = { remaining: GLOWUP_NEARBY_MAX };
-  const unique = [...new Set(categories)];
-  const byCategory: Partial<Record<BeautyCategory, Place[]>> = {};
-
-  for (const category of unique) {
-    let places: Place[] = [];
-    if (categorySearch[category].ktoKeywords.length > 0) {
-      const result = await discoverPlaces({ category, origin: resolved, limit: 12 });
-      places = result.places.filter((place) => place.latitude && place.longitude);
-    }
-    if (places.length === 0 && GOOGLE_ON_DEMAND_CATEGORIES.includes(category)) {
-      places = await discoverGoogleCategory(category, resolved, budget);
-    } else if (places.length === 0) {
-      places = await nearbyProCached(
-        category,
-        categorySearch[category].googleTypes.slice(0, 1),
-        resolved,
-        (hits) => hits.map((hit) => toPlaceFromGoogle(hit, category)),
-        budget
-      );
-    }
-    byCategory[category] = places.filter((place) => place.latitude && place.longitude);
-  }
-
-  let spa: Place[] = [];
-  if (opts?.includeSpa) {
-    spa = await nearbyProCached(
-      'spa',
-      ['spa'],
-      resolved,
-      (hits) => hits.map((hit) => toPlaceFromGoogle(hit, 'skin')),
-      budget
-    );
-    spa = spa.filter((place) => place.latitude && place.longitude);
-  }
-
-  return { byCategory, spa };
 }
 
 async function enrichKtoMatches(places: Place[]): Promise<void> {

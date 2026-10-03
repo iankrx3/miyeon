@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Bookmark, ChevronLeft, Loader2, Sparkles } from 'lucide-react';
 import type { Itinerary, RegeneratePreference, ReplacePreference, Spot, UserSession } from '../types';

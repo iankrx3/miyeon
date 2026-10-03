@@ -38,19 +38,6 @@ export const fixDowntimeOptions: { id: FixDowntimeAnswer; label: string }[] = [
   { id: 'doesnt-matter', label: "Doesn't matter" },
 ];
 
-/** Keyed by which FIX item(s) were picked, not the downtime answer. */
-export const FIX_REACTION_COPY: Record<'skin' | 'face' | 'both', string> = {
-  skin: "Got it — we'll focus on tone and texture.",
-  face: "Got it — we'll focus on lifting and contouring.",
-  both: "Got it — we'll cover both skin and face.",
-};
-
-export function fixReactionCopy(items: FixItem[]): string {
-  if (items.includes('skin') && items.includes('face')) return FIX_REACTION_COPY.both;
-  if (items.includes('face')) return FIX_REACTION_COPY.face;
-  return FIX_REACTION_COPY.skin;
-}
-
 export const changeOptions: { id: ChangeItem; label: string; headline: string; image: string }[] = [
   { id: 'personal-color', label: 'Personal Color', headline: "What's Your Color?", image: changePersonalColor },
   { id: 'hair', label: 'Hair Salon', headline: 'Korea-Exclusive Hair', image: changeHairSalon },
@@ -123,9 +110,6 @@ const OPTION_LABEL_BY_SUBTYPE: Record<string, string> = Object.fromEntries(
 export function labelForSubtype(subtype: string): string {
   return OPTION_LABEL_BY_SUBTYPE[subtype] ?? subtype;
 }
-
-export const regionLabel = (id: GlowUpRegion | null): string =>
-  [...SEOUL_REGIONS, ...BUSAN_REGIONS].find((r) => r.id === id)?.label ?? 'Not sure yet';
 
 export const tripDaysLabel = (id: GlowUpTripDays | null): string =>
   tripDaysOptions.find((d) => d.id === id)?.label ?? '2-3 days';

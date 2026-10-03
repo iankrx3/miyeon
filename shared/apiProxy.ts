@@ -23,9 +23,6 @@ export const PLACES_SEARCH_FIELD_MASK = [
   'places.primaryType',
 ].join(',');
 
-/** @deprecated Use PLACES_SEARCH_FIELD_MASK — kept so older imports keep compiling. */
-export const PLACES_FIELD_MASK = PLACES_SEARCH_FIELD_MASK;
-
 /** Pro-tier Place Details only. reviews/editorialSummary → Enterprise + Atmosphere;
  *  rating/phone/website → Enterprise. Both have a 1,000/month free cap. */
 export const PLACES_DETAILS_FIELD_MASK = [

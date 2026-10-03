@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import { ChevronLeft, Globe, Instagram, ListPlus, MapPin, Music2, Pencil } from 'lucide-react';

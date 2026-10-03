@@ -1,4 +1,3 @@
-import React from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 import type { Creator, UserSession } from '../types';

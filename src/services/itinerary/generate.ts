@@ -574,23 +574,6 @@ function emptyProfileFallback(): BeautyTripProfile {
   };
 }
 
-export function emptyProfile(): BeautyTripProfile {
-  return {
-    purpose: null,
-    goals: [],
-    skinExperience: null,
-    needleComfort: null,
-    restrictions: [],
-    nothingOffLimits: false,
-    budget: null,
-    beautyTime: null,
-    tripDays: null,
-    downtime: null,
-    subcategoryVibe: {},
-    languageNeeds: [],
-  };
-}
-
 export function itinerarySpotCount(itinerary: Itinerary): number {
   return itinerary.days.reduce((c, d) => c + d.blocks.filter((b) => b.kind === 'spot').length, 0);
 }

@@ -91,8 +91,7 @@ Explore (`/`) is a **beauty trip planner**, not a "quiz → 3 matches" screen an
 follows the onboarding spec in `MIYEON_planner.md` end to end (Purpose → Goals →
 conditional Skin/Needles → Restrictions → Budget → Time → Days → Downtime → Profile
 summary → AI transition), then generates a day-by-day itinerary and hands you off to
-it. The old category/quiz/match screen this replaced is still in the tree as dead code
-(see "Known gaps" below) but is no longer reachable from any route.
+it. The old category/quiz/match screen this replaced has been deleted.
 
 - **Beauty trip onboarding → itinerary generation** (`src/pages/ExplorePage.tsx`,
   `src/services/itinerary/generate.ts`) — a multi-step wizard (`src/components/onboarding/`)
@@ -191,12 +190,6 @@ Satoshi / Pretendard typography, from the Miyeon brand board.
 - No real LLM ranker yet — itinerary generation in `services/itinerary/generate.ts`
   is a transparent hard-filter + weighted-scoring heuristic, per PRD §13's
   "structured pipeline, not an LLM prompt" requirement.
-- **The pre-planner Explore flow is dead code, not deleted.** `services/match.ts`,
-  `components/explore/ResultCard.tsx`/`ProductCommerce.tsx`/`EmailCaptureCard.tsx`,
-  `components/quiz/CategoryRadial.tsx`/`PairChoice.tsx`, and
-  `components/place/PlaceSearchPicker.tsx` implemented the old "category → quiz →
-  top 3 matches" screen. None of them are imported from any route anymore; whether
-  to delete or revive them hasn't been decided.
 - `CuratorList`/`ListSpot` (the `creator_lists`/`list_spots` tables and
   `SpotSearchPicker`) are still wired up, but curators now build itineraries, not
   standalone lists — this infra is mostly legacy at this point. The even older
@@ -205,4 +198,4 @@ Satoshi / Pretendard typography, from the Miyeon brand board.
   comments in `supabase/schema/creators_schema.sql`.
 
 See [`docs/architecture/`](docs/architecture/README.md) for the full breakdown,
-including the current state of each subsystem and everything that's now dead code.
+including the current state of each subsystem.

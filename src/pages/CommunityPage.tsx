@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { useSearchParams } from 'react-router-dom';
 import type { CommunityPost, UserSession } from '../types';

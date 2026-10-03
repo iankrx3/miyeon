@@ -164,21 +164,6 @@ export function getSpots(): Spot[] {
   return cachedSpots;
 }
 
-/** Merge live Glow Up venues into the sync catalog so getSpot()/map clicks work. */
-export function ingestPlaces(places: Place[]): Spot[] {
-  const added: Spot[] = [];
-  const seen = new Set(cachedSpots.map((spot) => spot.id));
-  for (const place of places) {
-    if (!place.latitude || !place.longitude) continue;
-    if (seen.has(place.id)) continue;
-    seen.add(place.id);
-    const spot = placeToSpot(place);
-    cachedSpots.push(spot);
-    added.push(spot);
-  }
-  return added;
-}
-
 export const SUBCATEGORY_LABEL: Record<SpotSubcategory, string> = {
   'color-perm': 'Color & Perm',
   'head-spa': 'Head Spa & Treatment',
@@ -228,8 +213,4 @@ export function spotToPlace(spot: Spot): Place {
     googlePlaceId: spot.googlePlaceId,
     ktoContentId: spot.ktoContentId,
   };
-}
-
-export function allSpotsAsPlaces(): Place[] {
-  return getSpots().map(spotToPlace);
 }
