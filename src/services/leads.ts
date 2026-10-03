@@ -1,5 +1,5 @@
-import { supabase } from '../lib/supabase';
-import { saveLocalLead, type LocalLead } from '../lib/localLeadStore';
+import { supabase } from '../lib/supabase/client';
+import { saveLocalLead, type LocalLead } from '../lib/storage/localLeadStore';
 
 export interface SaveLeadInput {
   email: string;

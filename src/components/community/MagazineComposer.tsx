@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import type { MagazineArticle, UserSession } from '../../types';
-import type { CreateMagazineArticleInput } from '../../services/magazine';
+import type { CreateMagazineArticleInput } from '../../services/community/magazine';
 import { DEMO_USER } from '../../services/auth';
 
 interface MagazineComposerProps {

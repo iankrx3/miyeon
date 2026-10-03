@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ChevronLeft, Star } from 'lucide-react';
 import type { Place, Treatment } from '../types';
-import { fetchPlaceById, fetchTreatmentById } from '../services/places';
+import { fetchPlaceById, fetchTreatmentById } from '../services/places/places';
 import { hasCreatripListing, withCreatripAffiliate, CREATRIP_DISCLOSURE } from '../lib/creatrip';
 import { TreatmentExplainer } from '../components/treatment/TreatmentExplainer';
 

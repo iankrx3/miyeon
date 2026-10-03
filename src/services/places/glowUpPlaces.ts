@@ -6,14 +6,14 @@ import type {
   GlowUpRegion,
   GlowUpSubtype,
 } from '../../types';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/supabase/client';
 import { withCreatripAffiliate } from '../../lib/creatrip';
 import bundled from '../../data/glowUpPlaces.json';
 
 /** Direct Creatrip product page for a venue (its Creatrip spot id), with affiliate params. */
 export const creatripSpotUrl = (id: string): string => withCreatripAffiliate(`https://creatrip.com/en/spot/${id}`);
 
-/** A row of the Supabase `places` table (supabase/places_schema.sql) — same shape as the bundled JSON. */
+/** A row of the Supabase `places` table (supabase/schema/places_schema.sql) — same shape as the bundled JSON. */
 interface PlaceRow {
   id: string;
   name: string;

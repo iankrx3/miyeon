@@ -13,7 +13,7 @@ Explore 탭(`/`)은 더 이상 "카테고리 → 퀴즈 → Top 3 장소" 매칭
 | 일정 생성 엔진 | `services/itinerary/generate.ts` | 하드 필터 → 스코어링 → 지역 클러스터링 → 도보순서 → 타임라인 조립 |
 | 이동시간 | `services/itinerary/travel.ts` | 두 spot 사이 이동수단/시간 추정(도보 우선, 거리 기반) |
 | 일정 워크스페이스 | `pages/ItineraryPage.tsx`, `components/itinerary/ItineraryTimeline.tsx`, `ItineraryRouteMap.tsx` | 일별 타임라인 · 지도 · Replace/Move/Remove/Regenerate |
-| 저장 | `hooks/useSavedItineraries.ts`, `lib/localItineraryStore.ts`, `services/savedItineraries.ts` | 생성된 일정을 `localStorage`(항상) + 로그인 시 Supabase `saved_itineraries`에도 저장 |
+| 저장 | `hooks/useSavedItineraries.ts`, `lib/storage/localItineraryStore.ts`, `services/itinerary/savedItineraries.ts` | 생성된 일정을 `localStorage`(항상) + 로그인 시 Supabase `saved_itineraries`에도 저장 |
 
 ### 4.1 온보딩 흐름
 
@@ -54,7 +54,7 @@ purpose → goals → (goals에 skin 포함 시) skin → (skin === 'medical' �
 
 ### 4.4 저장 (`useSavedItineraries`)
 
-Save 버튼은 **curator 일정(`source === 'curator'`)에만** 노출된다(`isSavableItinerary`). 플랜 생성으로 만든 일정(Glow Up 등)과 유저가 직접 만든 일정은 저장 대상이 아니며(각각 프로필의 "My Glow Up Plan"·"My itineraries"에 있다), 예전에 저장된 비-curator 항목도 훅이 목록에서 걸러낸다. 버튼은 로그인 없이도 누를 수 있게 UI엔 노출되지만 실제로는 로그인을 요구한다(`onSignIn()` 폴백). 저장된 항목은 `/profile`(ProfilePage, "Saved itineraries")에서 다시 열 수 있고, 로그인 사용자는 Supabase `saved_itineraries`(스냅샷 JSON 컬럼)에도 동기화된다 — 자세한 저장 계층은 [§11](11-curator-tools.md#4-저장된-일정-servicessaveditinerariests) 참고.
+Save 버튼은 **curator 일정(`source === 'curator'`)에만** 노출된다(`isSavableItinerary`). 플랜 생성으로 만든 일정(Glow Up 등)과 유저가 직접 만든 일정은 저장 대상이 아니며(각각 프로필의 "My Glow Up Plan"·"My itineraries"에 있다), 예전에 저장된 비-curator 항목도 훅이 목록에서 걸러낸다. 버튼은 로그인 없이도 누를 수 있게 UI엔 노출되지만 실제로는 로그인을 요구한다(`onSignIn()` 폴백). 저장된 항목은 `/profile`(ProfilePage, "Saved itineraries")에서 다시 열 수 있고, 로그인 사용자는 Supabase `saved_itineraries`(스냅샷 JSON 컬럼)에도 동기화된다 — 자세한 저장 계층은 [§11](11-curator-tools.md#4-저장된-일정-servicesitinerarysaveditinerariests) 참고.
 
 ### 4.5 지금은 죽은 코드 — 예전 매칭 엔진
 

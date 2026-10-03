@@ -6,7 +6,7 @@ import { MapView } from '../components/map/MapView';
 import { PlaceListView } from '../components/map/PlaceListView';
 import { useSavedPlaces } from '../hooks/useSavedPlaces';
 import { useSpotsCatalog } from '../hooks/useSpotsCatalog';
-import { createUserItinerary } from '../services/userItinerary';
+import { createUserItinerary } from '../services/itinerary/userItinerary';
 import type { Place, UserSession } from '../types';
 
 export default function MapPage({ session, onSignIn }: { session: UserSession; onSignIn: () => void }) {

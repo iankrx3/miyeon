@@ -5,14 +5,14 @@
 **장소 상세** (`PlaceDetailPage.tsx`)
 
 - 사진, 별점, Why people like it, 시술 목록
-- 주소는 `lib/englishAddress.ts`로 한글을 걷어 영문 한 줄만 표시. 상세 진입 시 `services/placeDetail.ts#enrichPlaceDetail`이 Google Place Details + KTO `detailCommon`/`detailMdclTursm`으로 주소를 다시 맞추고 "Why people like it" 불릿(별점, 영문 리뷰, 의료관광 등록, 지원 언어, 진료과, editorial/overview)을 채운다. LLM 호출 없음. API가 비면 섹션을 숨긴다 (fail-silent)
-- 경로찾기 링크 (Google/Naver/Kakao Maps, `lib/directions.ts`) — 좌표 + `googlePlaceId` 기반, 새 탭
+- 주소는 `lib/map/englishAddress.ts`로 한글을 걷어 영문 한 줄만 표시. 상세 진입 시 `services/places/placeDetail.ts#enrichPlaceDetail`이 Google Place Details + KTO `detailCommon`/`detailMdclTursm`으로 주소를 다시 맞추고 "Why people like it" 불릿(별점, 영문 리뷰, 의료관광 등록, 지원 언어, 진료과, editorial/overview)을 채운다. LLM 호출 없음. API가 비면 섹션을 숨긴다 (fail-silent)
+- 경로찾기 링크 (Google/Naver/Kakao Maps, `lib/map/directions.ts`) — 좌표 + `googlePlaceId` 기반, 새 탭
 - `NearbyWellnessSection` · `MedicalTourismSection` (`src/components/badges/KtoBadges.tsx`) — 데이터 없으면 안 그림 (fail-silent)
 - Save to My Map, "Book →" 버튼 — `place.bookingUrl` 그대로 연결한다(Creatrip 리스팅이면 그 spot 페이지, 아니면 대부분 Google Places가 준 그 업체의 실제 웹사이트). `hasCreatripListing(place)`가 true일 때만 `lib/creatrip.ts#withCreatripAffiliate()`로 `utm_source`/`aff_id`를 붙이고 커미션 disclosure 문구(`CREATRIP_DISCLOSURE`)를 보여준다 — Creatrip이 아닌 외부 URL에는 어필리에이트 파라미터를 붙이지 않는다(예전엔 무조건 붙이는 버그가 있었음). `bookingUrl` 자체가 없으면 버튼을 숨긴다.
 
 **시술 상세** (`TreatmentDetailPage.tsx`) — 가격대, 다운타임, 강도, 연결된 장소. 같은 "Book →" 로직을 연결된 `place.bookingUrl`에 적용(예전엔 라이브 데이터에서 항상 비어 있던 `treatment.creatripUrl`을 썼음).
 
-**Creatrip 제휴 링크 검증** — `Place.bookingUrl`이 진짜 spot 페이지(`/en/spot/13165`)인지, 아직 안 채워진 홈 URL인지는 `lib/creatrip.ts#hasCreatripListing()`으로 판별한다. 실제 spot URL을 채우는 건 자동화하지 않는다 — `src/data/mock.ts`에 사람이 검토해서 넣는다.
+**Creatrip 제휴 링크 검증** — `Place.bookingUrl`이 진짜 spot 페이지(`/en/spot/13165`)인지, 아직 안 채워진 홈 URL인지는 `lib/creatrip.ts#hasCreatripListing()`으로 판별한다. 실제 spot URL을 채우는 건 자동화하지 않는다 — `src/data/mock/mock.ts`에 사람이 검토해서 넣는다.
 
 **Itinerary의 "Book with Creatrip" 버튼**(별개, `ItineraryTimeline.tsx`)은 이 상세 페이지의 "Book →"과 다르다 — 항상 Creatrip 카테고리 리스트 페이지(어필리에이트 코드 포함)로 연결된다. 자세한 내용은 [§4.2](04-matching.md#42-일정-생성-servicesitinerarygeneratets) 참고.
 
@@ -20,8 +20,8 @@
 
 > 이전 "Find My Match 결과의 광고 카드"(`ExplorePage.tsx`가 매치 3개 옆에 `SponsoredPlaceCard`를 끼워 넣던 로직)는 Explore가 매칭 화면이 아니게 되면서 함께 없어졌다 — [§4.5](04-matching.md#45-지금은-죽은-코드--예전-매칭-엔진). `SponsoredPlaceCard` 자체는 지금도 Map 리스트뷰([§5](05-map.md))에서 쓰인다.
 
-**커뮤니티** (`CommunityPage.tsx`, `PostDetailPage.tsx`, `services/community.ts`) — Supabase가 설정돼 있으면 `community_posts`/`post_likes`/`post_comments` 테이블을 쓰고, 아니거나 실패하면 `localStorage`(`lib/localCommunityStore.ts`) + `mockCommunityPosts`로 폴백. 글쓰기, 좋아요/취소, 댓글, 본인 게시글/댓글 삭제까지 된다(전부 로그인 필요). 팔로우는 아직 없음. `community_posts.place_id`는 FK가 없는 자유 텍스트다 — Google/KTO/큐레이션 spot 어떤 출처의 id든 그대로 저장한다(`places` 테이블 자체가 없다, [§7](07-domain-model.md) 참고).
+**커뮤니티** (`CommunityPage.tsx`, `PostDetailPage.tsx`, `services/community/community.ts`) — Supabase가 설정돼 있으면 `community_posts`/`post_likes`/`post_comments` 테이블을 쓰고, 아니거나 실패하면 `localStorage`(`lib/storage/localCommunityStore.ts`) + `mockCommunityPosts`로 폴백. 글쓰기, 좋아요/취소, 댓글, 본인 게시글/댓글 삭제까지 된다(전부 로그인 필요). 팔로우는 아직 없음. `community_posts.place_id`는 FK가 없는 자유 텍스트다 — Google/KTO/큐레이션 spot 어떤 출처의 id든 그대로 저장한다(`places` 테이블 자체가 없다, [§7](07-domain-model.md) 참고).
 
-**Community 페이지 안의 Magazine 탭** (`CommunityPage.tsx`의 `?tab=magazine`, `MagazineGrid`/`MagazineComposer`, `/magazine/:id` → `MagazineDetailPage.tsx`) — 큐레이터가 쓰는 TREATMENT/GUIDE/TREND 칼럼. 자세한 내용은 [§11](11-curator-tools.md#3-매거진-servicesmagazinets) 참고.
+**Community 페이지 안의 Magazine 탭** (`CommunityPage.tsx`의 `?tab=magazine`, `MagazineGrid`/`MagazineComposer`, `/magazine/:id` → `MagazineDetailPage.tsx`) — 큐레이터가 쓰는 TREATMENT/GUIDE/TREND 칼럼. 자세한 내용은 [§11](11-curator-tools.md#3-매거진-servicescommunitymagazinets) 참고.
 
-**My Map** (`hooks/useSavedPlaces.ts`) — 장소 스냅샷 배열, `miyeon_my_map:<userId|guest>`. 게스트/데모는 `localStorage`만. Google 로그인이면 Supabase `saved_places`에도 올리고, 로그인 hydrate 때 로컬에만 있는 행을 원격으로 밀어 올린다(`supabase/user_saves_schema.sql`). 저장된 일정은 [§4.4](04-matching.md#44-저장-usesaveditineraries)와 [§11](11-curator-tools.md#4-저장된-일정-servicessaveditinerariests) 참고.
+**My Map** (`hooks/useSavedPlaces.ts`) — 장소 스냅샷 배열, `miyeon_my_map:<userId|guest>`. 게스트/데모는 `localStorage`만. Google 로그인이면 Supabase `saved_places`에도 올리고, 로그인 hydrate 때 로컬에만 있는 행을 원격으로 밀어 올린다(`supabase/schema/user_saves_schema.sql`). 저장된 일정은 [§4.4](04-matching.md#44-저장-usesaveditineraries)와 [§11](11-curator-tools.md#4-저장된-일정-servicesitinerarysaveditinerariests) 참고.

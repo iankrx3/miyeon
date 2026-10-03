@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Creator, UserSession } from '../types';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/supabase/client';
 import {
   buildUserSession,
   consumeReturnTab,
@@ -8,7 +8,7 @@ import {
   signInAsDemo as authSignInAsDemo,
   signOut as authSignOut,
 } from '../services/auth';
-import { mergeLocalCreator } from '../lib/localCuratorStore';
+import { mergeLocalCreator } from '../lib/storage/localCuratorStore';
 
 export function useAuth() {
   const [authReady, setAuthReady] = useState(false);

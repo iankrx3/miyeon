@@ -27,10 +27,10 @@
 
 | 파일 | 기능 |
 |---|---|
-| `services/googlePlaces.ts` | Nearby · Text Search · Place Details, 사진 URL, health 캐시 |
-| `services/kto.ts` | `searchKeyword`, `locationBasedList`, `detailMdclTursm`, `detailCommon` |
-| `lib/englishAddress.ts` | 한글이 섞인 주소를 영문 한 줄로 정규화 |
-| `services/placeDetail.ts` | 상세는 KTO만. Google Place Details는 꺼 둠 |
+| `services/external/googlePlaces.ts` | Nearby · Text Search · Place Details, 사진 URL, health 캐시 |
+| `services/external/kto.ts` | `searchKeyword`, `locationBasedList`, `detailMdclTursm`, `detailCommon` |
+| `lib/map/englishAddress.ts` | 한글이 섞인 주소를 영문 한 줄로 정규화 |
+| `services/places/placeDetail.ts` | 상세는 KTO만. Google Place Details는 꺼 둠 |
 | `shared/placesQuota.ts` | Nearby/Text Pro 일 150건. Details/Photos 일 0건 |
 | `data/categorySearch.ts` | 카테고리 → Google type · 검색어 · KTO 키워드 |
 
@@ -62,9 +62,9 @@ Map 탭 검색창은 이미 로드된 `places`를 이름/지역으로 즉시 필
 - 결과는 (discovery 결과와 동일하게) `rememberDiscovery()`로 인메모리 카탈로그에 저장돼, 검색으로 찾은 장소를 클릭해 `/place/:id`로 들어가도 `fetchPlaceById`가 찾을 수 있다.
 - 검색 결과를 클릭하면 지도에 아직 핀이 없을 수 있으므로(로컬 `places`에 없던 라이브 결과), `MapView`가 그 장소를 `places` state에 추가한 뒤 카메라를 이동시킨다. 카테고리 필터가 걸려 있으면 핀이 안 보일 수 있어 이때 필터도 "All"로 초기화한다.
 
-### 3.5 조회 파사드 (`services/places.ts`)
+### 3.5 조회 파사드 (`services/places/places.ts`)
 
-`fetchPlaceById`/`fetchTreatmentById` 순서: `src/data/spots.ts`의 일정 후보 카탈로그(`getSpot`, 아래 3.6 참고) → in-memory 디스커버리 카탈로그(`catalogPlace`/`catalogTreatment`) → `src/data/mock.ts` → (그래도 없으면) `fetchPlaces()`/`fetchTreatments()`로 전체 디스커버리 재조회.
+`fetchPlaceById`/`fetchTreatmentById` 순서: `src/data/spots.ts`의 일정 후보 카탈로그(`getSpot`, 아래 3.6 참고) → in-memory 디스커버리 카탈로그(`catalogPlace`/`catalogTreatment`) → `src/data/mock/mock.ts` → (그래도 없으면) `fetchPlaces()`/`fetchTreatments()`로 전체 디스커버리 재조회.
 
 ### 3.6 `data/spots.ts` — 이 엔진 위에 얹힌 일정 후보 카탈로그
 

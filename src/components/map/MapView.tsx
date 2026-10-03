@@ -3,7 +3,7 @@ import L from 'leaflet';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Locate, Loader2, Search, X, ChevronRight, ChevronDown, Plus, Minus } from 'lucide-react';
 import type { BeautyCategory, Creator, CreatorPick, Place, UserSession } from '../../types';
-import { categoryMeta } from '../../data/mock';
+import { categoryMeta } from '../../data/mock/mock';
 import { ENABLED_MAP_CATEGORIES } from '../../data/mapCategories';
 import {
   catalogPlace,
@@ -18,9 +18,9 @@ import {
   fetchItineraryById,
 } from '../../services/curator';
 import { getSpot, spotToPlace } from '../../data/spots';
-import { getStoredItinerary, listAllCuratorItineraries, listUserItineraries } from '../../lib/localItineraryStore';
+import { getStoredItinerary, listAllCuratorItineraries, listUserItineraries } from '../../lib/storage/localItineraryStore';
 import { useSavedItineraries } from '../../hooks/useSavedItineraries';
-import { fetchUserItineraries } from '../../services/userItinerary';
+import { fetchUserItineraries } from '../../services/itinerary/userItinerary';
 import type { Itinerary } from '../../types';
 
 // Adapted from extract/src/components/MapView.tsx (Sniffood map + login kit).

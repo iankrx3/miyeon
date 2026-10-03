@@ -3,9 +3,9 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import { ChevronLeft, Globe, Instagram, ListPlus, MapPin, Music2, Pencil } from 'lucide-react';
 import type { Creator, CreatorPick, Itinerary, Place, UserSession } from '../types';
-import { fetchCreatorPicksByCreatorId } from '../services/places';
+import { fetchCreatorPicksByCreatorId } from '../services/places/places';
 import { createCuratorItinerary, fetchCuratorById, fetchCuratorItineraries } from '../services/curator';
-import { firstSpotImage } from '../lib/localItineraryStore';
+import { firstSpotImage } from '../lib/storage/localItineraryStore';
 import { PlaceCard } from '../components/place/PlaceCard';
 
 interface CuratorProfilePageProps {

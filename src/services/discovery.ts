@@ -1,8 +1,8 @@
 import type { BeautyCategory, MedicalTourismMatch, Place, Treatment } from '../types';
 import { categorySearch, resolveOrigin } from '../data/categorySearch';
-import { toEnglishAddress } from '../lib/englishAddress';
-import { getApiHealth, searchNearby, searchText, type GooglePlaceHit } from './googlePlaces';
-import { detailMedical, locationBasedList, searchKeyword, type KtoFacility } from './kto';
+import { toEnglishAddress } from '../lib/map/englishAddress';
+import { getApiHealth, searchNearby, searchText, type GooglePlaceHit } from './external/googlePlaces';
+import { detailMedical, locationBasedList, searchKeyword, type KtoFacility } from './external/kto';
 
 export interface DiscoverQuery {
   category: BeautyCategory;

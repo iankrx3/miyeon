@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Itinerary, SavedItinerary } from '../types';
-import { isRemoteUser } from '../lib/remoteUser';
-import { addTombstones, removeTombstone, TOMBSTONE_SAVED_ITINERARIES } from '../lib/syncTombstones';
+import { isRemoteUser } from '../lib/supabase/remoteUser';
+import { addTombstones, removeTombstone, TOMBSTONE_SAVED_ITINERARIES } from '../lib/storage/syncTombstones';
 import {
   listSavedItineraries,
   migrateGuestSavedItineraries,
   upsertItinerary,
   writeSavedItineraries,
-} from '../lib/localItineraryStore';
+} from '../lib/storage/localItineraryStore';
 import {
   deleteRemoteSavedItinerary,
   excludeDeletedSavedItineraries,
@@ -19,7 +19,7 @@ import {
   pushLocalSavedItineraries,
   reconcileDeletedSavedItineraries,
   savedItineraryKeys,
-} from '../services/savedItineraries';
+} from '../services/itinerary/savedItineraries';
 
 export function useSavedItineraries(userId?: string) {
   const [saved, setSaved] = useState<SavedItinerary[]>(() =>

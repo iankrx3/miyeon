@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Bookmark, Star } from 'lucide-react';
 import type { Place } from '../../types';
-import { categoryMeta } from '../../data/mock';
+import { categoryMeta } from '../../data/mock/mock';
 import { MedicalInfoBadge, WellnessPickBadge } from '../badges/KtoBadges';
 
 interface PlaceCardProps {

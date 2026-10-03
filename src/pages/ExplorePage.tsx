@@ -32,7 +32,7 @@ import { AITransition } from '../components/quiz/AITransition';
 import { PinkTransition } from '../components/quiz/PinkTransition';
 import { useT } from '../i18n';
 import { buildGlowUpItinerary, emptyGlowUpProfile } from '../services/glowUp/generate';
-import { upsertItinerary } from '../lib/localItineraryStore';
+import { upsertItinerary } from '../lib/storage/localItineraryStore';
 
 type Step =
   | 'home'

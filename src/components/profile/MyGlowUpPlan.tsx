@@ -2,8 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { guideFor } from '../../data/categoryGuides';
 import { TIMING_LABEL } from '../../data/glowUpRoutines';
-import { latestGlowUpPlan } from '../../lib/localItineraryStore';
-import { readBookedStops, toggleBookedStop } from '../../lib/localBookedStops';
+import { latestGlowUpPlan } from '../../lib/storage/localItineraryStore';
+import { readBookedStops, toggleBookedStop } from '../../lib/storage/localBookedStops';
 
 const MAX_ROWS = 4;
 

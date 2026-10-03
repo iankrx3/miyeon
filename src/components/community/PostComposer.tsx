@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import type { CommunityPost, UserSession } from '../../types';
-import type { CreatePostInput } from '../../services/community';
+import type { CreatePostInput } from '../../services/community/community';
 import { DEMO_USER } from '../../services/auth';
 
 interface PostComposerProps {

@@ -9,9 +9,9 @@ import { useSavedItineraries } from '../hooks/useSavedItineraries';
 import { useSavedPlaces } from '../hooks/useSavedPlaces';
 import { SwipeRow } from '../components/common/SwipeRow';
 import { MyGlowUpPlan } from '../components/profile/MyGlowUpPlan';
-import { firstSpotImage, upsertItinerary } from '../lib/localItineraryStore';
+import { firstSpotImage, upsertItinerary } from '../lib/storage/localItineraryStore';
 import { itinerarySpotCount } from '../services/itinerary/generate';
-import { createUserItinerary, deleteUserItinerary, fetchUserItineraries } from '../services/userItinerary';
+import { createUserItinerary, deleteUserItinerary, fetchUserItineraries } from '../services/itinerary/userItinerary';
 
 interface ProfilePageProps {
   session: UserSession;

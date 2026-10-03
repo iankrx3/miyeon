@@ -1,6 +1,6 @@
 import { MatchResult, Place, QuizAnswers, Treatment } from '../types';
 import { discoverPlaces } from './discovery';
-import { fetchPlaceById, fetchTreatments } from './places';
+import { fetchPlaceById, fetchTreatments } from './places/places';
 
 // AI Matching & Place Ranking — MIYEON Core UX §02-6/§02-7.
 // Match Score = Concern + Result + Downtime + Budget + Timing + Location Fit

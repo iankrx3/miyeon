@@ -4,10 +4,10 @@ import { ChevronLeft, MapPin, Pencil, Plus, Trash2 } from 'lucide-react';
 import type { Itinerary, Spot, UserSession } from '../types';
 import { SpotSearchPicker } from '../components/place/SpotSearchPicker';
 import { ItineraryTimeline } from '../components/itinerary/ItineraryTimeline';
-import { removeItinerary, upsertItinerary } from '../lib/localItineraryStore';
+import { removeItinerary, upsertItinerary } from '../lib/storage/localItineraryStore';
 import { addEmptyDay, addSpotToDay, removeSpotFromItinerary } from '../services/itinerary/generate';
 import { deleteCuratorItinerary, fetchItineraryById, updateCuratorItinerary } from '../services/curator';
-import { deleteUserItinerary, persistUserItinerary } from '../services/userItinerary';
+import { deleteUserItinerary, persistUserItinerary } from '../services/itinerary/userItinerary';
 import { useSpotsCatalog } from '../hooks/useSpotsCatalog';
 
 interface CuratorListPageProps {

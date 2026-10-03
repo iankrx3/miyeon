@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import type { GlowUpRoutine } from '../../types';
-import { addBasemap } from '../../lib/leafletBasemap';
+import { addBasemap } from '../../lib/map/leafletBasemap';
 import { useT } from '../../i18n';
 
 interface RoutineMapProps {

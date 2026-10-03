@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Place } from '../types';
-import { isRemoteUser } from '../lib/remoteUser';
-import { addTombstone, removeTombstone, TOMBSTONE_PLACES } from '../lib/syncTombstones';
-import { fetchPlaceById } from '../services/places';
+import { isRemoteUser } from '../lib/supabase/remoteUser';
+import { addTombstone, removeTombstone, TOMBSTONE_PLACES } from '../lib/storage/syncTombstones';
+import { fetchPlaceById } from '../services/places/places';
 import {
   deleteRemoteSavedPlace,
   excludeDeletedPlaces,
@@ -12,7 +12,7 @@ import {
   pushLocalSavedPlaces,
   reconcileDeletedPlaces,
   type SavedPlaceEntry,
-} from '../services/savedPlaces';
+} from '../services/places/savedPlaces';
 
 function storageKeyFor(userId?: string): string {
   return `miyeon_my_map:${userId ?? 'guest'}`;

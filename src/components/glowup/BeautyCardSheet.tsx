@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Check, X } from 'lucide-react';
 import type { Itinerary } from '../../types';
-import { requestBeautyCard } from '../../services/beautyCard';
+import { requestBeautyCard } from '../../services/glowUp/beautyCard';
 
 interface BeautyCardSheetProps {
   itinerary: Itinerary;

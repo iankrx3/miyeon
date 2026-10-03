@@ -11,9 +11,9 @@ import { upgradeLegacyItinerary } from '../services/glowUp/generate';
 import { PLAN_VERSION } from '../services/glowUp/routines';
 import { useSavedItineraries } from '../hooks/useSavedItineraries';
 import { useSpotsCatalog } from '../hooks/useSpotsCatalog';
-import { getStoredItinerary, isCategoryPlan, upsertItinerary } from '../lib/localItineraryStore';
-import { isSavableItinerary } from '../services/savedItineraries';
-import { persistUserItinerary } from '../services/userItinerary';
+import { getStoredItinerary, isCategoryPlan, upsertItinerary } from '../lib/storage/localItineraryStore';
+import { isSavableItinerary } from '../services/itinerary/savedItineraries';
+import { persistUserItinerary } from '../services/itinerary/userItinerary';
 import {
   itinerarySpotCount,
   moveSpotToDay,

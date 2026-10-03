@@ -1,6 +1,6 @@
 import type { User } from '@supabase/supabase-js';
 import { CommunityPost, Creator, CuratorList, ListSpot, MagazineArticle, Place, PostComment, UserSession } from '../types';
-import { toEnglishAddress } from './englishAddress';
+import { toEnglishAddress } from './map/englishAddress';
 
 export function mapPlace(row: any): Place {
   return {
@@ -64,7 +64,7 @@ export function mapListSpot(row: any): ListSpot {
     list_id: row.list_id,
     place_id: row.place_id,
     // No FK/join to `places` (it's an intentionally empty cache) — place data is
-    // captured as a snapshot at write time instead. See supabase/creators_schema.sql.
+    // captured as a snapshot at write time instead. See supabase/schema/creators_schema.sql.
     place: { ...(row.place_snapshot ?? {}), id: row.place_id },
     note: row.note ?? undefined,
     position: row.position ?? 0,

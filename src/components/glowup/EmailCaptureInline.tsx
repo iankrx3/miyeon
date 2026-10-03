@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
 import type { Itinerary } from '../../types';
-import { requestBeautyCard } from '../../services/beautyCard';
+import { requestBeautyCard } from '../../services/glowUp/beautyCard';
 import { useT } from '../../i18n';
 
 interface EmailCaptureInlineProps {

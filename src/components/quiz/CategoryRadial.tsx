@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import type { BeautyCategory } from '../../types';
-import { categoryMeta } from '../../data/mock';
+import { categoryMeta } from '../../data/mock/mock';
 
 interface CategoryRadialProps {
   categories?: BeautyCategory[];

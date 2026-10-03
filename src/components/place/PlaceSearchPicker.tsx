@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Loader2, Search, X } from 'lucide-react';
 import type { Place } from '../../types';
-import { fetchPlaces } from '../../services/places';
+import { fetchPlaces } from '../../services/places/places';
 import { searchPlacesByCategory } from '../../services/discovery';
 import { ENABLED_MAP_CATEGORIES } from '../../data/mapCategories';
 

@@ -1,6 +1,6 @@
 import type { BeautyCategory, Place, Spot, SpotArea, SpotParentCategory, SpotSubcategory } from '../types';
 import { discoverAll, PRICE_BAND } from '../services/discovery';
-import { mockPlaces } from './mock';
+import { mockPlaces } from './mock/mock';
 
 const SUBCATEGORY_IMAGE: Record<SpotSubcategory, string> = {
   'color-perm': 'https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?q=80&w=1200',

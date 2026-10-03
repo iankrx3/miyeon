@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft, Trash2 } from 'lucide-react';
 import type { MagazineArticle, UserSession } from '../types';
-import { deleteMagazineArticle, fetchMagazineArticles } from '../services/magazine';
+import { deleteMagazineArticle, fetchMagazineArticles } from '../services/community/magazine';
 
 interface MagazineDetailPageProps {
   session: UserSession;

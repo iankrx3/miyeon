@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 import type { CommunityPost, UserSession } from '../types';
-import { deleteCommunityPost, fetchCommunityPostById, toggleLike } from '../services/community';
+import { deleteCommunityPost, fetchCommunityPostById, toggleLike } from '../services/community/community';
 import { PostCard } from '../components/community/PostCard';
 
 interface PostDetailPageProps {

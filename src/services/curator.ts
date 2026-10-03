@@ -1,9 +1,9 @@
 import type { Creator, CreatorPick, CuratorList, Itinerary, ListSpot, Place, UserSession } from '../types';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/supabase/client';
 import { mapCreator, mapCuratorList, mapListSpot } from '../lib/mappers';
-import { mockCreatorPicks } from '../data/mock';
+import { mockCreatorPicks } from '../data/mock/mock';
 import { ENABLED_MAP_CATEGORIES } from '../data/mapCategories';
-import { dedupeCreatorPicksByCreator, fetchAllCreatorPicks, fetchCreatorById as fetchRemoteCreatorById } from './places';
+import { dedupeCreatorPicksByCreator, fetchAllCreatorPicks, fetchCreatorById as fetchRemoteCreatorById } from './places/places';
 import { DEMO_USER } from './auth';
 import {
   findLocalListById,
@@ -16,18 +16,18 @@ import {
   saveLocalList,
   saveLocalSpot,
   updateLocalList,
-} from '../lib/localCuratorStore';
+} from '../lib/storage/localCuratorStore';
 import {
   getStoredItinerary,
   listAllCuratorItineraries,
   listCuratorItineraries,
   removeItinerary,
   upsertItinerary,
-} from '../lib/localItineraryStore';
+} from '../lib/storage/localItineraryStore';
 import { getSpot, spotToPlace } from '../data/spots';
-import { mockCreators } from '../data/mock';
+import { mockCreators } from '../data/mock/mock';
 import { createBlankItinerary } from './itinerary/generate';
-import { fetchRemoteUserItinerary } from './userItinerary';
+import { fetchRemoteUserItinerary } from './itinerary/userItinerary';
 
 export interface CuratorProfileInput {
   username: string;
@@ -154,7 +154,7 @@ export async function fetchCuratorLists(curatorId: string): Promise<CuratorList[
   const local = readLocalLists(curatorId);
   if (local.length > 0) return local;
 
-  // Mock creators (from src/data/mock.ts) have no lists — wrap their existing
+  // Mock creators (from src/data/mock/mock.ts) have no lists — wrap their existing
   // flat CreatorPicks into a single synthetic list so the profile page still
   // has something to show in demo mode.
   const picks = mockCreatorPicks.filter((pick) => pick.creator_id === curatorId);

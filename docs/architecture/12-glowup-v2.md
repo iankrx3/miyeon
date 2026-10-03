@@ -17,8 +17,8 @@ Figma "MIYEON V2 UX"를 구현한 흐름. §4의 옛 `BeautyTripProfile` 온보�
 ### 12.2 장소 DB
 
 - 원본: 루트의 `places.csv` (creatrip_place_DB 스크래퍼 출력, 188곳). `id`가 Creatrip spot id이고 예약 URL은 `https://creatrip.com/en/spot/{id}` + 제휴 파라미터(`services/places/glowUpPlaces.ts#creatripSpotUrl`).
-- 빌드: `node scripts/build-places.mjs [csv 경로]` → CSV 컬럼을 그대로 타입만 바꿔 `supabase/seed_places.sql` + `src/data/glowUpPlaces.json`(같은 행 모양).
-- Supabase: `supabase/places_schema.sql`(`places` 한 테이블, CSV 컬럼 1:1, RLS는 select만) 실행 후 `seed_places.sql`. 앱은 Supabase에 행이 있으면 그것을, 없거나 미설정이면 번들 JSON을 쓴다(`loadGlowUpPlaces`).
+- 빌드: `node scripts/build-places.mjs [csv 경로]` → CSV 컬럼을 그대로 타입만 바꿔 `supabase/seed/seed_places.sql` + `src/data/glowUpPlaces.json`(같은 행 모양).
+- Supabase: `supabase/schema/places_schema.sql`(`places` 한 테이블, CSV 컬럼 1:1, RLS는 select만) 실행 후 `seed_places.sql`. 앱은 Supabase에 행이 있으면 그것을, 없거나 미설정이면 번들 JSON을 쓴다(`loadGlowUpPlaces`).
 - 선택 컬럼 `booked_count`("More than N Global travelers have booked", 스냅샷)·`captured_at`(캡처일)은 CSV에 있으면 읽고, 없으면 null. 현재 CSV엔 둘 다 없다.
 - 행 → `GlowUpPlace` 변환은 `glowUpPlaces.ts#fromRow`: subtype 매핑(dermatology는 `fix_targets`로 skin/face), 지역명 → 앱 지역 8곳(그 외 `null`), Seoul/Busan 이외 도시와 `active = false`는 제외, `languages`는 `listed`만. 옵션별 상품(products)은 CSV에 없어 빈 배열.
 - 스크랩 시점 스냅샷이므로 가격·영업시간·예약 가능 여부를 단정하지 않는다.
@@ -45,7 +45,7 @@ Figma "MIYEON V2 UX"를 구현한 흐름. §4의 옛 `BeautyTripProfile` 온보�
 
 ### 12.4 알려진 한계
 
-- 이메일 수집은 화면과 로컬 저장(`miyeon_beauty_card_requests`)까지만 — 실제 발송은 `services/beautyCard.ts`의 `TODO(email)` 그대로다.
+- 이메일 수집은 화면과 로컬 저장(`miyeon_beauty_card_requests`)까지만 — 실제 발송은 `services/glowUp/beautyCard.ts`의 `TODO(email)` 그대로다.
 - 현지 신뢰(Google Places 리뷰·별점)는 점수에 없다. 이동시간은 경로 API(카카오/네이버) 없이 직선거리 추정(`services/itinerary/travel.ts`)이다.
 - `booked_count`·`captured_at`이 CSV에 아직 없어 외국인 수요는 Creatrip 리뷰 수만, 캡처 최신성은 중간값으로 계산된다.
 - 소요 시간·다운타임은 장소별 실제 값이 있는 곳이 적어 카테고리 가이드(`data/categoryGuides.ts`)의 일반값으로 대체된다.

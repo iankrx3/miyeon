@@ -7,7 +7,7 @@
 | UI | `src/components/auth/GoogleAuthModal.tsx` | Continue as demo / Continue with Google |
 | Hook | `hooks/useAuth.ts` | 세션 hydrate, demo·Google·sign out |
 | Service | `services/auth.ts` | demo `localStorage`, Google OAuth, return tab |
-| Infra | `lib/supabase.ts` | `VITE_SUPABASE_*`가 있을 때만 클라이언트 생성 |
+| Infra | `lib/supabase/client.ts` | `VITE_SUPABASE_*`가 있을 때만 클라이언트 생성 |
 
 **Continue as demo**
 

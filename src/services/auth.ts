@@ -1,8 +1,8 @@
 import type { User } from '@supabase/supabase-js';
 import { Creator, UserSession } from '../types';
 import { mapAuthSession } from '../lib/mappers';
-import { isSupabaseConfigured, requireSupabase, supabase } from '../lib/supabase';
-import { fetchCreatorByUserId } from './places';
+import { isSupabaseConfigured, requireSupabase, supabase } from '../lib/supabase/client';
+import { fetchCreatorByUserId } from './places/places';
 
 export { isSupabaseConfigured };
 

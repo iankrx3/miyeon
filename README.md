@@ -24,12 +24,12 @@ npm run dev
 
 Without `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY`, Google OAuth is skipped and
 **Continue as demo** still signs you in locally (stored in `localStorage`). Every
-data call falls back to `src/data/mock.ts` unless the place-discovery keys below
+data call falls back to `src/data/mock/mock.ts` unless the place-discovery keys below
 are set. Without `VITE_MAPTILER_API_KEY`, the map uses the free Carto Voyager
 basemap instead of MapTiler.
 
 Google sign-in alone does **not** create the save tables. After Auth is working,
-run `supabase/user_saves_schema.sql` in the Supabase SQL editor so Saved places,
+run `supabase/schema/user_saves_schema.sql` in the Supabase SQL editor so Saved places,
 My itineraries, and Saved itineraries sync across devices. Until that file has
 been applied, those lists stay in the browser's `localStorage` and look different
 on each phone.
@@ -48,6 +48,42 @@ GOOGLE_PLACES_API_KEY=    # Google Cloud Places API (New) — Pro search only
 - Google key: enable **Places API (New)** on a Cloud project. In Cloud Console, cap **Nearby Search Pro** and **Text Search Pro** at 5,000 requests/month (the free SKU caps). The app only uses Pro field masks (no rating/reviews/photos — those bill as Enterprise, 1,000 free/month). Map bootstrap is KTO-only; Google Nearby Pro runs on demand for hair/nails/makeup (24h cache) and one Text Search Pro if KTO search is empty. Place Details and Place Photos are disabled. A process-local daily budget (150 Nearby + 150 Text) rejects extra calls with `429 quota_exhausted`.
 
 `src/services/discovery.ts` loads skin/face from KTO. Hair/nails/makeup use one Nearby Search Pro when that filter is selected. If a key is missing or a call fails, the app keeps serving mock / KTO data. KTO responses must be attributed `자료: 한국관광공사` (already on the medical/wellness badges). Development quota on data.go.kr is 1,000 calls/day — list results are cached.
+
+## Project structure
+
+```
+api/                  Vercel serverless functions (KTO / Google Places proxy, plan email)
+shared/               Server code shared by api/ and the Vite dev proxy
+plugins/              Vite plugin that serves api/ routes during `npm run dev`
+scripts/              build-places.mjs (places.csv -> seed SQL + bundled JSON)
+supabase/
+  schema/             Table DDL + RLS, one file per feature (run in the SQL editor)
+  seed/               Generated seed data — do not hand-edit
+docs/architecture/    Per-layer design notes
+src/
+  pages/              Route screens
+  components/<area>/  UI grouped by feature (home, glowup, map, place, community, ...)
+  hooks/              React hooks (auth, saved items, catalogs)
+  services/           Data access + domain logic
+    places/  itinerary/  community/  glowUp/   per-domain modules
+    external/         Google Places / KTO API clients
+  lib/
+    storage/          localStorage fallbacks + sync tombstones
+    supabase/         Supabase client, error helpers, remote-user check
+    map/              Leaflet basemap, directions, address formatting
+  data/               Static content, quiz/routine definitions, glowUpPlaces.json
+    mock/             Demo dataset used when Supabase / live APIs are absent
+  i18n/               Translations
+```
+
+### Updating the place DB
+
+`places.csv` (scraper output) lives in the repo root but is git-ignored. After replacing it:
+
+```bash
+node scripts/build-places.mjs        # writes supabase/seed/seed_places.sql + src/data/glowUpPlaces.json
+supabase db query --linked --project-ref <ref> -f supabase/seed/seed_places.sql
+```
 
 ## What's implemented
 
@@ -71,7 +107,7 @@ it. The old category/quiz/match screen this replaced is still in the tree as dea
   more relaxing, start later, finish earlier) — all pure functions in
   `services/itinerary/generate.ts` that preserve the original profile's constraints.
 - **Save an itinerary** (`src/hooks/useSavedItineraries.ts`,
-  `src/services/savedItineraries.ts`) — bookmarks **curators' itineraries only**
+  `src/services/itinerary/savedItineraries.ts`) — bookmarks **curators' itineraries only**
   (`isSavableItinerary`); generated Glow Up plans and hand-built itineraries have no
   Save button and live in "My Glow Up Plan" / "My itineraries". Any signed-in user can
   save; entries are written to `localStorage` and mirrored to Supabase
@@ -96,8 +132,8 @@ it. The old category/quiz/match screen this replaced is still in the tree as dea
   fall through the curated catalog, and the Map search box above.
 - **Place / Treatment detail** — Nearby Wellness and Medical Info KTO badges
   (§7.2/§7.3), fail-silent when their data is absent. Get-directions links to
-  Google/Naver/Kakao Maps (`src/lib/directions.ts`). The address is forced to a
-  single English line (`src/lib/englishAddress.ts`). "Why people like it" is
+  Google/Naver/Kakao Maps (`src/lib/map/directions.ts`). The address is forced to a
+  single English line (`src/lib/map/englishAddress.ts`). "Why people like it" is
   composed on the detail page from Google Place Details (editorial summary,
   rating, English reviews, place type) and KTO `detailCommon` / `detailMdclTursm`
   (registered medical-tourism, languages, departments, English overview) — no LLM.
@@ -109,7 +145,7 @@ it. The old category/quiz/match screen this replaced is still in the tree as dea
   apart a place with a real, spot-specific Creatrip page from one still pointing at
   the generic homepage; only the former is labeled "광고" (ad) — with one shown as a
   featured "광고 · 추천" pick — in the Map list view. Filling a real Creatrip spot
-  URL on a place is manual (`src/data/mock.ts`).
+  URL on a place is manual (`src/data/mock/mock.ts`).
 - **Curator tools** (`src/services/curator.ts`) — sign up / edit a curator profile
   (`/curator/signup`, `/curator/:id/edit`); create, edit (add spot/day, rename,
   delete), and publish **itineraries** as a curator's primary content
@@ -120,16 +156,16 @@ it. The old category/quiz/match screen this replaced is still in the tree as dea
   (`CuratorList`/`ListSpot`, `creator_lists`/`list_spots`) still exists in the code
   and schema but isn't what curators build with day to day anymore — see "Known
   gaps".
-- **Magazine** (`src/services/magazine.ts`, Community tab's "Magazine" sub-tab,
+- **Magazine** (`src/services/community/magazine.ts`, Community tab's "Magazine" sub-tab,
   `/magazine/:id`) — curator-authored TREATMENT/GUIDE/TREND columns, backed by
   Supabase `magazine_articles` with a `localStorage` + seeded-article fallback.
-- **Community** (`src/services/community.ts`) — read/write feed backed by
+- **Community** (`src/services/community/community.ts`) — read/write feed backed by
   Supabase when configured, falling back to `localStorage` otherwise: create
   post, like/unlike, comment, and delete your own post/comment. Follow is not
   built.
 - **My Map** (`src/hooks/useSavedPlaces.ts`) — save/unsave individual places.
   Always cached in `localStorage`; signed-in Google users also sync to Supabase
-  `saved_places` (apply `supabase/user_saves_schema.sql`). Demo / guest sessions
+  `saved_places` (apply `supabase/schema/user_saves_schema.sql`). Demo / guest sessions
   stay on-device. Separate from saving whole itineraries, above.
 - **Mobile bottom nav** (`src/components/layout/BottomNav.tsx`) — below the `sm`
   breakpoint, the top tab bar (`NavHeader`) hides and a thumb-reachable bottom
@@ -166,7 +202,7 @@ Satoshi / Pretendard typography, from the Miyeon brand board.
   standalone lists — this infra is mostly legacy at this point. The even older
   `creator_picks` table (and the `places` table it used to join against) is fully
   superseded; `places` was dropped entirely rather than getting a schema, per the
-  comments in `supabase/creators_schema.sql`.
+  comments in `supabase/schema/creators_schema.sql`.
 
 See [`docs/architecture/`](docs/architecture/README.md) for the full breakdown,
 including the current state of each subsystem and everything that's now dead code.

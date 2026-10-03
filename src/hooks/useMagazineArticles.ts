@@ -5,7 +5,7 @@ import {
   createMagazineArticle,
   deleteMagazineArticle,
   fetchMagazineArticles,
-} from '../services/magazine';
+} from '../services/community/magazine';
 
 export function useMagazineArticles(session: UserSession) {
   const [articles, setArticles] = useState<MagazineArticle[]>([]);

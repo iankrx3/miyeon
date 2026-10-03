@@ -3,13 +3,13 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Bookmark, ChevronLeft, Navigation, Star } from 'lucide-react';
 import type { CommunityPost, Place, Treatment, UserSession } from '../types';
-import { fetchPlaceById, fetchTreatments } from '../services/places';
-import { fetchCommunityPosts } from '../services/community';
+import { fetchPlaceById, fetchTreatments } from '../services/places/places';
+import { fetchCommunityPosts } from '../services/community/community';
 import { useSavedPlaces } from '../hooks/useSavedPlaces';
 import { MedicalTourismSection, NearbyWellnessSection } from '../components/badges/KtoBadges';
-import { getDirectionsLinks } from '../lib/directions';
-import { toEnglishAddress } from '../lib/englishAddress';
-import { enrichPlaceDetail } from '../services/placeDetail';
+import { getDirectionsLinks } from '../lib/map/directions';
+import { toEnglishAddress } from '../lib/map/englishAddress';
+import { enrichPlaceDetail } from '../services/places/placeDetail';
 import { hasCreatripListing, withCreatripAffiliate, CREATRIP_DISCLOSURE } from '../lib/creatrip';
 import { getSpot, SUBCATEGORY_LABEL } from '../data/spots';
 

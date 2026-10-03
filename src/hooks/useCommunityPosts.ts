@@ -6,8 +6,8 @@ import {
   deleteCommunityPost,
   fetchCommunityPosts,
   toggleLike as toggleLikeService,
-} from '../services/community';
-import { fetchCreatorIdsByUserIds } from '../services/places';
+} from '../services/community/community';
+import { fetchCreatorIdsByUserIds } from '../services/places/places';
 
 export function useCommunityPosts(session: UserSession) {
   const [posts, setPosts] = useState<CommunityPost[]>([]);

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import { Heart, MapPin, MessageCircle, Star, Trash2 } from 'lucide-react';
 import type { CommunityPost, PostComment, UserSession } from '../../types';
-import { addComment, deleteComment, fetchComments } from '../../services/community';
+import { addComment, deleteComment, fetchComments } from '../../services/community/community';
 import { ShareButton } from './ShareButton';
 
 interface PostCardProps {

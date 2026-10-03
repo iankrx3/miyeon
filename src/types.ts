@@ -166,7 +166,7 @@ export interface Itinerary {
   source: 'miyeon' | 'curator' | 'user';
   curatorId?: string;
   /** Set when source === 'user' — a plain logged-in user's own manually-built
-   * itinerary (see services/userItinerary.ts). */
+   * itinerary (see services/itinerary/userItinerary.ts). */
   userId?: string;
   profileSnapshot?: BeautyTripProfile;
   /** Set when this itinerary was built from the Glow Up quiz. */

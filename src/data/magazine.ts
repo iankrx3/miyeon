@@ -6,7 +6,7 @@ import trendingGuide from '../assets/home/trending-guide.jpg';
 
 // Seed content for the Community tab's "Magazine" view — editorial columns, not user posts.
 // Real curator-submitted columns (via MagazineComposer) are merged on top of this list at fetch
-// time (see services/magazine.ts); these entries have no curatorId since they aren't authored by
+// time (see services/community/magazine.ts); these entries have no curatorId since they aren't authored by
 // a registered curator.
 const EDITORIAL_AUTHOR = 'Miyeon Editorial';
 const EDITORIAL_AVATAR = 'https://i.pravatar.cc/150?img=5';

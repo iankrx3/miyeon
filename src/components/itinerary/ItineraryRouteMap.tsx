@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import type { ItineraryDay, Spot } from '../../types';
 import { getSpot } from '../../data/spots';
-import { addBasemap } from '../../lib/leafletBasemap';
+import { addBasemap } from '../../lib/map/leafletBasemap';
 
 interface ItineraryRouteMapProps {
   day: ItineraryDay | undefined;

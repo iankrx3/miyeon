@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'reac
 import { Check, ChevronLeft } from 'lucide-react';
 import type { GlowUpPlace, GlowUpSubtype, UserSession } from '../types';
 import { guideFor } from '../data/categoryGuides';
-import { getStoredItinerary } from '../lib/localItineraryStore';
+import { getStoredItinerary } from '../lib/storage/localItineraryStore';
 import { buildGlowUpCreatripUrl, CREATRIP_DISCLOSURE } from '../lib/creatrip';
 import { SwipeRow } from '../components/common/SwipeRow';
 import { BeautyCardSheet } from '../components/glowup/BeautyCardSheet';
