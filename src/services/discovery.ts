@@ -11,6 +11,8 @@ export interface DiscoverQuery {
   keywordHints?: string[];
   englishFriendly?: boolean;
   limit?: number;
+  /** When false, skip KTO detailMedical. List rows already have coordinates. Default true. */
+  enrich?: boolean;
 }
 
 export interface DiscoveryResult {
@@ -60,7 +62,14 @@ export function catalogTreatment(id: string): Treatment | undefined {
 
 function cacheKey(query: DiscoverQuery, origin: { lat: number; lng: number }): string {
   const hints = (query.keywordHints ?? []).slice().sort().join(',');
-  return [query.category, origin.lat.toFixed(3), origin.lng.toFixed(3), query.radiusM ?? 5000, hints].join('|');
+  return [
+    query.category,
+    origin.lat.toFixed(3),
+    origin.lng.toFixed(3),
+    query.radiusM ?? 5000,
+    hints,
+    query.enrich === false ? '0' : '1',
+  ].join('|');
 }
 
 function distanceM(a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
@@ -444,7 +453,7 @@ export async function discoverPlaces(query: DiscoverQuery): Promise<DiscoveryRes
     places.push(toPlaceFromKto(item, query.category));
   }
 
-  await enrichKtoMatches(places);
+  if (query.enrich !== false) await enrichKtoMatches(places);
 
   const limited = places.slice(0, query.limit ?? 24);
   const treatments = limited.map((place) => treatmentForPlace(place, query.keywordHints));
@@ -511,10 +520,13 @@ export async function searchPlacesByCategory(
 
 const ALL_CATEGORIES: BeautyCategory[] = ['skin', 'face', 'hair', 'nails', 'makeup'];
 
-export async function discoverAll(origin?: { lat: number; lng: number }): Promise<DiscoveryResult> {
+export async function discoverAll(
+  origin?: { lat: number; lng: number },
+  opts?: { enrich?: boolean }
+): Promise<DiscoveryResult> {
   const results = await Promise.all(
     ALL_CATEGORIES.map((category) =>
-      discoverPlaces({ category, origin, limit: 12 }).catch((err) => {
+      discoverPlaces({ category, origin, limit: 12, enrich: opts?.enrich }).catch((err) => {
         console.warn(`discoverPlaces(${category}) failed`, err);
         return { places: [], treatments: [] } satisfies DiscoveryResult;
       })

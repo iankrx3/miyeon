@@ -134,7 +134,10 @@ export function loadSpots(): Promise<Spot[]> {
   if (loadPromise) return loadPromise;
   loadPromise = (async () => {
     try {
-      const results = await Promise.all(SPOT_AREAS.map((area) => discoverAll(AREA_CENTROID[area])));
+      // Pins only need list coordinates. detailMedical stays on the enrich:true path (place detail).
+      const results = await Promise.all(
+        SPOT_AREAS.map((area) => discoverAll(AREA_CENTROID[area], { enrich: false }))
+      );
       const seen = new Set<string>();
       const merged: Spot[] = [];
       for (const result of results) {

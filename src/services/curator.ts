@@ -20,7 +20,7 @@ import {
   removeItinerary,
   upsertItinerary,
 } from '../lib/storage/localItineraryStore';
-import { getSpot, spotToPlace } from '../data/spots';
+import { getSpot, loadSpots, spotToPlace } from '../data/spots';
 import { mockCreators } from '../data/mock/mock';
 import { createBlankItinerary } from './itinerary/generate';
 import { fetchRemoteUserItinerary } from './itinerary/userItinerary';
@@ -336,8 +336,12 @@ function collectItineraryPlaces(itineraries: Itinerary[], into: Map<string, Plac
  * curator itinerary (remote + local) plus the legacy creator_picks/list_spots data
  * (`fetchAllCreatorPicks`) — instead of the full KTO/Google discovery catalog. */
 export async function fetchCuratedMapData(session: UserSession): Promise<{ places: Place[]; picks: CreatorPick[] }> {
-  const itineraries = await fetchRemoteCuratorItineraries();
-  const legacyPicks = await fetchAllCreatorPicks();
+  // Catalog lookup and the two Supabase reads share one wait. getSpot() runs only after loadSpots resolves.
+  const [itineraries, legacyPicks] = await Promise.all([
+    fetchRemoteCuratorItineraries(),
+    fetchAllCreatorPicks(),
+    loadSpots(),
+  ]);
 
   const placesById = new Map<string, Place>();
   for (const pick of legacyPicks) {
@@ -347,28 +351,36 @@ export async function fetchCuratedMapData(session: UserSession): Promise<{ place
   if (session.creator) collectItineraryPlaces(listCuratorItineraries(session.creator.id), placesById);
 
   const places = Array.from(placesById.values());
-  const picks: CreatorPick[] = [];
   const seen = new Set<string>();
+  const pickSources: { itn: Itinerary; place: Place }[] = [];
 
   for (const itn of itineraries) {
     if (!itn.curatorId || seen.has(itn.curatorId)) continue;
     seen.add(itn.curatorId);
-    const creator =
-      (await fetchCuratorById(itn.curatorId)) ?? mockCreators.find((c) => c.id === itn.curatorId);
-    if (!creator) continue;
     const firstSpotId = itn.days.flatMap((d) => d.blocks).find((b) => b.spotId)?.spotId;
     const place = firstSpotId ? placesById.get(firstSpotId) : undefined;
     if (!place) continue;
-    picks.push({
-      id: `itn-pick-${itn.id}`,
-      creator_id: creator.id,
-      creator,
-      place_id: place.id,
-      place,
-      personal_note: itn.title,
-      created_at: itn.createdAt,
-    });
+    pickSources.push({ itn, place });
   }
+
+  const picks = (
+    await Promise.all(
+      pickSources.map(async ({ itn, place }) => {
+        const creator =
+          (await fetchCuratorById(itn.curatorId!)) ?? mockCreators.find((c) => c.id === itn.curatorId);
+        if (!creator) return null;
+        return {
+          id: `itn-pick-${itn.id}`,
+          creator_id: creator.id,
+          creator,
+          place_id: place.id,
+          place,
+          personal_note: itn.title,
+          created_at: itn.createdAt,
+        };
+      })
+    )
+  ).filter((pick): pick is CreatorPick => pick !== null);
 
   if (session.creator && !seen.has(session.creator.id)) {
     const local = listCuratorItineraries(session.creator.id);

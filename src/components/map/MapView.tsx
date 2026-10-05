@@ -16,7 +16,7 @@ import {
   fetchCuratorItineraries,
   fetchItineraryById,
 } from '../../services/curator';
-import { getSpot, spotToPlace } from '../../data/spots';
+import { AREA_CENTROID, getSpot, spotToPlace } from '../../data/spots';
 import { getStoredItinerary, listAllCuratorItineraries, listUserItineraries } from '../../lib/storage/localItineraryStore';
 import { useSavedItineraries } from '../../hooks/useSavedItineraries';
 import { fetchUserItineraries } from '../../services/itinerary/userItinerary';
@@ -46,6 +46,26 @@ const CATEGORY_FILTERS: { id: 'all' | BeautyCategory; label: string }[] = [
 
 /** Pans/zooms the map so `targets` are fully visible — a single flyTo for one place,
  * or a padded flyToBounds for several (padded so the top search/filter UI never covers a pin). */
+function hasPinCoords(place: Place): boolean {
+  return (
+    Number.isFinite(place.latitude) &&
+    Number.isFinite(place.longitude) &&
+    (place.latitude !== 0 || place.longitude !== 0)
+  );
+}
+
+/** Frame that covers Gangnam, Seongsu, Hongdae, and Myeongdong before pins arrive. */
+function neighborhoodBounds(): L.LatLngBounds {
+  return L.latLngBounds(Object.values(AREA_CENTROID).map((c) => [c.lat, c.lng] as [number, number]));
+}
+
+const PIN_FIT = {
+  paddingTopLeft: [40, 140] as L.PointExpression,
+  paddingBottomRight: [40, 100] as L.PointExpression,
+  maxZoom: 15,
+  animate: false,
+};
+
 function fitMapToPlaces(map: L.Map, targets: Place[]) {
   if (targets.length === 0) return;
   if (targets.length === 1) {
@@ -83,6 +103,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
   const [searchParams, setSearchParams] = useSearchParams();
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
+  const didFitPins = useRef(false);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const wellnessLayerRef = useRef<L.LayerGroup | null>(null);
   const userLocationLayerRef = useRef<L.LayerGroup | null>(null);
@@ -256,8 +277,6 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
     if (!mapContainerRef.current || mapInstanceRef.current) return;
 
     const map = L.map(mapContainerRef.current, {
-      center: [37.5665, 126.978],
-      zoom: 13,
       zoomControl: false,
     });
 
@@ -286,6 +305,14 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
     wellnessLayerRef.current = L.layerGroup().addTo(map);
     userLocationLayerRef.current = L.layerGroup().addTo(map);
     mapInstanceRef.current = map;
+    // A view is required before Leaflet will paint tiles. Refit on the next frame
+    // once the container has its real size, unless pins have already taken over.
+    map.fitBounds(neighborhoodBounds(), { padding: [40, 80], animate: false });
+    requestAnimationFrame(() => {
+      if (didFitPins.current) return;
+      map.invalidateSize();
+      map.fitBounds(neighborhoodBounds(), { padding: [40, 80], animate: false });
+    });
   }, []);
 
   // MapPage keeps this component mounted and toggles it via CSS `hidden` (so the
@@ -296,6 +323,25 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
     const frame = requestAnimationFrame(() => mapInstanceRef.current?.invalidateSize());
     return () => cancelAnimationFrame(frame);
   }, [visible]);
+
+  // Once, when the curated pins arrive. Category filters and later Google hits must not move the camera.
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || loading || didFitPins.current) return;
+    if (curatorFilterActive || tripFilterActive) return;
+    const targets = places.filter(hasPinCoords);
+    if (targets.length === 0) return;
+    didFitPins.current = true;
+    map.invalidateSize();
+    if (targets.length === 1) {
+      map.setView([targets[0].latitude, targets[0].longitude], 15, { animate: false });
+      return;
+    }
+    map.fitBounds(
+      L.latLngBounds(targets.map((p) => [p.latitude, p.longitude] as [number, number])),
+      PIN_FIT
+    );
+  }, [loading, places, curatorFilterActive, tripFilterActive]);
 
   const getFilteredPlaces = useCallback((): Place[] => {
     if (tripFilterActive) return tripFilterPlaces;
