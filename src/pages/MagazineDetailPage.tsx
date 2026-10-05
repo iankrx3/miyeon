@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ChevronLeft, Trash2 } from 'lucide-react';
+import { ArrowRight, ChevronLeft, Trash2 } from 'lucide-react';
 import type { MagazineArticle, UserSession } from '../types';
 import { deleteMagazineArticle, fetchMagazineArticles } from '../services/community/magazine';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
+import { useT } from '../i18n';
 
 interface MagazineDetailPageProps {
   session: UserSession;
@@ -12,6 +13,7 @@ interface MagazineDetailPageProps {
 export default function MagazineDetailPage({ session }: MagazineDetailPageProps) {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const t = useT();
   const [article, setArticle] = useState<MagazineArticle | null | undefined>(undefined);
 
   useEffect(() => {
@@ -97,6 +99,25 @@ export default function MagazineDetailPage({ session }: MagazineDetailPageProps)
           <p key={i}>{paragraph}</p>
         ))}
       </div>
+
+      <section className="rounded-2xl bg-[#fef6f8] px-5 py-6">
+        <p className="font-display text-[10px] font-medium tracking-[0.16em] text-miyeon-accent-dark">
+          {t('YOUR TURN')}
+        </p>
+        <h2 className="mt-1.5 font-display text-[22px] font-bold leading-snug text-miyeon-ink">
+          {t('Make this part of your glow-up')}
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-miyeon-main/70">
+          {t("Six questions. We'll build a Seoul plan around what you just read.")}
+        </p>
+        <Link
+          to="/start"
+          className="mt-4 inline-flex items-center gap-2 rounded-full bg-miyeon-ink py-[14px] pl-6 pr-5 text-[14px] font-medium text-white"
+        >
+          {t('Start Glowing')}
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+      </section>
     </div>
   );
 }

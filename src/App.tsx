@@ -63,6 +63,7 @@ export default function App() {
           >
             <Routes>
               <Route path="/" element={<ExplorePage />} />
+              <Route path="/start" element={<ExplorePage startWithQuestions />} />
               <Route
                 path="/profile"
                 element={

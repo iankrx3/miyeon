@@ -89,14 +89,18 @@ const HOME_META = {
   },
 };
 
-export default function ExplorePage() {
+export default function ExplorePage({ startWithQuestions = false }: { startWithQuestions?: boolean }) {
   useDocumentMeta(HOME_META);
   const navigate = useNavigate();
   const t = useT();
   const generatingRef = useRef(false);
-  const [step, setStep] = useState<Step>(wizardMemory.step);
-  const [profile, setProfile] = useState<GlowUpProfile>(wizardMemory.profile);
-  const [base, setBase] = useState<Base>(wizardMemory.base);
+  // `/start` (ads, magazine CTA) always opens a blank first question. `/` resumes wizardMemory.
+  const [step, setStep] = useState<Step>(() => {
+    if (startWithQuestions) wizardMemory = { ...freshWizardMemory(), step: 'fix' };
+    return wizardMemory.step;
+  });
+  const [profile, setProfile] = useState<GlowUpProfile>(() => wizardMemory.profile);
+  const [base, setBase] = useState<Base>(() => wizardMemory.base);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -128,6 +132,16 @@ export default function ExplorePage() {
       return;
     }
     setStep(FLOW[idx - 1]);
+  };
+
+  const backFromFirstQuestion = () => {
+    // Leaving `/start` must clear the question before `/` mounts, or Home resumes Fix.
+    if (startWithQuestions) {
+      wizardMemory = freshWizardMemory();
+      navigate('/');
+      return;
+    }
+    setStep('home');
   };
 
   const toggleFix = (id: FixItem) => {
@@ -219,7 +233,7 @@ export default function ExplorePage() {
               subtitle={t("Pick what you'd become. Or skip.")}
               step={stepIndex}
               total={TOTAL_STEPS}
-              onBack={() => setStep('home')}
+              onBack={backFromFirstQuestion}
               onNext={() => goNextFrom('fix')}
               nextLabel={profile.fix.items.length > 0 ? t('Next') : t('Skip — nothing to fix')}
               nextVariant={profile.fix.items.length > 0 ? 'primary' : 'skip'}
