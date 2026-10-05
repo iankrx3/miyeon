@@ -3,6 +3,7 @@ import { Check } from 'lucide-react';
 import type { Itinerary } from '../../types';
 import { requestBeautyCard } from '../../services/glowUp/beautyCard';
 import { useT } from '../../i18n';
+import { track } from '../../lib/analytics';
 
 interface EmailCaptureInlineProps {
   itinerary: Itinerary;
@@ -23,6 +24,7 @@ export const EmailCaptureInline: React.FC<EmailCaptureInlineProps> = ({ itinerar
     setStatus('sending');
     try {
       await requestBeautyCard(email, itinerary);
+      track('plan_email', { ok: true });
       setStatus('done');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');

@@ -19,7 +19,9 @@ import CuratorEditPage from './pages/CuratorEditPage';
 import CuratorListPage from './pages/CuratorListPage';
 import ItineraryPage from './pages/ItineraryPage';
 import ProfilePage from './pages/ProfilePage';
+import InsightsPage from './pages/InsightsPage';
 import type { AuthReturnTab } from './services/auth';
+import { captureLandingUtm, trackPageView } from './lib/analytics';
 
 export default function App() {
   const { authReady, session, returnTab, signOut, signInAsDemo, onCreatorUpdated } = useAuth();
@@ -29,6 +31,11 @@ export default function App() {
   useEffect(() => {
     if (returnTab) setIsAuthOpen(false);
   }, [returnTab]);
+
+  useEffect(() => {
+    captureLandingUtm();
+    trackPageView(location.pathname);
+  }, [location.pathname]);
 
   const isMapRoute = location.pathname.startsWith('/map');
   const isItineraryRoute = location.pathname.startsWith('/itinerary');
@@ -114,6 +121,10 @@ export default function App() {
                 element={<CuratorListPage session={session} />}
               />
               <Route path="/itinerary/:itineraryId/build" element={<CuratorListPage session={session} />} />
+              <Route
+                path="/insights"
+                element={<InsightsPage session={session} onSignIn={() => setIsAuthOpen(true)} />}
+              />
             </Routes>
           </motion.div>
         </AnimatePresence>

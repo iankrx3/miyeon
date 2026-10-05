@@ -10,6 +10,7 @@ import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { BeautyCardSheet } from '../components/glowup/BeautyCardSheet';
 import { getGlowUpPlace, loadGlowUpPlaces } from '../services/places/glowUpPlaces';
 import { checksFor, isClinicSubtype, otherOptionsCount, type CheckItem, shortRegion } from '../services/glowUp/routines';
+import { track } from '../lib/analytics';
 
 /** Figma "DETAIL — Personal Color": explains a Plan category before sending the
  * user to Creatrip for real options. */
@@ -74,6 +75,10 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
     });
   }, [guide, fromItinerary, place]);
   const bookHref = place?.bookingUrl ?? null;
+  const trackOutbound = () => {
+    if (!guide) return;
+    track('outbound_click', { subtype: guide.subtype, surface: 'category_cta' });
+  };
   const freeBooking = guide ? isClinicSubtype(guide.subtype as GlowUpSubtype) : false;
 
   useDocumentMeta(guide ? { title: `${guide.name} in Korea`, description: `${guide.headline} ${guide.whyKorea}` } : null);
@@ -167,7 +172,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
 
       {place && bookHref ? (
         <div className="px-5 pb-5">
-          <a href={bookHref} target="_blank" rel="noreferrer sponsored" className={ctaClass}>
+          <a href={bookHref} target="_blank" rel="noreferrer sponsored" className={ctaClass} onClick={trackOutbound}>
             Book your Best Fit on Creatrip →
           </a>
           {creatripHref && (
@@ -175,6 +180,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
               href={creatripHref}
               target="_blank"
               rel="noreferrer"
+              onClick={trackOutbound}
               className="mt-2.5 block w-full rounded-full border border-miyeon-line bg-white py-[14px] text-center text-[14px] text-miyeon-ink"
             >
               {moreCount ? `See ${moreCount}+ More Options` : 'See More Options'}
@@ -184,7 +190,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
       ) : (
         creatripHref && (
           <div className="px-5 pb-5">
-            <a href={creatripHref} target="_blank" rel="noreferrer" className={ctaClass}>
+            <a href={creatripHref} target="_blank" rel="noreferrer" className={ctaClass} onClick={trackOutbound}>
               See options on Creatrip →
             </a>
             <p className="mt-2 text-center text-[11px] text-miyeon-main/45">or keep reading — 30 sec</p>
@@ -271,6 +277,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
             href={creatripHref}
             target="_blank"
             rel="noreferrer"
+            onClick={trackOutbound}
             className={`${ctaClass} shadow-[0_6px_16px_rgba(207,63,97,0.22)]`}
           >
             See options on Creatrip →
@@ -301,6 +308,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
             href={bookHref}
             target="_blank"
             rel="noreferrer sponsored"
+            onClick={trackOutbound}
             className="flex shrink-0 items-center gap-1.5 rounded-full bg-miyeon-ink px-[18px] py-3.5 text-sm font-medium text-white"
           >
             Book on Creatrip →
@@ -317,6 +325,7 @@ export default function CategoryDetailPage({ session }: { session?: UserSession 
             href={creatripHref}
             target="_blank"
             rel="noreferrer"
+            onClick={trackOutbound}
             className="flex items-center gap-1.5 rounded-full bg-miyeon-ink px-[18px] py-3.5 text-sm font-medium text-white"
           >
             See options →

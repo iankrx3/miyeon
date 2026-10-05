@@ -17,6 +17,7 @@ import {
   fetchItineraryById,
 } from '../../services/curator';
 import { AREA_CENTROID, getSpot, spotToPlace } from '../../data/spots';
+import { track } from '../../lib/analytics';
 import { getStoredItinerary, listAllCuratorItineraries, listUserItineraries } from '../../lib/storage/localItineraryStore';
 import { useSavedItineraries } from '../../hooks/useSavedItineraries';
 import { fetchUserItineraries } from '../../services/itinerary/userItinerary';
@@ -378,6 +379,7 @@ export const MapView: React.FC<MapViewProps> = ({ onSelectPlace, session, visibl
 
       const marker = L.marker([place.latitude, place.longitude], { icon: customIcon });
       marker.on('click', () => {
+        track('map_pin', { category: place.category, area: place.area });
         onSelectPlace(place);
         fitMapToPlaces(map, [place]);
       });

@@ -11,6 +11,7 @@ import { AftercareProducts } from './AftercareProducts';
 import { RoutineCard } from './RoutineCard';
 import { TryAnotherMix } from './TryAnotherMix';
 import { EmailCaptureInline } from './EmailCaptureInline';
+import { trackResultView } from '../../lib/analytics';
 
 interface GlowUpResultViewProps {
   itinerary: Itinerary;
@@ -53,6 +54,13 @@ export const GlowUpResultView: React.FC<GlowUpResultViewProps> = ({ itinerary, o
   useEffect(() => {
     if (!groups.some((g) => g.timing === active)) setActive(groups[0]?.timing);
   }, [groups, active]);
+
+  useEffect(() => {
+    const glow = itinerary.glowUpV2;
+    if (!glow) return;
+    const placeCount = glow.routines.reduce((sum, routine) => sum + routine.stops.length, 0);
+    trackResultView(itinerary.id, placeCount);
+  }, [itinerary]);
 
   // The routine panels sit side by side in one flex row so they can swipe horizontally; without
   // this, the row's height (and the gap before the caption below it) would default to the

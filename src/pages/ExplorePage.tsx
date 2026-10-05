@@ -34,6 +34,7 @@ import { PinkTransition } from '../components/quiz/PinkTransition';
 import { useT } from '../i18n';
 import { buildGlowUpItinerary, emptyGlowUpProfile } from '../services/glowUp/generate';
 import { upsertItinerary } from '../lib/storage/localItineraryStore';
+import { budgetBand, track, trackQuizStart } from '../lib/analytics';
 
 type Step =
   | 'home'
@@ -107,6 +108,10 @@ export default function ExplorePage({ startWithQuestions = false }: { startWithQ
   }, [step]);
 
   useEffect(() => {
+    if (startWithQuestions) trackQuizStart('start');
+  }, [startWithQuestions]);
+
+  useEffect(() => {
     // 'transition' isn't resumable (it would re-run generation) and the interludes are pass-throughs,
     // so remember the last real question instead.
     const resumable: Step =
@@ -117,6 +122,19 @@ export default function ExplorePage({ startWithQuestions = false }: { startWithQ
   const stepIndex = STEP_DISPLAY_INDEX[step];
 
   const goNextFrom = (current: Step) => {
+    if (current === 'fix') track('quiz_step', { step: 'fix', picked: profile.fix.items.length });
+    if (current === 'change') track('quiz_step', { step: 'change', picked: profile.change.length });
+    if (current === 'restore') track('quiz_step', { step: 'restore', picked: profile.restore.length });
+    if (current === 'tripInfo') {
+      track('quiz_step', {
+        step: 'trip',
+        city: profile.city ?? base ?? 'unsure',
+        trip_days: profile.tripDays ?? 'unset',
+      });
+    }
+    if (current === 'budget') track('quiz_step', { step: 'budget', budget_band: budgetBand(profile.budgetMaxUsd) });
+    if (current === 'language') track('quiz_step', { step: 'language', picked: profile.languages.length });
+
     const idx = FLOW.indexOf(current);
     const next = FLOW[idx + 1] ?? 'transition';
     // Reflect the answers just given before moving on — skipped when there is nothing to reflect.
@@ -189,13 +207,25 @@ export default function ExplorePage({ startWithQuestions = false }: { startWithQ
     void (async () => {
       const itinerary = await buildGlowUpItinerary(profile);
       upsertItinerary(itinerary);
+      track('quiz_complete', {
+        city: profile.city ?? base ?? 'unsure',
+        trip_days: profile.tripDays ?? 'unset',
+        budget_band: budgetBand(profile.budgetMaxUsd),
+      });
       wizardMemory = freshWizardMemory();
       navigate(`/itinerary/${itinerary.id}`);
     })();
   };
 
   if (step === 'home') {
-    return <HomeLanding onStartAnalysis={() => setStep('fix')} />;
+    return (
+      <HomeLanding
+        onStartAnalysis={() => {
+          trackQuizStart('home');
+          setStep('fix');
+        }}
+      />
+    );
   }
 
   if (step === 'interlude1' || step === 'interlude2') {

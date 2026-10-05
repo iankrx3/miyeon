@@ -23,7 +23,7 @@ const CATEGORY_SUBTYPES = [
 
 const STATIC_PATHS = ['/', '/map', '/community'];
 
-const DISALLOWED_PATHS = ['/api/', '/profile', '/curator/signup', '/curator/*/edit', '/itinerary/'];
+const DISALLOWED_PATHS = ['/api/', '/profile', '/insights', '/curator/signup', '/curator/*/edit', '/itinerary/'];
 
 export const OG_IMAGE_PATH = '/og-image.png';
 
