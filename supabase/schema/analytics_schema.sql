@@ -84,5 +84,5 @@ grant execute on function public.product_event_props_ok(jsonb) to anon, authenti
 grant insert on table public.product_events to anon, authenticated;
 grant select on table public.product_events to authenticated;
 
-insert into analytics_readers (email) values ('iankrx3@gmail.com')
+insert into analytics_readers (email) values ('iankrx3@gmail.com'), ('seungchan0605@gmail.com')
 on conflict (email) do nothing;
